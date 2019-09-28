@@ -1,0 +1,61 @@
+Terms:
+User - Paying customer of the Site, performs actions to buy and sell
+Player - A member of an NFL franchise
+Team - A collection of Players assembled by a User
+Contest - Set of Users that is active for one week of the NFL season.
+Point - Unit of currency within the Contest
+Budget - The number of Points that a User has available to buy Players
+Price - The number of Points required to buy a Player for a Team
+Buyer - User who adds a Player to their Team
+Seller - User who removes a Player from their Team
+
+Rules:
+
+Each User has one Team in a contest
+    A Team may have at most # QB, # RB, # WR, # TE, # DE, # Flex?
+    Teams begin empty
+
+** PRE-GAME PHASE **
+
+Every user deposits $X to the Site, gets Y Points to spend
+    All Users deposit the same amount
+
+Before games begin, Price for each Player is fixed based on Yahoo/ESPN predicted points
+    Determine scoring rules
+    Prices do not fluctuate yet
+
+Users can buy any Player for the Player's fixed Price
+    Price is subtracted from User's Budget on purchase
+    A User cannot buy a Player if the Player's Price is greater than the User's current Budget
+Users can sell any Player for same fixed Price
+    Price is added to User's Budget on sale
+Any number of Users can buy a given Player
+
+New users can join at any time in this phase
+
+** GAMETIME PHASE **
+
+NFL games begin
+    No new users can join
+    The number of people who own a specific player is now constant
+    Prices are no longer fixed to Yahoo/ESPN
+
+Users can submit buy and sell offers on Players at arbitrary Prices
+    If a prospective Buyer and a prospective Seller agree on a Price for a Player
+        The Buyer adds the Player to their team and reduces their Budget by the Price
+        The Seller removes the Player from their team and increases their Budget by the Price
+    Offers are public and agreeable to by any other User
+
+Players can only be traded from one team to another; they cannot be dropped or added unilateraly
+
+** POST-GAME PHASE **
+
+Trading is suspended
+
+All Players are converted to Points
+    The number of Points for conversion is determined by the scoring rules
+    ** The number of Points for conversion is NOT determined by the last trade price **
+
+The converted Points are added to each Player's Budget
+
+The Players are ranked by Budget and winners announced.

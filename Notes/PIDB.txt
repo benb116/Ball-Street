@@ -1,0 +1,32 @@
+Offer
+    ID
+    ContractID
+    Offeror (UserID)
+    Buy/Sell
+    Yes/No
+    Price
+    DateSubmitted
+
+User
+    ID
+    Balance
+    Shares
+        ContractID
+        Yes/No
+        Price paid
+        Quantity
+        Datebought
+    TransactionHistory
+
+=== READ ONLY ===
+
+Market
+    ID
+    Name
+    Rules
+    Resolution date
+    Contract
+        ID
+        Name
+
+M2C and C2M maps

@@ -1,0 +1,31 @@
+{
+  "name": "ball-street",
+  "version": "1.0.0",
+  "description": "Dummy site",
+  "main": "index.js",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-jwt": "^5.3.1",
+    "helmet": "^3.21.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.7.1",
+    "request": "^2.88.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benb116/Ball-Street.git"
+  },
+  "author": "Ben Bernstein <benb116@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/benb116/Ball-Street/issues"
+  },
+  "homepage": "https://github.com/benb116/Ball-Street#readme"
+}
