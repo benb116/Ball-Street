@@ -2,58 +2,59 @@ const mongoose = require('mongoose');
 const express = require("express");
 const router = express.Router();
 
+const u = require('../../util.js');
+
 // Load User model
 const User = require("../../models/User");
 const Offer = require("../../models/Offer");
 const Market = require("../../models/Market");
 
+const bestPrices = require('../../admin/bestPrices.js');
+
 router.post("/", (req, res) => {
-    const thisoffer = req.body;
-    // Promise.all([userCanTrade(req.user, thisoffer), isContractActive(thisoffer.contractID)])
-    // .then((out) => {
-    //     console.log('e', out);
-    //     findMatchingOffers(thisoffer);
-    // });
-    findMatchingOffers(thisoffer) 
-    .then((offers) => sortOffers(offers, thisoffer))
-    .then((sortedOffers) => initTrade(sortedOffers, thisoffer))
+    const rawOffer = req.body;
+    console.log('incoming offer', rawOffer);
+    const thisoffer = u.validateOffer(rawOffer); // Clean offer input
+    isContractActive(thisoffer.contractID) // Is this offer on an active contract?
+    .then(() => userCanTrade(req.user, thisoffer)) // Does the user have $ or shares?
+    .then((thisoffer) => findMatchingOffers(thisoffer)) // Get all existing offers that could be filled
+    .then((offers) => sortOffers(offers, thisoffer)) // Sort existing offers by price then date
+    .then((sortedOffers) => initTrade(sortedOffers, thisoffer)) // Begin filling orders / create a new one
+    .then((returnInfo) => res.json(returnInfo)) // Send results back to user
+    .then(() => bestPrices(thisoffer.contractID)) // Update the best prices for the contract
     .catch((err) => res.status(403).json({ tradeError: err }));
 });
 
 function userCanTrade(reqUser, offer) {
     console.log('userCanTrade');
-    return User.findOne({ email: reqUser.email }).then(user => {
-        // console.log('user', JSON.striify(user));
-        if (!user) { return new Error('No user found'); }
-        if (offer.buy) {
-            const bal = user.balance;
-            const balLeft = bal - (offer.quantity * offer.price);
-            if (balLeft < 0) { throw new Error('Insufficient funds'); console.log('funds'); }
-        } else {
-            if (offer.yes) {
-                if (user.yesShares[offer.contractID] < offer.quantity) { throw new Error('Insufficient shares'); console.log('shares');}
+    return new Promise((resolve, reject) => {
+        return User.findOne({ email: reqUser.email }).then(user => {
+            if (!user) { return new Error('No user found'); }
+            if (offer.buy) {
+                const bal = user.balance;
+                const balLeft = bal - (offer.quantity * offer.price);
+                if (balLeft < 0) { console.log('ERR: no funds'); reject('Insufficient funds'); }
             } else {
-                if (user.noShares[offer.contractID] < offer.quantity) { throw new Error('Insufficient shares'); console.log('shares');}
+                userShares = (offer.yes ? user.yesShares[offer.contractID] : user.noShares[offer.contractID]);
+                if (userShares < offer.quantity) { console.log('ERR: no shares'); reject('Insufficient shares');}
             }
-        }
-        return true;
+            offer.offeror = reqUser.email;
+            resolve(offer);
+        });
     });
 }
 
 function isContractActive(contractID) {
-    const mID = C2M(contractID);
+    console.log('isContractActive');
+    const mID = u.C2M(contractID);
     return Market.findOne({ marketID: mID }).then((m) => {
-        console.log('market', JSON.stringify(m));
         const cIDs = m.contracts.filter((c) => c.active).map((c) => c.contractID);
-        console.log((cIDs.indexOf(contractID) > -1));
         if (cIDs.indexOf(contractID) == -1) {
             throw new Error('Contract not active');
         }
         return true;
     });
 }
-
-function C2M(cID) { return cID.split('-')[0]; }
 
 function findMatchingOffers(offer) {
     /*
@@ -78,7 +79,7 @@ function findMatchingOffers(offer) {
     W = buy, Z = lower
 
     */
-
+    console.log('findMatchingOffers');
     const baseQuery = {
         contractID: offer.contractID,
         filled: false,
@@ -105,6 +106,7 @@ function findMatchingOffers(offer) {
 }
 
 function sortOffers(offers, thisoffer) {
+    console.log('sortOffers');
     if (!offers.length) { return []; }
     const normOffers = offers.map((o) => {
         o.normPrice = (o.buy == thisoffer.buy ? (100 - o.price) : o.price);
@@ -119,42 +121,32 @@ function sortOffers(offers, thisoffer) {
 }
 
 async function initTrade(offers, thisoffer) {
-    // While thisoffer.quantity > 0
-    // fill offer[0]
-    console.log('yeyeye');
-    console.log(thisoffer.quantity, offers.length);
+    console.log('INIT');
+    let resOut = {
+        filled: [],
+        created: {}
+    };
+
     let offerInd = 0;
-    while (thisoffer.quantity > 0 && offers.length >= offerInd && offers.length) {
+    while (thisoffer.quantity > 0 && offers.length >= offerInd) {
         console.log('looooop');
-        thisoffer = await fillOffer(offers[offerInd], thisoffer);
+        console.log(thisoffer);
+        if (!offers[offerInd]) { break; }
+        const out = await fillOffer(offers[offerInd], thisoffer);
+        thisoffer = out[0];
+        resOut.filled.push(out[1]);
         offerInd++;
     }
-    console.log(thisoffer.quantity, offers.length);
 
-    if (thisoffer.quantity > 0 && offers.length == 0) { return createOffer(thisoffer); }
+    if (thisoffer.quantity > 0) { resOut.created = await createOffer(thisoffer); }
+    console.log('Finished trade');
+    return resOut;
 }
 
-function createOffer(offer) {
-    console.log('eee', offer);
+async function createOffer(offer) {
+    console.log('creating offer', offer);
     const newOffer = new Offer(offer);
-    return newOffer.save();
-}
-
-function collapseShares(sharesArray) {
-    return sharesArray.reduce((acc, cur, i) => {
-        const cID = cur.contractID;
-        acc[cID] = (acc[cID] + cur.quantity) || cur.quantity;
-        return acc;
-    }, {});
-}
-
-function expandShares(sharesObj) {
-    return Object.keys(sharesObj).map((cID) => {
-        return {
-            contractID: cID,
-            quantity: sharesObj[cID]
-        };
-    });
+    return await newOffer.save();
 }
 
 async function fillOffer(eO, tO) {
@@ -164,139 +156,86 @@ async function fillOffer(eO, tO) {
     try {
         const opts = { session, new: true, useFindAndModify: false };
 
-        const minQ = Math.min(eO.quantity, tO.quantity);
-        console.log(minQ);
+        const minQuantity = Math.min(eO.quantity, tO.quantity);
 
         const esign = (-1 + 2 * eO.buy);
         const existUser = await User.findOne({ email: eO.offeror }).session(session);
-        let eY =  collapseShares(existUser.yesShares);
+        let eY =  u.collapseShares(existUser.yesShares);
         eY[eO.contractID] = eY[eO.contractID] || 0;
-        eY[eO.contractID] += (minQ*eO.yes * esign);
-        existUser.yesShares = expandShares(eY);
-        let eN =  collapseShares(existUser.noShares);
+        eY[eO.contractID] += (minQuantity*eO.yes * esign);
+        existUser.yesShares = u.expandShares(eY);
+        let eN =  u.collapseShares(existUser.noShares);
         eN[eO.contractID] = eN[eO.contractID] || 0;
-        eN[eO.contractID] += (minQ*!eO.yes * esign);
-        existUser.noShares = expandShares(eN);
-        existUser.balance = (existUser.balance) += (eO.price*minQ * -esign);
-        console.log(existUser);
-
-        console.log('yeet');
+        eN[eO.contractID] += (minQuantity*!eO.yes * esign);
+        existUser.noShares = u.expandShares(eN);
+        existUser.balance = (existUser.balance) += (eO.price*minQuantity * -esign);
+        console.log('existingUser', existUser);
 
         if (existUser.balance < 0) {
             console.log('aa');
-            throw new Error('Insufficient balance: ');
+            throw new Error('Insufficient balance: existing user');
         }
-        if (Math.min(Object.values(existUser.yesShares)) < 0 || Math.min(Object.values(existUser.yesShares)) < 0) {
+        if (Math.min(Object.values(existUser.yesShares)) < 0 || Math.min(Object.values(existUser.noShares)) < 0) {
             console.log('bb');
-            throw new Error('Insufficient shares: ');
+            throw new Error('Insufficient shares: existing user');
         }
-        console.log('2');
+        console.log('Past exist');
         
-
-        // let tdelta = {
-        //     balance: tO.price*minQ * -tsign,
-        //     yesShares: {},
-        //     noShares: {},
-        // };
-        // tdelta.yesShares[tO.contractID] = minQ*tO.yes * tsign;
-        // tdelta.noShares[tO.contractID] = minQ*tO.yes * tsign;
-
-        // const thisUser = await User.findOneAndUpdate({ email: tO.offeror }, { $inc: tdelta }, opts);
-
-
         const tsign = (-1 + 2 * tO.buy);
         const thisUser = await User.findOne({ email: tO.offeror }).session(session);
-        thisUser.balance = (thisUser.balance) += (tO.price*minQ * -tsign);
-        let tY =  collapseShares(thisUser.yesShares);
+        thisUser.balance = (thisUser.balance) += (tO.price*minQuantity * -tsign);
+        let tY =  u.collapseShares(thisUser.yesShares);
         tY[tO.contractID] = tY[tO.contractID] || 0;
-        tY[tO.contractID] += (minQ*tO.yes * tsign);
-        thisUser.yesShares = expandShares(tY);
-        let tN =  collapseShares(thisUser.noShares);
+        tY[tO.contractID] += (minQuantity*tO.yes * tsign);
+        thisUser.yesShares = u.expandShares(tY);
+        let tN =  u.collapseShares(thisUser.noShares);
         tN[tO.contractID] = tN[tO.contractID] || 0;
-        tN[tO.contractID] += (minQ*!tO.yes * tsign);
-        thisUser.noShares = expandShares(tN);
-        console.log(thisUser);
+        tN[tO.contractID] += (minQuantity*!tO.yes * tsign);
+        thisUser.noShares = u.expandShares(tN);
+        console.log('thisUser', thisUser);
 
-        console.log(3);
         if (thisUser.balance < 0) {
-            throw new Error('Insufficient balance: ');
+            throw new Error('Insufficient balance: this user');
         }
-        if (Math.min(Object.values(thisUser.yesShares)) < 0 || Math.min(Object.values(thisUser.yesShares)) < 0) {
-            throw new Error('Insufficient shares: ');
+        if (Math.min(Object.values(thisUser.yesShares)) < 0 || Math.min(Object.values(thisUser.noShares)) < 0) {
+            throw new Error('Insufficient shares: this user');
         }
 
-        await existUser.save();
-        await thisUser.save();
+        console.log('Past this');
 
-        console.log(4);
-        // modify offerobjs
-        const neweO = await Offer.findByIdAndUpdate(eO._id, { $inc: { quantity: -minQ }, $set: { filled: (eO.quantity - minQ == 0) } }, opts);
+        const neweO = await Offer.findByIdAndUpdate(eO._id, { $inc: { quantity: -minQuantity }, $set: { filled: (eO.quantity - minQuantity == 0) } }, opts);
+        console.log('found offer');
         if (neweO.quantity < 0) {
             throw new Error('Took too many shares');
         }
-        tO.quantity -= minQ;
+        tO.quantity -= minQuantity;
         if (tO.quantity.quantity < 0) {
             throw new Error('Took too many shares');
         }
-        console.log(5);
+        console.log('Updated offer');
+
+        await thisUser.save();
+        console.log('222');
+        await existUser.save();
+
+        const result = {
+            buy: tO.buy,
+            yes: tO.yes,
+            quantity: minQuantity,
+            price: tO.price
+        };
         await session.commitTransaction();
         session.endSession();
-        return tO;
+
+        return [tO, result];
     } catch (error) {
         // If an error occurred, abort the whole transaction and
         // undo any changes that might have happened
-        console.log('eeeerrroooorrr', error);
+        console.log('trade eeeerrroooorrr', error);
         await session.abortTransaction();
         session.endSession();
         throw error; // Rethrow so calling function sees error
     }
 }
-
-// function handleMoneyTransfer(senderAccountId, receiveAccountId, amount) {
-//   // connect the DB and get the User Model
-//   const session = await mongoose.startSession();
-//   session.startTransaction();
-//   try {
-//     // always pass session to find queries when the data is needed for the transaction session
-//     const sender = await User.findOne({ accountId: senderAccountId }).session(session);
-    
-//     // calculate the updated sender balance
-//     sender.balance = $(sender.balance).subtract(amount);
-    
-//     // if funds are insufficient, the transfer cannot be processed
-//     if (sender.balance < 0) {
-//       throw new Error(`User - ${sender.name} has insufficient funds`);
-//     }
-    
-//     // save the sender updated balance
-//     // do not pass the session here
-//     // mongoose uses the associated session here from the find query return
-//     // more about the associated session ($session) later on
-//     await sender.save();
-    
-//     const receiver = await User.findOne({ accountId: receiverAccountId }).session(session);
-    
-//     receive.balance = $(receiver.balance).add(amount);
-    
-//     await receiver.save();
-    
-//     // commit the changes if everything was successful
-//     await session.commitTransaction();
-//   } catch (error) {
-//     // if anything fails above just rollback the changes here
-  
-//     // this will rollback any changes made in the database
-//     await session.abortTransaction();
-    
-//     // logging the error
-//     console.error(error);
-    
-//     // rethrow the error
-//     throw error;
-//   } finally {
-//     // ending the session
-//     session.endSession();
-//   }
-// }
 
 module.exports = router;

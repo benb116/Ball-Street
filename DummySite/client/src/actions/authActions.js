@@ -34,17 +34,16 @@ export const loginUser = userData => dispatch => {
       // Set current user
       dispatch(setCurrentUser(decoded));
     })
-    .then(function() {
-      return axios.post('/api/trade/', {
-          contractID: '1-1',
-          offeror: 'benb611@yahoo.com',
-          buy: true,
-          yes: true,
-          price: 65,
-          quantity: 8,
-      });
-    })
-    .then(console.log)
+    // .then(function() {
+    //   return axios.post('/api/trade/', {
+    //       contractID: '1-1',
+    //       buy: true,
+    //       yes: true,
+    //       price: 36,
+    //       quantity: 10,
+    //   });
+    // })
+    // .then(console.log)
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
