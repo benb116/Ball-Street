@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Market = require("../models/Market");
+const User = require("../models/User");
 // DB Config
 const db = require("../config/keys").mongoURI;
 
@@ -74,5 +75,10 @@ const newInfo = {
     rules: 'te2st'
 };
 
-createMarket(theinfo);
+// createMarket(theinfo);
 // updateMarket(newInfo);
+
+function resetBalances() {
+    User.update({}, {balance: 1000},{multi: true});
+}
+resetBalances()

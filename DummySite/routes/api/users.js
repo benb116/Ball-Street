@@ -55,6 +55,7 @@ router.post("/register", (req, res) => {
 // @access Public
 router.post("/login", (req, res) => {
   // Form validation
+  console.log('22223333');
 
   const { errors, isValid } = validateLoginInput(req.body);
 
@@ -65,7 +66,6 @@ router.post("/login", (req, res) => {
 
   const email = req.body.email;
   const password = req.body.password;
-  User.find().then(console.log);
   // Find user by email
   User.findOne({ email }).then(user => {
     // Check if user exists
