@@ -3,7 +3,6 @@ const Schema = mongoose.Schema;
 
 // Create Schema
 const OfferSchema = new Schema({
-  offerID: { type: String, default: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15), unique: true },
   contractID: { type: String, required: true },
   offeror: { type: String, required: true },
   buy: { type: Boolean, required: true },

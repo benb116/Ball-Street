@@ -1,3 +1,7 @@
 export const GET_ERRORS = "GET_ERRORS";
 export const USER_LOADING = "USER_LOADING";
 export const SET_CURRENT_USER = "SET_CURRENT_USER";
+export const SET_USER_INFO = "SET_USER_INFO";
+export const CLEAR_USER_INFO = "CLEAR_USER_INFO";
+export const UPDATE_USER_INFO = "UPDATE_USER_INFO";
+export const UPDATE_USER_OFFERS = "UPDATE_USER_OFFERS";

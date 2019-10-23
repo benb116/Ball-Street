@@ -7,7 +7,7 @@ const UserSchema = new Schema({
   email: {type: String, required: true, unique: true},
   password: {type: String, required: true},
   date: {type: Date, default: Date.now},
-  balance: {type: Number, default: 1000},
+  balance: {type: Number, default: 100000},
   yesShares: [{
     contractID: {type: String, required: true},
     quantity: {type: Number, required: true},

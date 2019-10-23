@@ -6,7 +6,7 @@ class MarketCard extends Component {
     const mURL = './market/'+market.marketID;
     return (
       <a href={mURL}>
-        <img src={market.imageURL}/>
+        <img src={market.imageURL} alt="Logo"/>
         <div>{market.name}</div>
       </a>
     )

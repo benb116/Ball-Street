@@ -1,4 +1,8 @@
 import React, { Component } from 'react'
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+
+import ContractRow from "./contractRow";
 
 const TableHeader = () => {
   return (
@@ -13,32 +17,54 @@ const TableHeader = () => {
   )
 }
 
-const TableBody = props => {
-  const rows = props.contracts.map((c) => {
-    return (
-      <tr key={c.contractID}>
-        <td><img src={c.imageURL}/>{c.contractName}</td>
-        <td>{c.lastYes}</td>
-        <td>{c.bestLeft}</td>
-        <td>{c.bestRight}</td>
-      </tr>
-    )
-  })
+class TableBody extends Component {
+  state = { contracts: [] }
+  render() {
+    const cs = this.props.contracts;
+    const formC = cs.map((c) => {
+      const Yshares = this.props.userInfo.yesShares.filter((cs) => cs.contractID === c.contractID)[0];
+      const Nshares = this.props.userInfo.noShares.filter((cs) => cs.contractID === c.contractID)[0];
+      c.numY = (Yshares ? Yshares.quantity : null);
+      c.numN = (Nshares ? Nshares.quantity : null);
+      const uOffers = this.props.userInfo.offers.filter(o => o.contractID === c.contractID)
+      c.numBuyOffer = uOffers.filter(o => o.buy).length;
+      c.numSellOffer = uOffers.filter(o => !o.buy).length;
+      return c;
+    })
 
-  return <tbody>{rows}</tbody>
+    const rows = formC.map((c, i) => {
+      return <ContractRow contractInfo={c} key={c.contractID}/>
+    });
+
+    return (<tbody>{rows}</tbody>)
+  } 
 }
 
 class ContractTable extends Component {
   render() {
-    const { contracts } = this.props;
-
+    const { contracts } = (this.props || {});
+    const ui = this.props.userInfo;
+    console.log(this.props.userInfo);
     return (
       <table>
         <TableHeader />
-        <TableBody contracts={contracts} />
+        <TableBody contracts={contracts} userInfo={ui} />
       </table>
     )
   }
 }
 
-export default ContractTable
+ContractTable.propTypes = {
+  auth: PropTypes.object.isRequired,
+  userInfo: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+  userInfo: state.userInfo,  
+});
+
+export default connect(
+  mapStateToProps,
+  null,
+)(ContractTable);

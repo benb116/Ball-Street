@@ -30,7 +30,6 @@ class Dashboard extends Component {
 
   render() {
     const { user } = this.props.auth;
-    console.log(this.state.markets);
     const mcards = this.state.markets.map((m, index) => {
       return (<MarketCard key={index} market={m} />)
     });

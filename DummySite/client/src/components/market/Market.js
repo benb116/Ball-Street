@@ -17,39 +17,38 @@ class Market extends Component {
 
   // Code is invoked after the component is mounted/inserted into the DOM tree.
   componentDidMount() {
-    const { mID } = this.props.match.params
-    const url = '../api/markets/'+mID;
+    const { mID } = this.props.match.params;
+    const murl = '../api/markets/'+mID;
 
-    fetch(url)
+    fetch(murl)
       .then(result => result.json())
       .then(result => {
         this.setState({
           mInfo: result,
-        })
+        });
         return result;
-      })
-      .then(console.log)
+      });
   }
 
   render() {
-    const { user } = this.props.auth;
     const info = this.state.mInfo;
     if (!info.contracts) { info.contracts = []; }
     const pricedC = info.contracts.map((c) => {
       c.lastYes = 56;
       c.bestLeft = 55;
-      c.bestRight = 57;
+      c.bestRight = 47;
       return c;
     });
+
+    const ui = this.props.userInfo;
     return (
       <div style={{ height: "75vh" }} className="container valign-wrapper">
         <div className="row"> 
           <div className="landing-copy col s12 center-align">
-            <img src={info.imageURL}/>
+            <img src={info.imageURL} alt="Logo"/>
             <h3>{info.name}</h3>
             <p>{info.rules}</p>
-            {/*<div>{ccards}</div>*/}
-            <ContractTable contracts={pricedC}/>
+            <ContractTable contracts={pricedC} userInfo={ui}/>
           </div>
         </div>
       </div>
@@ -59,11 +58,13 @@ class Market extends Component {
 
 Market.propTypes = {
   logoutUser: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired
+  auth: PropTypes.object.isRequired,
+  userInfo: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
-  auth: state.auth
+  auth: state.auth,
+  userInfo: state.userInfo,  
 });
 
 export default connect(

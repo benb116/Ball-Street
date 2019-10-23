@@ -7,7 +7,7 @@ const WebSocket = require('ws');
 
 // const redis = require('redis');
 // const subscriber = redis.createClient();
-const accounts = require("./routes/api/accounts");
+const account = require("./routes/api/account");
 const markets = require("./routes/api/markets");
 const offers = require("./routes/api/offers");
 const trade = require("./routes/api/trade");
@@ -40,7 +40,7 @@ require("./config/passport")(passport);
 // Routes
 app.use("/api/users", users);
 app.use("/api/markets", markets);
-app.use("/api/accounts", passport.authenticate('jwt', { session: false }), accounts);
+app.use("/api/account", passport.authenticate('jwt', { session: false }), account);
 app.use("/api/offers", passport.authenticate('jwt', { session: false }), offers);
 app.use("/api/trade", passport.authenticate('jwt', { session: false }), trade);
 

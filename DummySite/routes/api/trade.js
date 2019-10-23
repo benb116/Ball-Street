@@ -22,7 +22,9 @@ router.post("/", (req, res) => {
     .then((sortedOffers) => initTrade(sortedOffers, thisoffer)) // Begin filling orders / create a new one
     .then((returnInfo) => res.json(returnInfo)) // Send results back to user
     .then(() => bestPrices(thisoffer.contractID)) // Update the best prices for the contract
-    .catch((err) => res.status(403).json({ tradeError: err }));
+    .catch((err) => {
+        console.log(err); res.status(403).json({ tradeError: err });
+    });
 });
 
 function userCanTrade(reqUser, offer) {
@@ -100,6 +102,7 @@ function findMatchingOffers(offer) {
         createSharesQuery.price = {$lte: (100 - offer.price)};
         tradeSharesQuery.price = {$gte: (offer.price)};
     }
+    console.log(createSharesQuery, tradeSharesQuery);
     Object.assign(createSharesQuery, baseQuery);
     Object.assign(tradeSharesQuery, baseQuery);
     return Offer.find({$or:[createSharesQuery,tradeSharesQuery]});
@@ -107,6 +110,7 @@ function findMatchingOffers(offer) {
 
 function sortOffers(offers, thisoffer) {
     console.log('sortOffers');
+    // console.log(offers);
     if (!offers.length) { return []; }
     const normOffers = offers.map((o) => {
         o.normPrice = (o.buy == thisoffer.buy ? (100 - o.price) : o.price);
@@ -124,21 +128,27 @@ async function initTrade(offers, thisoffer) {
     console.log('INIT');
     let resOut = {
         filled: [],
-        created: {}
+        created: {},
+        balance: null
     };
 
     let offerInd = 0;
+    let out = [];
+    // console.log(offers);
     while (thisoffer.quantity > 0 && offers.length >= offerInd) {
         console.log('looooop');
         console.log(thisoffer);
         if (!offers[offerInd]) { break; }
-        const out = await fillOffer(offers[offerInd], thisoffer);
+        out = await fillOffer(offers[offerInd], thisoffer);
         thisoffer = out[0];
         resOut.filled.push(out[1]);
         offerInd++;
     }
 
     if (thisoffer.quantity > 0) { resOut.created = await createOffer(thisoffer); }
+    console.log(3);
+    resOut.balance = (out[2] || null);
+
     console.log('Finished trade');
     return resOut;
 }
@@ -146,6 +156,8 @@ async function initTrade(offers, thisoffer) {
 async function createOffer(offer) {
     console.log('creating offer', offer);
     const newOffer = new Offer(offer);
+    console.log(2);
+    console.log(newOffer);
     return await newOffer.save();
 }
 
@@ -169,7 +181,6 @@ async function fillOffer(eO, tO) {
         eN[eO.contractID] += (minQuantity*!eO.yes * esign);
         existUser.noShares = u.expandShares(eN);
         existUser.balance = (existUser.balance) += (eO.price*minQuantity * -esign);
-        console.log('existingUser', existUser);
 
         if (existUser.balance < 0) {
             console.log('aa');
@@ -178,6 +189,10 @@ async function fillOffer(eO, tO) {
         if (Math.min(Object.values(existUser.yesShares)) < 0 || Math.min(Object.values(existUser.noShares)) < 0) {
             console.log('bb');
             throw new Error('Insufficient shares: existing user');
+        }
+        if (eY[eO.contractID] > 0 && eN[eO.contractID]) {
+            console.log('cc');
+            throw new Error('Existing: Own yes and no shares');
         }
         console.log('Past exist');
         
@@ -192,7 +207,6 @@ async function fillOffer(eO, tO) {
         tN[tO.contractID] = tN[tO.contractID] || 0;
         tN[tO.contractID] += (minQuantity*!tO.yes * tsign);
         thisUser.noShares = u.expandShares(tN);
-        console.log('thisUser', thisUser);
 
         if (thisUser.balance < 0) {
             throw new Error('Insufficient balance: this user');
@@ -200,7 +214,10 @@ async function fillOffer(eO, tO) {
         if (Math.min(Object.values(thisUser.yesShares)) < 0 || Math.min(Object.values(thisUser.noShares)) < 0) {
             throw new Error('Insufficient shares: this user');
         }
-
+        if (tY[tO.contractID] > 0 && tN[tO.contractID]) {
+            console.log('cc');
+            throw new Error('This: Own yes and no shares');
+        }
         console.log('Past this');
 
         const neweO = await Offer.findByIdAndUpdate(eO._id, { $inc: { quantity: -minQuantity }, $set: { filled: (eO.quantity - minQuantity == 0) } }, opts);
@@ -219,6 +236,7 @@ async function fillOffer(eO, tO) {
         await existUser.save();
 
         const result = {
+            contractID: tO.contractID,
             buy: tO.buy,
             yes: tO.yes,
             quantity: minQuantity,
@@ -227,7 +245,7 @@ async function fillOffer(eO, tO) {
         await session.commitTransaction();
         session.endSession();
 
-        return [tO, result];
+        return [tO, result, thisUser.balance];
     } catch (error) {
         // If an error occurred, abort the whole transaction and
         // undo any changes that might have happened
