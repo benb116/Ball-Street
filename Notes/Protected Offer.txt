@@ -1,0 +1,15 @@
+ID  Buy     Price   TS      Prot
+
+A   true    10      1234    true
+B   false   12      1300    false
+C   true    8       1350    false
+D   false   1       1400    false
+- Search for opposite offers (sort first by notprotected before protected, then by price, then by date old to new)
+- When D comes in, matches with A and C
+    C is not protected, so D matches with C and processes immediately
+    If C did not exist, D would match with A and start a protected timer
+    When protected timer expires:
+        Does A still exist?
+        Does D still exist?
+        Then get all offers that match A, random match and repeat
+

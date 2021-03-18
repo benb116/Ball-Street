@@ -46,6 +46,21 @@ Users can submit buy and sell offers on Players at arbitrary Prices
         The Seller removes the Player from their team and increases their Budget by the Price
     Offers are public and agreeable to by any other User
 
+    Offer delay protection
+        User A submits buy offer A on player
+        player gets hurt
+        Users B-Z submits sell offers B-Z before offer A can be cancelled
+        With delay, User A can cancel offer before execution.
+        If not cancelled, User B is not favored over User Z
+
+        If an offer doesn't match immediately, add to the order book (offer A)
+        Once a matchable offer (offer B) comes in, start a timer for N seconds.
+        Maybe send a notification if lots of interest comes in?
+        After N seconds, check if offer A is still on the book
+            If not, cancel
+        Get all offers that could match with offer A
+        Pick one at random and match them.
+
 Players can only be traded from one team to another; they cannot be dropped or added unilateraly
 
 ** POST-GAME PHASE **

@@ -1,0 +1,137 @@
+Users
+    ID (pk)
+    Email (unique str)
+    Money (int)
+    other info
+
+Contests
+    ID (pk)
+    Name and info
+    ContestType ID (fk)
+    PrizeType ID (fk)
+
+ContestTypes
+    ID (pk)
+    Name and info
+
+NFLDivisions
+    ID (pk)
+    Name (str)
+    AFC (bool)
+
+NFLTeams
+    ID (pk)
+    Location (str)
+    TeamName (str)
+    Abbrev (str)
+    Division (fk)
+
+NFLPlayers
+    ID (pk)
+    FirstName (str)
+    LastName (str)
+    Number (int)
+    NFLTeam ID (fk)
+    NFLPosition (fk)
+    PrePrice (int)
+    StatPrice (int)
+
+PlayerStats?
+    Player ID (fk)
+    Week # (int)
+    ...
+
+NFLPositions
+    ID (pk)
+    Name (str)
+    Abbrev (str)
+    CanFlex (bool)
+
+TeamPositions
+    ID (pk)
+    Name (str) (e.g. "RB2")
+    NFLPosition ID (fk)
+
+ContestTypeXTeamPositions
+    ContestType ID (fk)
+    TeamPosition ID (fk)
+    Valid (bool)
+
+Entries
+    User ID (fk)
+    Contest ID (fk)
+    PointTotal (int)
+
+Rosters
+    User ID (fk)
+    Contest ID (fk)
+    TeamPosition ID (fk)
+    Player ID (fk)
+
+    CONSTRAINT NoTwins PRIMARY KEY (User ID, Contest ID, Player ID) -- Can't have player in entry twice
+    CREATE UNIQUE NONCLUSTERED INDEX IX_TeamPosition -- Can't have multiple RB2s
+        ON Rosters (User ID, Contest ID, TeamPosition ID);
+
+    -- Constraint: Don't allow a WR to be put into RB1
+    -- Constraint: Don't allow a RB3 in a contest with only RB1, RB2
+
+Offers
+    Offer ID (pk)
+    Time (date)
+    User ID (fk)
+    Contest ID (fk)
+    Player ID (fk)
+    Bid (bool)
+    Price (int)
+    Protected (bool)
+    Filled (bool)
+
+    -- Create index on orders that aren't fully filled
+    CREATE INDEX offers_incomplete ON Offers (Offer ID)
+        WHERE Filled is false;
+    -- Create unique constraint that prevents user from having
+    -- multiple active offers for a player
+    create unique index IX_offers_oneperplayer 
+    on Offers (user_id, contest, nflplayer)
+    where filled = false;
+
+    create table offers (
+        id serial primary key,
+        user_id int references users (id) not null,
+        contest int references contests (id) not null,
+        nflplayer int references nflplayers (id) not null,
+        bid bool not null,
+        price int not null,
+        protected bool default false,
+        filled bool default false,
+        datecreated timestamptz NOT NULL DEFAULT(NOW())
+    );
+
+ProtectedMatches
+    Old Offer ID (fk)
+    New Offer ID (fk)
+    Match time (date)
+
+Trades
+    Time (date)
+    Offer ID Bid (fk)
+    Offer ID Ask (fk)
+    Price (int)
+
+
+
+Redis:
+    Player
+        LastTrade
+        Bid
+        Ask
+        Statline
+        Points
+        ProjectedPoints
+    Contest
+        Leader1UserID
+        Leader1Points
+        Leader2UserID
+        Leader2Points
+        Leader3UserID
+        Leader3Points

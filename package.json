@@ -12,9 +12,13 @@
     "helmet": "^3.21.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.7.1",
-    "request": "^2.88.0"
+    "pg": "^8.5.1",
+    "pg-hstore": "^2.3.3",
+    "request": "^2.88.0",
+    "sequelize": "^6.5.1",
+    "sequelize-auto": "^0.8.1",
+    "sqlite3": "^5.0.2"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
