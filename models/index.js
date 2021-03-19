@@ -12,21 +12,28 @@ const _RosterPosition = require("./rosterPosition");
 const _trade = require("./trade");
 const _user = require("./user");
 
-function initModels(sequelize) {
-    const Contest = _contest(sequelize, DataTypes);
-    const Entry = _entry(sequelize, DataTypes);
-    const NFLDivision = _nfldivision(sequelize, DataTypes);
-    const NFLPlayer = _nflplayer(sequelize, DataTypes);
-    const NFLPosition = _nflposition(sequelize, DataTypes);
-    const NFLTeam = _nflteam(sequelize, DataTypes);
-    const Offer = _offer(sequelize, DataTypes);
-    const ProtectedMatch = _protectedmatch(sequelize, DataTypes);
-    const Roster = _roster(sequelize, DataTypes);
-    const RosterPosition = _RosterPosition(sequelize, DataTypes);
-    const Trade = _trade(sequelize, DataTypes);
-    const User = _user(sequelize, DataTypes);
+function modelf() {
+    this.models = {};
+    return this;
+}
 
-    // Add foreign keys and references
+let out = modelf();
+function initModels(sequelize) {
+    if (sequelize) {
+        const Contest = _contest(sequelize, DataTypes);
+        const Entry = _entry(sequelize, DataTypes);
+        const NFLDivision = _nfldivision(sequelize, DataTypes);
+        const NFLPlayer = _nflplayer(sequelize, DataTypes);
+        const NFLPosition = _nflposition(sequelize, DataTypes);
+        const NFLTeam = _nflteam(sequelize, DataTypes);
+        const Offer = _offer(sequelize, DataTypes);
+        const ProtectedMatch = _protectedmatch(sequelize, DataTypes);
+        const Roster = _roster(sequelize, DataTypes);
+        const RosterPosition = _RosterPosition(sequelize, DataTypes);
+        const Trade = _trade(sequelize, DataTypes);
+        const User = _user(sequelize, DataTypes);
+
+        // Add foreign keys and references
         NFLTeam.belongsTo(NFLDivision, {foreignKey: {allowNull: false}});
         NFLDivision.hasMany(NFLTeam, {foreignKey: {allowNull: false}});
         NFLPlayer.belongsTo(NFLTeam, {foreignKey: {allowNull: false}});
@@ -70,23 +77,22 @@ function initModels(sequelize) {
         Trade.belongsTo(Offer, {as: 'ask', foreignKey: {allowNull: false}});
         Offer.hasOne(Trade, {as: 'ask', foreignKey: {allowNull: false}});
 
-    
-
-    return {
-        Contest,
-        Entry,
-        NFLDivision,
-        NFLPlayer,
-        NFLPosition,
-        NFLTeam,
-        Offer,
-        ProtectedMatch,
-        Roster,
-        RosterPosition,
-        Trade,
-        User,
-    };
+        out.models = {
+            Contest,
+            Entry,
+            NFLDivision,
+            NFLPlayer,
+            NFLPosition,
+            NFLTeam,
+            Offer,
+            ProtectedMatch,
+            Roster,
+            RosterPosition,
+            Trade,
+            User,
+        };
+        return out;
+    } 
 }
-module.exports = initModels;
+module.exports = () => out.models;
 module.exports.initModels = initModels;
-module.exports.default = initModels;
