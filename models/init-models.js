@@ -8,7 +8,7 @@ var _nflteam = require("./nflteam");
 var _offer = require("./offer");
 var _protectedmatch = require("./protectedmatch");
 var _roster = require("./roster");
-var _teamposition = require("./teamposition");
+var _RosterPosition = require("./rosterPosition");
 var _trade = require("./trade");
 var _user = require("./user");
 
@@ -22,7 +22,7 @@ function initModels(sequelize) {
     var Offer = _offer(sequelize, DataTypes);
     var ProtectedMatch = _protectedmatch(sequelize, DataTypes);
     var Roster = _roster(sequelize, DataTypes);
-    var TeamPosition = _teamposition(sequelize, DataTypes);
+    var RosterPosition = _RosterPosition(sequelize, DataTypes);
     var Trade = _trade(sequelize, DataTypes);
     var User = _user(sequelize, DataTypes);
 
@@ -34,8 +34,8 @@ function initModels(sequelize) {
         NFLPlayer.belongsTo(NFLPosition, {foreignKey: {allowNull: false}});
         NFLPosition.hasMany(NFLPlayer, {foreignKey: {allowNull: false}});
 
-        TeamPosition.belongsTo(NFLPosition, {foreignKey: {allowNull: false}});
-        NFLPosition.hasMany(TeamPosition, {foreignKey: {allowNull: false}});
+        RosterPosition.belongsTo(NFLPosition, {foreignKey: {allowNull: false}});
+        NFLPosition.hasMany(RosterPosition, {foreignKey: {allowNull: false}});
 
         // User.belongsToMany(Contest, {through: Entry, foreignKey: {allowNull: false}});
         // Contest.belongsToMany(User, {through: Entry, foreignKey: {allowNull: false}});
@@ -50,8 +50,8 @@ function initModels(sequelize) {
         Contest.hasMany(Roster, {foreignKey: {allowNull: false}});
         Roster.belongsTo(NFLPlayer, {foreignKey: {allowNull: false}});
         NFLPlayer.hasMany(Roster, {foreignKey: {allowNull: false}});
-        Roster.belongsTo(TeamPosition, {foreignKey: {allowNull: false}});
-        TeamPosition.hasMany(Roster, {foreignKey: {allowNull: false}});
+        Roster.belongsTo(RosterPosition, {foreignKey: {allowNull: false}});
+        RosterPosition.hasMany(Roster, {foreignKey: {allowNull: false}});
 
         Offer.belongsTo(User, {foreignKey: {allowNull: false}});
         User.hasMany(Offer, {foreignKey: {allowNull: false}});
@@ -82,7 +82,7 @@ function initModels(sequelize) {
         Offer,
         ProtectedMatch,
         Roster,
-        TeamPosition,
+        RosterPosition,
         Trade,
         User,
     };

@@ -47,14 +47,14 @@ NFLPositions
     Abbrev (str)
     CanFlex (bool)
 
-TeamPositions
+RosterPositions
     ID (pk)
     Name (str) (e.g. "RB2")
     NFLPosition ID (fk)
 
-ContestTypeXTeamPositions
+ContestTypeXRosterPositions
     ContestType ID (fk)
-    TeamPosition ID (fk)
+    RosterPosition ID (fk)
     Valid (bool)
 
 Entries
@@ -65,12 +65,12 @@ Entries
 Rosters
     User ID (fk)
     Contest ID (fk)
-    TeamPosition ID (fk)
+    RosterPosition ID (fk)
     Player ID (fk)
 
     CONSTRAINT NoTwins PRIMARY KEY (User ID, Contest ID, Player ID) -- Can't have player in entry twice
-    CREATE UNIQUE NONCLUSTERED INDEX IX_TeamPosition -- Can't have multiple RB2s
-        ON Rosters (User ID, Contest ID, TeamPosition ID);
+    CREATE UNIQUE NONCLUSTERED INDEX IX_RosterPosition -- Can't have multiple RB2s
+        ON Rosters (User ID, Contest ID, RosterPosition ID);
 
     -- Constraint: Don't allow a WR to be put into RB1
     -- Constraint: Don't allow a RB3 in a contest with only RB1, RB2

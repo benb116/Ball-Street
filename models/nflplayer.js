@@ -26,6 +26,14 @@ module.exports = function(sequelize, DataTypes) {
     statprice: {
       type: DataTypes.INTEGER,
       allowNull: true
+    },
+    NFLPositionId: {
+      type: DataTypes.INTEGER,
+      validate: {
+        isNotFlex(value) {
+          if (!value || value < 0) { throw new Error('Cannot have a NFLPlayer as a flex'); }
+        }
+      }
     }
   }, {sequelize});
 };
