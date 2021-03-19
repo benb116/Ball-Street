@@ -1,8 +1,12 @@
 const { Sequelize, Op, Model, DataTypes } = require("sequelize");
+const util = require('../util');
 
 async function PopulateDB(sequelize) {
     await sequelize.sync({ force: true });
 
+    const { NFLPosition, RosterPosition, NFLDivision, NFLTeam, NFLPlayer, Contest, User } = sequelize.models;
+
+    // Define NFL positions
     const nflpos = {
         'FLEX': {id: 0, canflex: false},
         'QB': {id: 1, canflex: false},
@@ -12,12 +16,12 @@ async function PopulateDB(sequelize) {
         'K': {id: 5, canflex: false},
         'DEF': {id: 6, canflex: false},
     };
-
     const nflposrecords = Object.keys(nflpos).map(p => {
         return {...nflpos[p], name: p};
     });
-    await sequelize.models.NFLPosition.bulkCreate(nflposrecords);    
+    await NFLPosition.bulkCreate(nflposrecords);    
 
+    // Define roster positions
     const rosterpos = {
         'QB1': 'QB',
         'RB1': 'RB',
@@ -29,12 +33,12 @@ async function PopulateDB(sequelize) {
         'K1': 'K',
         'DEF1': 'DEF'
     };
-
     const rosposrecords = Object.keys(rosterpos).map(p => {
         return {name: p, NFLPositionId: nflpos[rosterpos[p]].id};
     });
-    const row = await sequelize.models.RosterPosition.bulkCreate(rosposrecords);
+    const row = await RosterPosition.bulkCreate(rosposrecords);
 
+    // Define NFL divisions
     const divs = {
         'NFC East': {id: 1, isafc: false},
         'NFC West': {id: 2, isafc: false},
@@ -45,12 +49,12 @@ async function PopulateDB(sequelize) {
         'AFC North': {id: 7, isafc: true},
         'AFC South': {id: 8, isafc: true},
     };
-
     const divrecords = Object.keys(divs).map(d => {
         return {...divs[d], name: d};
     });
-    await sequelize.models.NFLDivision.bulkCreate(divrecords);    
+    await NFLDivision.bulkCreate(divrecords);    
 
+    // Define NFL teams
     const teams = {
         "ARI": {location: "Arizona", name: "Cardinals", id: 1, division: "NFC West", fullname: "Arizona Cardinals"},
         "ATL": {location: "Atlanta", name: "Falcons", id: 2, division: "NFC South", fullname: "Atlanta Falcons"},
@@ -91,17 +95,16 @@ async function PopulateDB(sequelize) {
         acc[cur] = teamabrs[i];
         return acc;
     }, {});
-
     const teamrecords = Object.keys(teams).map(t => {
         let obj = {...teams[t], abr: t, NFLDivisionId: divs[teams[t].division].id};
         delete obj.division;
         delete obj.fullname;
         return obj;
     });
-    await sequelize.models.NFLTeam.bulkCreate(teamrecords);    
+    await NFLTeam.bulkCreate(teamrecords);    
 
+    // Define NFL players
     const players = require('./nflplayers.json');
-
     let playerrecords = players.map(p => {
         let obj = {};
         obj.id = p.player_id;
@@ -123,10 +126,32 @@ async function PopulateDB(sequelize) {
 
         return obj;
     });
+    await NFLPlayer.bulkCreate(playerrecords);
+    await NFLPlayer.bulkCreate(teamdefrecords);
 
-    await sequelize.models.NFLPlayer.bulkCreate(playerrecords);
-    await sequelize.models.NFLPlayer.bulkCreate(teamdefrecords);
+    // Define existing contest
+    const con = {
+        name: 'Ball Street Big One',
+        nflweek: 1
+    };
+    await Contest.bulkCreate([con]);
 
+    // // Define Users
+    // const usrs = [ 'email1@gmail.com', 'email2@gmail.com', 'email3@gmail.com' ];
+    // await User.bulkCreate(usrs.map(u => {
+    //     return {email: u};
+    // }));
+
+
+    // User.findAll().then(console.log);
+
+    const NYteams = await sequelize.models.NFLTeam.findOne({
+        where: {
+            location: { [Op.startsWith]: 'New York' },
+        },
+        attributes: ['name', 'abr']    
+    }).then(util.dv);
+    console.log(NYteams);
 }
 
 module.exports = PopulateDB;
