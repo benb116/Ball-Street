@@ -1,30 +1,30 @@
-var DataTypes = require("sequelize").DataTypes;
-var _contest = require("./contest");
-var _entry = require("./entry");
-var _nfldivision = require("./nfldivision");
-var _nflplayer = require("./nflplayer");
-var _nflposition = require("./nflposition");
-var _nflteam = require("./nflteam");
-var _offer = require("./offer");
-var _protectedmatch = require("./protectedmatch");
-var _roster = require("./roster");
-var _RosterPosition = require("./rosterPosition");
-var _trade = require("./trade");
-var _user = require("./user");
+const DataTypes = require("sequelize").DataTypes;
+const _contest = require("./contest");
+const _entry = require("./entry");
+const _nfldivision = require("./nfldivision");
+const _nflplayer = require("./nflplayer");
+const _nflposition = require("./nflposition");
+const _nflteam = require("./nflteam");
+const _offer = require("./offer");
+const _protectedmatch = require("./protectedmatch");
+const _roster = require("./roster");
+const _RosterPosition = require("./rosterPosition");
+const _trade = require("./trade");
+const _user = require("./user");
 
 function initModels(sequelize) {
-    var Contest = _contest(sequelize, DataTypes);
-    var Entry = _entry(sequelize, DataTypes);
-    var NFLDivision = _nfldivision(sequelize, DataTypes);
-    var NFLPlayer = _nflplayer(sequelize, DataTypes);
-    var NFLPosition = _nflposition(sequelize, DataTypes);
-    var NFLTeam = _nflteam(sequelize, DataTypes);
-    var Offer = _offer(sequelize, DataTypes);
-    var ProtectedMatch = _protectedmatch(sequelize, DataTypes);
-    var Roster = _roster(sequelize, DataTypes);
-    var RosterPosition = _RosterPosition(sequelize, DataTypes);
-    var Trade = _trade(sequelize, DataTypes);
-    var User = _user(sequelize, DataTypes);
+    const Contest = _contest(sequelize, DataTypes);
+    const Entry = _entry(sequelize, DataTypes);
+    const NFLDivision = _nfldivision(sequelize, DataTypes);
+    const NFLPlayer = _nflplayer(sequelize, DataTypes);
+    const NFLPosition = _nflposition(sequelize, DataTypes);
+    const NFLTeam = _nflteam(sequelize, DataTypes);
+    const Offer = _offer(sequelize, DataTypes);
+    const ProtectedMatch = _protectedmatch(sequelize, DataTypes);
+    const Roster = _roster(sequelize, DataTypes);
+    const RosterPosition = _RosterPosition(sequelize, DataTypes);
+    const Trade = _trade(sequelize, DataTypes);
+    const User = _user(sequelize, DataTypes);
 
     // Add foreign keys and references
         NFLTeam.belongsTo(NFLDivision, {foreignKey: {allowNull: false}});

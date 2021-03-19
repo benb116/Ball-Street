@@ -2,18 +2,13 @@ const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('NFLPlayer', {
     id: {
-      autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    firstname: {
+    name: {
       type: DataTypes.STRING,
-      allowNull: true
-    },
-    lastname: {
-      type: DataTypes.STRING,
-      allowNull: true
+      allowNull: false
     },
     jersey: {
       type: DataTypes.INTEGER,

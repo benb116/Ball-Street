@@ -16,7 +16,6 @@ module.exports = function(sequelize, DataTypes) {
         // Make sure that we don't allow a WR in a RB3 spot
         // And make sure that we don't allow a QB in a FLEX
         async isCorrectPosition(value, next) {
-
           const res1 = await sequelize.models.NFLPlayer.findById(value);
           const res2 = await sequelize.models.RosterPosition.findById(this.RosterPositionId);
 
@@ -26,7 +25,7 @@ module.exports = function(sequelize, DataTypes) {
           if (playerType === rosterType) {
             next();
           } else if (rosterType === 0) {
-            const res3 = await sequelize.models.NFLPosition.findById(playerType)
+            const res3 = await sequelize.models.NFLPosition.findById(playerType);
             if (res3.canflex) {
               next();
             } else {
@@ -35,28 +34,6 @@ module.exports = function(sequelize, DataTypes) {
           } else {
             throw new Error('Trying to put a player in an incorrect position!');    
           }
-
-          // Promise.all([
-          //   sequelize.models.NFLPlayer.findById(value),
-          //   sequelize.models.RosterPosition.findById(this.RosterPositionId)
-          // ]).then(results => {
-          //   const playerType = results[0].NFLPositionId;
-          //   const rosterType = results[1].NFLPositionId;
-          //   if (playerType === rosterType) {
-          //     next();
-          //   } else if (rosterType === 0) {
-          //     sequelize.models.NFLPosition.findById(playerType)
-          //     .then(NFLPositionData => {
-          //       if (NFLPositionData.canflex) {
-          //         next();
-          //       } else {
-          //         throw new Error('Trying to put a non-flex player in a flex position!');
-          //       }
-          //     });
-          //   } else {
-          //     throw new Error('Trying to put a player in an incorrect position!');    
-          //   }
-          // });
         }
       }
     },
