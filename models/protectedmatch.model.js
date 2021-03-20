@@ -3,9 +3,13 @@ module.exports = function(sequelize, DataTypes) {
   return sequelize.define('ProtectedMatch', {
     existingId: {
       type: DataTypes.UUID,
+      references: { model: 'Offers' },
+      allowNull: false,
     },
     newId: {
       type: DataTypes.UUID,
+      references: { model: 'Offers' },
+      allowNull: false,
     },
   }, {
       sequelize,

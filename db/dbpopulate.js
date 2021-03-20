@@ -3,11 +3,11 @@ const u = require('../util');
 
 async function PopulateDB(sequelize) {
     await sequelize.sync({ force: true });
-    const { NFLPosition, RosterPosition, NFLDivision, NFLTeam, NFLPlayer, Contest, User, Entry } = require('../models')();
+    const { NFLPosition, RosterPosition, NFLDivision, NFLTeam, NFLPlayer, Contest, User, Entry } = sequelize.models;
 
     // Define NFL positions
     const nflpos = {
-        'FLEX': {id: 0, canflex: false},
+        'FLEX': {id: 99, canflex: false},
         'QB': {id: 1, canflex: false},
         'RB': {id: 2, canflex: true},
         'WR': {id: 3, canflex: true},
@@ -18,7 +18,8 @@ async function PopulateDB(sequelize) {
     const nflposrecords = Object.keys(nflpos).map(p => {
         return {...nflpos[p], name: p};
     });
-    await NFLPosition.bulkCreate(nflposrecords);    
+    await NFLPosition.bulkCreate(nflposrecords);  
+    // NFLPosition.findAll().then(console.log);  
 
     // Define roster positions
     const rosterpos = {
@@ -29,6 +30,7 @@ async function PopulateDB(sequelize) {
         'WR2': 'WR',
         'TE1': 'TE',
         'FLEX1': 'FLEX',
+        'FLEX2': 'FLEX',
         'K1': 'K',
         'DEF1': 'DEF'
     };
@@ -36,6 +38,7 @@ async function PopulateDB(sequelize) {
         return {name: p, NFLPositionId: nflpos[rosterpos[p]].id};
     });
     const row = await RosterPosition.bulkCreate(rosposrecords);
+    RosterPosition.findAll().then(console.log);  
 
     // Define NFL divisions
     const divs = {
@@ -133,11 +136,15 @@ async function PopulateDB(sequelize) {
         where: { name: 'Jalen Hurts'},
         attributes: ['id']
     }).then(data => data.dataValues.id);
-    await NFLPlayer.update({ preprice: 1700 }, { where: { id: hurtsID } });
+    await NFLPlayer.update({ preprice: 17000 }, { where: { id: hurtsID } });
 
-    const aaa = await NFLPlayer.findByPk(hurtsID);
-    console.log(aaa);
-    console.log(await aaa.getNFLPosition());
+    // Give Ezekiel Elliott a preprice
+    const EllID = await NFLPlayer.findOne({
+        where: { name: 'Ezekiel Elliott'},
+        attributes: ['id']
+    }).then(data => data.dataValues.id);
+    await NFLPlayer.update({ preprice: 1700 }, { where: { id: EllID } });
+
 
     // Define existing contest
     const con = {

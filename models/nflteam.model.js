@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('NFLTeam', {
     id: {
@@ -25,7 +26,9 @@ module.exports = function(sequelize, DataTypes) {
       unique: true
     },
     NFLDivisionId: {
-      type: DataTypes.INTEGER
+      type: DataTypes.INTEGER,
+      references: { model: 'NFLDivisions' },
+      allowNull: false,
     }
   }, {sequelize});
 };

@@ -1,19 +1,10 @@
-const { Sequelize, Transaction } = require('sequelize');
-
-const dbOptions = {
-    // logging: false,
-    // isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE
-};
-
-const sequelize = new Sequelize('sqlite::memory:', dbOptions); // Example for sqlite
-// const sequelize = new Sequelize('postgres://localhost:5432/Ben', dbOptions); // Example for postgres
-
-const models = require('./models/').initModels(sequelize);
+const sequelize = require('./db');
+const models = require('./models');
 
 (async () => {
     await require('./db/dbpopulate')(sequelize);
 
-    const controllers = require('./controllers/')(sequelize);
+    const controllers = require('./controllers/');
 
     // controllers.entry.getEntry({param: {entryID: 2}});
     // controllers.entry.createEntry({
@@ -21,14 +12,28 @@ const models = require('./models/').initModels(sequelize);
     //     param: {contestID: 1}
     // });
 
-    controllers.trade.preTradeAdd({
-        user: {id: 1},
+    console.log('begin');
+
+    // await controllers.trade.preTradeAdd({
+    //     user: {id: 1},
+    //     param: {
+    //         contestID: 1,
+    //         nflplayerID: 40117,
+    //         rosterpositionID: 1
+    //     }
+    // });
+
+    await controllers.trade.preTradeAdd({
+        user: {id: 2},
         param: {
             contestID: 1,
-            nflplayerID: 40117,
-            rosterpositionID: 1
+            nflplayerID: 17923,
+            rosterpositionID: 8
         }
-    }).then(console.log);
+    }).then(console.log).then(() => {
+        controllers.entry.getEntry({param: {entryID: 2}}).then(console.log);
+    });
+
 
 })();
 // const { NFLPosition, RosterPosition, NFLDivision, NFLTeam, NFLPlayer, Contest, User } = models;

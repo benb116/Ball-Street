@@ -1,10 +1,8 @@
-module.exports = function(sq) {
-    const roster = require('./roster');
-    const entry = require('./entry');
-    const trade = require('./trade')(sq);
-    return {
-        roster,
-        entry,
-        trade
-    };
+const roster = require('./roster.controller');
+const entry = require('./entry.controller');
+const trade = require('./trade.controller');
+module.exports = {
+    roster,
+    entry,
+    trade
 };

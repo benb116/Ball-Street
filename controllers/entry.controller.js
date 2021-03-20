@@ -4,7 +4,7 @@
     // Getting info about a user's entries across contests
     // Getting info about all entries in a contest
 
-const {Entry} = require('../models')();
+const { Entry } = require('../models');
 const u = require('../util');
 
 module.exports = {

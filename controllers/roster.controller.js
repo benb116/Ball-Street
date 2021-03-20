@@ -2,7 +2,7 @@
     // Getting info about a user's roster
     // Reordering a team
 
-const {Roster} = require('../models')();
+const {Roster} = require('../models');
 const u = require('../util');
 
 module.exports = {

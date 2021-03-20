@@ -10,6 +10,16 @@ module.exports = function(sequelize, DataTypes) {
     price: {
       type: DataTypes.INTEGER,
       allowNull: false
-    }
+    },
+    bidId: {
+      type: DataTypes.UUID,
+      references: { model: 'Offers' },
+      allowNull: false,
+    },
+    askId: {
+      type: DataTypes.UUID,
+      references: { model: 'Offers' },
+      allowNull: false,
+    },
   }, {sequelize});
 };

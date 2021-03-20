@@ -8,9 +8,13 @@ module.exports = function(sequelize, DataTypes) {
     },
     UserId: {
       type: DataTypes.INTEGER,
+      references: { model: 'Users' },
+      allowNull: false,
     },
     ContestId: {
       type: DataTypes.INTEGER,
+      references: { model: 'Contests' },
+      allowNull: false,
     },
   }, {
       sequelize,
