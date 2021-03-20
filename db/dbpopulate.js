@@ -1,10 +1,9 @@
 const { Sequelize, Op, Model, DataTypes } = require("sequelize");
-const util = require('../util');
+const u = require('../util');
 
 async function PopulateDB(sequelize) {
     await sequelize.sync({ force: true });
-
-    const { NFLPosition, RosterPosition, NFLDivision, NFLTeam, NFLPlayer, Contest, User } = sequelize.models;
+    const { NFLPosition, RosterPosition, NFLDivision, NFLTeam, NFLPlayer, Contest, User, Entry } = require('../models')();
 
     // Define NFL positions
     const nflpos = {
@@ -109,8 +108,8 @@ async function PopulateDB(sequelize) {
         let obj = {};
         obj.id = p.player_id;
         obj.name = p.name;
-        const posind = Object.keys(nflpos).indexOf(p.position) + 1;
-        if (!posind) { return null; }
+        const posind = Object.keys(nflpos).indexOf(p.position);
+        if (posind === -1) { return null; }
         obj.NFLPositionId = posind;
         obj.jersey = p.jersey;
         obj.NFLTeamId = teams[teamfullnameMap[p.team]].id;
@@ -129,29 +128,52 @@ async function PopulateDB(sequelize) {
     await NFLPlayer.bulkCreate(playerrecords);
     await NFLPlayer.bulkCreate(teamdefrecords);
 
+    // Give Jalen Hurts a preprice
+    const hurtsID = await NFLPlayer.findOne({
+        where: { name: 'Jalen Hurts'},
+        attributes: ['id']
+    }).then(data => data.dataValues.id);
+    await NFLPlayer.update({ preprice: 1700 }, { where: { id: hurtsID } });
+
+    const aaa = await NFLPlayer.findByPk(hurtsID);
+    console.log(aaa);
+    console.log(await aaa.getNFLPosition());
+
     // Define existing contest
     const con = {
+        id: 1,
         name: 'Ball Street Big One',
         nflweek: 1
     };
     await Contest.bulkCreate([con]);
 
-    // // Define Users
-    // const usrs = [ 'email1@gmail.com', 'email2@gmail.com', 'email3@gmail.com' ];
-    // await User.bulkCreate(usrs.map(u => {
-    //     return {email: u};
-    // }));
 
+    // Define Users
+    const usrs = [ 'email1@gmail.com', 'email2@gmail.com', 'email3@gmail.com' ];
+    await User.bulkCreate(usrs.map(u => {
+        return {email: u};
+    }));
+
+    await Entry.bulkCreate([
+        {
+            UserId: 1,
+            ContestId: 1
+        },
+        {
+            UserId: 2,
+            ContestId: 1
+        }
+    ]);
 
     // User.findAll().then(console.log);
 
-    const NYteams = await sequelize.models.NFLTeam.findOne({
-        where: {
-            location: { [Op.startsWith]: 'New York' },
-        },
-        attributes: ['name', 'abr']    
-    }).then(util.dv);
-    console.log(NYteams);
+    // const NYteams = await sequelize.models.NFLTeam.findOne({
+    //     where: {
+    //         location: { [Op.startsWith]: 'New York' },
+    //     },
+    //     attributes: ['name', 'abr']    
+    // }).then(util.dv);
+    // console.log(NYteams);
 }
 
 module.exports = PopulateDB;

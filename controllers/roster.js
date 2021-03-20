@@ -1,19 +1,17 @@
 // Roster controller covers:
-    // Adding and dropping pregame
     // Getting info about a user's roster
     // Reordering a team
 
 const {Roster} = require('../models')();
+const u = require('../util');
 
 module.exports = {
     getUserRoster(req, res) {
-        const userID = req.user.id;
-        const contestID = req.param.contest;
-        return Roster.findAll({
+        return Entry.findOne({
             where: {
-                UserId: userID,
-                ContestId: contestID
+                UserId: req.user.id,
+                ContestId: req.param.contestID
             }
-        }).then(console.log);
-    }
+        }).then(u.dv).then(console.log).catch(console.error);
+    },
 };

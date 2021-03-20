@@ -1,9 +1,8 @@
 let out = {};
 
 out.dv = function(input) {
-    if (input.length) {
-        return input.map(out.dv);
-    }
+    if (!input) { return input; }
+    if (input.length) { return input.map(out.dv); }
     return input.toJSON();
 };
 

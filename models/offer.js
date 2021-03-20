@@ -25,6 +25,11 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       defaultValue: false
     },
+    cancelled: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+      defaultValue: false
+    },
     UserId: {
       type: DataTypes.INTEGER,
     },
@@ -42,7 +47,8 @@ module.exports = function(sequelize, DataTypes) {
         name: 'IX_Offer-Unfilled',
         fields: ['id'],
         where: {
-          filled: false
+          filled: false,
+          cancelled: false
         }
       },
       {

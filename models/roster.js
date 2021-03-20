@@ -16,17 +16,14 @@ module.exports = function(sequelize, DataTypes) {
         // Make sure that we don't allow a WR in a RB3 spot
         // And make sure that we don't allow a QB in a FLEX
         async isCorrectPosition(value, next) {
-          const res1 = await sequelize.models.NFLPlayer.findById(value);
-          const res2 = await sequelize.models.RosterPosition.findById(this.RosterPositionId);
-
-          const playerType = res1.NFLPositionId;
-          const rosterType = res2.NFLPositionId;
+          const playerType = await sequelize.models.NFLPlayer.findByPk(value).then(d => d.dataValues.NFLPositionId);
+          const rosterType = await sequelize.models.RosterPosition.findByPk(this.RosterPositionId).then(d => d.dataValues.NFLPositionId);
 
           if (playerType === rosterType) {
             next();
           } else if (rosterType === 0) {
-            const res3 = await sequelize.models.NFLPosition.findById(playerType);
-            if (res3.canflex) {
+            const canflex = await sequelize.models.NFLPosition.findByPk(playerType).then(d => d.dataValues.canflex);
+            if (canflex) {
               next();
             } else {
               throw new Error('Trying to put a non-flex player in a flex position!');
