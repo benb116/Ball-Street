@@ -4,21 +4,12 @@ module.exports = function(sequelize, DataTypes) {
     existingId: {
       type: DataTypes.UUID,
       references: { model: 'Offers' },
-      allowNull: false,
+      primaryKey: true,
     },
     newId: {
       type: DataTypes.UUID,
       references: { model: 'Offers' },
-      allowNull: false,
+      primaryKey: true,
     },
-  }, {
-      sequelize,
-      indexes: [
-        {
-          name: 'IX_ProtectedMatch-Offer_Offer',
-          unique: true,
-          fields: ['existingId', 'newId'],
-        }
-      ]
-  });
+  }, { sequelize });
 };

@@ -4,22 +4,22 @@ module.exports = function(sequelize, DataTypes) {
     UserId: {
       type: DataTypes.INTEGER,
       references: { model: 'Users' },
-      allowNull: false,
+      primaryKey: true,
     },
     ContestId: {
       type: DataTypes.INTEGER,
       references: { model: 'Contests' },
-      allowNull: false,
+      primaryKey: true,
     },
     RosterPositionId: {
       type: DataTypes.INTEGER,
       references: { model: 'RosterPositions' },
-      allowNull: false,
+      primaryKey: true,
     },
     NFLPlayerId: {
       type: DataTypes.INTEGER,
       references: { model: 'NFLPlayers' },
-      allowNull: false,
+      primaryKey: true,
       validate: {
         // Make sure that we don't allow a WR in a RB3 spot
         // And make sure that we don't allow a QB in a FLEX

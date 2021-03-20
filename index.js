@@ -39,8 +39,5 @@ const models = require('./models');
     .then(console.log)
     .catch(console.error);
     // });
-
-
-
 })();
 // const { NFLPosition, RosterPosition, NFLDivision, NFLTeam, NFLPlayer, Contest, User } = models;

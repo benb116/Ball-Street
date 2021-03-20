@@ -9,21 +9,12 @@ module.exports = function(sequelize, DataTypes) {
     UserId: {
       type: DataTypes.INTEGER,
       references: { model: 'Users' },
-      allowNull: false,
+      primaryKey: true,
     },
     ContestId: {
       type: DataTypes.INTEGER,
       references: { model: 'Contests' },
-      allowNull: false,
+      primaryKey: true,
     },
-  }, {
-      sequelize,
-      indexes: [
-        {
-          name: 'IX_Entry-User_Contest',
-          unique: true,
-          fields: ['UserId', 'ContestId'],
-        }
-      ]
-  });
+  }, { sequelize });
 };

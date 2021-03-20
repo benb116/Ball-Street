@@ -4,7 +4,8 @@ module.exports = function(sequelize, DataTypes) {
   return sequelize.define('RosterPosition', {
     id: {
       type: DataTypes.INTEGER,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true,
     },
     name: {
       type: DataTypes.STRING,
