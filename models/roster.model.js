@@ -24,8 +24,6 @@ module.exports = function(sequelize, DataTypes) {
         // Make sure that we don't allow a WR in a RB3 spot
         // And make sure that we don't allow a QB in a FLEX
         async isCorrectPosition(value, next) {
-          console.log(value);
-          console.log(this.RosterPositionId);
           const playerType = await sequelize.models.NFLPlayer.findByPk(value).then(d => d.dataValues.NFLPositionId);
           const rosterType = await sequelize.models.RosterPosition.findByPk(this.RosterPositionId).then(d => d.dataValues.NFLPositionId);
 

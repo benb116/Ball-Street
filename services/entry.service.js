@@ -1,4 +1,4 @@
-// Entry controller covers:
+// Entry service covers:
     // Creating and deleting an entry
     // Getting info about a specific entry
     // Getting info about a user's entries across contests
@@ -8,7 +8,7 @@ const { Entry } = require('../models');
 const u = require('../util');
 
 module.exports = {
-    getEntry(req, res) {
+    getEntry(req) {
         let out;
         if (req.param.entryID) {
             out = Entry.findByPk(req.param.entryID);
@@ -22,7 +22,7 @@ module.exports = {
         }
         return out.then(u.dv).then(console.log).catch(console.error);
     },
-    createEntry(req, res) {
+    createEntry(req) {
         let obj = {};
         obj.UserId = req.user.id;
         obj.ContestId = req.param.contestID;

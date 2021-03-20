@@ -38,7 +38,7 @@ async function PopulateDB(sequelize) {
         return {name: p, NFLPositionId: nflpos[rosterpos[p]].id};
     });
     const row = await RosterPosition.bulkCreate(rosposrecords);
-    RosterPosition.findAll().then(console.log);  
+    // RosterPosition.findAll().then(console.log);  
 
     // Define NFL divisions
     const divs = {

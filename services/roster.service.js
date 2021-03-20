@@ -1,4 +1,4 @@
-// Roster controller covers:
+// Roster service covers:
     // Getting info about a user's roster
     // Reordering a team
 
@@ -6,7 +6,7 @@ const {Roster} = require('../models');
 const u = require('../util');
 
 module.exports = {
-    getUserRoster(req, res) {
+    getUserRoster(req) {
         return Entry.findOne({
             where: {
                 UserId: req.user.id,
