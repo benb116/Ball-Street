@@ -5,7 +5,6 @@ const { Transaction } = require('sequelize');
 const sequelize = require('../db');
 const { Roster, Entry, NFLPlayer, RosterPosition, Offer, ProtectedMatch, Trade } = require('../models');
 const u = require('../util');
-
 const isoOption = {
     // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
 };
@@ -38,8 +37,8 @@ function preTradeAdd(req) {
         console.log("PDATA", playerdata);
 
         // Checks
-        if (!playerdata.preprice) { return new Error("Player has no price"); }
-        if (playerdata.preprice > pts) { return new Error("User doesn't have enough points"); }
+        if (!playerdata.preprice) { throw new Error("Player has no price"); }
+        if (playerdata.preprice > pts) { throw new Error("User doesn't have enough points"); }
           
         if (req.param.rosterpositionID >= 0) {
             // Try to add to roster
@@ -51,6 +50,9 @@ function preTradeAdd(req) {
                 RosterPositionId: req.param.rosterpositionID
             }, {
                 transaction: t,
+            })
+            .catch(err => {
+                throw new Error("Roster create error: " + err.original.detail);
             });
 
             // Deduct cost from points
@@ -59,7 +61,7 @@ function preTradeAdd(req) {
 
             return u.dv([newroster, theentry]);
         } else {
-            return new Error("Select a roster position to put this player into");
+            throw new Error("Select a roster position to put this player into");
         }
     });
 }
@@ -73,13 +75,12 @@ function preTradeDrop(req) {
                 UserId: req.user.id,
                 ContestId: req.param.contestID,
                 NFLPlayerId: req.param.nflplayerID,
-                RosterPositionId: req.param.rosterpositionID
             }
         }, {
             transaction: t,
             lock: t.LOCK.UPDATE
         });
-        if (!oldroster) { return new Error("That player wasn't in that roster position"); }
+        if (!oldroster) { throw new Error("That player wasn't on the roster"); }
 
         // How much to add to point total
         const preprice = await NFLPlayer.findByPk(req.param.nflplayerID, {

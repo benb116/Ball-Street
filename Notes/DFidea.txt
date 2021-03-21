@@ -68,6 +68,8 @@ Users can submit buy and sell offers on Players at arbitrary Prices
     Linked offers?
         User A wants to buy Player 1 but has no room on Roster
         User A submits linked offer A1 to immediately sell Player 2 at best price if A1 is filled
+            Still requires User to reserve the points to spend
+            Reserve full price for Player 1? How much will sale of Player 2 bring in?
 
 Players can only be traded from one team to another; they cannot be dropped or added unilateraly
 

@@ -2,7 +2,7 @@ const sequelize = require('./db');
 const models = require('./models');
 
 (async () => {
-    await require('./db/dbpopulate')(sequelize);
+    // await require('./db/dbpopulate')(sequelize);
 
     const services = require('./services/');
 
@@ -12,9 +12,7 @@ const models = require('./models');
     //     param: {contestID: 1}
     // });
 
-    console.log('begin');
-
-    await services.trade.preTradeAdd({
+    const tradeResults = await services.trade.preTradeDrop({
         user: {id: 2},
         param: {
             contestID: 1,
@@ -23,21 +21,23 @@ const models = require('./models');
             rosterpositionID: 2
         }
     })
-    .then(console.log)
-    .catch(console.error)
-    .then(() => {
-        return services.trade.preTradeDrop({
-            user: {id: 2},
-            param: {
-                contestID: 1,
-                // nflplayerID: 19045,
-                nflplayerID: 17923,
-                rosterpositionID: 2
-            }
-        });
-    })
-    .then(console.log)
     .catch(console.error);
-    // });
+    const offerObj = await services.offer.createOffer({
+        user: {id: 2},
+        param: { offerObj: {
+            contestID: 1,
+            // nflplayerID: 19045,
+            nflplayerID: 17923,
+            isbid: true,
+            price: 1000,
+        }}
+    })
+    .catch(console.error);
+    if (!offerObj) {return;}
+    await services.offer.cancelOffer({
+        param: { offerID: offerObj.id }
+    }).then(out => {
+        console.log(out);
+        return out;
+    });
 })();
-// const { NFLPosition, RosterPosition, NFLDivision, NFLTeam, NFLPlayer, Contest, User } = models;
