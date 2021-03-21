@@ -2,25 +2,25 @@
     // Creating and deleting an entry
     // Getting info about a specific entry
     // Getting info about a user's entries across contests
-    // Getting info about all entries in a contest
 
 const { Entry } = require('../models');
 const u = require('../util');
 
 module.exports = {
     getEntry(req) {
-        let out;
-        if (req.param.entryID) {
-            out = Entry.findByPk(req.param.entryID);
-        } else {
-            out = Entry.findOne({
-                where: {
-                    UserId: req.user.id,
-                    ContestId: req.param.contestID
-                }
-            });
-        }
-        return out.then(u.dv).then(console.log).catch(console.error);
+        return Entry.findOne({
+            where: {
+                UserId: req.user.id,
+                ContestId: req.param.contestID
+            }
+        }).then(u.dv).then(console.log).catch(console.error);
+    },
+    getUserEntries(req) {
+        return Entry.findAll({
+            where: {
+                UserId: req.user.id,
+            }
+        }).then(u.dv).then(console.log).catch(console.error);
     },
     createEntry(req) {
         let obj = {};

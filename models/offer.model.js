@@ -24,11 +24,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       defaultValue: false
     },
-    cancelled: {
-      type: DataTypes.BOOLEAN,
-      allowNull: true,
-      defaultValue: false
-    },
     UserId: {
       type: DataTypes.INTEGER,
       references: { model: 'Users' },
@@ -53,7 +48,6 @@ module.exports = function(sequelize, DataTypes) {
         fields: ['id'],
         where: {
           filled: false,
-          cancelled: false
         }
       },
       {

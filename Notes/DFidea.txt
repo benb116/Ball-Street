@@ -1,18 +1,18 @@
 Terms:
 User - Paying customer of the Site, performs actions to buy and sell
 Player - A member of an NFL franchise
-Team - A collection of Players assembled by a User
+Roster - A collection of Players assembled by a User
 Contest - Set of Users that is active for one week of the NFL season.
 Point - Unit of currency within the Contest
 Budget - The number of Points that a User has available to buy Players
-Price - The number of Points required to buy a Player for a Team
-Buyer - User who adds a Player to their Team
-Seller - User who removes a Player from their Team
+Price - The number of Points required to buy a Player for a Roster
+Buyer - User who adds a Player to their Roster
+Seller - User who removes a Player from their Roster
 
 Rules:
 
-Each User has one Team in a contest
-    A Team may have at most # QB, # RB, # WR, # TE, # DE, # Flex?
+Each User has one Roster in a contest
+    A Roster may have at most # QB, # RB, # WR, # TE, # DE, # Flex?
     Teams begin empty
 
 ** PRE-GAME PHASE **
@@ -41,6 +41,10 @@ NFL games begin
     Prices are no longer fixed to Yahoo/ESPN
 
 Users can submit buy and sell offers on Players at arbitrary Prices
+
+    A buy offer will "reserve" the offered amount of points (so that they can't be used for another offer)
+    A User can set and adjust sell offers from their dashboard
+
     If a prospective Buyer and a prospective Seller agree on a Price for a Player
         The Buyer adds the Player to their team and reduces their Budget by the Price
         The Seller removes the Player from their team and increases their Budget by the Price
@@ -60,6 +64,10 @@ Users can submit buy and sell offers on Players at arbitrary Prices
             If not, cancel
         Get all offers that could match with offer A
         Pick one at random and match them.
+
+    Linked offers?
+        User A wants to buy Player 1 but has no room on Roster
+        User A submits linked offer A1 to immediately sell Player 2 at best price if A1 is filled
 
 Players can only be traded from one team to another; they cannot be dropped or added unilateraly
 

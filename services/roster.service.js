@@ -7,7 +7,7 @@ const u = require('../util');
 
 module.exports = {
     getUserRoster(req) {
-        return Entry.findOne({
+        return Roster.findAll({
             where: {
                 UserId: req.user.id,
                 ContestId: req.param.contestID

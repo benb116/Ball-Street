@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+const config = require('../config');
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('Roster', {
     UserId: {
@@ -29,7 +30,7 @@ module.exports = function(sequelize, DataTypes) {
 
           if (playerType === rosterType) {
             next();
-          } else if (rosterType === 99) {
+          } else if (rosterType === config.FlexNFLPositionId) {
             const canflex = await sequelize.models.NFLPosition.findByPk(playerType).then(d => d.dataValues.canflex);
             if (canflex) {
               next();

@@ -1,4 +1,5 @@
 const { Sequelize, Op, Model, DataTypes } = require("sequelize");
+const config = require('../config');
 const u = require('../util');
 
 async function PopulateDB(sequelize) {
@@ -7,7 +8,7 @@ async function PopulateDB(sequelize) {
 
     // Define NFL positions
     const nflpos = {
-        'FLEX': {id: 99, canflex: false},
+        'FLEX': {id: config.FlexNFLPositionId, canflex: false},
         'QB': {id: 1, canflex: false},
         'RB': {id: 2, canflex: true},
         'WR': {id: 3, canflex: true},

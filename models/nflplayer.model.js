@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+const config = require('../config');
 
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('NFLPlayer', {
@@ -12,7 +13,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     jersey: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      default: 0
     },
     preprice: {
       type: DataTypes.INTEGER,
@@ -28,7 +29,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       validate: {
         isNotFlex(value) {
-          if (!value || value < 0) { throw new Error('Cannot have a NFLPlayer as a flex'); }
+          if (value === config.FlexNFLPositionId) { throw new Error('Cannot have a NFLPlayer as a flex'); }
         }
       }
     },
