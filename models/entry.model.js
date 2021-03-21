@@ -6,11 +6,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       defaultValue: 10000
     },
-    reservedpoints: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: 0
-    },
     UserId: {
       type: DataTypes.INTEGER,
       references: { model: 'Users' },

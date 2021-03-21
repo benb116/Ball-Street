@@ -2,12 +2,16 @@
     // Creating and deleting an offer
     // Getting info about a user's offers across contests
 const { Transaction } = require('sequelize');
+const Queue = require('bull');
 const sequelize = require('../db');
 const { Offer, Roster, Entry } = require('../models');
 const u = require('../util');
 const isoOption = {
     // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
 };
+
+const offerQueue = new Queue('offer-queue');
+
 module.exports = {
     getUserOffers,
     createOffer,
@@ -61,6 +65,7 @@ function createOffer(req) {
             NFLPlayerId: obj.nflplayerID,
             isbid: obj.isbid,
             price: obj.price,
+            protected: obj.protected || false
         }, {
             transaction: t,
             lock: t.LOCK.UPDATE
@@ -71,6 +76,7 @@ function createOffer(req) {
     })
     .then(u.dv).then(offer => {
         console.log('Add offer to queue');
+        offerQueue.add(offer);
         return offer;
     });
 

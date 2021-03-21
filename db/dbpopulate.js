@@ -157,21 +157,15 @@ async function PopulateDB(sequelize) {
 
 
     // Define Users
-    const usrs = [ 'email1@gmail.com', 'email2@gmail.com', 'email3@gmail.com' ];
+    const usrs = [ 'email1@gmail.com', 'email2@gmail.com', 'email3@gmail.com', 'email4@gmail.com' ];
     await User.bulkCreate(usrs.map(u => {
         return {email: u};
     }));
 
-    await Entry.bulkCreate([
-        {
-            UserId: 1,
-            ContestId: 1
-        },
-        {
-            UserId: 2,
-            ContestId: 1
-        }
-    ]);
+    const entrs = usrs.map((e, i) => {
+        return { UserId: i+1, ContestId: 1 };
+    });
+    await Entry.bulkCreate(entrs);
 
     // User.findAll().then(console.log);
 

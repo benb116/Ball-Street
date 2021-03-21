@@ -1,8 +1,10 @@
 const sequelize = require('./db');
 const models = require('./models');
 
+const delay = ms => new Promise(res => setTimeout(res, ms));
+console.log('go');
 (async () => {
-    // await require('./db/dbpopulate')(sequelize);
+    await require('./db/dbpopulate')(sequelize);
 
     const services = require('./services/');
 
@@ -12,16 +14,26 @@ const models = require('./models');
     //     param: {contestID: 1}
     // });
 
-    const tradeResults = await services.trade.preTradeDrop({
-        user: {id: 2},
+    const tradeResults = await services.trade.preTradeAdd({
+        user: {id: 1},
         param: {
             contestID: 1,
             // nflplayerID: 19045,
             nflplayerID: 17923,
             rosterpositionID: 2
         }
-    })
-    .catch(console.error);
+    }).catch(console.error);
+
+    const tradeResults2 = await services.trade.preTradeAdd({
+        user: {id: 3},
+        param: {
+            contestID: 1,
+            // nflplayerID: 19045,
+            nflplayerID: 17923,
+            rosterpositionID: 2
+        }
+    }).catch(console.error);
+
     const offerObj = await services.offer.createOffer({
         user: {id: 2},
         param: { offerObj: {
@@ -30,14 +42,67 @@ const models = require('./models');
             nflplayerID: 17923,
             isbid: true,
             price: 1000,
+            protected: true,
         }}
-    })
-    .catch(console.error);
+    }).catch(console.error);
     if (!offerObj) {return;}
-    await services.offer.cancelOffer({
-        param: { offerID: offerObj.id }
-    }).then(out => {
-        console.log(out);
-        return out;
-    });
+
+    await delay(1000);
+
+    const offerObj3 = await services.offer.createOffer({
+        user: {id: 1},
+        param: { offerObj: {
+            contestID: 1,
+            // nflplayerID: 19045,
+            nflplayerID: 17923,
+            isbid: false,
+            price: 900,
+        }}
+    }).catch(console.error);
+    await delay(1000);
+
+    const offerObj4 = await services.offer.createOffer({
+        user: {id: 4},
+        param: { offerObj: {
+            contestID: 1,
+            // nflplayerID: 19045,
+            nflplayerID: 17923,
+            isbid: true,
+            price: 1200,
+        }}
+    }).catch(console.error);
+    await delay(1000);
+
+    const offerObj5 = await services.offer.createOffer({
+        user: {id: 3},
+        param: { offerObj: {
+            contestID: 1,
+            // nflplayerID: 19045,
+            nflplayerID: 17923,
+            isbid: false,
+            price: 200,
+        }}
+    }).catch(console.error);
+    await delay(1000);
+
+    await services.nflplayer.getNFLPlayerOfferSummary({
+        param: {
+            nflplayerID: offerObj.NFLPlayerId,
+            contestID: 1,
+        }
+    }).then(res => {
+        const [bids, asks] = res;
+        // console.log(bids);
+        const thebids = bids.map(p => { p.count = Number(p.count); return p; }).sort((a, b) => Number(b.count) - Number(a.count));
+        const theasks = asks.map(p => { p.count = Number(p.count); return p; }).sort((a, b) => Number(b.count) - Number(a.count));
+        return [thebids, theasks];
+    })
+    .then(console.log);
+
+    // await services.offer.cancelOffer({
+    //     param: { offerID: offerObj.id }
+    // }).then(out => {
+    //     console.log(out);
+    //     return out;
+    // });
 })();

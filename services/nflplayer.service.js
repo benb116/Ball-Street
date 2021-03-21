@@ -20,9 +20,9 @@ module.exports = {
                 NFLPlayerId: req.param.nflplayerID,
                 ContestId: req.param.contestID,
                 filled: false,
-                bid: true
+                isbid: true
             },
-            order: [ ['price', 'DESC'] ]
+            attributes: ['price'],
         });
         const asks = Offer.count({
             group: 'price',
@@ -30,9 +30,9 @@ module.exports = {
                 NFLPlayerId: req.param.nflplayerID,
                 ContestId: req.param.contestID,
                 filled: false,
-                bid: false
+                isbid: false
             },
-            order: [ ['price', 'ASC'] ]
+            attributes: ['price'],
         });
 
         return Promise.all([bids, asks]);

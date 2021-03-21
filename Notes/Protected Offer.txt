@@ -12,4 +12,3 @@ D   false   1       1400    false
         Does A still exist?
         Does D still exist?
         Then get all offers that match A, random match and repeat
-
