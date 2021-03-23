@@ -25,6 +25,16 @@ console.log('go');
     }).catch(console.error);
 
     const tradeResults2 = await services.trade.preTradeAdd({
+        user: {id: 2},
+        param: {
+            contestID: 1,
+            // nflplayerID: 19045,
+            nflplayerID: 17923,
+            rosterpositionID: 2
+        }
+    }).catch(console.error);
+
+    const tradeResults3 = await services.trade.preTradeAdd({
         user: {id: 3},
         param: {
             contestID: 1,
@@ -35,7 +45,7 @@ console.log('go');
     }).catch(console.error);
 
     const offerObj = await services.offer.createOffer({
-        user: {id: 2},
+        user: {id: 4},
         param: { offerObj: {
             contestID: 1,
             // nflplayerID: 19045,
@@ -59,19 +69,19 @@ console.log('go');
             price: 900,
         }}
     }).catch(console.error);
-    await delay(1000);
+    // await delay(1000);
 
     const offerObj4 = await services.offer.createOffer({
-        user: {id: 4},
+        user: {id: 2},
         param: { offerObj: {
             contestID: 1,
             // nflplayerID: 19045,
             nflplayerID: 17923,
-            isbid: true,
-            price: 1200,
+            isbid: false,
+            price: 800,
         }}
     }).catch(console.error);
-    await delay(1000);
+    // await delay(1000);
 
     const offerObj5 = await services.offer.createOffer({
         user: {id: 3},
@@ -80,10 +90,10 @@ console.log('go');
             // nflplayerID: 19045,
             nflplayerID: 17923,
             isbid: false,
-            price: 200,
+            price: 1200,
         }}
     }).catch(console.error);
-    await delay(1000);
+    // await delay(1000);
 
     await services.nflplayer.getNFLPlayerOfferSummary({
         param: {
@@ -101,8 +111,5 @@ console.log('go');
 
     // await services.offer.cancelOffer({
     //     param: { offerID: offerObj.id }
-    // }).then(out => {
-    //     console.log(out);
-    //     return out;
     // });
 })();

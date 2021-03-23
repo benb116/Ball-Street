@@ -1,22 +1,23 @@
-const Queue = require('bull');
-const offerQueue = new Queue('offer-queue');
-const {Offer, ProtectedMatch, Trade } = require('../models');
 const u = require('../util');
+const config = require('../config');
+const Queue = require('bull');
 
-let running = false;
+const offerQueue = new Queue('offer-queue');
+const protectedQueue = new Queue('protected-queue');
+
+const {Offer, ProtectedMatch, Trade } = require('../models');
 
 offerQueue.process(async (job) => {
-    console.log('New Job', job.data);
+    console.log('\r\nNew Job', job.data);
     await evalOrderBook(job.data.ContestId, job.data.NFLPlayerId);
 });
 
-
 async function evalOrderBook(contestID, nflplayerID) {
-    running = true;
     Promise.all([
         findSortOffers(contestID, nflplayerID, true),
         findSortOffers(contestID, nflplayerID, false)
-    ]).then(off => compareBidsAsks(off[0], off[1])).then(console.log).then(() => running = false);
+    ]).then(([bids, asks]) => compareBidsAsks(bids, asks))
+    .then(console.log);
 }
 
 async function findSortOffers(contestID, nflplayerID, isbid) {
@@ -26,7 +27,8 @@ async function findSortOffers(contestID, nflplayerID, isbid) {
             ContestId: contestID,
             NFLPlayerId: nflplayerID,
             isbid: isbid,
-            filled: false
+            filled: false,
+            cancelled: false,
         },
         order: [
             ['protected', 'ASC'],
@@ -71,7 +73,7 @@ async function matchOffers(bid, ask) {
         nextind = await initTrade(bid, ask, oldOffer.price);
     } else {
         // Add delayed to protected queue
-        addToProtectedMatchQueue(oldOffer, newOffer);
+        await addToProtectedMatchQueue(oldOffer, newOffer);
         nextind = [Number(isBidOld), Number(!isBidOld)];
     }
     console.log(nextind);
@@ -80,7 +82,7 @@ async function matchOffers(bid, ask) {
 
 async function initTrade(bid, ask, price) {
     console.log('initTrade', price);
-    await Offer.destroy({
+    await Offer.update({ cancelled: true }, {
         where: {
             id: [bid.id, ask.id]
         }
@@ -88,7 +90,17 @@ async function initTrade(bid, ask, price) {
     return [1, 1];
 }
 
-function addToProtectedMatchQueue(eOffer, nOffer) {
-    console.log('protected');
-    return 1;
+async function addToProtectedMatchQueue(eOffer, nOffer) {
+    console.log('protected', eOffer.id, nOffer.id);
+    return ProtectedMatch.create({
+        existingId: eOffer.id,
+        newId: nOffer.id,
+    }).then((out) => {
+        protectedQueue.add({
+            existingOffer: eOffer.id,
+            newOffer: nOffer.id,
+        }, { delay: config.ProtectionDelay*1000 });
+        // Send ping to user
+        return 1;
+    }).catch(err => 0);
 }

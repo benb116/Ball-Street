@@ -24,6 +24,7 @@ function getUserOffers(req) {
             UserId: req.user.id,
             ContestId: req.param.contestID,
             filled: false,
+            cancelled: false
         }
     }).then(u.dv).then(console.log).catch(console.error);
 }
@@ -90,7 +91,7 @@ function createOffer(req) {
 }
 
 function cancelOffer(req) {
-    return Offer.destroy({
+    return Offer.update({ cancelled: true }, {
         where: {
             id: req.param.offerID
         }

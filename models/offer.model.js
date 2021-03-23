@@ -21,7 +21,12 @@ module.exports = function(sequelize, DataTypes) {
     },
     filled: {
       type: DataTypes.BOOLEAN,
-      allowNull: true,
+      allowNull: false,
+      defaultValue: false
+    },
+    cancelled: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
       defaultValue: false
     },
     UserId: {
@@ -44,10 +49,11 @@ module.exports = function(sequelize, DataTypes) {
     sequelize,
     indexes: [
       {
-        name: 'IX_Offer-Unfilled',
+        name: 'IX_Offer-Active',
         fields: ['id'],
         where: {
           filled: false,
+          cancelled: false
         }
       },
       {
@@ -55,7 +61,8 @@ module.exports = function(sequelize, DataTypes) {
         unique: true,
         fields: ['UserId', 'ContestId', 'NFLPlayerId'],
         where: {
-          filled: false
+          filled: false,
+          cancelled: false
         }
       }
     ]

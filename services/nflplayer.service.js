@@ -20,6 +20,7 @@ module.exports = {
                 NFLPlayerId: req.param.nflplayerID,
                 ContestId: req.param.contestID,
                 filled: false,
+                cancelled: false,
                 isbid: true
             },
             attributes: ['price'],
@@ -30,6 +31,7 @@ module.exports = {
                 NFLPlayerId: req.param.nflplayerID,
                 ContestId: req.param.contestID,
                 filled: false,
+                cancelled: false,
                 isbid: false
             },
             attributes: ['price'],
