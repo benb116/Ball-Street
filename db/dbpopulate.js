@@ -134,7 +134,7 @@ async function PopulateDB(sequelize) {
 
     // Give Jalen Hurts a preprice
     const hurtsID = await NFLPlayer.findOne({
-        where: { name: 'Jalen Hurts'},
+        where: { name: ['Jalen Hurts']},
         attributes: ['id']
     }).then(data => data.dataValues.id);
     await NFLPlayer.update({ preprice: 17000 }, { where: { id: hurtsID } });
@@ -146,6 +146,12 @@ async function PopulateDB(sequelize) {
     }).then(data => data.dataValues.id);
     await NFLPlayer.update({ preprice: 1700 }, { where: { id: EllID } });
 
+    // Give Ezekiel Elliott a preprice
+    const AJID = await NFLPlayer.findOne({
+        where: { name: 'Aaron Jones'},
+        attributes: ['id']
+    }).then(data => data.dataValues.id);
+    await NFLPlayer.update({ preprice: 2000 }, { where: { id: AJID } });
 
     // Define existing contest
     const con = {

@@ -82,7 +82,7 @@ async function matchOffers(bid, ask) {
 
 async function initTrade(bid, ask, price) {
     console.log('initTrade', price);
-    await Offer.update({ cancelled: true }, {
+    await Offer.update({ filled: true }, {
         where: {
             id: [bid.id, ask.id]
         }

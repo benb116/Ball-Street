@@ -5,6 +5,7 @@ const { Transaction } = require('sequelize');
 const sequelize = require('../db');
 const { Roster, Entry, NFLPlayer, RosterPosition, Offer, ProtectedMatch, Trade } = require('../models');
 const u = require('../util');
+const config = require('../config');
 const isoOption = {
     // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
 };
@@ -16,8 +17,8 @@ module.exports = {
 
 function preTradeAdd(req) {
     return sequelize.transaction(isoOption, async (t) => {
-
-        // Get # of points user has
+        const _player = req.param.nflplayerID;
+        // Get user entry
         const theentry = await Entry.findOne({
             where: {
                 UserId: req.user.id,
@@ -26,11 +27,16 @@ function preTradeAdd(req) {
             transaction: t,
             lock: t.LOCK.UPDATE
         });
+
+        // Determine if user already has player on roster
+        const isOnTeam = u.isPlayerOnRoster(theentry, _player);
+        if (isOnTeam) { throw new Error('Player is on roster'); }
+
         const pts = theentry.dataValues.pointtotal;
         console.log("POINTS", pts);
 
         // Get player price and position
-        const playerdata = await NFLPlayer.findByPk(req.param.nflplayerID, {
+        const playerdata = await NFLPlayer.findByPk(_player, {
             attributes: ['preprice', 'NFLPositionId'],
             transaction: t
         }).then(d => d.dataValues);
@@ -40,29 +46,29 @@ function preTradeAdd(req) {
         if (!playerdata.preprice) { throw new Error("Player has no price"); }
         if (playerdata.preprice > pts) { throw new Error("User doesn't have enough points"); }
           
-        if (req.param.rosterpositionID >= 0) {
-            // Try to add to roster
-            // (There are model-level validations too)
-            const newroster = await Roster.create({
-                UserId: req.user.id,
-                ContestId: req.param.contestID,
-                NFLPlayerId: req.param.nflplayerID,
-                RosterPositionId: req.param.rosterpositionID
-            }, {
-                transaction: t,
-            })
-            .catch(err => {
-                throw new Error("Roster create error: " + err.original.detail);
-            });
+        // Deduct cost from points
+        theentry.pointtotal -= playerdata.preprice;
 
-            // Deduct cost from points
-            theentry.pointtotal -= playerdata.preprice;
-            await theentry.save({transaction: t});
+        const playerType = playerdata.NFLPositionId;
+        if (req.param.rosterposition) { // If a roster position was specified
+            // Is it a valid one?
+            const isinvalid = u.isInvalidSpot(playerType, req.param.rosterposition);
+            if (isinvalid) { throw new Error(isinvalid); }
+            // Is it an empty one?
+            if (theentry[req.param.rosterposition] !== null) {
+                throw new Error('There is a player in that spot');
+            }
+            theentry[req.param.rosterposition] = _player;
 
-            return u.dv([newroster, theentry]);
         } else {
-            throw new Error("Select a roster position to put this player into");
+            // Find an open spot
+            const isOpen = u.isOpenRoster(theentry, playerType);
+            if (!isOpen) { throw new Error('There are no open spots'); }
+            theentry[isOpen] = _player;
         }
+        await theentry.save({transaction: t});
+
+        return u.dv(theentry);
     });
 }
 
@@ -70,35 +76,24 @@ function preTradeDrop(req) {
     return sequelize.transaction(isoOption, async (t) => {
 
         // Remove from roster
-        const oldroster = await Roster.destroy({
+        const theentry = await Entry.findOne({
             where: {
                 UserId: req.user.id,
-                ContestId: req.param.contestID,
-                NFLPlayerId: req.param.nflplayerID,
-            }
-        }, {
+                ContestId: req.param.contestID
+            },
             transaction: t,
             lock: t.LOCK.UPDATE
         });
-        if (!oldroster) { throw new Error("That player wasn't on the roster"); }
+
+        const isOnTeam = u.isPlayerOnRoster(theentry, req.param.nflplayerID);
+        if (!isOnTeam) { throw new Error('Player is not on roster'); }
+        theentry[isOnTeam] = null;
 
         // How much to add to point total
         const preprice = await NFLPlayer.findByPk(req.param.nflplayerID, {
             attributes: ['preprice'],
             transaction: t
         }).then(d => d.dataValues.preprice);
-
-        // Find and update
-        // Want to be able to return entry
-        const theentry = await Entry.findOne({
-            where: {
-                UserId: req.user.id,
-                ContestId: req.param.contestID
-            }
-        }, {
-            transaction: t,
-            lock: t.LOCK.UPDATE
-        });
 
         // Deduct cost from points
         theentry.pointtotal += preprice;

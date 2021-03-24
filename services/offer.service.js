@@ -34,32 +34,24 @@ function createOffer(req) {
     obj.userID = req.user.id;
 
     return sequelize.transaction(isoOption, async (t) => {
-        const rost = await Roster.findOne({
+        const theentry = await Entry.findOne({
             where: {
                 UserId: obj.userID,
                 ContestId: obj.contestID,
-                NFLPlayerId: obj.nflplayerID
             },
             transaction: t,
             lock: t.LOCK.UPDATE
         });
+        
+        const isOnTeam = u.isPlayerOnRoster(theentry, obj.nflplayerID);
         if (!obj.isbid) {
-            if (rost === null) { throw new Error('Player is not on roster'); }
+            if (!isOnTeam) { throw new Error('Player is not on roster'); }
         } else {
-            if (rost) { throw new Error('Player is on roster already'); }
-
-            // Get # of points user has
-            const theentry = await Entry.findOne({
-                where: {
-                    UserId: obj.userID,
-                    ContestId: obj.contestID,
-                },
-                transaction: t,
-                lock: t.LOCK.UPDATE
-            });
+            if (isOnTeam) {throw new Error('Player is on roster'); }
             const pts = theentry.dataValues.pointtotal;
             if (obj.price > pts) { throw new Error("User doesn't have enough points to buy"); }
         }
+
         return Offer.create({
             UserId: obj.userID,
             ContestId: obj.contestID,
