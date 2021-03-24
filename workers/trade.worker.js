@@ -15,12 +15,12 @@ const service = require('../services/trade.service');
 async function fillOffers(bidid, askid, price) {
     console.log('begin:', bidid, askid);
     const out = sequelize.transaction(isoOption, async (t) => {
-        return await attemptFill(bidid, askid, price);
+        return await attemptFill(t, bidid, askid, price);
     });
     return out;
 }
 
-async function attemptFill(bidid, askid, price) {
+async function attemptFill(t, bidid, askid, price) {
     let resp = [1, 1];
 
     const bidoffer = await Offer.findByPk(bidid, u.tobj(t));

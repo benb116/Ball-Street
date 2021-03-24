@@ -32,8 +32,8 @@ async function findSortOffers(contestID, nflplayerID, isbid) {
             cancelled: false,
         },
         order: [
-            ['protected', 'ASC'],
             ['price', priceSort],
+            ['protected', 'ASC'],
             ['createdAt', 'ASC']
         ]
     }).then(u.dv);
@@ -88,15 +88,15 @@ async function initTrade(bid, ask, price) {
 
 async function addToProtectedMatchQueue(eOffer, nOffer) {
     console.log('protected', eOffer.id, nOffer.id);
-    return ProtectedMatch.create({
-        existingId: eOffer.id,
-        newId: nOffer.id,
-    }).then((out) => {
-        protectedQueue.add({
-            existingOffer: eOffer.id,
-            newOffer: nOffer.id,
-        }, { delay: config.ProtectionDelay*1000 });
-        // Send ping to user
-        return 1;
-    }).catch(err => 0);
+    protectedQueue.add({
+        existingOffer: eOffer.id,
+        newOffer: nOffer.id,
+    }, { delay: config.ProtectionDelay*1000 });
+    // Send ping to user
+    return 1;
 }
+
+protectedQueue.process(async (job) => {
+    console.log('\r\nNew Job', job.data);
+    await fillOffers(job.data.existingOffer, job.data.newOffer);
+});
