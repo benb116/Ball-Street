@@ -21,7 +21,8 @@ const config = {
         '4': {name: 'TE', canflex: true},
         '5': {name: 'K', canflex: false},
         '6': {name: 'DEF', canflex: false},
-    }
+    },
+    DefaultProtected: false,
 };
 
 config.Roster.FLEX1 = config.FlexNFLPositionId;

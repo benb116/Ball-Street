@@ -6,6 +6,7 @@ const Queue = require('bull');
 const sequelize = require('../db');
 const { Offer, Roster, Entry } = require('../models');
 const u = require('../util');
+const config = require('../config');
 const isoOption = {
     // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
 };
@@ -58,7 +59,7 @@ function createOffer(req) {
             NFLPlayerId: obj.nflplayerID,
             isbid: obj.isbid,
             price: obj.price,
-            protected: obj.protected || false
+            protected: obj.protected || config.DefaultProtected
         }, {
             transaction: t,
             lock: t.LOCK.UPDATE

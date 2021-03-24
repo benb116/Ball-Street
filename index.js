@@ -39,8 +39,8 @@ console.log('go');
     //     user: {id: 3},
     //     param: {
     //         contestID: 1,
-    //         // nflplayerID: 19045,
-    //         nflplayerID: 17923,
+    //         nflplayerID: 19045,
+    //         // nflplayerID: 17923,
     //         rosterposition: "FLEX1"
     //     }
     // }).then(u.dv).then(console.log).catch(console.error);
@@ -51,7 +51,6 @@ console.log('go');
     //         contestID: 1,
     //         nflplayerID: 19045,
     //         // nflplayerID: 17923,
-    //         // rosterposition: 4
     //     }
     // }).then(u.dv).then(console.log).catch(console.error);
 
@@ -63,7 +62,7 @@ console.log('go');
             nflplayerID: 17923,
             isbid: true,
             price: 1000,
-            protected: true,
+            protected: false,
         }}
     }).then(u.dv).catch(console.error);
     if (!offerObj) {return;}
@@ -104,7 +103,28 @@ console.log('go');
             price: 1200,
         }}
     }).then(u.dv).catch(console.error);
-    // await delay(1000);
+
+    await delay(3000);
+
+    // const tradeResults7 = await services.trade.preTradeAdd({
+    //     user: {id: 1},
+    //     param: {
+    //         contestID: 1,
+    //         // nflplayerID: 19045,
+    //         nflplayerID: 17923,
+    //         // rosterposition: "RB1"
+    //     }
+    // }).then(u.dv).then(console.log).catch(console.error);
+
+    // const tradeResults8 = await services.trade.preTradeAdd({
+    //     user: {id: 2},
+    //     param: {
+    //         contestID: 1,
+    //         // nflplayerID: 19045,
+    //         nflplayerID: 17923,
+    //         // rosterposition: "RB1"
+    //     }
+    // }).then(u.dv).then(console.log).catch(console.error);
 
     await services.nflplayer.getNFLPlayerOfferSummary({
         param: {
@@ -120,7 +140,43 @@ console.log('go');
     })
     .then(console.log);
 
-    await services.offer.cancelOffer({
-        param: { offerID: offerObj.id }
-    });
+    const entres1 = await services.entry.getEntry({
+        user: {id: 1},
+        param: {
+            contestID: 1,
+            // nflplayerID: 19045,
+            // rosterposition: "RB1"
+        }
+    }).then(u.dv).then(console.log).catch(console.error);
+
+    const entres2 = await services.entry.getEntry({
+        user: {id: 2},
+        param: {
+            contestID: 1,
+            // nflplayerID: 19045,
+            // rosterposition: "RB1"
+        }
+    }).then(u.dv).then(console.log).catch(console.error);
+
+    const entres3 = await services.entry.getEntry({
+        user: {id: 3},
+        param: {
+            contestID: 1,
+            // nflplayerID: 19045,
+            // rosterposition: "RB1"
+        }
+    }).then(u.dv).then(console.log).catch(console.error);
+
+    const entres4 = await services.entry.getEntry({
+        user: {id: 4},
+        param: {
+            contestID: 1,
+            // nflplayerID: 19045,
+            // rosterposition: "RB1"
+        }
+    }).then(u.dv).then(console.log).catch(console.error);
+
+    // await services.offer.cancelOffer({
+    //     param: { offerID: offerObj.id }
+    // });
 })();

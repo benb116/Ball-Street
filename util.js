@@ -46,4 +46,11 @@ out.isOpenRoster = function(theentry, playerType) {
     }
 };
 
+out.tobj = function(t) {
+    return {
+        transaction: t,
+        lock: t.LOCK.UPDATE
+    };
+};
+
 module.exports = out;

@@ -6,9 +6,10 @@ const offerQueue = new Queue('offer-queue');
 const protectedQueue = new Queue('protected-queue');
 
 const {Offer, ProtectedMatch, Trade } = require('../models');
+const {fillOffers} = require('./trade.worker');
 
 offerQueue.process(async (job) => {
-    console.log('\r\nNew Job', job.data);
+    console.log('\r\nNew Job', job.data.id);
     await evalOrderBook(job.data.ContestId, job.data.NFLPlayerId);
 });
 
@@ -40,13 +41,12 @@ async function findSortOffers(contestID, nflplayerID, isbid) {
 }
 
 async function compareBidsAsks(bids, asks, bidind=0, askind=0) {
-    console.log('ba', bidind, askind, bids.length, asks.length);
+    console.log('bidaskind', bidind, askind, bids.length, asks.length);
     if (!bids[bidind] || !asks[askind]) {
         console.log('EOL');
         return null;
     } else if (bids[bidind].price > asks[askind].price) {
         const [nextbid, nextask] = await matchOffers(bids[bidind], asks[bidind]);
-        console.log('n', nextbid, nextask);
         if (nextbid || nextask) {
             return compareBidsAsks(bids, asks, bidind+nextbid, askind+nextask);
         }
@@ -76,18 +76,14 @@ async function matchOffers(bid, ask) {
         await addToProtectedMatchQueue(oldOffer, newOffer);
         nextind = [Number(isBidOld), Number(!isBidOld)];
     }
-    console.log(nextind);
+    console.log('nextind', nextind);
     return nextind;
 }
 
 async function initTrade(bid, ask, price) {
     console.log('initTrade', price);
-    await Offer.update({ filled: true }, {
-        where: {
-            id: [bid.id, ask.id]
-        }
-    });
-    return [1, 1];
+    output = await fillOffers(bid.id, ask.id, price);
+    return output;
 }
 
 async function addToProtectedMatchQueue(eOffer, nOffer) {

@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+const config = require('../config');
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('Offer', {
     id: {
@@ -17,7 +18,7 @@ module.exports = function(sequelize, DataTypes) {
     protected: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: false
+      defaultValue: config.DefaultProtected
     },
     filled: {
       type: DataTypes.BOOLEAN,

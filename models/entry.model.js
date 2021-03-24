@@ -21,6 +21,7 @@ function model(sequelize) {
         },
     };
 
+    // Add position columns as defined by config
     const rpos = Object.keys(config.Roster);
     rpos.forEach((p, i) => {
         modelobj[p] = {
