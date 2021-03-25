@@ -1,6 +1,6 @@
 const config = {
     FlexNFLPositionId: 99,
-    ProtectionDelay: 30, // seconds
+    ProtectionDelay: 5, // seconds
     Roster: {
         'QB1': 1,
         'RB1': 2,

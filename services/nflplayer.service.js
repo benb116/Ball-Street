@@ -2,8 +2,9 @@
     // Getting info about a specific player
     // Get order book info about a specific player
 
-const { NFLPlayer, Offer, Trade } = require('../models');
+const { NFLPlayer, Offer, Trade, Entry } = require('../models');
 const u = require('../util');
+const config = require('../config');
 
 module.exports = {
     getNFLPlayer(req) {
@@ -47,12 +48,21 @@ module.exports = {
             }
         });
     },
-    getNFLPlayerNumAdds(req) {
-        return Roster.count({
-            where: {
-                ContestId: req.param.contestID,
-                NFLPlayerId: req.param.nflplayerID
-            }
-        });
-    }
+    // getNFLPlayerNumAdds(req) {
+    //     return Entry.count({
+    //         where: {
+    //             ContestId: req.param.contestID,
+    //             [Op.or]: gen(req.param.nflplayerID)
+    //         }
+    //     });
+
+    //     function gen(_player) {
+    //         const rpos = Object.keys(config.Roster);
+    //         return rpos.map(r => {
+    //             let out = {};
+    //             out[r] = _player;
+    //             return out;
+    //         });
+    //     }
+    // }
 };

@@ -1,6 +1,8 @@
 const u = require('../util');
 const config = require('../config');
 const Queue = require('bull');
+const redis = require("redis");
+const client = redis.createClient();
 
 const offerQueue = new Queue('offer-queue');
 const protectedQueue = new Queue('protected-queue');
@@ -17,8 +19,15 @@ async function evalOrderBook(contestID, nflplayerID) {
     Promise.all([
         findSortOffers(contestID, nflplayerID, true),
         findSortOffers(contestID, nflplayerID, false)
-    ]).then(([bids, asks]) => compareBidsAsks(bids, asks))
-    .then(console.log);
+    ])
+    .then(([bids, asks]) => compareBidsAsks(bids, asks))
+    .then(([player, nextbid, nextask]) => {
+        const bestbid = (nextbid ? nextbid.price : NaN);
+        const bestask = (nextask ? nextask.price : NaN);
+        client.hmset(player, 'bestbid', bestbid, 'bestask', bestask);
+        client.publish('priceUpdate', player);
+    });
+    // .then(console.log);
 }
 
 async function findSortOffers(contestID, nflplayerID, isbid) {
@@ -44,15 +53,18 @@ async function compareBidsAsks(bids, asks, bidind=0, askind=0) {
     console.log('bidaskind', bidind, askind, bids.length, asks.length);
     if (!bids[bidind] || !asks[askind]) {
         console.log('EOL');
-        return null;
+        const player = (bids[0] ? bids[0].NFLPlayerId : (asks[0] ? asks[0].NFLPlayerId : 0));
+        return [player, bids[bidind], bids[askind]];
+
     } else if (bids[bidind].price > asks[askind].price) {
-        const [nextbid, nextask] = await matchOffers(bids[bidind], asks[bidind]);
+        const [nextbid, nextask] = await matchOffers(bids[bidind], asks[askind]);
         if (nextbid || nextask) {
             return compareBidsAsks(bids, asks, bidind+nextbid, askind+nextask);
         }
+
     } else {
         console.log('PriceMismatch');
-        return null;
+        return [bids[0].NFLPlayerId,bids[bidind], bids[askind]];
     }
 }
 
@@ -74,14 +86,13 @@ async function matchOffers(bid, ask) {
     } else {
         // Add delayed to protected queue
         await addToProtectedMatchQueue(oldOffer, newOffer);
-        nextind = [Number(isBidOld), Number(!isBidOld)];
+        nextind = [Number(!isBidOld), Number(isBidOld)];
     }
     console.log('nextind', nextind);
     return nextind;
 }
 
 async function initTrade(bid, ask, price) {
-    console.log('initTrade', price);
     output = await fillOffers(bid.id, ask.id, price);
     return output;
 }
@@ -97,6 +108,5 @@ async function addToProtectedMatchQueue(eOffer, nOffer) {
 }
 
 protectedQueue.process(async (job) => {
-    console.log('\r\nNew Job', job.data);
     await fillOffers(job.data.existingOffer, job.data.newOffer);
 });

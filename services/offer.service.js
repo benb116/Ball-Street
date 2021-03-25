@@ -4,7 +4,7 @@
 const { Transaction } = require('sequelize');
 const Queue = require('bull');
 const sequelize = require('../db');
-const { Offer, Roster, Entry } = require('../models');
+const { Offer, Roster, Entry, NFLPlayer } = require('../models');
 const u = require('../util');
 const config = require('../config');
 const isoOption = {
@@ -51,6 +51,11 @@ function createOffer(req) {
             if (isOnTeam) {throw new Error('Player is on roster'); }
             const pts = theentry.dataValues.pointtotal;
             if (obj.price > pts) { throw new Error("User doesn't have enough points to buy"); }
+            const playerdata = await NFLPlayer.findByPk(obj.nflplayerID, {
+                attributes: ['NFLPositionId'],
+                transaction: t
+            }).then(d => d.dataValues);
+            if (!u.isOpenRoster(theentry, playerdata.NFLPositionId)) { throw new Error("There are no spots this player could fit into"); }
         }
 
         return Offer.create({

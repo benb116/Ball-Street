@@ -70,7 +70,7 @@ async function tradeAdd(req, t) {
     }
     await theentry.save({transaction: t});
 
-    return u.dv(theentry);
+    return 0;
 }
 
 async function tradeDrop(req, t) {
@@ -102,7 +102,7 @@ async function tradeDrop(req, t) {
 
     await theentry.save({transaction: t});
 
-    return u.dv(theentry);
+    return 0;
 }
 
 function preTradeAdd(req) {
