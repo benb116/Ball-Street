@@ -3,7 +3,7 @@
     // Submitting and cancelling offers
 const { Transaction } = require('sequelize');
 const sequelize = require('../db');
-const { Roster, Entry, NFLPlayer, RosterPosition, Offer, ProtectedMatch, Trade } = require('../models');
+const { Roster, Entry, NFLPlayer, RosterPosition, Offer, ProtectedMatch, Trade, User } = require('../models');
 const u = require('../util');
 const config = require('../config');
 const isoOption = {
@@ -15,6 +15,7 @@ module.exports = {
     tradeDrop,
     preTradeAdd,
     preTradeDrop,
+    getUserTrades,
 };
 
 async function tradeAdd(req, t) {
@@ -115,4 +116,15 @@ function preTradeDrop(req) {
     return sequelize.transaction(isoOption, async (t) => {
         await tradeDrop(req, t);
     });
+}
+
+function getUserTrades(req) {
+    return Trade.findAll({
+        include: {
+            model: User,
+            where: {
+                UserId: req.user.id
+            }
+        }
+    }).then(u.dv).then(console.log).catch(console.error);
 }
