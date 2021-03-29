@@ -71,6 +71,8 @@ Users can submit buy and sell offers on Players at arbitrary Prices
             Still requires User to reserve the points to spend
             Reserve full price for Player 1? How much will sale of Player 2 bring in?
 
+    See a graph of prices over time
+
 Players can only be traded from one team to another; they cannot be dropped or added unilateraly
 
 ** POST-GAME PHASE **

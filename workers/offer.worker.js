@@ -20,12 +20,16 @@ offerQueue.process(async (job) => {
     await evalOrderBook(job.data.ContestId, job.data.NFLPlayerId);
 });
 
+// Evaluate the order book for a player in a contest
 async function evalOrderBook(contestID, nflplayerID) {
+    // Get all outstanding offers (sorted)
     Promise.all([
         findSortOffers(contestID, nflplayerID, true),
         findSortOffers(contestID, nflplayerID, false)
     ])
+    // Iterate through and try to match
     .then(([bids, asks]) => compareBidsAsks(bids, asks))
+    // Output results
     .then(([player, nextbid, nextask]) => {
         const bestbid = (nextbid ? nextbid.price : NaN);
         const bestask = (nextask ? nextask.price : NaN);
@@ -35,6 +39,8 @@ async function evalOrderBook(contestID, nflplayerID) {
     // .then(console.log);
 }
 
+// Find highest bids and lowest asks
+// Give priority to unprotected and older offers
 async function findSortOffers(contestID, nflplayerID, isbid) {
     const priceSort = (isbid ? 'DESC' : 'ASC');
     const possibleMatches = Offer.findAll({
@@ -48,12 +54,15 @@ async function findSortOffers(contestID, nflplayerID, isbid) {
         order: [
             ['price', priceSort],
             ['protected', 'ASC'],
-            ['createdAt', 'ASC']
+            ['updatedAt', 'ASC']
         ]
     }).then(u.dv);
     return possibleMatches;
 }
 
+// Try to match the "heads" of bids and asks
+// Based on output, update the heads and do it again
+// When there's no match at the heads, stop
 async function compareBidsAsks(bids, asks, bidind=0, askind=0) {
     console.log('bidaskind', bidind, askind, bids.length, asks.length);
     if (!bids[bidind] || !asks[askind]) {
@@ -73,11 +82,10 @@ async function compareBidsAsks(bids, asks, bidind=0, askind=0) {
     }
 }
 
+// Try to match two offers
+// If unprotected, try to trade now
+// If protected, add to protected queue
 async function matchOffers(bid, ask) {
-    // Determine which is older
-    // Determine if old is protected
-    // Set trade price to older's price
-
     const isBidOld = (bid.createdAt < ask.createdAt);
     const oldOffer = (isBidOld ? bid : ask);
     const newOffer = (!isBidOld ? bid : ask);
@@ -101,6 +109,7 @@ async function initTrade(bid, ask, price) {
     return output;
 }
 
+// Comes back after N seconds
 async function addToProtectedMatchQueue(eOffer, nOffer) {
     console.log('protected', eOffer.id, nOffer.id);
     protectedQueue.add({
@@ -113,6 +122,7 @@ async function addToProtectedMatchQueue(eOffer, nOffer) {
     return 1;
 }
 
+// 
 protectedQueue.process(async (job) => {
     await findProtectedMatches(job.data.existingOffer, job.data.isExistingBid);
 });

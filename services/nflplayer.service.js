@@ -14,6 +14,9 @@ module.exports = {
             }
         }).then(u.dv);
     },
+    getNFLPlayers(req) {
+        return NFLPlayer.findAll().then(u.dv);
+    },
     getNFLPlayerOfferSummary(req) {
         const bids = Offer.count({
             group: 'price',
