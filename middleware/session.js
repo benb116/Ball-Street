@@ -9,5 +9,10 @@ module.exports = session({
     resave: false,
     saveUninitialized: true,
     cookie: { httpOnly: true, sameSite: true, },
-    store: new redisStore({ host: 'localhost', port: 6379, client: redisClient, ttl: 86400 }),
+    store: new redisStore({
+        host: 'localhost',
+        port: 6379,
+        client: redisClient,
+        ttl: 86400
+    }),
 });

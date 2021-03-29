@@ -77,17 +77,17 @@ wss.on('connection', function (ws, request) {
 
 setInterval(() => {
     if (priceUpdateMap.size) {
-        wss.clients.forEach(function each(client) {
-            if (client.readyState === WebSocket.OPEN) {
-                client.send(priceUpdateMap);
+        wss.clients.forEach(function each(_ws) {
+            if (_ws.readyState === WebSocket.OPEN) {
+                _ws.send(priceUpdateMap);
             }
         });
         priceUpdateMap.clear();
     }
     if (lastTradeMap.size) {
-        wss.clients.forEach(function each(client) {
-            if (client.readyState === WebSocket.OPEN) {
-                client.send(lastTradeMap);
+        wss.clients.forEach(function each(_ws) {
+            if (_ws.readyState === WebSocket.OPEN) {
+                _ws.send(lastTradeMap);
             }
         });
         lastTradeMap.clear();

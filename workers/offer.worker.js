@@ -81,8 +81,7 @@ async function matchOffers(bid, ask) {
 
     if (!isOldProtected) {
         // Try to trade rn
-        const tradePrice = (isBidOld ? bid.price : ask.price);
-        nextind = await initTrade(bid, ask, oldOffer.price);
+        nextind = await initTrade(bid, ask);
     } else {
         // Add delayed to protected queue
         await addToProtectedMatchQueue(oldOffer, newOffer);
@@ -102,6 +101,7 @@ async function addToProtectedMatchQueue(eOffer, nOffer) {
     protectedQueue.add({
         existingOffer: eOffer.id,
         newOffer: nOffer.id,
+        isExistingBid: eOffer.isbid,
     }, { delay: config.ProtectionDelay*1000 });
     // Send ping to user
     client.publish('protectedMatch', eOffer.UserId+' '+eOffer.id);
@@ -109,5 +109,43 @@ async function addToProtectedMatchQueue(eOffer, nOffer) {
 }
 
 protectedQueue.process(async (job) => {
-    await fillOffers(job.data.existingOffer, job.data.newOffer);
+    await findProtectedMatches(job.data.existingOffer, job.data.isExistingBid);
 });
+
+async function findProtectedMatches(poffer, ispbid) {
+    // contestID, nflplayerID, isbid
+    const contestID = poffer.ContestId;
+    const nflplayerID = poffer.NFLPlayerId;
+    const findbids = !ispbid;
+
+    let priceobj = {};
+    if (findbids) { priceobj = { [Op.lte]: poffer.price }; }
+    else { priceobj = { [Op.gte]: poffer.price }; }
+
+    const possibleMatches = Offer.findAll({
+        where: {
+            ContestId: contestID,
+            NFLPlayerId: nflplayerID,
+            isbid: findbids,
+            filled: false,
+            cancelled: false,
+            price: priceobj
+        },
+    })
+    .then(u.dv)
+    .then(async offers => {
+        let filled = false;
+        while (offers.length) {
+            const randomInd = Math.floor(Math.random()*offers.length);
+            const randomOffer = offers[randomInd];
+            const bidoffer = (ispbid ? poffer : randomOffer);
+            const askoffer = (!ispbid ? poffer : randomOffer);
+            const out = await fillOffers(bidoffer, askoffer);
+            // if out[!ispbid] is 1, then the protected offer was filled or errored
+            if (out[!ispbid]) { break; }
+            if (out[ispbid]) { // There was something wrong with the matching offer, get new random
+                offers.splice(randomInd, 1);
+            }
+        }
+    });
+}

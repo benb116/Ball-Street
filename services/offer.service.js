@@ -12,11 +12,13 @@ const isoOption = {
 };
 
 const offerQueue = new Queue('offer-queue');
+const protectedQueue = new Queue('protected-queue');
 
 module.exports = {
     getUserOffers,
     createOffer,
     cancelOffer,
+    getOfferBacklog,
 };
 
 function getUserOffers(req) {
@@ -97,4 +99,11 @@ function cancelOffer(req) {
         await o.save({transaction: t});
         return o;
     });
+}
+
+async function getOfferBacklog() {
+    return Promise.all([
+        offerQueue.getJobCounts(),
+        protectedQueue.getJobCounts(),
+    ]);
 }

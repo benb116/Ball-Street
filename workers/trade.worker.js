@@ -20,13 +20,13 @@ async function fillOffers(bidid, askid, price) {
     }).catch(err => {
         switch(err) {
             case 'bid':
-            console.log('bider');
+                console.log('bid err');
                 return [1, 0];
             case 'ask':
-            console.log('asker');
+                console.log('ask err');
                 return [0, 1];
             default:
-            console.log('bother');
+                console.log('both err');
                 return [1, 1];
         }
     });
@@ -41,7 +41,7 @@ async function attemptFill(t, bidid, askid, price) {
     const askoffer = await Offer.findByPk(askid, u.tobj(t));
     let aoffer = u.dv(askoffer);
 
-    if (!boffer.isbid) { [aoffer, boffer] = [boffer, aoffer]; }
+    if (!boffer.isbid) { throw new Error('bidoffer is not a bid'); }
 
     if (!boffer || boffer.filled || boffer.cancelled) {
         console.log('no bid', bidid);
