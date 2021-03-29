@@ -6,17 +6,18 @@ const { Contest } = require('../models');
 const u = require('../util');
 
 module.exports = {
-    getContest(req) {
+    getContest(req, res) {
+        console.log(req.params.contestID);
         return Contest.findOne({
             where: {
-                ContestId: req.param.contestID
+                id: req.params.contestID
             }
-        }).then(u.dv).then(console.log).catch(console.error);
+        }).then(u.dv).catch(console.error);
     },
     getUserContests(req) {
         return Contest.findAll({
             where: {
-                UserId: req.user.id,
+                UserId: req.session.user.id,
             }
         }).then(u.dv).then(console.log).catch(console.error);
     }

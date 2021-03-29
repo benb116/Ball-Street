@@ -1,3 +1,4 @@
+
 const sequelize = require('./db');
 const models = require('./models');
 const u = require('util');
@@ -9,15 +10,15 @@ console.log('go');
 
     const services = require('./services/');
 
-    // services.entry.getEntry({param: {entryID: 2}});
+    // services.entry.getEntry({params: {entryID: 2}});
     // services.entry.createEntry({
     //     user: {id: 3},
-    //     param: {contestID: 1}
+    //     params: {contestID: 1}
     // });
 
     const tradeResults = await services.trade.preTradeAdd({
         user: {id: 1},
-        param: {
+        params: {
             contestID: 1,
             // nflplayerID: 19045,
             nflplayerID: 17923,
@@ -27,7 +28,7 @@ console.log('go');
 
     const tradeResults2 = await services.trade.preTradeAdd({
         user: {id: 2},
-        param: {
+        params: {
             contestID: 1,
             // nflplayerID: 19045,
             nflplayerID: 17923,
@@ -37,7 +38,7 @@ console.log('go');
 
     const tradeResults3 = await services.trade.preTradeAdd({
         user: {id: 3},
-        param: {
+        params: {
             contestID: 1,
             nflplayerID: 19045,
             // nflplayerID: 17923,
@@ -47,7 +48,7 @@ console.log('go');
 
     // const tradeResults4 = await services.trade.preTradeAdd({
     //     user: {id: 4},
-    //     param: {
+    //     params: {
     //         contestID: 1,
     //         // nflplayerID: 19045,
     //         nflplayerID: 17923,
@@ -56,7 +57,7 @@ console.log('go');
 
     const offerObj3 = await services.offer.createOffer({
         user: {id: 2},
-        param: { offerObj: {
+        params: { offerObj: {
             contestID: 1,
             // nflplayerID: 19045,
             nflplayerID: 17923,
@@ -68,7 +69,7 @@ console.log('go');
     
     const offerObj = await services.offer.createOffer({
         user: {id: 3},
-        param: { offerObj: {
+        params: { offerObj: {
             contestID: 1,
             // nflplayerID: 19045,
             nflplayerID: 17923,
@@ -83,7 +84,7 @@ console.log('go');
 
     const offerObj4 = await services.offer.createOffer({
         user: {id: 1},
-        param: { offerObj: {
+        params: { offerObj: {
             contestID: 1,
             // nflplayerID: 19045,
             nflplayerID: 17923,
@@ -95,7 +96,7 @@ console.log('go');
 
     const offerObj5 = await services.offer.createOffer({
         user: {id: 4},
-        param: { offerObj: {
+        params: { offerObj: {
             contestID: 1,
             // nflplayerID: 19045,
             nflplayerID: 17923,
@@ -107,13 +108,13 @@ console.log('go');
     await delay(6000);
 
     // await services.offer.cancelOffer({
-    //     param: { offerID: offerObj.id }
+    //     params: { offerID: offerObj.id }
     // });
     // await delay(7000);
 
     // const tradeResults7 = await services.trade.preTradeAdd({
     //     user: {id: 1},
-    //     param: {
+    //     params: {
     //         contestID: 1,
     //         // nflplayerID: 19045,
     //         nflplayerID: 17923,
@@ -123,7 +124,7 @@ console.log('go');
 
     // const tradeResults8 = await services.trade.preTradeAdd({
     //     user: {id: 2},
-    //     param: {
+    //     params: {
     //         contestID: 1,
     //         // nflplayerID: 19045,
     //         nflplayerID: 17923,
@@ -132,7 +133,7 @@ console.log('go');
     // }).then(u.dv).then(console.log).catch(console.error);
 
     await services.nflplayer.getNFLPlayerOfferSummary({
-        param: {
+        params: {
             nflplayerID: offerObj.NFLPlayerId,
             contestID: 1,
         }
@@ -147,7 +148,7 @@ console.log('go');
 
     // const entres1 = await services.entry.getEntry({
     //     user: {id: 1},
-    //     param: {
+    //     params: {
     //         contestID: 1,
     //         // nflplayerID: 19045,
     //         // rosterposition: "RB1"
@@ -156,7 +157,7 @@ console.log('go');
 
     // const entres2 = await services.entry.getEntry({
     //     user: {id: 2},
-    //     param: {
+    //     params: {
     //         contestID: 1,
     //         // nflplayerID: 19045,
     //         // rosterposition: "RB1"
@@ -165,7 +166,7 @@ console.log('go');
 
     // const entres3 = await services.entry.getEntry({
     //     user: {id: 3},
-    //     param: {
+    //     params: {
     //         contestID: 1,
     //         // nflplayerID: 19045,
     //         // rosterposition: "RB1"
@@ -174,7 +175,7 @@ console.log('go');
 
     // const entres4 = await services.entry.getEntry({
     //     user: {id: 4},
-    //     param: {
+    //     params: {
     //         contestID: 1,
     //         // nflplayerID: 19045,
     //         // rosterposition: "RB1"
@@ -182,6 +183,6 @@ console.log('go');
     // }).then(u.dv).then(console.log).catch(console.error);
 
     // await services.offer.cancelOffer({
-    //     param: { offerID: offerObj.id }
+    //     params: { offerID: offerObj.id }
     // });
 })();

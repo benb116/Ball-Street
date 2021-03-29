@@ -13,6 +13,10 @@ module.exports = function(sequelize, DataTypes) {
       validate: {
         isEmail: true
       }
-    }
+    },
+    pwHash: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   }, {sequelize});
 };

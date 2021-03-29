@@ -9,8 +9,8 @@ module.exports = {
     getUserRoster(req) {
         return Roster.findAll({
             where: {
-                UserId: req.user.id,
-                ContestId: req.param.contestID
+                UserId: req.session.user.id,
+                ContestId: req.params.contestID
             }
         }).then(u.dv).then(console.log).catch(console.error);
     },

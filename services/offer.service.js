@@ -22,8 +22,8 @@ module.exports = {
 function getUserOffers(req) {
     return Offer.findAll({
         where: {
-            UserId: req.user.id,
-            ContestId: req.param.contestID,
+            UserId: req.session.user.id,
+            ContestId: req.params.contestID,
             filled: false,
             cancelled: false
         }
@@ -31,8 +31,8 @@ function getUserOffers(req) {
 }
 
 function createOffer(req) {
-    let obj = req.param.offerObj;
-    obj.userID = req.user.id;
+    let obj = req.params.offerObj;
+    obj.userID = req.session.user.id;
 
     return sequelize.transaction(isoOption, async (t) => {
         const theentry = await Entry.findOne({
@@ -91,7 +91,7 @@ function createOffer(req) {
 function cancelOffer(req) {
     return Offer.update({ cancelled: true }, {
         where: {
-            id: req.param.offerID
+            id: req.params.offerID
         }
     });
 }

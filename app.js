@@ -1,8 +1,10 @@
+const path = require('path');
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require("cors");
+const helmet = require("helmet");
 
-const path = require('path'),
-      express = require('express'),
-      bodyParser = require('body-parser'),
-      cors = require('cors');
+const session = require("./middleware/session");
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -10,15 +12,17 @@ const isProduction = process.env.NODE_ENV === 'production';
 const app = express();
 
 app.use(cors());
-
-// Normal express config defaults
+app.use(express.json());
+app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(express.static(__dirname + '/public'));
+app.use(session);
+app.use(helmet());
 
+app.use('/auth/', require('./routes/auth.route'));
 app.use('/api/', require('./routes'));
 
 // finally, let's start our server...
 const server = app.listen( process.env.PORT || 3000, function(){
-  console.log('Listening on port ' + server.address().port);
+    console.log('Listening on port ' + server.address().port);
 });

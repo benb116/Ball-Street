@@ -10,7 +10,7 @@ module.exports = {
     getNFLPlayer(req) {
         return NFLPlayer.findOne({
             where: {
-                NFLPlayerId: req.param.nflplayerID
+                NFLPlayerId: req.params.nflplayerID
             }
         }).then(u.dv).then(console.log).catch(console.error);
     },
@@ -18,8 +18,8 @@ module.exports = {
         const bids = Offer.count({
             group: 'price',
             where: {
-                NFLPlayerId: req.param.nflplayerID,
-                ContestId: req.param.contestID,
+                NFLPlayerId: req.params.nflplayerID,
+                ContestId: req.params.contestID,
                 filled: false,
                 cancelled: false,
                 isbid: true
@@ -29,8 +29,8 @@ module.exports = {
         const asks = Offer.count({
             group: 'price',
             where: {
-                NFLPlayerId: req.param.nflplayerID,
-                ContestId: req.param.contestID,
+                NFLPlayerId: req.params.nflplayerID,
+                ContestId: req.params.contestID,
                 filled: false,
                 cancelled: false,
                 isbid: false
@@ -43,16 +43,16 @@ module.exports = {
     getNFLPlayerTradeVolume(req) {
         return Trade.count({
             where: {
-                ContestId: req.param.contestID,
-                NFLPlayerId: req.param.nflplayerID
+                ContestId: req.params.contestID,
+                NFLPlayerId: req.params.nflplayerID
             }
         });
     },
     // getNFLPlayerNumAdds(req) {
     //     return Entry.count({
     //         where: {
-    //             ContestId: req.param.contestID,
-    //             [Op.or]: gen(req.param.nflplayerID)
+    //             ContestId: req.params.contestID,
+    //             [Op.or]: gen(req.params.nflplayerID)
     //         }
     //     });
 

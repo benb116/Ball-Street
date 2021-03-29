@@ -65,7 +65,7 @@ async function attemptFill(t, bidid, askid, price) {
 
     const bidreq = {
         user: {id: biduser},
-        param: {
+        params: {
             contestID: boffer.ContestId,
             nflplayerID: player,
             price: price,
@@ -73,7 +73,7 @@ async function attemptFill(t, bidid, askid, price) {
     };
     const askreq = {
         user: {id: askuser},
-        param: {
+        params: {
             contestID: aoffer.ContestId,
             nflplayerID: player,
             price: price,
