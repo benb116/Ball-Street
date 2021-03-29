@@ -23,6 +23,7 @@ const config = {
         '6': {name: 'DEF', canflex: false},
     },
     DefaultProtected: false,
+    RefreshTime: 5,
 };
 
 config.Roster.FLEX1 = config.FlexNFLPositionId;

@@ -25,7 +25,7 @@ async function evalOrderBook(contestID, nflplayerID) {
         const bestbid = (nextbid ? nextbid.price : NaN);
         const bestask = (nextask ? nextask.price : NaN);
         client.hmset(player, 'bestbid', bestbid, 'bestask', bestask);
-        client.publish('priceUpdate', player);
+        client.publish('priceUpdate', player+' '+bestbid+' '+bestask);
     });
     // .then(console.log);
 }
@@ -64,7 +64,7 @@ async function compareBidsAsks(bids, asks, bidind=0, askind=0) {
 
     } else {
         console.log('PriceMismatch');
-        return [bids[0].NFLPlayerId,bids[bidind], bids[askind]];
+        return [bids[0].NFLPlayerId, bids[bidind], bids[askind]];
     }
 }
 
@@ -104,6 +104,7 @@ async function addToProtectedMatchQueue(eOffer, nOffer) {
         newOffer: nOffer.id,
     }, { delay: config.ProtectionDelay*1000 });
     // Send ping to user
+    client.publish('protectedMatch', eOffer.UserId+' '+eOffer.id);
     return 1;
 }
 

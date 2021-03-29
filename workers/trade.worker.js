@@ -100,7 +100,9 @@ async function attemptFill(t, bidid, askid, price) {
     }, u.tobj(t));
 
     client.hmset(player, 'lastTradePrice', price);
-    client.publish('lastTrade', player);
+    client.publish('lastTrade', player+' '+price);
+    client.publish('offerFilled', bidoffer.UserId+' '+bidoffer.id);
+    client.publish('offerFilled', askoffer.UserId+' '+askoffer.id);
     console.log('finish trade', price);
     return [1, 1];
 }

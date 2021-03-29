@@ -89,9 +89,12 @@ function createOffer(req) {
 }
 
 function cancelOffer(req) {
-    return Offer.update({ cancelled: true }, {
-        where: {
-            id: req.params.offerID
-        }
+    return sequelize.transaction(isoOption, async (t) => {
+        const o = await Offer.findByPk(req.params.offerID, u.tobj(t));
+        if (!o) { throw new Error('No offer found'); }
+        if (o.filled) { throw new Error('Offer already filled'); }
+        o.cancelled = true;
+        await o.save({transaction: t});
+        return o;
     });
 }

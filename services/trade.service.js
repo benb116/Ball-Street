@@ -108,13 +108,13 @@ async function tradeDrop(req, t) {
 
 function preTradeAdd(req) {
     return sequelize.transaction(isoOption, async (t) => {
-        await tradeAdd(req, t);
+        return tradeAdd(req, t);
     });
 }
 
 function preTradeDrop(req) {
     return sequelize.transaction(isoOption, async (t) => {
-        await tradeDrop(req, t);
+        return tradeDrop(req, t);
     });
 }
 
