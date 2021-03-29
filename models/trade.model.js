@@ -6,7 +6,7 @@ module.exports = function(sequelize, DataTypes) {
       defaultValue: Sequelize.UUIDV4,
       primaryKey: true
     },
-    price: {
+    price: { // What was the actual price that was traded at
       type: DataTypes.INTEGER,
       allowNull: false
     },

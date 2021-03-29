@@ -2,6 +2,11 @@ const { Sequelize, DataTypes } = require('sequelize');
 const u = require('../util');
 const config = require('../config');
 
+// The model has common columns (UserId, ContestId, pointtotal)
+// This script also generates columns based on the set roster in config
+// So it will add a "QB1" column, a "FLEX2" column, etc. All with allowNull = true
+// Those columns store the NFLPlayerId of the player in that roster position
+
 function model(sequelize) {
     let modelobj = {
         pointtotal: {

@@ -1,3 +1,6 @@
+// Websocket server worker
+// Subscribe to redis updates and push out to clients
+
 const WebSocket = require('ws');
 const redis = require("redis");
 const http = require('http');
@@ -12,8 +15,8 @@ client.subscribe('lastTrade');
 client.subscribe('protectedMatch');
 client.subscribe('offerFilled');
 
-const priceUpdateMap = new Map();
-const lastTradeMap = new Map();
+const priceUpdateMap = new Map(); // Keep an account of changes, will be flushed on interval
+const lastTradeMap = new Map(); // Keep an account of changes, will be flushed on interval
 
 client.on("message", function (channel, message) {
     switch(channel) {
@@ -75,6 +78,7 @@ wss.on('connection', function (ws, request) {
     });
 });
 
+// Send out new data when it's available
 setInterval(() => {
     if (priceUpdateMap.size) {
         wss.clients.forEach(function each(_ws) {

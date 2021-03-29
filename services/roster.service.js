@@ -1,3 +1,5 @@
+// Deprecated, see model
+
 // Roster service covers:
     // Getting info about a user's roster
     // Reordering a team

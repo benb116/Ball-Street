@@ -14,13 +14,6 @@ const isoOption = {
 const offerQueue = new Queue('offer-queue');
 const protectedQueue = new Queue('protected-queue');
 
-module.exports = {
-    getUserOffers,
-    createOffer,
-    cancelOffer,
-    getOfferBacklog,
-};
-
 function getUserOffers(req) {
     return Offer.findAll({
         where: {
@@ -37,6 +30,7 @@ function createOffer(req) {
     obj.userID = req.session.user.id;
 
     return sequelize.transaction(isoOption, async (t) => {
+        // Find user's entry
         const theentry = await Entry.findOne({
             where: {
                 UserId: obj.userID,
@@ -46,17 +40,22 @@ function createOffer(req) {
             lock: t.LOCK.UPDATE
         });
         
+        // Player should be in entry for ask, not for bid
         const isOnTeam = u.isPlayerOnRoster(theentry, obj.nflplayerID);
         if (!obj.isbid) {
             if (!isOnTeam) { throw new Error('Player is not on roster'); }
         } else {
-            if (isOnTeam) {throw new Error('Player is on roster'); }
+            if (isOnTeam) {throw new Error('Player is on roster already'); }
+
             const pts = theentry.dataValues.pointtotal;
-            if (obj.price > pts) { throw new Error("User doesn't have enough points to buy"); }
+            if (obj.price > pts) { throw new Error("User doesn't have enough points to offer"); }
+            
             const playerdata = await NFLPlayer.findByPk(obj.nflplayerID, {
                 attributes: ['NFLPositionId'],
                 transaction: t
-            }).then(d => d.dataValues);
+            }).then(u.dv);
+            // Only allow offer if there's currently room on the roster
+            // TODO make linked offers? I.e. sell player at market price to make room for other player
             if (!u.isOpenRoster(theentry, playerdata.NFLPositionId)) { throw new Error("There are no spots this player could fit into"); }
         }
 
@@ -70,9 +69,6 @@ function createOffer(req) {
         }, {
             transaction: t,
             lock: t.LOCK.UPDATE
-        })
-        .catch(err => {
-            throw new Error("Offer create error: " + err.original.detail);
         });
     })
     .then(u.dv).then(offer => {
@@ -80,17 +76,10 @@ function createOffer(req) {
         offerQueue.add(offer);
         return offer;
     });
-
-
-    // Do they have this player on their roster?
-    // Can user submit offer? bid
-        // Do they have the funds?
-        // Do they have a spot on their roster?
-    // Can user submit offer? ask
-
 }
 
 function cancelOffer(req) {
+    // Cancel offer, but if it's filled, let user know
     return sequelize.transaction(isoOption, async (t) => {
         const o = await Offer.findByPk(req.params.offerID, u.tobj(t));
         if (!o) { throw new Error('No offer found'); }
@@ -107,3 +96,10 @@ async function getOfferBacklog() {
         protectedQueue.getJobCounts(),
     ]);
 }
+
+module.exports = {
+    getUserOffers,
+    createOffer,
+    cancelOffer,
+    getOfferBacklog,
+};

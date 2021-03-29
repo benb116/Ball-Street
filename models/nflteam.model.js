@@ -6,21 +6,21 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       primaryKey: true
     },
-    location: {
+    location: { // Philadelphia
       type: DataTypes.STRING(255),
       allowNull: true
     },
-    name: {
+    name: { // Eagles
       type: DataTypes.STRING(255),
       allowNull: true
     },
-    fullname: {
+    fullname: { // Philadelphia Eagles
       type: DataTypes.VIRTUAL,
       get() {
         return `${this.location} ${this.name}`;
       } 
     },
-    abr: {
+    abr: { // PHL
       type: DataTypes.STRING(255),
       allowNull: false,
       unique: true

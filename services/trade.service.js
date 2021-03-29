@@ -18,6 +18,13 @@ module.exports = {
     getUserTrades,
 };
 
+// Adding and dropping are two separate processes
+// Splitting them supports pregame independent trading
+// For in-game trading, need to see if both add and drop can be done before committing transaction
+// So separate functions will run through the process without committing,
+// then both can be committed together if there were no issues
+
+// Add a player within a transaction, but don't commit
 async function tradeAdd(req, t) {
     const _player = req.params.nflplayerID;
     // Get user entry
@@ -74,6 +81,7 @@ async function tradeAdd(req, t) {
     return 0;
 }
 
+// Drop a player within a transaction, but don't commit
 async function tradeDrop(req, t) {
     // Remove from roster
     const theentry = await Entry.findOne({
@@ -106,12 +114,14 @@ async function tradeDrop(req, t) {
     return 0;
 }
 
+// Try to add within a transaction, errors will rollback
 function preTradeAdd(req) {
     return sequelize.transaction(isoOption, async (t) => {
         return tradeAdd(req, t);
     });
 }
 
+// Try to drop within a transaction, errors will rollback
 function preTradeDrop(req) {
     return sequelize.transaction(isoOption, async (t) => {
         return tradeDrop(req, t);
@@ -126,5 +136,5 @@ function getUserTrades(req) {
                 UserId: req.session.user.id
             }
         }
-    }).then(u.dv).then(console.log).catch(console.error);
+    }).then(u.dv);
 }

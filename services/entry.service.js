@@ -13,20 +13,20 @@ module.exports = {
                 UserId: req.session.user.id,
                 ContestId: req.params.contestID
             }
-        }).then(u.dv).then(console.log).catch(console.error);
+        }).then(u.dv);
     },
     getUserEntries(req) {
         return Entry.findAll({
             where: {
                 UserId: req.session.user.id,
             }
-        }).then(u.dv).then(console.log).catch(console.error);
+        }).then(u.dv);
     },
     createEntry(req) {
         let obj = {};
         obj.UserId = req.session.user.id;
         obj.ContestId = req.body.contestID;
         if (req.body.startPoints) { obj.pointtotal = req.body.startPoints; }
-        return Entry.create(obj).then(u.dv).then(console.log).catch(console.error);
+        return Entry.create(obj).then(u.dv);
     }
 };

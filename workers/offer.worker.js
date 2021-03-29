@@ -1,3 +1,8 @@
+// Offer server worker
+// Processes jobs on the offer queue
+// Tries to reduce order book whenever an offer comes in
+// Sends out matches to be filled
+
 const u = require('../util');
 const config = require('../config');
 const Queue = require('bull');

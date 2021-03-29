@@ -27,7 +27,6 @@ const RosterPosition = _rosterposition(sequelize, DataTypes);
 const Trade = _trade(sequelize, DataTypes);
 const User = _user(sequelize, DataTypes);
 
-
 module.exports = {
     Contest,
     Entry,

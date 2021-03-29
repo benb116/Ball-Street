@@ -12,13 +12,13 @@ module.exports = {
             where: {
                 id: req.params.contestID
             }
-        }).then(u.dv).catch(console.error);
+        }).then(u.dv);
     },
     getUserContests(req) {
         return Contest.findAll({
             where: {
                 UserId: req.session.user.id,
             }
-        }).then(u.dv).then(console.log).catch(console.error);
+        }).then(u.dv);
     }
 };

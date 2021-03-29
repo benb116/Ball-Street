@@ -1,3 +1,9 @@
+// Roster table is not used anymore
+// had originally used as a through table between entries (by User and Contest) and Players
+// When doing transactions, would need to use range locks
+// And it's a bit more complicated to determine which roster slots are open
+// If we're fine with null values in Entry table, I think that's better
+
 const Sequelize = require('sequelize');
 const config = require('../config');
 module.exports = function(sequelize, DataTypes) {

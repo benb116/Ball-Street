@@ -1,3 +1,7 @@
+// Trade worker
+// Could be done within Offer worker
+// Try to fill a pair of offers
+
 const u = require('../util');
 const config = require('../config');
 

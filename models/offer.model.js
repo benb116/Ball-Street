@@ -49,7 +49,7 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     sequelize,
     indexes: [
-      {
+      { // Make it faster to search for offers that aren't filled or cancelled
         name: 'IX_Offer-Active',
         fields: ['id'],
         where: {
@@ -57,7 +57,7 @@ module.exports = function(sequelize, DataTypes) {
           cancelled: false
         }
       },
-      {
+      { // Can only have one offer per user per contest per player that's active
         name: 'IX_Offer-OneActive',
         unique: true,
         fields: ['UserId', 'ContestId', 'NFLPlayerId'],

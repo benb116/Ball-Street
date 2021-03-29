@@ -8,7 +8,6 @@ const session = require("./middleware/session");
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-// Create global app object
 const app = express();
 
 app.use(cors());

@@ -9,9 +9,9 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: false
     },
-    canflex: {
+    canflex: { // E.g. RB can flex but DEF can't
       type: DataTypes.BOOLEAN,
-      allowNull: true,
+      allowNull: false,
       defaultValue: false
     }
   }, {sequelize});

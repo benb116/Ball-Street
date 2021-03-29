@@ -12,7 +12,7 @@ module.exports = {
             where: {
                 NFLPlayerId: req.params.nflplayerID
             }
-        }).then(u.dv).then(console.log).catch(console.error);
+        }).then(u.dv);
     },
     getNFLPlayerOfferSummary(req) {
         const bids = Offer.count({
@@ -38,7 +38,7 @@ module.exports = {
             attributes: ['price'],
         });
 
-        return Promise.all([bids, asks]);
+        return Promise.all([bids, asks]).then(u.dv);
     },
     getNFLPlayerTradeVolume(req) {
         return Trade.count({
@@ -46,7 +46,7 @@ module.exports = {
                 ContestId: req.params.contestID,
                 NFLPlayerId: req.params.nflplayerID
             }
-        });
+        }).then(u.dv);
     },
     // getNFLPlayerNumAdds(req) {
     //     return Entry.count({

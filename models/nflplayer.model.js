@@ -15,20 +15,20 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       default: 0
     },
-    preprice: {
+    preprice: { // How much can someone pay to add before games start
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    statprice: {
+    statprice: { // If games ended now, how many points would he be worth
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    NFLPositionId: {
+    NFLPositionId: { // RB, not RB2
       type: DataTypes.INTEGER,
       references: { model: 'NFLPositions' },
       allowNull: false,
       validate: {
-        isNotFlex(value) {
+        isNotFlex(value) { // Make sure we never list a player as a true flex
           if (value === config.FlexNFLPositionId) { throw new Error('Cannot have a NFLPlayer as a flex'); }
         }
       }

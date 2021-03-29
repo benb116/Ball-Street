@@ -7,11 +7,11 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true,
       autoIncrement: true,
     },
-    name: {
+    name: { // RB2
       type: DataTypes.STRING,
       allowNull: false
     },
-    NFLPositionId: {
+    NFLPositionId: { // RB2 is an RB position
       type: DataTypes.INTEGER,
       references: { model: 'NFLPositions' },
       allowNull: false,
