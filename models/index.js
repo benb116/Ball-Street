@@ -2,6 +2,8 @@ const sequelize = require('../db');
 const DataTypes = require("sequelize").DataTypes;
 
 const _contest = require("./contest.model");
+const _league = require("./league.model");
+const _membership = require("./membership.model");
 const _entry = require("./entry.model");
 const _nfldivision = require("./nfldivision.model");
 const _nflplayer = require("./nflplayer.model");
@@ -15,6 +17,8 @@ const _trade = require("./trade.model");
 const _user = require("./user.model");
 
 const Contest = _contest(sequelize, DataTypes);
+const League = _league(sequelize, DataTypes);
+const Membership = _membership(sequelize, DataTypes);
 const Entry = _entry(sequelize, DataTypes);
 const NFLDivision = _nfldivision(sequelize, DataTypes);
 const NFLPlayer = _nflplayer(sequelize, DataTypes);
@@ -28,6 +32,8 @@ const Trade = _trade(sequelize, DataTypes);
 const User = _user(sequelize, DataTypes);
 
 module.exports = {
+    League,
+    Membership,
     Contest,
     Entry,
     NFLDivision,

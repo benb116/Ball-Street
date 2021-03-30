@@ -4,7 +4,7 @@ const u = require('../util');
 
 async function PopulateDB(sequelize) {
     await sequelize.sync({ force: true });
-    const { NFLPosition, RosterPosition, NFLDivision, NFLTeam, NFLPlayer, Contest, User, Entry } = sequelize.models;
+    const { NFLPosition, RosterPosition, NFLDivision, NFLTeam, NFLPlayer, Contest, User, Entry, League, Membership } = sequelize.models;
 
     // Define NFL positions
     const nflpos = {

@@ -12,7 +12,6 @@ function model(sequelize) {
         pointtotal: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            defaultValue: 10000
         },
         UserId: {
             type: DataTypes.INTEGER,

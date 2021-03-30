@@ -3,7 +3,7 @@
     // Getting info about a specific entry
     // Getting info about a user's entries across contests
 
-const { Entry } = require('../models');
+const { Entry, Contest, Membership, League } = require('../models');
 const u = require('../util');
 
 module.exports = {
@@ -22,11 +22,25 @@ module.exports = {
             }
         }).then(u.dv);
     },
-    createEntry(req) {
+    async createEntry(req) {
         let obj = {};
         obj.UserId = req.session.user.id;
         obj.ContestId = req.body.contestID;
-        if (req.body.startPoints) { obj.pointtotal = req.body.startPoints; }
-        return Entry.create(obj).then(u.dv);
+        return sequelize.transaction(isoOption, async (t) => {
+            const leagueID = await Contest.findByPk(req.body.contestID, u.tobj(t)).then(u.dv).then(out => out.LeagueId);
+            if (!leagueID) { return new Error('No contest found'); }
+            const _league = await Membership.findOn({
+                where: {
+                    UserId: obj.UserId,
+                    LeagueId: leagueID,
+                },
+                include: {
+                    model: League,
+                }
+            }, u.tobj(t)).then(u.dv);
+            if (!_league) { return new Error('No contest found'); }
+            obj.pointtotal = _league.league.budget;
+            return Entry.create(obj).then(u.dv);
+        });
     }
 };

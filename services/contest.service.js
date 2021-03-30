@@ -6,13 +6,9 @@ const { Contest } = require('../models');
 const u = require('../util');
 
 module.exports = {
-    getContest(req, res) {
+    getContest(req) {
         console.log(req.params.contestID);
-        return Contest.findOne({
-            where: {
-                id: req.params.contestID
-            }
-        }).then(u.dv);
+        return Contest.findByPk(req.params.contestID).then(u.dv);
     },
     getUserContests(req) {
         return Contest.findAll({

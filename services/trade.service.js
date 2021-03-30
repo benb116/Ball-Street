@@ -133,7 +133,7 @@ function getUserTrades(req) {
         include: {
             model: User,
             where: {
-                UserId: req.session.user.id
+                id: req.session.user.id
             }
         }
     }).then(u.dv);
