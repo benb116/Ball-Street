@@ -7,6 +7,8 @@ const u = require('../util');
 const config = require('../config');
 const Queue = require('bull');
 const redis = require("redis");
+const { Op } = require("sequelize");
+
 const client = redis.createClient();
 
 const offerQueue = new Queue('offer-queue');
@@ -124,18 +126,19 @@ async function addToProtectedMatchQueue(eOffer, nOffer) {
 
 // 
 protectedQueue.process(async (job) => {
+    console.log('job');
     await findProtectedMatches(job.data.existingOffer, job.data.isExistingBid);
 });
 
-async function findProtectedMatches(poffer, ispbid) {
-    // contestID, nflplayerID, isbid
+async function findProtectedMatches(proffer, ispbid) {
+    const poffer = await Offer.findByPk(proffer).then(u.dv);
     const contestID = poffer.ContestId;
     const nflplayerID = poffer.NFLPlayerId;
     const findbids = !ispbid;
 
     let priceobj = {};
-    if (findbids) { priceobj = { [Op.lte]: poffer.price }; }
-    else { priceobj = { [Op.gte]: poffer.price }; }
+    if (findbids) { priceobj = { [Op.gte]: poffer.price }; }
+    else { priceobj = { [Op.lte]: poffer.price }; }
 
     const possibleMatches = Offer.findAll({
         where: {
@@ -149,18 +152,20 @@ async function findProtectedMatches(poffer, ispbid) {
     })
     .then(u.dv)
     .then(async offers => {
+        console.log('o', offers);
         let filled = false;
         while (offers.length) {
             const randomInd = Math.floor(Math.random()*offers.length);
             const randomOffer = offers[randomInd];
             const bidoffer = (ispbid ? poffer : randomOffer);
             const askoffer = (!ispbid ? poffer : randomOffer);
-            const out = await fillOffers(bidoffer, askoffer);
+            const out = await fillOffers(bidoffer.id, askoffer.id);
             // if out[!ispbid] is 1, then the protected offer was filled or errored
-            if (out[!ispbid]) { break; }
+            if (out[Number(!ispbid)]) { break; }
             if (out[ispbid]) { // There was something wrong with the matching offer, get new random
                 offers.splice(randomInd, 1);
             }
         }
-    });
+    })
+    .catch(console.log);
 }

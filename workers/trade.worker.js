@@ -39,13 +39,13 @@ async function fillOffers(bidid, askid, price) {
 
 async function attemptFill(t, bidid, askid, price) {
     let resp = [0, 0];
-
     const bidoffer = await Offer.findByPk(bidid, u.tobj(t));
     let boffer = u.dv(bidoffer);
     const askoffer = await Offer.findByPk(askid, u.tobj(t));
     let aoffer = u.dv(askoffer);
 
-    if (!boffer.isbid) { throw new Error('bidoffer is not a bid'); }
+    if (!boffer.isbid) { console.log('bid not bid', boffer); throw new Error('bidoffer is not a bid'); }
+    if (aoffer.isbid) { console.log('ask not ask', aoffer); throw new Error('askoffer is not a ask'); }
 
     if (!boffer || boffer.filled || boffer.cancelled) {
         console.log('no bid', bidid);
@@ -59,6 +59,7 @@ async function attemptFill(t, bidid, askid, price) {
     if (resp[0] === 1) { throw new Error('bid'); }
     if (resp[1] === 1) { throw new Error('ask'); }
 
+    console.log('past initial');
     const biduser = boffer.UserId;
     const askuser = aoffer.UserId;
     const player = boffer.NFLPlayerId;
@@ -68,7 +69,7 @@ async function attemptFill(t, bidid, askid, price) {
     }
 
     const bidreq = {
-        user: {id: biduser},
+        session: {user: {id: biduser}},
         params: {
             contestID: boffer.ContestId,
             nflplayerID: player,
@@ -76,7 +77,7 @@ async function attemptFill(t, bidid, askid, price) {
         }
     };
     const askreq = {
-        user: {id: askuser},
+        session: {user: {id: askuser}},
         params: {
             contestID: aoffer.ContestId,
             nflplayerID: player,
@@ -84,8 +85,8 @@ async function attemptFill(t, bidid, askid, price) {
         }
     };
 
-    const biddone = await service.tradeAdd(bidreq, t).catch(() => { return 1; } );
-    const askdone = await service.tradeDrop(askreq, t).catch(() => { return 1; } );
+    const biddone = await service.tradeAdd(bidreq, t).catch(err => { console.log(err); return 1; } );
+    const askdone = await service.tradeDrop(askreq, t).catch(err => { console.log(err); return 1; } );
     // if waiting for a lock, maybe return [0, 0]?
     if (biddone === 1 && askdone === 1) { throw new Error('both'); }
     if (biddone === 1) { throw new Error('bid'); }

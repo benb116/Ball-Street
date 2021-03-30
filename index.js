@@ -12,12 +12,14 @@ console.log('go');
 
     // services.entry.getEntry({params: {entryID: 2}});
     // services.entry.createEntry({
-    //     user: {id: 3},
+    //     
+    // session: {user: {id: 3}},
     //     params: {contestID: 1}
     // });
 
     const tradeResults = await services.trade.preTradeAdd({
-        user: {id: 1},
+        
+        session: {user: {id: 1}},
         params: {
             contestID: 1,
             // nflplayerID: 19045,
@@ -27,7 +29,8 @@ console.log('go');
     }).then(u.dv).then(console.log).catch(console.error);
 
     const tradeResults2 = await services.trade.preTradeAdd({
-        user: {id: 2},
+        
+        session: {user: {id: 2}},
         params: {
             contestID: 1,
             // nflplayerID: 19045,
@@ -37,7 +40,8 @@ console.log('go');
     }).then(u.dv).then(console.log).catch(console.error);
 
     const tradeResults3 = await services.trade.preTradeAdd({
-        user: {id: 3},
+        
+        session: {user: {id: 3}},
         params: {
             contestID: 1,
             nflplayerID: 19045,
@@ -47,7 +51,8 @@ console.log('go');
     }).then(u.dv).then(console.log).catch(console.error);
 
     // const tradeResults4 = await services.trade.preTradeAdd({
-    //     user: {id: 4},
+    //     
+    // session: {user: {id: 4}},
     //     params: {
     //         contestID: 1,
     //         // nflplayerID: 19045,
@@ -56,7 +61,8 @@ console.log('go');
     // }).then(u.dv).then(console.log).catch(console.error);
 
     const offerObj3 = await services.offer.createOffer({
-        user: {id: 2},
+        
+        session: {user: {id: 2}},
         params: { offerObj: {
             contestID: 1,
             // nflplayerID: 19045,
@@ -68,7 +74,8 @@ console.log('go');
     // await delay(1000);
     
     const offerObj = await services.offer.createOffer({
-        user: {id: 3},
+        
+        session: {user: {id: 3}},
         params: { offerObj: {
             contestID: 1,
             // nflplayerID: 19045,
@@ -83,7 +90,8 @@ console.log('go');
     // await delay(1000);
 
     const offerObj4 = await services.offer.createOffer({
-        user: {id: 1},
+        
+        session: {user: {id: 1}},
         params: { offerObj: {
             contestID: 1,
             // nflplayerID: 19045,
@@ -95,7 +103,8 @@ console.log('go');
     // await delay(1000);
 
     const offerObj5 = await services.offer.createOffer({
-        user: {id: 4},
+        
+        session: {user: {id: 4}},
         params: { offerObj: {
             contestID: 1,
             // nflplayerID: 19045,
@@ -105,7 +114,7 @@ console.log('go');
         }}
     }).then(u.dv).catch(console.error);
 
-    await delay(6000);
+    await delay(8000);
 
     // await services.offer.cancelOffer({
     //     params: { offerID: offerObj.id }
@@ -113,7 +122,8 @@ console.log('go');
     // await delay(7000);
 
     // const tradeResults7 = await services.trade.preTradeAdd({
-    //     user: {id: 1},
+    //     
+    // session: {user: {id: 1}},
     //     params: {
     //         contestID: 1,
     //         // nflplayerID: 19045,
@@ -123,7 +133,8 @@ console.log('go');
     // }).then(u.dv).then(console.log).catch(console.error);
 
     // const tradeResults8 = await services.trade.preTradeAdd({
-    //     user: {id: 2},
+    //     
+    // session: {user: {id: 2}},
     //     params: {
     //         contestID: 1,
     //         // nflplayerID: 19045,
@@ -147,7 +158,8 @@ console.log('go');
     .then(console.log);
 
     // const entres1 = await services.entry.getEntry({
-    //     user: {id: 1},
+    //     
+    // session: {user: {id: 1}},
     //     params: {
     //         contestID: 1,
     //         // nflplayerID: 19045,
@@ -156,7 +168,8 @@ console.log('go');
     // }).then(u.dv).then(console.log).catch(console.error);
 
     // const entres2 = await services.entry.getEntry({
-    //     user: {id: 2},
+    //     
+    // session: {user: {id: 2}},
     //     params: {
     //         contestID: 1,
     //         // nflplayerID: 19045,
@@ -165,7 +178,8 @@ console.log('go');
     // }).then(u.dv).then(console.log).catch(console.error);
 
     // const entres3 = await services.entry.getEntry({
-    //     user: {id: 3},
+    //     
+    // session: {user: {id: 3}},
     //     params: {
     //         contestID: 1,
     //         // nflplayerID: 19045,
@@ -174,7 +188,8 @@ console.log('go');
     // }).then(u.dv).then(console.log).catch(console.error);
 
     // const entres4 = await services.entry.getEntry({
-    //     user: {id: 4},
+    //     
+    // session: {user: {id: 4}},
     //     params: {
     //         contestID: 1,
     //         // nflplayerID: 19045,
