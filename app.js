@@ -5,6 +5,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 
 const session = require("./middleware/session");
+const limiter = require("./middleware/limiter");
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -17,6 +18,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(session);
 app.use(helmet());
+app.enable("trust proxy"); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
+app.use(limiter);
 
 app.use('/auth/', require('./routes/auth.route'));
 app.use('/api/', require('./routes'));
