@@ -21,4 +21,8 @@ router.get('/tradestats', async (req, res) => {
     return res.json(out);
 });
 
+router.get('/addstats', async (req, res) => {
+    const out = await nflplayer.getNFLPlayerNumAdds(req);
+    return res.json(out);
+});
 module.exports = router;

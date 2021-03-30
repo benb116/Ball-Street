@@ -2,6 +2,7 @@
     // Getting info about a specific player
     // Get order book info about a specific player
 
+const { Op } = require("sequelize");
 const { NFLPlayer, Offer, Trade, Entry } = require('../models');
 const u = require('../util');
 const config = require('../config');
@@ -45,27 +46,30 @@ module.exports = {
     },
     getNFLPlayerTradeVolume(req) {
         return Trade.count({
-            where: {
-                ContestId: req.params.contestID,
-                NFLPlayerId: req.params.nflplayerID
+            include: {
+                model: Offer,
+                where: {
+                    ContestId: req.params.contestID,
+                    NFLPlayerId: req.params.nflplayerID
+                }
             }
         }).then(u.dv);
     },
-    // getNFLPlayerNumAdds(req) {
-    //     return Entry.count({
-    //         where: {
-    //             ContestId: req.params.contestID,
-    //             [Op.or]: gen(req.params.nflplayerID)
-    //         }
-    //     });
+    getNFLPlayerNumAdds(req) {
+        return Entry.count({
+            where: {
+                ContestId: req.params.contestID,
+                [Op.or]: gen(req.params.nflplayerID)
+            }
+        });
 
-    //     function gen(_player) {
-    //         const rpos = Object.keys(config.Roster);
-    //         return rpos.map(r => {
-    //             let out = {};
-    //             out[r] = _player;
-    //             return out;
-    //         });
-    //     }
-    // }
+        function gen(_player) {
+            const rpos = Object.keys(config.Roster);
+            return rpos.map(r => {
+                let out = {};
+                out[r] = _player;
+                return out;
+            });
+        }
+    }
 };

@@ -157,6 +157,13 @@ console.log('go');
     })
     .then(console.log);
 
+    await services.nflplayer.getNFLPlayerNumAdds({
+        params: {
+            nflplayerID: offerObj.NFLPlayerId,
+            contestID: 1,
+        }
+    }).then(console.log);
+
     // const entres1 = await services.entry.getEntry({
     //     
     // session: {user: {id: 1}},

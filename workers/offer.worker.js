@@ -152,7 +152,6 @@ async function findProtectedMatches(proffer, ispbid) {
     })
     .then(u.dv)
     .then(async offers => {
-        console.log('o', offers);
         let filled = false;
         while (offers.length) {
             const randomInd = Math.floor(Math.random()*offers.length);
