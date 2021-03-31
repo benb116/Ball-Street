@@ -5,39 +5,45 @@ const WebSocket = require('ws');
 const redis = require("redis");
 const http = require('http');
 const express = require('express');
+const { promisify } = require("util");
 
 const u = require('../util');
 const config = require('../config');
+const { hashkey } = require('../db/redisSchema');
+
 const client = redis.createClient();
+const hgetallAsync = promisify(client.hgetall).bind(client);
 
 client.subscribe('priceUpdate');
 client.subscribe('lastTrade');
 client.subscribe('protectedMatch');
 client.subscribe('offerFilled');
 
-const priceUpdateMap = new Map(); // Keep an account of changes, will be flushed on interval
-const lastTradeMap = new Map(); // Keep an account of changes, will be flushed on interval
+const priceUpdateMap = {}; // Keep an account of changes, will be flushed on interval
+const lastTradeMap = {}; // Keep an account of changes, will be flushed on interval
 
 client.on("message", function (channel, message) {
     switch(channel) {
         case 'priceUpdate':
-            [playerID, bestbid, bestask] = message.split(' ');
-            priceUpdateMap.set(playerID, {'bestbid': bestbid, 'bestask': bestask});
+            const {contestID, nflplayerID, bestbid, bestask} = JSON.parse(message);
+            if (!priceUpdateMap[contestID]) { priceUpdateMap[contestID] = {}; }
+            priceUpdateMap[contestID][playerID] = {'bid': bestbid, 'ask': bestask};
             break;
 
         case 'lastTrade':
-            [playerID, price] = message.split(' ');
-            lastTrade.set(playerID, price);
+            const {contestID, nflplayerID, price} = JSON.parse(message);
+            if (!priceUpdateMap[contestID]) { priceUpdateMap[contestID] = {}; }
+            lastTrade[contestID][playerID] = {'price': price};
             break;
 
         case 'protectedMatch':
-            [userID, offerID] = message.split(' ');
+            const {userID, offerID} = JSON.parse(message);
             _ws = connmap(userID);
             _ws.send({ event: 'offerMatched', offerID: offerID });
             break;
 
         case 'offerFilled':
-            [userID, offerID] = message.split(' ');
+            const {userID, offerID} = JSON.parse(message);
             _ws = connmap(userID);
             _ws.send({ event: 'offerFilled', offerID: offerID });
             break;
@@ -46,6 +52,7 @@ client.on("message", function (channel, message) {
 
 const session = require("../middleware/session");
 const connmap = new Map();
+const contestmap = new Map();
 const app = express();
 app.use(session);
 
@@ -73,28 +80,51 @@ wss.on('connection', function (ws, request) {
 
     connmap.set(userId, ws);
 
+    ws.on('message', async function (msg) {
+        contestmap.delete(ws);
+        // Send starting data
+        ws.send(sendLatest(msg.contestID));
+        contestmap.set(ws, msg.contestID);
+    });
+
     ws.on('close', function () {
         connmap.delete(userId);
+        contestmap.delete(ws);
     });
 });
+
+async function sendLatest(contestID) {
+    const playerIDs = await ;
+    const outPromises = playerIDs.map(p => {
+        const rkey = hashkey(contestID, p)
+        return hgetallAsync(rkey).then(obj => {
+            obj.contestID = contestID;
+            obj.nflPlayerID = p;
+            return obj;
+        })
+    });
+    return Promise.all(outPromises)
+}
 
 // Send out new data when it's available
 setInterval(() => {
     if (priceUpdateMap.size) {
         wss.clients.forEach(function each(_ws) {
             if (_ws.readyState === WebSocket.OPEN) {
-                _ws.send(priceUpdateMap);
+                const _contestID = contestmap.get(_ws);
+                _ws.send(priceUpdateMap[contestID]);
             }
         });
-        priceUpdateMap.clear();
+        priceUpdateMap = {};
     }
     if (lastTradeMap.size) {
         wss.clients.forEach(function each(_ws) {
             if (_ws.readyState === WebSocket.OPEN) {
-                _ws.send(lastTradeMap);
+                const _contestID = contestmap.get(_ws);
+                _ws.send(lastTradeMap[contestID]);
             }
         });
-        lastTradeMap.clear();
+        lastTradeMap = {};
     }
 }, config.RefreshTime*1000);
 

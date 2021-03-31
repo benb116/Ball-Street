@@ -4,6 +4,7 @@
 
 const u = require('../util');
 const config = require('../config');
+const { hashkey } = require('../db/redisSchema');
 
 const sequelize = require('../db');
 const { Transaction } = require('sequelize');
@@ -104,10 +105,22 @@ async function attemptFill(t, bidid, askid, price) {
         price: price
     }, u.tobj(t));
 
-    client.hmset(player, 'lastTradePrice', price);
-    client.publish('lastTrade', player+' '+price);
-    client.publish('offerFilled', bidoffer.UserId+' '+bidoffer.id);
-    client.publish('offerFilled', askoffer.UserId+' '+askoffer.id);
+    const contestID = boffer.ContestId;
+
+    client.hmset(hashkey(contestID, player), 'lastTradePrice', price);
+    client.publish('lastTrade', JSON.stringify({
+            contestID: contestID,
+            nflplayerID: nflplayerID,
+            price: price,
+        }));
+    client.publish('offerFilled', JSON.stringify({
+        userID: bidoffer.UserId,
+        offerID: bidoffer.id
+    }));
+    client.publish('offerFilled', JSON.stringify({
+        userID: askoffer.UserId,
+        offerID: askoffer.id
+    }));;
     console.log('finish trade', price);
     return [1, 1];
 }

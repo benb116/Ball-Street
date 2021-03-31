@@ -5,6 +5,7 @@
 
 const u = require('../util');
 const config = require('../config');
+const { hashkey } = require('../db/redisSchema');
 const Queue = require('bull');
 const redis = require("redis");
 const { Op } = require("sequelize");
@@ -32,11 +33,16 @@ async function evalOrderBook(contestID, nflplayerID) {
     // Iterate through and try to match
     .then(([bids, asks]) => compareBidsAsks(bids, asks))
     // Output results
-    .then(([player, nextbid, nextask]) => {
+    .then(([nextbid, nextask]) => {
         const bestbid = (nextbid ? nextbid.price : NaN);
         const bestask = (nextask ? nextask.price : NaN);
-        client.hmset(player, 'bestbid', bestbid, 'bestask', bestask);
-        client.publish('priceUpdate', player+' '+bestbid+' '+bestask);
+        client.hset(hashkey(contestID, nflplayerID), 'bestbid', bestbid, 'bestask', bestask);
+        client.publish('priceUpdate', JSON.stringify({
+            contestID: contestID,
+            nflplayerID: nflplayerID,
+            bestbid: bestbid,
+            bestask: bestask
+        }));
     });
     // .then(console.log);
 }
@@ -70,7 +76,7 @@ async function compareBidsAsks(bids, asks, bidind=0, askind=0) {
     if (!bids[bidind] || !asks[askind]) {
         console.log('EOL');
         const player = (bids[0] ? bids[0].NFLPlayerId : (asks[0] ? asks[0].NFLPlayerId : 0));
-        return [player, bids[bidind], bids[askind]];
+        return [bids[bidind], bids[askind]];
 
     } else if (bids[bidind].price > asks[askind].price) {
         const [nextbid, nextask] = await matchOffers(bids[bidind], asks[askind]);
@@ -80,7 +86,7 @@ async function compareBidsAsks(bids, asks, bidind=0, askind=0) {
 
     } else {
         console.log('PriceMismatch');
-        return [bids[0].NFLPlayerId, bids[bidind], bids[askind]];
+        return [bids[bidind], bids[askind]];
     }
 }
 
@@ -120,7 +126,10 @@ async function addToProtectedMatchQueue(eOffer, nOffer) {
         isExistingBid: eOffer.isbid,
     }, { delay: config.ProtectionDelay*1000 });
     // Send ping to user
-    client.publish('protectedMatch', eOffer.UserId+' '+eOffer.id);
+    client.publish('protectedMatch', JSON.stringify({
+        userID: eOffer.UserId,
+        offerID: eOffer.id
+    }));
     return 1;
 }
 
