@@ -3,10 +3,25 @@
     // Getting info about a specific entry
     // Getting info about a user's entries across contests
 
-const { Entry, Contest, Membership, League } = require('../models');
+const { Entry } = require('../models');
 const u = require('../util');
+const { canUserSeeContest } = require('./util.service');
+const isoOption = {
+    // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
+};
 
 module.exports = {
+    // Show all entries in a contest
+    getContestEntries(req) {
+        // Only show a specific contest's data if user is in contest's league
+        return sequelize.transaction(isoOption, async (t) => {
+            const [_contest, _league] = await canUserSeeContest(t, req.session.user.id, req.params.contestID);
+            const includeObj = (_league.ispublic ? {} : { model: User });
+            return Entry.findAll({ where: { ContestId: req.params.contestID }, includeObj });
+        });
+    },
+
+    // Show a specific of the user's entries
     getEntry(req) {
         return Entry.findOne({
             where: {
@@ -15,32 +30,17 @@ module.exports = {
             }
         }).then(u.dv);
     },
-    getUserEntries(req) {
-        return Entry.findAll({
-            where: {
-                UserId: req.session.user.id,
-            }
-        }).then(u.dv);
-    },
+    
+    // Join a new contest
     async createEntry(req) {
         let obj = {};
         obj.UserId = req.session.user.id;
-        obj.ContestId = req.body.contestID;
+        obj.ContestId = req.params.contestID;
+        // Only allow if user is in contest's league
         return sequelize.transaction(isoOption, async (t) => {
-            const leagueID = await Contest.findByPk(req.body.contestID, u.tobj(t)).then(u.dv).then(out => out.LeagueId);
-            if (!leagueID) { return new Error('No contest found'); }
-            const _league = await Membership.findOn({
-                where: {
-                    UserId: obj.UserId,
-                    LeagueId: leagueID,
-                },
-                include: {
-                    model: League,
-                }
-            }, u.tobj(t)).then(u.dv);
-            if (!_league) { return new Error('No contest found'); }
-            obj.pointtotal = _league.league.budget;
-            return Entry.create(obj).then(u.dv);
+            const [_contest, _league] = await canUserSeeContest(t, req.session.user.id, req.params.contestID);
+            obj.pointtotal = _league.budget;
+            return Entry.create(obj, u.tobj(t)).then(u.dv);
         });
     }
 };

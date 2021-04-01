@@ -26,7 +26,7 @@ function getUserOffers(req) {
 }
 
 function createOffer(req) {
-    let obj = req.params.offerObj;
+    let obj = req.body.offerObj;
     obj.userID = req.session.user.id;
 
     return sequelize.transaction(isoOption, async (t) => {
@@ -81,7 +81,7 @@ function createOffer(req) {
 function cancelOffer(req) {
     // Cancel offer, but if it's filled, let user know
     return sequelize.transaction(isoOption, async (t) => {
-        const o = await Offer.findByPk(req.params.offerID, u.tobj(t));
+        const o = await Offer.findByPk(req.body.offerID, u.tobj(t));
         if (!o) { throw new Error('No offer found'); }
         if (o.filled) { throw new Error('Offer already filled'); }
         o.cancelled = true;

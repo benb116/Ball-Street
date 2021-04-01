@@ -26,12 +26,12 @@ module.exports = {
 
 // Add a player within a transaction, but don't commit
 async function tradeAdd(req, t) {
-    const _player = req.params.nflplayerID;
+    const _player = req.body.nflplayerID;
     // Get user entry
     const theentry = await Entry.findOne({
         where: {
             UserId: req.session.user.id,
-            ContestId: req.params.contestID
+            ContestId: req.body.contestID
         },
         transaction: t,
         lock: t.LOCK.UPDATE
@@ -51,7 +51,7 @@ async function tradeAdd(req, t) {
     }).then(d => d.dataValues);
     // console.log("PDATA", playerdata);
 
-    const tradeprice = req.params.price || playerdata.preprice;
+    const tradeprice = req.body.price || playerdata.preprice;
     // Checks
     if (!tradeprice) { throw new Error("Player has no preprice"); }
     if (tradeprice > pts) { throw new Error("User doesn't have enough points"); }
@@ -60,15 +60,15 @@ async function tradeAdd(req, t) {
     theentry.pointtotal -= tradeprice;
 
     const playerType = playerdata.NFLPositionId;
-    if (req.params.rosterposition) { // If a roster position was specified
+    if (req.body.rosterposition) { // If a roster position was specified
         // Is it a valid one?
-        const isinvalid = u.isInvalidSpot(playerType, req.params.rosterposition);
+        const isinvalid = u.isInvalidSpot(playerType, req.body.rosterposition);
         if (isinvalid) { throw new Error(isinvalid); }
         // Is it an empty one?
-        if (theentry[req.params.rosterposition] !== null) {
+        if (theentry[req.body.rosterposition] !== null) {
             throw new Error('There is a player in that spot');
         }
-        theentry[req.params.rosterposition] = _player;
+        theentry[req.body.rosterposition] = _player;
 
     } else {
         // Find an open spot
@@ -87,21 +87,21 @@ async function tradeDrop(req, t) {
     const theentry = await Entry.findOne({
         where: {
             UserId: req.session.user.id,
-            ContestId: req.params.contestID
+            ContestId: req.body.contestID
         },
         transaction: t,
         lock: t.LOCK.UPDATE
     });
 
-    const isOnTeam = u.isPlayerOnRoster(theentry, req.params.nflplayerID);
+    const isOnTeam = u.isPlayerOnRoster(theentry, req.body.nflplayerID);
     if (!isOnTeam) { throw new Error('Player is not on roster'); }
     theentry[isOnTeam] = null;
 
-    if (req.params.price) {
-        theentry.pointtotal += req.params.price;
+    if (req.body.price) {
+        theentry.pointtotal += req.body.price;
     } else {
         // How much to add to point total
-        const preprice = await NFLPlayer.findByPk(req.params.nflplayerID, {
+        const preprice = await NFLPlayer.findByPk(req.body.nflplayerID, {
             attributes: ['preprice'],
             transaction: t
         }).then(d => d.dataValues.preprice);
@@ -130,11 +130,19 @@ function preTradeDrop(req) {
 
 function getUserTrades(req) {
     return Trade.findAll({
-        include: {
-            model: User,
-            where: {
-                id: req.session.user.id
-            }
-        }
+        include: [
+            {
+                model: User,
+                where: {
+                    id: req.session.user.id
+                }
+            },
+            {
+                model: Offer,
+                where: {
+                    ContestId: req.params.contestID
+                }
+            },
+        ]
     }).then(u.dv);
 }

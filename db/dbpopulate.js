@@ -153,23 +153,30 @@ async function PopulateDB(sequelize) {
     }).then(data => data.dataValues.id);
     await NFLPlayer.update({ preprice: 2000 }, { where: { id: AJID } });
 
-    // Define existing contest
-    const con = {
-        id: 1,
-        name: 'Ball Street Big One',
-        nflweek: 1
-    };
-    await Contest.bulkCreate([con]);
-
-
     // Define Users
     const usrs = [ 'email1@gmail.com', 'email2@gmail.com', 'email3@gmail.com', 'email4@gmail.com' ];
     await User.bulkCreate(usrs.map(u => {
         return {email: u, pwHash: "hdhdhdh"};
     }));
 
+    const lea = {
+        name: 'Ball Street',
+        adminId: 1,
+        ispublic: true,
+    }
+    await League.bulkCreate([lea]);
+
+    // Define existing contest
+    const con = {
+        id: 1,
+        name: 'Ball Street Big One',
+        LeagueId: 1
+    };
+    await Contest.bulkCreate([con]);
+
+
     const entrs = usrs.map((e, i) => {
-        return { UserId: i+1, ContestId: 1 };
+        return { UserId: i+1, ContestId: 1, pointtotal:10000 };
     });
     await Entry.bulkCreate(entrs);
 

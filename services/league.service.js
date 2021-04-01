@@ -6,11 +6,13 @@ const { League, Membership, User } = require('../models');
 const { Op } = require("sequelize");
 const sequelize = require('../db');
 const u = require('../util');
+const { canUserSeeLeague } = require('./util.service');
 const isoOption = {
     // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
 };
 
 module.exports = {
+    // Get all leagues a user has joined
     getUserLeagues(req) {
         return Membership.findAll({
             where: {
@@ -21,6 +23,8 @@ module.exports = {
             }
         }).then(u.dv);
     },
+
+    // Show available public leagues
     getPublicLeagues() {
         return League.findAll({
             where: {
@@ -28,15 +32,17 @@ module.exports = {
             }
         });
     },
-    getLeague(req) {
-        if (!req.session.user.id) {
-            return League.findOne({
-                LeagueId: req.params.leagueID,
-                ispublic: true,
-            }).then(u.dv);
 
+    // Get specific league info
+    async getLeague(req) {
+        const errortext = 'No league found';
+        const _league = await League.findOne({ LeagueId: req.params.leagueID, }).then(u.dv);
+        if (!_league) { return new Error(errortext); }
+        if (!req.session.user.id) {
+            // If not logged in, find amongst public leagues
+            if (!_league.ispublic) { return new Error(errortext); }
         } else {
-            return Membership.findOne({
+            const _member = await Membership.findOne({
                 where: {
                     LeagueId: req.params.leagueID,
                     UserId: req.session.user.id,
@@ -44,26 +50,29 @@ module.exports = {
                 include: {
                     model: League,
                 }
-            }).then(u.dv);
+            });
+            // If not a member, don't show
+            if (!_member) { return new Error(errortext); }
         }
+        return _league;
     },
+
+    // Find a league's membership list (only private leagues)
     getLeagueUsers(req) {
-        let whereObj = {
-            LeagueId: req.params.leagueID
-        };
-        let inclObj = {
-            model: League,
-        };
-        if (!req.session.user.id) {
-            inclObj.ispublic = true;
-        } else {
-            whereObj.UserId = req.session.user.id;
-        }
-        return Membership.findOne({
-            where: whereObj,
-            include: inclObj,
-        }).then(u.dv);
+        return sequelize.transaction(isoOption, async (t) => {
+            // Can search through memberships because we're ignoring all public leagues (incl. non-joined ones)
+            const _league = await canUserSeeLeague(t, req.session.user.id, req.params.leagueID);
+            const includeObj = (_league.ispublic ? {} : { model: User });
+            return Membership.findAll({
+                where: {
+                    LeagueId: req.body.leagueID,
+                },
+                include: includeObj,
+            }, u.tobj(t));
+        });
     },
+
+    // Make a new league
     async createLeague(req) {
         let obj = {};
         obj.adminId = req.session.user.id;
@@ -79,20 +88,25 @@ module.exports = {
             return newleague;
         });
     },
+
+    // Add a member to a private league
     async addMember(req) {
         return sequelize.transaction(isoOption, async (t) => {
-            const admin = League.findByPk(req.body.leagueID, u.tobj(t)).then(u.dv).then(out => out.adminId);
-            if (req.session.user.id !== admin) { return new Error('You are not admin, cannot add new member'); }
+            const _league = await League.findByPk(req.body.leagueID, u.tobj(t));
+            if (!_league) { return new Error('No league found'); }
+            if (req.session.user.id !== _league.admin) { return new Error('You are not admin, cannot add new member'); }
             return Membership.create({
                 UserId: req.body.userID,
                 LeagueId: req.body.leagueID,
             }, u.tobj(t));
         });
     },
+
+    // Join a public league
     async join(req) {
         return sequelize.transaction(isoOption, async (t) => {
-            const ispublic = League.findByPk(req.body.leagueID, u.tobj(t)).then(u.dv).then(out => out.ispublic);
-            if (!ispublic) { return new Error('No league found'); }
+            const _league = League.findByPk(req.body.leagueID, u.tobj(t)).then(u.dv);
+            if (!_league.ispublic) { return new Error('No league found'); }
             return Membership.create({
                 UserId: req.body.userID,
                 LeagueId: req.body.leagueID,
