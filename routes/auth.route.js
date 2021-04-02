@@ -6,13 +6,13 @@ const auth = require('../services/auth.service');
 router.post('/login',  async (req, res) => {
     const {email, password} = req.body;
     if (!email || !password) {
-        return res.status(400).json('Bad request paramss');
+        return res.status(400).json('Bad request params');
     }
 
     try {
         const user = await auth.login(email, password);
         req.session.user = user; // add to session
-        res.sendStatus(204);
+        res.json(user);
     } catch(err) {
         console.error(err);
         res.status(401).json(err);
@@ -22,12 +22,12 @@ router.post('/login',  async (req, res) => {
 router.post('/signup', async (req, res) => {
     const {email, password} = req.body;
     if (!email || !password) {
-        return res.status(400).json('Bad request paramss');
+        return res.status(400).json('Bad request params');
     }
     try {
         const user = await auth.signup(email, password);
         req.session.user = user; // add to session
-        res.sendStatus(204);
+        res.json(user);
     } catch(err) {
         console.error(err);
         res.status(401).json(err);

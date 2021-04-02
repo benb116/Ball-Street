@@ -19,36 +19,41 @@ client.subscribe('lastTrade');
 client.subscribe('protectedMatch');
 client.subscribe('offerFilled');
 
-const priceUpdateMap = {}; // Keep an account of changes, will be flushed on interval
-const lastTradeMap = {}; // Keep an account of changes, will be flushed on interval
+let priceUpdateMap = {}; // Keep an account of changes, will be flushed on interval
+let lastTradeMap = {}; // Keep an account of changes, will be flushed on interval
 
 client.on("message", function (channel, message) {
     switch(channel) {
-        case 'priceUpdate':
-            const {contestID, nflplayerID, bestbid, bestask} = JSON.parse(message);
-            if (!priceUpdateMap[contestID]) { priceUpdateMap[contestID] = {}; }
-            priceUpdateMap[contestID][playerID] = {'bid': bestbid, 'ask': bestask};
-            break;
-
-        case 'lastTrade':
-            const {contestID, nflplayerID, price} = JSON.parse(message);
-            if (!priceUpdateMap[contestID]) { priceUpdateMap[contestID] = {}; }
-            lastTrade[contestID][playerID] = {'price': price};
-            break;
-
-        case 'protectedMatch':
-            const {userID, offerID} = JSON.parse(message);
-            _ws = connmap(userID);
-            _ws.send({ event: 'offerMatched', offerID: offerID });
-            break;
-
-        case 'offerFilled':
-            const {userID, offerID} = JSON.parse(message);
-            _ws = connmap(userID);
-            _ws.send({ event: 'offerFilled', offerID: offerID });
-            break;
+        case 'priceUpdate':    priceUpdate(message);    break;
+        case 'lastTrade':      lastTrade(message);      break;
+        case 'protectedMatch': protectedMatch(message); break;
+        case 'offerFilled':    offerFilled(message);    break;
     }
 });
+
+function priceUpdate(message) {
+    const {contestID, nflplayerID, bestbid, bestask} = JSON.parse(message);
+    if (!priceUpdateMap[contestID]) { priceUpdateMap[contestID] = {}; }
+    priceUpdateMap[contestID][playerID] = {'bid': bestbid, 'ask': bestask};
+}
+
+function lastTrade(message) {
+    const {contestID, nflplayerID, price} = JSON.parse(message);
+    if (!priceUpdateMap[contestID]) { priceUpdateMap[contestID] = {}; }
+    lastTrade[contestID][playerID] = {'price': price};
+}
+
+function protectedMatch(message) {
+    const {userID, offerID} = JSON.parse(message);
+    _ws = connmap(userID);
+    _ws.send({ event: 'offerMatched', offerID: offerID });   
+}
+
+function offerFilled(message) {
+    const {userID, offerID} = JSON.parse(message);
+    _ws = connmap(userID);
+    _ws.send({ event: 'offerFilled', offerID: offerID });
+}
 
 const session = require("../middleware/session");
 const connmap = new Map();
@@ -93,17 +98,18 @@ wss.on('connection', function (ws, request) {
     });
 });
 
+const playerIDs = [];
+
 async function sendLatest(contestID) {
-    const playerIDs = await ;
     const outPromises = playerIDs.map(p => {
-        const rkey = hashkey(contestID, p)
+        const rkey = hashkey(contestID, p);
         return hgetallAsync(rkey).then(obj => {
             obj.contestID = contestID;
             obj.nflPlayerID = p;
             return obj;
-        })
+        });
     });
-    return Promise.all(outPromises)
+    return Promise.all(outPromises);
 }
 
 // Send out new data when it's available

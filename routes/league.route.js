@@ -1,29 +1,29 @@
 const bcrypt = require('bcrypt');
 const router = require('express').Router();
-const league = require('../services/contest.service');
+const league = require('../services/league.service');
 const authenticate = require('../middleware/authenticate');
 
 // Get all leagues a user has joined
 router.get('/', authenticate, async (req, res) => {
-    const out = await contest.getUserLeagues(req);
+    const out = await league.getUserLeagues(req);
     return res.json(out);
 });
 
 // Get all public leagues
 router.get('/public', async (req, res) => {
-    const out = await contest.getPublicLeagues();
+    const out = await league.getPublicLeagues();
     return res.json(out);
 });
 
 // Get a specific league
 router.get('/:leagueID', async (req, res) => {
-    const out = await contest.getLeague(req);
+    const out = await league.getLeague(req);
     return res.json(out);
 });
 
 // Get a specific league's members
 router.get('/:leagueID/members', authenticate, async (req, res) => {
-    const out = await contest.getLeagueUsers(req);
+    const out = await league.getLeagueUsers(req);
     return res.json(out);
 });
 

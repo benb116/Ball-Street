@@ -163,7 +163,7 @@ async function PopulateDB(sequelize) {
         name: 'Ball Street',
         adminId: 1,
         ispublic: true,
-    }
+    };
     await League.bulkCreate([lea]);
 
     // Define existing contest

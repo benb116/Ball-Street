@@ -5,7 +5,7 @@ const u = require('../util');
 
 async function login(email, password) {
     try {
-        const user = await User.findOne({email: email});
+        const user = await User.findOne({ where: { email: email } });
         const match = await bcrypt.compare(password, user.pwHash);
         if (match) {
             return { id: user.id };
