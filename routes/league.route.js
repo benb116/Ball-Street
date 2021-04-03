@@ -11,6 +11,7 @@ router.get('/', authenticate, async (req, res) => {
 
 // Get all public leagues
 router.get('/public', async (req, res) => {
+    console.log(req.session);
     const out = await league.getPublicLeagues();
     return res.json(out);
 });
