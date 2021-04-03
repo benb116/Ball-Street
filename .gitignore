@@ -1,3 +1,4 @@
 node_modules/
 DummySite/node_modules/
 DummySite/config/keys.js
+secret.js

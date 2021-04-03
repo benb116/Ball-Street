@@ -2,9 +2,10 @@ const session = require('express-session');
 const redis = require('redis');
 const redisClient = redis.createClient();
 const redisStore = require('connect-redis')(session);
+const secret = require('../secret');
 
 module.exports = session({
-    secret: 'ThisIsHowYouUseRedisSessionStorage',
+    secret: secret.cookieSecret,
     name: '_ballstreet',
     resave: false,
     saveUninitialized: true,

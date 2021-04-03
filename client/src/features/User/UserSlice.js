@@ -5,7 +5,7 @@ export const signupUser = createAsyncThunk(
   async ({ name, email, password }, thunkAPI) => {
     try {
       const response = await fetch(
-        'http://localhost:3000/auth/signup',
+        '/app/auth/signup',
         {
           method: 'POST',
           headers: {
@@ -39,7 +39,7 @@ export const loginUser = createAsyncThunk(
   async ({ email, password }, thunkAPI) => {
     try {
       const response = await fetch(
-        'http://localhost:3000/auth/login',
+        '/app/auth/login',
         {
           method: 'POST',
           headers: {
@@ -72,7 +72,7 @@ export const fetchUserBytoken = createAsyncThunk(
   async ({ token }, thunkAPI) => {
     try {
       const response = await fetch(
-        'http://localhost:3000/api/leagues/',
+        '/app/api/leagues/',
         {
           method: 'GET',
           headers: {
