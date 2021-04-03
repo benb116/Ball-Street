@@ -9,9 +9,6 @@ const Dashboard = () => {
 
   const dispatch = useDispatch();
   const { isFetching, isError } = useSelector(userSelector);
-  useEffect(() => {
-    dispatch(fetchUserBytoken({ token: localStorage.getItem('token') }));
-  }, []);
 
   const { username, email } = useSelector(userSelector);
 
@@ -23,8 +20,6 @@ const Dashboard = () => {
   }, [isError]);
 
   const onLogOut = () => {
-    localStorage.removeItem('token');
-
     history.push('/login');
   };
 
@@ -35,7 +30,7 @@ const Dashboard = () => {
       ) : (
         <Fragment>
           <div className="container mx-auto">
-            Welcome back <h3>{username}</h3>
+            Welcome back <h3>{email}</h3>
           </div>
 
           <button

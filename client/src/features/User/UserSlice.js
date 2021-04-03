@@ -57,8 +57,8 @@ export const loginUser = createAsyncThunk(
       let data = await response.json();
       console.log('response', data);
       if (response.status === 200) {
-        localStorage.setItem('token', data.token);
-        return data;
+        console.log('122');
+        return { ...data, email: email };
       } else {
         return thunkAPI.rejectWithValue(data);
       }
@@ -69,32 +69,31 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-export const fetchUserBytoken = createAsyncThunk(
-  'users/fetchUserByToken',
-  async ({ token }, thunkAPI) => {
+export const logoutUser = createAsyncThunk(
+  'users/logout',
+  async ({ email, password }, thunkAPI) => {
     try {
       const response = await fetch(
-        '/app/api/leagues/',
+        '/app/auth/logout',
         {
-          method: 'GET',
+          method: 'DELETE',
           headers: {
             Accept: 'application/json',
-            Authorization: token,
             'Content-Type': 'application/json',
           },
+          credentials: 'same-origin',
         }
       );
       let data = await response.json();
-      console.log('data', data, response.status);
-
+      console.log('response', data);
       if (response.status === 200) {
-        return { ...data };
+        return data;
       } else {
         return thunkAPI.rejectWithValue(data);
       }
     } catch (e) {
       console.log('Error', e.response.data);
-      return thunkAPI.rejectWithValue(e.response.data);
+      thunkAPI.rejectWithValue(e.response.data);
     }
   }
 );
@@ -114,13 +113,10 @@ export const userSlice = createSlice({
       state.isError = false;
       state.isSuccess = false;
       state.isFetching = false;
-
-      return state;
     },
   },
   extraReducers: {
     [signupUser.fulfilled]: (state, { payload }) => {
-      console.log('payload', payload);
       state.isFetching = false;
       state.isSuccess = true;
       state.email = payload.email;
@@ -136,34 +132,16 @@ export const userSlice = createSlice({
     },
     [loginUser.fulfilled]: (state, { payload }) => {
       state.email = payload.email;
-      state.username = payload.name;
       state.isFetching = false;
       state.isSuccess = true;
-      return state;
     },
     [loginUser.rejected]: (state, { payload }) => {
-      console.log('payload', payload);
       state.isFetching = false;
       state.isError = true;
       state.errorMessage = payload.message;
     },
     [loginUser.pending]: (state) => {
       state.isFetching = true;
-    },
-    [fetchUserBytoken.pending]: (state) => {
-      state.isFetching = true;
-    },
-    [fetchUserBytoken.fulfilled]: (state, { payload }) => {
-      state.isFetching = false;
-      state.isSuccess = true;
-
-      state.email = payload.email;
-      state.username = payload.name;
-    },
-    [fetchUserBytoken.rejected]: (state) => {
-      console.log('fetchUserBytoken');
-      state.isFetching = false;
-      state.isError = true;
     },
   },
 });
