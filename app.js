@@ -13,7 +13,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(__dirname + '/public'));
+app.use(express.static('./client/build'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(session);
@@ -21,8 +21,12 @@ app.use(helmet());
 app.enable("trust proxy"); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
 app.use(limiter);
 
-app.use('/auth/', require('./routes/auth.route'));
-app.use('/api/', require('./routes'));
+app.use('/app/auth/', require('./routes/auth.route'));
+app.use('/app/api/', require('./routes'));
+
+app.get('/*', (req, res) => {
+  res.sendFile(__dirname + '/client/build/index.html');
+});
 
 // finally, let's start our server...
 const server = app.listen(process.env.PORT || 3000, () => {

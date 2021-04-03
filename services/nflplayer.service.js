@@ -51,15 +51,12 @@ module.exports = {
     getNFLPlayerTradeVolume(req) {
         return sequelize.transaction(isoOption, async (t) => {
             const [_contest, _league] = await canUserSeeContest(t, req.session.user.id, req.params.contestID);
-            return Trade.count({
-                include: {
-                    model: Offer,
-                    where: {
-                        ContestId: req.params.contestID,
-                        NFLPlayerId: req.params.nflplayerID
-                    }
+            return Offer.count({
+                where: {
+                    ContestId: req.params.contestID,
+                    NFLPlayerId: req.params.nflplayerID
                 }
-            }, u.tobj(t)).then(u.dv);
+            }, u.tobj(t)).then(u.dv).then(out => out / 2);
         });
     },
     getNFLPlayerNumAdds(req) {

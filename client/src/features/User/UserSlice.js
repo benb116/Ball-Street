@@ -12,6 +12,7 @@ export const signupUser = createAsyncThunk(
             Accept: 'application/json',
             'Content-Type': 'application/json',
           },
+          credentials: 'same-origin',
           body: JSON.stringify({
             name,
             email,
@@ -46,6 +47,7 @@ export const loginUser = createAsyncThunk(
             Accept: 'application/json',
             'Content-Type': 'application/json',
           },
+          credentials: 'same-origin',
           body: JSON.stringify({
             email,
             password,

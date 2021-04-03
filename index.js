@@ -20,7 +20,7 @@ console.log('go');
     const tradeResults = await services.trade.preTradeAdd({
         
         session: {user: {id: 1}},
-        params: {
+        body: {
             contestID: 1,
             // nflplayerID: 19045,
             nflplayerID: 17923,
@@ -31,7 +31,7 @@ console.log('go');
     const tradeResults2 = await services.trade.preTradeAdd({
         
         session: {user: {id: 2}},
-        params: {
+        body: {
             contestID: 1,
             // nflplayerID: 19045,
             nflplayerID: 17923,
@@ -42,7 +42,7 @@ console.log('go');
     const tradeResults3 = await services.trade.preTradeAdd({
         
         session: {user: {id: 3}},
-        params: {
+        body: {
             contestID: 1,
             nflplayerID: 19045,
             // nflplayerID: 17923,
@@ -53,7 +53,7 @@ console.log('go');
     // const tradeResults4 = await services.trade.preTradeAdd({
     //     
     // session: {user: {id: 4}},
-    //     params: {
+    //     body: {
     //         contestID: 1,
     //         // nflplayerID: 19045,
     //         nflplayerID: 17923,
@@ -63,7 +63,7 @@ console.log('go');
     const offerObj3 = await services.offer.createOffer({
         
         session: {user: {id: 2}},
-        params: { offerObj: {
+        body: { offerObj: {
             contestID: 1,
             // nflplayerID: 19045,
             nflplayerID: 17923,
@@ -76,7 +76,7 @@ console.log('go');
     const offerObj = await services.offer.createOffer({
         
         session: {user: {id: 3}},
-        params: { offerObj: {
+        body: { offerObj: {
             contestID: 1,
             // nflplayerID: 19045,
             nflplayerID: 17923,
@@ -92,7 +92,7 @@ console.log('go');
     const offerObj4 = await services.offer.createOffer({
         
         session: {user: {id: 1}},
-        params: { offerObj: {
+        body: { offerObj: {
             contestID: 1,
             // nflplayerID: 19045,
             nflplayerID: 17923,
@@ -105,7 +105,7 @@ console.log('go');
     const offerObj5 = await services.offer.createOffer({
         
         session: {user: {id: 4}},
-        params: { offerObj: {
+        body: { offerObj: {
             contestID: 1,
             // nflplayerID: 19045,
             nflplayerID: 17923,
@@ -117,14 +117,14 @@ console.log('go');
     await delay(8000);
 
     // await services.offer.cancelOffer({
-    //     params: { offerID: offerObj.id }
+    //     body: { offerID: offerObj.id }
     // });
     // await delay(7000);
 
     // const tradeResults7 = await services.trade.preTradeAdd({
     //     
     // session: {user: {id: 1}},
-    //     params: {
+    //     body: {
     //         contestID: 1,
     //         // nflplayerID: 19045,
     //         nflplayerID: 17923,
@@ -135,7 +135,7 @@ console.log('go');
     // const tradeResults8 = await services.trade.preTradeAdd({
     //     
     // session: {user: {id: 2}},
-    //     params: {
+    //     body: {
     //         contestID: 1,
     //         // nflplayerID: 19045,
     //         nflplayerID: 17923,

@@ -26,7 +26,7 @@ function priceUpdateDecode(str) {
         nflplayerID: 0,
         bestbid: 0,
         bestask: 0,
-    }
+    };
 }
 
 module.exports = {

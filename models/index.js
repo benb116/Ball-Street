@@ -31,6 +31,25 @@ const RosterPosition = _rosterposition(sequelize, DataTypes);
 const Trade = _trade(sequelize, DataTypes);
 const User = _user(sequelize, DataTypes);
 
+League.hasMany(Membership);
+Membership.belongsTo(League);
+
+User.hasMany(Membership);
+Membership.belongsTo(User);
+
+Contest.hasMany(Entry);
+Entry.belongsTo(Contest);
+
+User.hasMany(Entry);
+Entry.belongsTo(User);
+
+User.hasMany(Offer);
+Offer.belongsTo(User);
+
+Offer.hasOne(Trade);
+Trade.belongsTo(Offer, { foreignKey: 'bidId' });
+Trade.belongsTo(Offer, { foreignKey: 'askId' });
+
 module.exports = {
     League,
     Membership,
