@@ -156,7 +156,7 @@ async function PopulateDB(sequelize) {
     // Define Users
     const usrs = [ 'email1@gmail.com', 'email2@gmail.com', 'email3@gmail.com', 'email4@gmail.com' ];
     await User.bulkCreate(usrs.map(u => {
-        return {email: u, pwHash: "hdhdhdh"};
+        return {email: u, pwHash: "hdhdhdh", name: 'bot', };
     }));
 
     const lea = {

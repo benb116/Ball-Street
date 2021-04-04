@@ -21,7 +21,9 @@ module.exports = {
             include: {
                 model: League,
             }
-        }).then(u.dv);
+        }).then(u.dv).then(ships => {
+            return ships.map(m => m.League);
+        });
     },
 
     // Show available public leagues
@@ -30,6 +32,9 @@ module.exports = {
             where: {
                 ispublic: true 
             }
+        }).then(u.dv).then(out => {
+            console.log(out);
+            return out;
         });
     },
 

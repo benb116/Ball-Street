@@ -12,16 +12,15 @@ const Home = () => {
   const { isFetching, isSuccess, isError, errorMessage } = useSelector(statusSelector);
 
   useEffect(() => {
+    dispatch(getAccount());
+  }, []);
+
+  useEffect(() => {
     if (isError) {
       if (!id) {
         return loginRed();
       }
-    } else {
-      if (!id) {
-        return dispatch(getAccount());        
-      }
     }
-
     if (isSuccess) {
 
     }
@@ -34,7 +33,9 @@ const Home = () => {
 
   const loginRed = () => {
     dispatch(clearStatus());
+    localStorage.setItem('isLoggedIn', false);
     history.push('/login');
+    // In theory people can see this webpage as a landing if they aren't logged in
   };
 
   return (

@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-import { signupfunc, loginfunc, logoutfunc, accountfunc } from './auth.api.js';
+import { signupfunc, loginfunc, logoutfunc, accountfunc } from './User.api.js';
 
 const defaultState = {
   info: {
@@ -74,7 +74,6 @@ export const userSlice = createSlice({
     },
 
     [logoutUser.fulfilled]: (state, payload) => {
-      console.log(payload);
       state.status.isFetching = false;
       state.status.isSuccess = true;
       state.status.isError = false;
@@ -86,7 +85,6 @@ export const userSlice = createSlice({
       state.status.isError = false;
     },
     [logoutUser.rejected]: (state, payload) => {
-      console.log(payload);
       state.status.isFetching = false;
       state.status.isSuccess = false;
       state.status.isError = true;
@@ -94,14 +92,11 @@ export const userSlice = createSlice({
     },
 
     [getAccount.fulfilled]: (state, { payload }) => {
-      console.log('full');
       state.info = {...state.info, ...payload};
     },
     [getAccount.pending]: (state) => {
-      console.log('pending');
     },
     [getAccount.rejected]: (state, out) => {
-      console.log('e', JSON.stringify(out));
       state.status.isError = true;
       state.status.errorMessage = out;
     },

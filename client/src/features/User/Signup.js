@@ -33,6 +33,7 @@ const Signup = () => {
     if (isSuccess) {
       if (!id) { return; }
       dispatch(clearStatus());
+      localStorage.setItem('isLoggedIn', true);
       history.push('/');
     }
   }, [isError, isSuccess]);
