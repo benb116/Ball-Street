@@ -44,7 +44,8 @@ router.post('/signup', async (req, res) => {
     }
 });
 
-router.delete('/logout', function (req, res) {
+router.delete('/logout', authenticate, function (req, res) {
+    console.log('logout');
   req.session.destroy(function () {
     res.send({ result: 'OK', message: 'Session destroyed' });
   });

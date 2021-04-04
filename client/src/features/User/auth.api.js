@@ -41,7 +41,7 @@ const loginfunc = async ({ email, password }, thunkAPI) => {
   }
 };
 
-const logoutfunc = async ({ email, password }, thunkAPI) => {
+const logoutfunc = async (thunkAPI) => {
   console.log('logout');
   try {
     const response = await fetch('/app/auth/logout', {
@@ -49,12 +49,12 @@ const logoutfunc = async ({ email, password }, thunkAPI) => {
       headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', },
       credentials: 'same-origin',
     });
-    let data = await response.json();
 
     if (response.status === 200) {
+      let data = await response.json();
       return data;
     } else {
-      return thunkAPI.rejectWithValue(data);
+      return thunkAPI.rejectWithValue(response);
     }
   } catch (e) {
     console.log('Error', e.response.data);
@@ -63,20 +63,18 @@ const logoutfunc = async ({ email, password }, thunkAPI) => {
 };
 
 const accountfunc = async (thunkAPI) => {
-  console.log('332');
   try {
     const response = await fetch('/app/auth/account', {
       method: 'GET',
       headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', },
       credentials: 'same-origin',
     });
-    console.log(response);
-    let data = await response.json();
 
     if (response.status === 200) {
+      let data = await response.json();
       return { ...data };
     } else {
-      return thunkAPI.rejectWithValue(data);
+      return thunkAPI.rejectWithValue(response);
     }
   } catch (e) {
     console.log('Error', e.response.data);

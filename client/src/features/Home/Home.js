@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getAccount, logoutUser, userSelector, statusSelector } from '../User/UserSlice';
+import { getAccount, logoutUser, userSelector, statusSelector, clearStatus } from '../User/UserSlice';
 import Loader from 'react-loader-spinner';
 import { useHistory } from 'react-router-dom';
 
@@ -12,21 +12,28 @@ const Home = () => {
   const { isFetching, isSuccess, isError, errorMessage } = useSelector(statusSelector);
 
   useEffect(() => {
-    console.log(Date.now());
-    console.log(isError, isSuccess);
     if (isError) {
-      console.log('e');
+      if (!id) {
+        return loginRed();
+      }
     } else {
-      dispatch(getAccount(null));
+      if (!id) {
+        return dispatch(getAccount());        
+      }
     }
 
     if (isSuccess) {
-      console.log('s');
+
     }
   }, [isError, isSuccess]);  
 
   const onLogOut = () => {
     dispatch(logoutUser());
+    loginRed();
+  };
+
+  const loginRed = () => {
+    dispatch(clearStatus());
     history.push('/login');
   };
 

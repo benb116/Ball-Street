@@ -2,7 +2,7 @@ import React, { Fragment, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
-import { signupUser, statusSelector, clearStatus } from './UserSlice';
+import { signupUser, userSelector, statusSelector, clearStatus } from './UserSlice';
 import { useHistory } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
@@ -11,6 +11,7 @@ const Signup = () => {
   const { register, errors, handleSubmit } = useForm();
   const history = useHistory();
 
+  const { id, name, email } = useSelector(userSelector);
   const { isFetching, isSuccess, isError, errorMessage } = useSelector(statusSelector);
 
   const onSubmit = (data) => {
@@ -30,6 +31,7 @@ const Signup = () => {
     }
 
     if (isSuccess) {
+      if (!id) { return; }
       dispatch(clearStatus());
       history.push('/');
     }

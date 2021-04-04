@@ -73,16 +73,34 @@ export const userSlice = createSlice({
       state.status.errorMessage = payload;
     },
 
+    [logoutUser.fulfilled]: (state, payload) => {
+      console.log(payload);
+      state.status.isFetching = false;
+      state.status.isSuccess = true;
+      state.status.isError = false;
+      state.info = defaultState.info;
+    },
+    [logoutUser.pending]: (state) => {
+      state.status.isFetching = true;
+      state.status.isSuccess = false;
+      state.status.isError = false;
+    },
+    [logoutUser.rejected]: (state, payload) => {
+      console.log(payload);
+      state.status.isFetching = false;
+      state.status.isSuccess = false;
+      state.status.isError = true;
+      state.status.errorMessage = payload;
+    },
+
     [getAccount.fulfilled]: (state, { payload }) => {
       console.log('full');
       state.info = {...state.info, ...payload};
     },
     [getAccount.pending]: (state) => {
-      console.log(Date.now());
       console.log('pending');
     },
     [getAccount.rejected]: (state, out) => {
-      console.log(Date.now());
       console.log('e', JSON.stringify(out));
       state.status.isError = true;
       state.status.errorMessage = out;
