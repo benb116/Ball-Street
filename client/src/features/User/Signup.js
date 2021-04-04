@@ -2,7 +2,7 @@ import React, { Fragment, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
-import { signupUser, userSelector, clearState } from './UserSlice';
+import { signupUser, statusSelector, clearStatus } from './UserSlice';
 import { useHistory } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
@@ -11,30 +11,29 @@ const Signup = () => {
   const { register, errors, handleSubmit } = useForm();
   const history = useHistory();
 
-  const { isFetching, isSuccess, isError, errorMessage } = useSelector(
-    userSelector
-  );
+  const { isFetching, isSuccess, isError, errorMessage } = useSelector(statusSelector);
+
   const onSubmit = (data) => {
     dispatch(signupUser(data));
   };
 
   useEffect(() => {
     return () => {
-      dispatch(clearState());
+      dispatch(clearStatus());
     };
   }, []);
 
   useEffect(() => {
-    if (isSuccess) {
-      dispatch(clearState());
-      history.push('/');
-    }
-
     if (isError) {
       toast.error(errorMessage);
-      dispatch(clearState());
+      dispatch(clearStatus());
     }
-  }, [isSuccess, isError]);
+
+    if (isSuccess) {
+      dispatch(clearStatus());
+      history.push('/');
+    }
+  }, [isError, isSuccess]);
 
   return (
     <Fragment>

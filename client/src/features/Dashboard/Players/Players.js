@@ -1,10 +1,10 @@
 import React, { Fragment, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { userSelector, fetchUserBytoken, clearState } from './UserSlice';
+import { userSelector, clearState } from '../User/UserSlice';
 import Loader from 'react-loader-spinner';
 import { useHistory } from 'react-router-dom';
 
-const Dashboard = () => {
+const Players = () => {
   const history = useHistory();
 
   const dispatch = useDispatch();
@@ -45,4 +45,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Players;

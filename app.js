@@ -21,8 +21,9 @@ app.use(helmet());
 app.enable("trust proxy"); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
 app.use(limiter);
 
-app.use('/app/auth/', require('./routes/auth.route'));
-app.use('/app/api/', require('./routes'));
+const routePrefix = (process.env.NODE_ENV === 'production' ? '' : '/app');
+app.use(routePrefix+'/auth/', require('./routes/auth.route'));
+app.use(routePrefix+'/api/', require('./routes'));
 
 app.get('/*', (req, res) => {
   res.sendFile(__dirname + '/client/build/index.html');

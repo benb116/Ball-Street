@@ -1,151 +1,95 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-export const signupUser = createAsyncThunk(
-  'users/signupUser',
-  async ({ name, email, password }, thunkAPI) => {
-    try {
-      const response = await fetch(
-        '/app/auth/signup',
-        {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          credentials: 'same-origin',
-          body: JSON.stringify({
-            name,
-            email,
-            password,
-          }),
-        }
-      );
-      let data = await response.json();
-      console.log('data', data);
+import { signupfunc, loginfunc, logoutfunc, accountfunc } from './auth.api.js';
 
-      if (response.status === 200) {
-        return { ...data, name: name, email: email };
-      } else {
-        return thunkAPI.rejectWithValue(data);
-      }
-    } catch (e) {
-      console.log('Error', e.response.data);
-      return thunkAPI.rejectWithValue(e.response.data);
-    }
-  }
-);
-
-export const loginUser = createAsyncThunk(
-  'users/login',
-  async ({ email, password }, thunkAPI) => {
-    try {
-      const response = await fetch(
-        '/app/auth/login',
-        {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          credentials: 'same-origin',
-          body: JSON.stringify({
-            email,
-            password,
-          }),
-        }
-      );
-      let data = await response.json();
-      console.log('response', data);
-      if (response.status === 200) {
-        console.log('122');
-        return { ...data, email: email };
-      } else {
-        return thunkAPI.rejectWithValue(data);
-      }
-    } catch (e) {
-      console.log('Error', e.response.data);
-      thunkAPI.rejectWithValue(e.response.data);
-    }
-  }
-);
-
-export const logoutUser = createAsyncThunk(
-  'users/logout',
-  async ({ email, password }, thunkAPI) => {
-    try {
-      const response = await fetch(
-        '/app/auth/logout',
-        {
-          method: 'DELETE',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          credentials: 'same-origin',
-        }
-      );
-      let data = await response.json();
-      console.log('response', data);
-      if (response.status === 200) {
-        return data;
-      } else {
-        return thunkAPI.rejectWithValue(data);
-      }
-    } catch (e) {
-      console.log('Error', e.response.data);
-      thunkAPI.rejectWithValue(e.response.data);
-    }
-  }
-);
-
-export const userSlice = createSlice({
-  name: 'user',
-  initialState: {
-    username: '',
+const defaultState = {
+  info: {
+    id: null,
     email: '',
-    isFetching: false,
+    name: '',
+  },
+  status: {
+    isPending: false,
     isSuccess: false,
     isError: false,
     errorMessage: '',
-  },
+  }
+};
+
+export const signupUser = createAsyncThunk('users/signupUser', signupfunc);
+export const loginUser  = createAsyncThunk('users/loginUser', loginfunc);
+export const logoutUser = createAsyncThunk('users/logoutUser', logoutfunc);
+export const getAccount = createAsyncThunk('users/getAccount', accountfunc);
+
+export const userSlice = createSlice({
+  name: 'user',
+  initialState: defaultState,
   reducers: {
-    clearState: (state) => {
-      state.isError = false;
-      state.isSuccess = false;
-      state.isFetching = false;
+    set: (state, payload) => {
+      state = {...state, ...payload};
+    },
+    clear: state => state = defaultState,
+    clearState: state => state = defaultState,
+    clearStatus: state => {
+      console.log('cs');
+      state.status = defaultState.status;
+      console.log(state.status);
     },
   },
   extraReducers: {
     [signupUser.fulfilled]: (state, { payload }) => {
-      state.isFetching = false;
-      state.isSuccess = true;
-      state.email = payload.email;
-      state.username = payload.name;
+      state.status.isFetching = false;
+      state.status.isSuccess = true;
+      state.status.isError = false;
+      state.info = {...state.info, ...payload};
     },
     [signupUser.pending]: (state) => {
-      state.isFetching = true;
+      state.status.isFetching = true;
+      state.status.isSuccess = false;
+      state.status.isError = false;
     },
     [signupUser.rejected]: (state, { payload }) => {
-      state.isFetching = false;
-      state.isError = true;
-      state.errorMessage = payload.message;
+      state.status.isFetching = false;
+      state.status.isSuccess = false;
+      state.status.isError = true;
+      state.status.errorMessage = payload;
     },
+
     [loginUser.fulfilled]: (state, { payload }) => {
-      state.email = payload.email;
-      state.isFetching = false;
-      state.isSuccess = true;
-    },
-    [loginUser.rejected]: (state, { payload }) => {
-      state.isFetching = false;
-      state.isError = true;
-      state.errorMessage = payload.message;
+      state.status.isFetching = false;
+      state.status.isSuccess = true;
+      state.status.isError = false;
+      state.info = {...state.info, ...payload};
     },
     [loginUser.pending]: (state) => {
-      state.isFetching = true;
+      state.status.isFetching = true;
+      state.status.isSuccess = false;
+      state.status.isError = false;
+    },
+    [loginUser.rejected]: (state, { payload }) => {
+      state.status.isFetching = false;
+      state.status.isSuccess = false;
+      state.status.isError = true;
+      state.status.errorMessage = payload;
+    },
+
+    [getAccount.fulfilled]: (state, { payload }) => {
+      console.log('full');
+      state.info = {...state.info, ...payload};
+    },
+    [getAccount.pending]: (state) => {
+      console.log(Date.now());
+      console.log('pending');
+    },
+    [getAccount.rejected]: (state, out) => {
+      console.log(Date.now());
+      console.log('e', JSON.stringify(out));
+      state.status.isError = true;
+      state.status.errorMessage = out;
     },
   },
 });
 
-export const { clearState } = userSlice.actions;
-
-export const userSelector = (state) => state.user;
+export const { set, clearStatus, clearState } = userSlice.actions;
+export const userSelector = (state) => state.user.info;
+export const statusSelector = (state) => state.user.status;

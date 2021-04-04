@@ -2,35 +2,30 @@ import React, { Fragment, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
-import { loginUser, userSelector, clearState } from './UserSlice';
-import toast from 'react-hot-toast';
+import { getAccount, loginUser, statusSelector, clearStatus } from './UserSlice';
 import { useHistory } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
-const Login = ({}) => {
+const Login = () => {
   const dispatch = useDispatch();
-  const history = useHistory();
   const { register, errors, handleSubmit } = useForm();
-  const { isFetching, isSuccess, isError, errorMessage } = useSelector(
-    userSelector
-  );
+  const history = useHistory();
+
+  const { isFetching, isSuccess, isError, errorMessage } = useSelector(statusSelector);
+
   const onSubmit = (data) => {
     dispatch(loginUser(data));
   };
 
   useEffect(() => {
-    return () => {
-      dispatch(clearState());
-    };
-  }, []);
-
-  useEffect(() => {
+    console.log(isError, isSuccess);
     if (isError) {
       toast.error(errorMessage);
-      dispatch(clearState());
+      dispatch(clearStatus());
     }
 
     if (isSuccess) {
-      dispatch(clearState());
+      dispatch(clearStatus());
       history.push('/');
     }
   }, [isError, isSuccess]);

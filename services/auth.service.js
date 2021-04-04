@@ -5,30 +5,47 @@ const u = require('../util');
 
 async function login(email, password) {
     try {
-        const user = await User.findOne({ where: { email: email } });
-        const match = await bcrypt.compare(password, user.pwHash);
+        const _user = await User.findOne({ where: { email: email } });
+        const match = await bcrypt.compare(password, _user.pwHash);
         if (match) {
-            return { id: user.id };
+            return { id: _user.id, email: _user.email, name: _user.name };
         } else {
-            return Promise.reject('wrong username or password');
+            return Promise.reject('Wrong username or password');
         }
     } catch(err) {
-        return Promise.reject('user not found');
+        return Promise.reject('User not found');
     }
 }
 
-async function signup(email, password) {
-    const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(password, salt);
-    return User.create({
-        email: email,
-        pwHash: hash
-    }).then(u.dv).then(u => {
-        return { id: u.id };
-    });
+async function getAccount(userID) {
+    try {
+        return User.findByPk(userID).then(u.dv);
+    } catch(err) {
+        return Promise.reject('User not found');
+    }
+}
+
+async function signup(name, email, password) {
+    try {
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(password, salt);
+        const _user = await User.create({ name: name, email: email, pwHash: hash }).then(u.dv);
+        if (_user) {
+            return { id: _user.id, email: _user.email, name: _user.name };
+        }
+    } catch(err) {
+        const errmess = err.errors[0].message;
+        let outmess = 'Could not create user';
+        switch (errmess) {
+            case "email must be unique": outmess = "Email must be unique"; break;
+            case "User.name cannot be null": outmess = "Name cannot be null"; break;
+        }
+        return Promise.reject(outmess);
+    }
 }
 
 module.exports = {
     signup,
     login,
+    getAccount,
 };
