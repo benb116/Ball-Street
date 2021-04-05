@@ -33,7 +33,6 @@ module.exports = {
                 ispublic: true 
             }
         }).then(u.dv).then(out => {
-            console.log(out);
             return out;
         });
     },
@@ -82,7 +81,7 @@ module.exports = {
         let obj = {};
         obj.adminId = req.session.user.id;
         obj.name = req.body.name;
-        obj.ispublic = req.body.ispublic;
+        obj.ispublic = false;
         obj.budget = req.body.budget;
         return sequelize.transaction(isoOption, async (t) => {
             const newleague = await League.create(obj, {transaction: t}).then(u.dv);

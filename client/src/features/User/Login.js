@@ -19,7 +19,6 @@ const Login = () => {
   };
 
   useEffect(() => {
-    console.log(isError, isSuccess);
     if (isError) {
       toast.error(errorMessage);
       dispatch(clearStatus());

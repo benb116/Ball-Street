@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect } from 'react';
+import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { getAccount, logoutUser, userSelector, statusSelector, clearStatus } from '../User/UserSlice';
 import Loader from 'react-loader-spinner';
@@ -44,7 +45,8 @@ const Home = () => {
           <div className="container mx-auto">
             Welcome back <h3>{email}</h3>
           </div>
-
+          <Link to="/leagues">Leagues</Link>
+          <br/>
           <button
             onClick={onLogOut}
             className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"

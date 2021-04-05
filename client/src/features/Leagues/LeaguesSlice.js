@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-import { getuserleaguesfunc, getpublicleaguesfunc } from './Leagues.api.js';
+import { getuserleaguesfunc, getpublicleaguesfunc, creatleaguefunc } from './Leagues.api.js';
 
 const defaultState = {
     userleagues: [],
@@ -9,6 +9,8 @@ const defaultState = {
 
 export const getUserLeagues = createAsyncThunk('leagues/getUserLeagues', getuserleaguesfunc);
 export const getPublicLeagues = createAsyncThunk('leagues/getPublicLeagues', getpublicleaguesfunc);
+
+export const createLeague = createAsyncThunk('leagues/createLeague', creatleaguefunc);
 
 export const leaguesSlice = createSlice({
   name: 'leagues',
@@ -22,6 +24,9 @@ export const leaguesSlice = createSlice({
     },
     [getPublicLeagues.fulfilled]: (state, { payload }) => {
       state.publicleagues = payload;
+    },
+    [createLeague.fulfilled]: (state, { payload }) => {
+      state.userleagues.push(payload);
     },
   },
 });

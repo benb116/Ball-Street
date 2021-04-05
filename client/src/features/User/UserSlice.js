@@ -31,9 +31,7 @@ export const userSlice = createSlice({
     clear: state => state = defaultState,
     clearState: state => state = defaultState,
     clearStatus: state => {
-      console.log('cs');
       state.status = defaultState.status;
-      console.log(state.status);
     },
   },
   extraReducers: {
