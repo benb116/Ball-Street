@@ -1,7 +1,9 @@
 const router = require('express').Router();
+const authenticate = require('../middleware/authenticate');
 
-router.use('/contests/', require('./contest.route'));
+router.use(authenticate);
+
 router.use('/leagues/', require('./league.route'));
-router.use('/nflplayers/', require('./nflplayer.route'));
+router.use('/nfldata/', require('./nfldata.route'));
 
 module.exports = router;

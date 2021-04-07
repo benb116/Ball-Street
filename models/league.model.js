@@ -17,7 +17,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     budget: {
       type: DataTypes.INTEGER,
-      default: 10000,
+      allowNull: false,
     }
   }, {sequelize});
 };

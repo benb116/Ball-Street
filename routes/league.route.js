@@ -1,10 +1,11 @@
 const bcrypt = require('bcrypt');
 const router = require('express').Router();
 const league = require('../services/league.service');
-const authenticate = require('../middleware/authenticate');
+
+router.use('/:leagueID/', require('./contest.route'));
 
 // Get all leagues a user has joined
-router.get('/', authenticate, async (req, res) => {
+router.get('/', async (req, res) => {
     const out = await league.getUserLeagues(req);
     return res.json(out);
 });
@@ -22,19 +23,19 @@ router.get('/:leagueID', async (req, res) => {
 });
 
 // Get a specific league's members
-router.get('/:leagueID/members', authenticate, async (req, res) => {
+router.get('/:leagueID/members', async (req, res) => {
     const out = await league.getLeagueUsers(req);
     return res.json(out);
 });
 
 // Make a new league
-router.post('/league', authenticate, async (req, res) => {
+router.post('/league', async (req, res) => {
     const out = await league.createLeague(req);
     return res.json(out);
 });
 
 // Add a user to a private league
-router.post('/:leagueID/addMember', authenticate, async (req, res) => {
+router.post('/:leagueID/addMember', async (req, res) => {
     const out = await league.addMember(req);
     return res.json(out);
 });

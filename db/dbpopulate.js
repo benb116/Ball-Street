@@ -163,6 +163,7 @@ async function PopulateDB(sequelize) {
         name: 'Ball Street',
         adminId: 1,
         ispublic: true,
+        budget: 10000,
     };
     await League.bulkCreate([lea]);
 

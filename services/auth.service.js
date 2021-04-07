@@ -37,8 +37,8 @@ async function signup(name, email, password) {
         const errmess = err.errors[0].message;
         let outmess = 'Could not create user';
         switch (errmess) {
-            case "email must be unique": outmess = "Email must be unique"; break;
-            case "User.name cannot be null": outmess = "Name cannot be null"; break;
+            case "email must be unique":     outmess = "An account with that email already exists";   break;
+            case "User.name cannot be null": outmess = "Please enter a name";                         break;
         }
         return Promise.reject(outmess);
     }
