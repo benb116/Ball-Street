@@ -13,7 +13,6 @@ const Leagues = () => {
   const { leagueID } = useParams();
   const dispatch = useDispatch();
   const { register, errors, handleSubmit } = useForm();
-  console.log(leagueID);
 
   useEffect(() => {
     dispatch(getLeague(leagueID));
@@ -121,14 +120,6 @@ const Leagues = () => {
             </div>
           </form>
 
-          <br/>
-          This league's contests
-          <br/>
-          <ul>
-            {/*{leagueContests.map(function(contest, index){
-              return <ContestItem key={ index } contestdata={ contest } leagueID={thisLeague.id}/>;
-            })}*/}
-          </ul>
         </div>
       </Fragment>
     </div>

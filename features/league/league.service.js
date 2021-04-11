@@ -49,7 +49,6 @@ module.exports = {
             .then(records => records.map(r => r.User))
             .then(u.dv)
             .then(users => {
-                console.log(users);
                 return users.map(u => u.name);
             });
         });
@@ -67,7 +66,8 @@ module.exports = {
             const newMember = await Membership.create({
                 UserId: obj.adminId,
                 LeagueId: newleague.id,
-            }, u.tobj(t));
+            }, u.tobj(t))
+            .catch(err => u.Error(err.parent.constraint, 406));
             return newleague;
         });
     },
@@ -86,7 +86,9 @@ module.exports = {
             return Membership.create({
                 UserId: _user.id,
                 LeagueId: req.params.leagueID,
-            }, u.tobj(t));
+            }, u.tobj(t))
+            .then(mem => mem.name = _user.name)
+            .catch(err => u.Error(err.parent.constraint, 406));
         });
     },
 
@@ -98,7 +100,8 @@ module.exports = {
             return Membership.create({
                 UserId: req.body.userID,
                 LeagueId: req.body.leagueID,
-            }, u.tobj(t));
+            }, u.tobj(t))
+            .catch(err => u.Error(err.parent.constraint, 406));
         });
     }
 };
