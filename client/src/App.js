@@ -24,10 +24,10 @@ function App() {
           <Route exact component={Signup} path="/signup" />
           <PrivateRoute exact component={Account} path="/account" />
           <PrivateRoute exact component={Leagues} path="/leagues" />
-          <PrivateRoute component={League} path="/leagues/:leagueID" />
-          <PrivateRoute exact component={Contests} path="/contests" />
-          <PrivateRoute component={Contest} path="/contests/:contestID" />
-          <PrivateRoute exact component={Dashboard} path="/dashboard" />
+          <PrivateRoute exact component={League} path="/leagues/:leagueID" />
+          <PrivateRoute exact component={Contests} path="/leagues/:leagueID/contests" />
+          <PrivateRoute exact component={Contest} path="/leagues/:leagueID/contests/:contestID" />
+          <PrivateRoute exact component={Dashboard} path="/leagues/:leagueID/contests/:contestID/dashboard" />
         </Switch>
       </Router>
     </div>

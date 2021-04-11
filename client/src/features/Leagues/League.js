@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
-import { leagueSelector, getLeague, addMember } from './LeaguesSlice';
+import { leagueSelector, leagueContestsSelector, leagueMembersSelector, getLeague, getLeagueMembers, addMember, getContests, createContest } from './LeaguesSlice';
 import Loader from 'react-loader-spinner';
 import { useHistory, useParams } from 'react-router-dom';
 import { Link } from "react-router-dom";
@@ -17,12 +17,16 @@ const Leagues = () => {
 
   useEffect(() => {
     dispatch(getLeague(leagueID));
+    dispatch(getLeagueMembers(leagueID));
+    dispatch(getContests(leagueID));
   }, []);
 
   const thisLeague = useSelector(leagueSelector);
+  const thisLeagueContests = useSelector(leagueContestsSelector);
+  const thisLeagueMembers = useSelector(leagueMembersSelector);
 
   const onCreateContest = (data) => {
-    // dispatch(createContest(data));
+    dispatch(createContest({leagueID: leagueID, name: data.name}));
   };
 
   const onAddUser = (data) => {
@@ -38,6 +42,18 @@ const Leagues = () => {
           <span>League info</span>
           <br/>
           {JSON.stringify(thisLeague)}
+          <br/>
+          <br/>
+          League Contests
+          <br/>
+          <ul>
+            {thisLeagueContests.map(function(contest, index){
+              return <ContestItem key={ index } leagueID={leagueID} contestdata={ contest }/>;
+            })}
+          </ul>
+          <br/>
+          <br/>
+          {JSON.stringify(thisLeagueMembers)}
           <br/>
 
           <form className="space-y-6" onSubmit={handleSubmit(onCreateContest)} method="POST" >
