@@ -1,7 +1,7 @@
 const router = require('express').Router();
-const entry = require('../services/entry.service');
+const entry = require('./entry.service');
 
-const { routeHandler } = require('./util.route');
+const { routeHandler } = require('../util/util.route');
 
 // Get all entries in a contest
 router.get('/entries', routeHandler(entry.getContestEntries));

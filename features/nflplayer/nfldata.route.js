@@ -1,8 +1,8 @@
 const router = require('express').Router();
-const nflplayer = require('../services/nflplayer.service');
+const nflplayer = require('./nflplayer.service');
 const authenticate = require('../middleware/authenticate');
 
-const { routeHandler } = require('./util.route');
+const { routeHandler } = require('../util/util.route');
 
 // Get all players 
 router.get('/', routeHandler(nflplayer.getNFLPlayers));

@@ -3,10 +3,10 @@
     // Getting info about a user's offers across contests
 const { Transaction } = require('sequelize');
 const Queue = require('bull');
-const sequelize = require('../db');
-const { Offer, Roster, Entry, NFLPlayer } = require('../models');
-const u = require('../util');
-const config = require('../config');
+const sequelize = require('../../db');
+const { Offer, Roster, Entry, NFLPlayer } = require('../../models');
+const u = require('../util/util');
+const config = require('../../config');
 const isoOption = {
     // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
 };

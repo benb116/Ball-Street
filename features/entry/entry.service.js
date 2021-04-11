@@ -3,9 +3,9 @@
     // Getting info about a specific entry
     // Getting info about a user's entries across contests
 
-const { Entry } = require('../models');
-const u = require('../util');
-const { canUserSeeLeague } = require('./util.service');
+const { Entry } = require('../../models');
+const u = require('../util/util');
+const { canUserSeeLeague } = require('../util/util.service');
 const isoOption = {
     // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
 };

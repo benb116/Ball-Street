@@ -1,5 +1,5 @@
 let out = {};
-const config = require('./config');
+const config = require('../../config');
 const rpos = Object.keys(config.Roster);
 
 out.dv = function(input) {

@@ -2,11 +2,11 @@
     // Getting info about a specific league
     // Getting info about a user's leagues
 
-const { League, Membership, User } = require('../models');
+const { League, Membership, User } = require('../../models');
 const { Op } = require("sequelize");
-const sequelize = require('../db');
-const u = require('../util');
-const { canUserSeeLeague } = require('./util.service');
+const sequelize = require('../../db');
+const u = require('../util/util');
+const { canUserSeeLeague } = require('../util/util.service');
 const isoOption = {
     // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
 };

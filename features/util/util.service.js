@@ -1,5 +1,5 @@
-const { Contest, Membership, League} = require('../models');
-const u = require('../util');
+const { Contest, Membership, League} = require('../../models');
+const u = require('../util/util');
 
 async function canUserSeeContest(t, userID, contestID) {
     const _contest = await Contest.findByPk(contestID, { include: { model: League } }, u.tobj(t)).then(u.dv);

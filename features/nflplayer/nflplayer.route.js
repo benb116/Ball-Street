@@ -1,7 +1,7 @@
 const router = require('express').Router();
-const nflplayer = require('../services/nflplayer.service');
+const nflplayer = require('./nflplayer.service');
 
-const { routeHandler } = require('./util.route');
+const { routeHandler } = require('../util/util.route');
 
 // Get a player's orderbook in a contest
 router.get('/players/:nflplayerID/orderbook', routeHandler(nflplayer.getNFLPlayerOfferSummary));

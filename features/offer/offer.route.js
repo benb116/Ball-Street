@@ -1,7 +1,7 @@
 const router = require('express').Router();
-const offer = require('../services/offer.service');
+const offer = require('./offer.service');
 
-const { routeHandler } = require('./util.route');
+const { routeHandler } = require('../util/util.route');
 
 // Get a user's offers in a contest
 router.get('/offers', routeHandler(offer.getUserOffers));

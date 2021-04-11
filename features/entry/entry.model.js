@@ -1,6 +1,6 @@
 const { Sequelize, DataTypes } = require('sequelize');
-const u = require('../util');
-const config = require('../config');
+const u = require('../util/util');
+const config = require('../../config');
 
 // The model has common columns (UserId, ContestId, pointtotal)
 // This script also generates columns based on the set roster in config

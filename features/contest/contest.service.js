@@ -2,10 +2,10 @@
     // Getting info about a specific contest
     // Getting info about a user's contests
 
-const { Contest } = require('../models');
-const u = require('../util');
-const config = require('../config');
-const { canUserSeeLeague } = require('./util.service');
+const { Contest } = require('../../models');
+const u = require('../util/util');
+const config = require('../../config');
+const { canUserSeeLeague } = require('../util/util.service');
 const isoOption = {
     // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
 };

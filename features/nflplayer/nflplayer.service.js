@@ -3,9 +3,9 @@
     // Get order book info about a specific player
 
 const { Op } = require("sequelize");
-const { NFLPlayer, Offer, Trade, Entry } = require('../models');
-const u = require('../util');
-const config = require('../config');
+const { NFLPlayer, Offer, Trade, Entry } = require('../../models');
+const u = require('../util/util');
+const config = require('../../config');
 
 module.exports = {
     // Get a specific player

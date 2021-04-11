@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const config = require('../config');
+const config = require('../../config');
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('Offer', {
     id: {

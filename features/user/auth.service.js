@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 
-const { User } = require('../models');
-const u = require('../util');
+const { User } = require('../../models');
+const u = require('../util/util');
 
 async function login(email, password) {
     try {

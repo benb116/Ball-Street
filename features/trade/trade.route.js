@@ -1,7 +1,7 @@
 const router = require('express').Router();
-const trade = require('../services/trade.service');
+const trade = require('./trade.service');
 
-const { routeHandler } = require('./util.route');
+const { routeHandler } = require('../util/util.route');
 
 // Show a user's trades in a contest
 router.get('/trades', routeHandler(trade.getUserTrades));

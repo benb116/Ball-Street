@@ -1,19 +1,19 @@
-const sequelize = require('../db');
+const sequelize = require('./db');
 const DataTypes = require("sequelize").DataTypes;
 
-const _contest = require("./contest.model");
-const _league = require("./league.model");
-const _membership = require("./membership.model");
-const _entry = require("./entry.model");
-const _nfldivision = require("./nfldivision.model");
-const _nflplayer = require("./nflplayer.model");
-const _nflposition = require("./nflposition.model");
-const _nflteam = require("./nflteam.model");
-const _offer = require("./offer.model");
-const _protectedmatch = require("./protectedmatch.model");
-const _rosterposition = require("./rosterposition.model");
-const _trade = require("./trade.model");
-const _user = require("./user.model");
+const _contest = require("./features/contest/contest.model");
+const _league = require("./features/league/league.model");
+const _membership = require("./features/membership/membership.model");
+const _entry = require("./features/entry/entry.model");
+const _nfldivision = require("./features/nfldivision/nfldivision.model");
+const _nflplayer = require("./features/nflplayer/nflplayer.model");
+const _nflposition = require("./features/nflposition/nflposition.model");
+const _nflteam = require("./features/nflteam/nflteam.model");
+const _offer = require("./features/offer/offer.model");
+const _protectedmatch = require("./features/protectedmatch/protectedmatch.model");
+const _rosterposition = require("./features/rosterposition/rosterposition.model");
+const _trade = require("./features/trade/trade.model");
+const _user = require("./features/user/user.model");
 
 const Contest = _contest(sequelize, DataTypes);
 const League = _league(sequelize, DataTypes);

@@ -16,7 +16,7 @@ const isoOption = {
 const redis = require("redis");
 const client = redis.createClient();
 
-const service = require('../services/trade.service');
+const service = require('../features/trade/trade.service');
 
 async function fillOffers(bidid, askid, price) {
     console.log('begin:', bidid, askid);

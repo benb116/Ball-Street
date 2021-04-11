@@ -1,10 +1,8 @@
 const bcrypt = require('bcrypt');
 const router = require('express').Router();
-const league = require('../services/league.service');
+const league = require('./league.service');
 
-const { routeHandler } = require('./util.route');
-
-router.use('/:leagueID/', require('./contest.route'));
+const { routeHandler } = require('../util/util.route');
 
 // Get all leagues a user has joined
 router.get('/', routeHandler(league.getUserLeagues));
