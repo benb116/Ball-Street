@@ -42,10 +42,16 @@ module.exports = {
             const includeObj = (_league.ispublic ? {} : { model: User });
             return Membership.findAll({
                 where: {
-                    LeagueId: req.body.leagueID,
+                    LeagueId: req.params.leagueID,
                 },
                 include: includeObj,
-            }, u.tobj(t));
+            }, u.tobj(t))
+            .then(records => records.map(r => r.User))
+            .then(u.dv)
+            .then(users => {
+                console.log(users);
+                return users.map(u => u.name);
+            });
         });
     },
 

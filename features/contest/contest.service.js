@@ -4,6 +4,7 @@
 
 const { Contest } = require('../../models');
 const u = require('../util/util');
+const sequelize = require('../../db');
 const config = require('../../config');
 const { canUserSeeLeague } = require('../util/util.service');
 const isoOption = {
@@ -38,12 +39,12 @@ module.exports = {
     createContest(req) {
         return sequelize.transaction(isoOption, async (t) => {
             const _league = await canUserSeeLeague(t, req.session.user.id, req.params.leagueID);
-            if (league.ispublic) { u.Error('Cannot create contests in a public league', 403); }
+            if (_league.ispublic) { u.Error('Cannot create contests in a public league', 403); }
             if (req.session.user.id !== _league.adminId) { u.Error('Must be league admin to make new contests', 403); }
             return Contest.create({
                 name: req.body.name,
                 nflweek: config.currentNFLWeek,
-                LeagueId: league.id,
+                LeagueId: _league.id,
             }, u.tobj(t));
         });
     },
