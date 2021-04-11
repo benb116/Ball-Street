@@ -1,4 +1,4 @@
-const router = require('express').Router();
+const router = require('express').Router({mergeParams: true});
 const contest = require('./contest.service');
 
 const { routeHandler } = require('../util/util.route');

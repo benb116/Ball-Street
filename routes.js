@@ -3,10 +3,10 @@ const authenticate = require('./middleware/authenticate');
 
 router.use(authenticate);
 
-const leaguesRouter = require('express').Router();
-const leagueRouter = require('express').Router();
-const contestsRouter = require('express').Router();
-const contestRouter = require('express').Router();
+const leaguesRouter = require('express').Router({mergeParams: true});
+const leagueRouter = require('express').Router({mergeParams: true});
+const contestsRouter = require('express').Router({mergeParams: true});
+const contestRouter = require('express').Router({mergeParams: true});
 
 // /leagues/:leagueID/contests/:contestID/...
 
