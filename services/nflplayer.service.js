@@ -21,7 +21,7 @@ module.exports = {
     // Get a count of bids and asks at every price
     getNFLPlayerOfferSummary(req) {
         return sequelize.transaction(isoOption, async (t) => {
-            const [_contest, _league] = await canUserSeeContest(t, req.session.user.id, req.params.contestID);
+            const _league = await canUserSeeLeague(t, req.session.user.id, req.params.leagueID);
             const bids = Offer.count({
                 group: 'price',
                 where: {
@@ -50,7 +50,7 @@ module.exports = {
     },
     getNFLPlayerTradeVolume(req) {
         return sequelize.transaction(isoOption, async (t) => {
-            const [_contest, _league] = await canUserSeeContest(t, req.session.user.id, req.params.contestID);
+            const _league = await canUserSeeLeague(t, req.session.user.id, req.params.leagueID);
             return Offer.count({
                 where: {
                     ContestId: req.params.contestID,
@@ -61,7 +61,7 @@ module.exports = {
     },
     getNFLPlayerNumAdds(req) {
         return sequelize.transaction(isoOption, async (t) => {
-            const [_contest, _league] = await canUserSeeContest(t, req.session.user.id, req.params.contestID);
+            const _league = await canUserSeeLeague(t, req.session.user.id, req.params.leagueID);
             return Entry.count({
                 where: {
                     ContestId: req.params.contestID,

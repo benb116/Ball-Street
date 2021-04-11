@@ -39,7 +39,7 @@ async function tradeAdd(req, t) {
 
     // Determine if user already has player on roster
     const isOnTeam = u.isPlayerOnRoster(theentry, _player);
-    if (isOnTeam) { throw new Error('Player is on roster'); }
+    if (isOnTeam) { u.Error('Player is on roster', 406); }
 
     const pts = theentry.dataValues.pointtotal;
     // console.log("POINTS", pts);
@@ -53,8 +53,8 @@ async function tradeAdd(req, t) {
 
     const tradeprice = req.body.price || playerdata.preprice;
     // Checks
-    if (!tradeprice) { throw new Error("Player has no preprice"); }
-    if (tradeprice > pts) { throw new Error("User doesn't have enough points"); }
+    if (!tradeprice) { u.Error("Player has no preprice", 500); }
+    if (tradeprice > pts) { u.Error("User doesn't have enough points", 402); }
       
     // Deduct cost from points
     theentry.pointtotal -= tradeprice;
@@ -63,17 +63,17 @@ async function tradeAdd(req, t) {
     if (req.body.rosterposition) { // If a roster position was specified
         // Is it a valid one?
         const isinvalid = u.isInvalidSpot(playerType, req.body.rosterposition);
-        if (isinvalid) { throw new Error(isinvalid); }
+        if (isinvalid) { u.Error(isinvalid); }
         // Is it an empty one?
         if (theentry[req.body.rosterposition] !== null) {
-            throw new Error('There is a player in that spot');
+            u.Error('There is a player in that spot', 406);
         }
         theentry[req.body.rosterposition] = _player;
 
     } else {
         // Find an open spot
         const isOpen = u.isOpenRoster(theentry, playerType);
-        if (!isOpen) { throw new Error('There are no open spots'); }
+        if (!isOpen) { u.Error('There are no open spots', 406); }
         theentry[isOpen] = _player;
     }
     await theentry.save({transaction: t});
@@ -94,7 +94,7 @@ async function tradeDrop(req, t) {
     });
 
     const isOnTeam = u.isPlayerOnRoster(theentry, req.body.nflplayerID);
-    if (!isOnTeam) { throw new Error('Player is not on roster'); }
+    if (!isOnTeam) { u.Error('Player is not on roster', 406); }
     theentry[isOnTeam] = null;
 
     if (req.body.price) {

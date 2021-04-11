@@ -3,7 +3,7 @@ const u = require('../util');
 
 async function canUserSeeContest(t, userID, contestID) {
     const _contest = await Contest.findByPk(contestID, { include: { model: League } }, u.tobj(t)).then(u.dv);
-    if (!_contest) { return new Error('No contest found'); }
+    if (!_contest) { u.Error('No contest found', 404); }
     let _league = _contest.League;
     if (!_league.ispublic) {
         await canUserSeeLeague(t, userID, _contest.LeagueId);
@@ -12,16 +12,20 @@ async function canUserSeeContest(t, userID, contestID) {
 }
 
 async function canUserSeeLeague(t, userID, leagueID) {
-    const _league = await Membership.findOne({
+    const tobj = (t ? u.tobj(t) : {});
+    const _league = await League.findByPk(leagueID, tobj).then(u.dv);
+    if (!_league) { u.Error('No league found', 404); }
+    if (_league.ispublic) {
+        return _league;
+    }
+    const _member = await Membership.findOne({
         where: {
-            UserId: userID,
             LeagueId: leagueID,
-        },
-        include: {
-            model: League,
+            UserId: userID,
         }
-    }, u.tobj(t)).then(u.dv).then(out => out.League);
-    if (!_league) { return new Error('No league found'); }
+    }, tobj);
+    // If not a member, don't show
+    if (!_member) { u.Error('You are not a member of that league', 403); }
     return _league;
 }
 

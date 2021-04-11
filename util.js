@@ -3,6 +3,7 @@ const config = require('./config');
 const rpos = Object.keys(config.Roster);
 
 out.dv = function(input) {
+    if (input === null) { return input; }
     if (input.length) { return input.map(out.dv); }
     if (input.toJSON) { return input.toJSON(); }
     return input;
@@ -51,6 +52,12 @@ out.tobj = function(t) {
         transaction: t,
         lock: t.LOCK.UPDATE
     };
+};
+
+out.Error = function(msg, status=500) {
+    let err = new Error(msg);
+    err.status = status;
+    throw err;
 };
 
 module.exports = out;

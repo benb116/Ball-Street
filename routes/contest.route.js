@@ -1,17 +1,16 @@
 const router = require('express').Router();
 const contest = require('../services/contest.service');
 
+const { routeHandler } = require('./util.route');
+
+// Get all contests in a league
+router.get('/contests', routeHandler(contest.getLeagueContests));
+
 // Get a specific contest
-router.get('/:contestID', async (req, res) => {
-    const out = await contest.getContest(req);
-    return res.json(out);
-});
+router.get('/:contestID', routeHandler(contest.getContest));
 
 // Create a new contest
-router.post('/contest', async (req, res) => {
-    const out = await contest.createContest(req);
-    return res.json(out);
-});
+router.post('/contest', routeHandler(contest.createContest));
 
 router.use('/:contestID/', require('./entry.route'));
 router.use('/:contestID/', require('./offer.route'));

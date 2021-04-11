@@ -2,6 +2,8 @@ const router = require('express').Router();
 const auth = require('../services/auth.service');
 const authenticate = require('../middleware/authenticate');
 
+const { routeHandler } = require('./util.route');
+
 // TODO validation
 
 router.post('/login',  async (req, res) => {
@@ -14,20 +16,11 @@ router.post('/login',  async (req, res) => {
         req.session.user = user; // add to session
         res.json(user);
     } catch(err) {
-        console.error(err);
         res.status(401).json(err);
     }
 });
 
-router.get('/account', authenticate, async (req, res) => {
-    try {
-        const _user = await auth.getAccount(req.session.user.id);
-        res.json(_user);
-    } catch(err) {
-        console.log(err);
-        res.status(401).json(err);
-    }
-});
+router.get('/account', authenticate, routeHandler(auth.getAccount));
 
 router.post('/signup', async (req, res) => {
     const {name, email, password} = req.body;
@@ -39,7 +32,6 @@ router.post('/signup', async (req, res) => {
         req.session.user = user; // add to session
         res.json(user);
     } catch(err) {
-        console.error(err);
         res.status(401).json(err);
     }
 });

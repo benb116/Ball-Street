@@ -17,9 +17,9 @@ async function login(email, password) {
     }
 }
 
-async function getAccount(userID) {
+async function getAccount(req) {
     try {
-        return User.findByPk(userID).then(u.dv);
+        return User.findByPk(req.session.user.id).then(u.dv);
     } catch(err) {
         return Promise.reject('User not found');
     }

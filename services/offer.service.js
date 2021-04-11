@@ -35,20 +35,18 @@ function createOffer(req) {
             where: {
                 UserId: obj.userID,
                 ContestId: obj.contestID,
-            },
-            transaction: t,
-            lock: t.LOCK.UPDATE
-        });
+            }
+        }, u.tobj(t));
         
         // Player should be in entry for ask, not for bid
         const isOnTeam = u.isPlayerOnRoster(theentry, obj.nflplayerID);
         if (!obj.isbid) {
-            if (!isOnTeam) { throw new Error('Player is not on roster'); }
+            if (!isOnTeam) { u.Error('Player is not on roster', 404); }
         } else {
-            if (isOnTeam) {throw new Error('Player is on roster already'); }
+            if (isOnTeam) {u.Error('Player is on roster already', 409); }
 
             const pts = theentry.dataValues.pointtotal;
-            if (obj.price > pts) { throw new Error("User doesn't have enough points to offer"); }
+            if (obj.price > pts) { u.Error("User doesn't have enough points to offer", 402); }
             
             const playerdata = await NFLPlayer.findByPk(obj.nflplayerID, {
                 attributes: ['NFLPositionId'],
@@ -56,7 +54,7 @@ function createOffer(req) {
             }).then(u.dv);
             // Only allow offer if there's currently room on the roster
             // TODO make linked offers? I.e. sell player at market price to make room for other player
-            if (!u.isOpenRoster(theentry, playerdata.NFLPositionId)) { throw new Error("There are no spots this player could fit into"); }
+            if (!u.isOpenRoster(theentry, playerdata.NFLPositionId)) { u.Error("There are no spots this player could fit into", 409); }
         }
 
         return Offer.create({
@@ -82,8 +80,8 @@ function cancelOffer(req) {
     // Cancel offer, but if it's filled, let user know
     return sequelize.transaction(isoOption, async (t) => {
         const o = await Offer.findByPk(req.body.offerID, u.tobj(t));
-        if (!o) { throw new Error('No offer found'); }
-        if (o.filled) { throw new Error('Offer already filled'); }
+        if (!o) { u.Error('No offer found', 404); }
+        if (o.filled) { u.Error('Offer already filled', 406); }
         o.cancelled = true;
         await o.save({transaction: t});
         return o;

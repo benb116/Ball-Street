@@ -2,15 +2,12 @@ const router = require('express').Router();
 const nflplayer = require('../services/nflplayer.service');
 const authenticate = require('../middleware/authenticate');
 
+const { routeHandler } = require('./util.route');
+
 // Get all players 
-router.get('/', async (req, res) => {
-    const out = await nflplayer.getNFLPlayers(req);
-});
+router.get('/', routeHandler(nflplayer.getNFLPlayers));
 
 // Get a player's info
-router.get('/:nflplayerID', async (req, res) => {
-    const out = await nflplayer.getNFLPlayer(req);
-    return res.json(out);
-});
+router.get('/:nflplayerID', routeHandler(nflplayer.getNFLPlayer));
 
 module.exports = router;

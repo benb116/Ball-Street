@@ -5,7 +5,7 @@
 
 const { Entry } = require('../models');
 const u = require('../util');
-const { canUserSeeContest } = require('./util.service');
+const { canUserSeeLeague } = require('./util.service');
 const isoOption = {
     // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
 };
@@ -15,7 +15,7 @@ module.exports = {
     getContestEntries(req) {
         // Only show a specific contest's data if user is in contest's league
         return sequelize.transaction(isoOption, async (t) => {
-            const [_contest, _league] = await canUserSeeContest(t, req.session.user.id, req.params.contestID);
+            const _league = await canUserSeeLeague(t, req.session.user.id, req.params.leagueID);
             const includeObj = (_league.ispublic ? {} : { model: User });
             return Entry.findAll({ where: { ContestId: req.params.contestID }, includeObj });
         });
@@ -38,7 +38,7 @@ module.exports = {
         obj.ContestId = req.params.contestID;
         // Only allow if user is in contest's league
         return sequelize.transaction(isoOption, async (t) => {
-            const [_contest, _league] = await canUserSeeContest(t, req.session.user.id, req.params.contestID);
+            const _league = await canUserSeeLeague(t, req.session.user.id, req.params.leagueID);
             obj.pointtotal = _league.budget;
             return Entry.create(obj, u.tobj(t)).then(u.dv);
         });

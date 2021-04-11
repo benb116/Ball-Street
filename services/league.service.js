@@ -15,12 +15,8 @@ module.exports = {
     // Get all leagues a user has joined
     getUserLeagues(req) {
         return Membership.findAll({
-            where: {
-                UserId: req.session.user.id,
-            },
-            include: {
-                model: League,
-            }
+            where: { UserId: req.session.user.id, },
+            include: { model: League, }
         }).then(u.dv).then(ships => {
             return ships.map(m => m.League);
         });
@@ -28,37 +24,14 @@ module.exports = {
 
     // Show available public leagues
     getPublicLeagues() {
-        return League.findAll({
-            where: {
-                ispublic: true 
-            }
-        }).then(u.dv).then(out => {
+        return League.findAll({ where: { ispublic: true  } }).then(u.dv).then(out => {
             return out;
         });
     },
 
     // Get specific league info
     async getLeague(req) {
-        const errortext = 'No league found';
-        const _league = await League.findOne({ LeagueId: req.params.leagueID, }).then(u.dv);
-        if (!_league) { return new Error(errortext); }
-        if (!req.session.user.id) {
-            // If not logged in, find amongst public leagues
-            if (!_league.ispublic) { return new Error(errortext); }
-        } else {
-            const _member = await Membership.findOne({
-                where: {
-                    LeagueId: req.params.leagueID,
-                    UserId: req.session.user.id,
-                },
-                include: {
-                    model: League,
-                }
-            });
-            // If not a member, don't show
-            if (!_member) { return new Error(errortext); }
-        }
-        return _league;
+        return canUserSeeLeague(0, req.session.user.id, req.params.leagueID);
     },
 
     // Find a league's membership list (only private leagues)
@@ -88,7 +61,7 @@ module.exports = {
             const newMember = await Membership.create({
                 UserId: obj.adminId,
                 LeagueId: newleague.id,
-            }, {transaction: t});
+            }, u.tobj(t));
             return newleague;
         });
     },
@@ -96,12 +69,17 @@ module.exports = {
     // Add a member to a private league
     async addMember(req) {
         return sequelize.transaction(isoOption, async (t) => {
-            const _league = await League.findByPk(req.body.leagueID, u.tobj(t));
-            if (!_league) { return new Error('No league found'); }
-            if (req.session.user.id !== _league.admin) { return new Error('You are not admin, cannot add new member'); }
+            const _league = await League.findByPk(req.params.leagueID, u.tobj(t)).then(u.dv);
+            if (!_league) { u.Error('No league found', 404); }
+
+            if (req.session.user.id !== _league.adminId) { u.Error('You are not admin, cannot add new member', 403); }
+
+            const _user = await User.findOne({ where: { email: req.body.email } }).then(u.dv);
+            if (!_user) { u.Error('No user found', 404); }
+
             return Membership.create({
-                UserId: req.body.userID,
-                LeagueId: req.body.leagueID,
+                UserId: _user.id,
+                LeagueId: req.params.leagueID,
             }, u.tobj(t));
         });
     },
@@ -110,7 +88,7 @@ module.exports = {
     async join(req) {
         return sequelize.transaction(isoOption, async (t) => {
             const _league = League.findByPk(req.body.leagueID, u.tobj(t)).then(u.dv);
-            if (!_league.ispublic) { return new Error('No league found'); }
+            if (!_league.ispublic) { u.Error('No league found', 404); }
             return Membership.create({
                 UserId: req.body.userID,
                 LeagueId: req.body.leagueID,

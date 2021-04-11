@@ -2,48 +2,29 @@ const bcrypt = require('bcrypt');
 const router = require('express').Router();
 const league = require('../services/league.service');
 
+const { routeHandler } = require('./util.route');
+
 router.use('/:leagueID/', require('./contest.route'));
 
 // Get all leagues a user has joined
-router.get('/', async (req, res) => {
-    const out = await league.getUserLeagues(req);
-    return res.json(out);
-});
+router.get('/', routeHandler(league.getUserLeagues));
 
 // Get all public leagues
-router.get('/public', async (req, res) => {
-    const out = await league.getPublicLeagues();
-    return res.json(out);
-});
+router.get('/public', routeHandler(league.getPublicLeagues));
 
 // Get a specific league
-router.get('/:leagueID', async (req, res) => {
-    const out = await league.getLeague(req);
-    return res.json(out);
-});
+router.get('/:leagueID', routeHandler(league.getLeague));
 
 // Get a specific league's members
-router.get('/:leagueID/members', async (req, res) => {
-    const out = await league.getLeagueUsers(req);
-    return res.json(out);
-});
+router.get('/:leagueID/members', routeHandler(league.getLeagueUsers));
 
 // Make a new league
-router.post('/league', async (req, res) => {
-    const out = await league.createLeague(req);
-    return res.json(out);
-});
+router.post('/league', routeHandler(league.createLeague));
 
 // Add a user to a private league
-router.post('/:leagueID/addMember', async (req, res) => {
-    const out = await league.addMember(req);
-    return res.json(out);
-});
+router.post('/:leagueID/addMember', routeHandler(league.addMember));
 
 // Join a public league
-router.post('/:leagueID/join', async (req, res) => {
-    const out = await league.join(req);
-    return res.json(out);
-});
+router.post('/:leagueID/join', routeHandler(league.join));
 
 module.exports = router;
