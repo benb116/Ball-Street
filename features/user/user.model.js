@@ -24,5 +24,14 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: false,
     }
-  }, {sequelize});
+  }, {
+    defaultScope: {
+      attributes: { exclude: ['pwHash'] },
+    },
+    scopes: {
+      withPassword: {
+        attributes: { },
+      }
+    }
+  });
 };
