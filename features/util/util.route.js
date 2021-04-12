@@ -4,6 +4,7 @@ function routeHandler(service) {
             const out = await service(req);
             return res.json(out);
         } catch(err) {
+            if (!err) { console.log(err); }
             return res.status((err.status || 500)).json({ error: err.message });
         }
     };

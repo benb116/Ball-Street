@@ -3,8 +3,9 @@
     // Getting info about a specific entry
     // Getting info about a user's entries across contests
 
-const { Entry } = require('../../models');
+const { Entry, User } = require('../../models');
 const u = require('../util/util');
+const sequelize = require('../../db');
 const { canUserSeeLeague } = require('../util/util.service');
 const isoOption = {
     // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
@@ -41,6 +42,7 @@ module.exports = {
             const _league = await canUserSeeLeague(t, req.session.user.id, req.params.leagueID);
             obj.pointtotal = _league.budget;
             return Entry.create(obj, u.tobj(t)).then(u.dv);
-        });
+        })
+        .catch(err => u.Error(err.parent.constraint, 406));
     }
 };

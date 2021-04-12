@@ -46,6 +46,7 @@ module.exports = {
                 nflweek: config.currentNFLWeek,
                 LeagueId: _league.id,
             }, u.tobj(t));
-        });
+        })
+        .catch(err => u.Error(err.parent.constraint, 406));
     },
 };

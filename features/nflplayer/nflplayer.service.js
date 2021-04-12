@@ -4,6 +4,7 @@
 
 const { Op } = require("sequelize");
 const { NFLPlayer, Offer, Trade, Entry } = require('../../models');
+const sequelize = require('../../db');
 const u = require('../util/util');
 const config = require('../../config');
 
