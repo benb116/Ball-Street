@@ -1,46 +1,25 @@
 import React, { Fragment, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { userSelector, clearState } from '../User/UserSlice';
+import { userSelector, clearState } from './EntrySlice';
 import Loader from 'react-loader-spinner';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
+
+import { getEntry } from './EntrySlice';
+
 
 const Entry = () => {
-  const history = useHistory();
-
+  const { leagueID, contestID } = useParams();
   const dispatch = useDispatch();
-  const { isFetching, isError } = useSelector(userSelector);
 
-  const { username, email } = useSelector(userSelector);
+  console.log(leagueID, contestID);
 
   useEffect(() => {
-    if (isError) {
-      dispatch(clearState());
-      history.push('/login');
-    }
-  }, [isError]);
-
-  const onLogOut = () => {
-    history.push('/login');
-  };
+    dispatch(getEntry({leagueID, contestID}));
+  }, []);
 
   return (
     <div className="container mx-auto">
-      {isFetching ? (
-        <Loader type="Puff" color="#00BFFF" height={100} width={100} />
-      ) : (
-        <Fragment>
-          <div className="container mx-auto">
-            Welcome back <h3>{email}</h3>
-          </div>
-
-          <button
-            onClick={onLogOut}
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-          >
-            Log Out
-          </button>
-        </Fragment>
-      )}
+      Entry
     </div>
   );
 };

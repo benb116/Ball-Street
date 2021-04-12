@@ -15,4 +15,4 @@ export const leaderboardSlice = createSlice({
 
 export const { } = leaderboardSlice.actions;
 
-export const leaderboardSelector = (state) => state.user;
+export const leaderboardSelector = (state) => state.leaderboard;

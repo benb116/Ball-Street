@@ -15,4 +15,4 @@ export const playersSlice = createSlice({
 
 export const { } = playersSlice.actions;
 
-export const playersSelector = (state) => state.user;
+export const playersSelector = (state) => state.players;
