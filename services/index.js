@@ -5,12 +5,12 @@ const league = require('./league.service');
 const nflplayer = require('./nflplayer.service');
 const offer = require('./offer.service');
 const trade = require('./trade.service');
+
 module.exports = {
-    // roster,
-    contest,
-    entry,
-    league,
-    nflplayer,
-    offer,
-    trade
+  contest,
+  entry,
+  league,
+  nflplayer,
+  offer,
+  trade,
 };

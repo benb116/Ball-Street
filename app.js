@@ -1,11 +1,10 @@
-const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
-const cors = require("cors");
-const helmet = require("helmet");
+const cors = require('cors');
+const helmet = require('helmet');
 
-const session = require("./middleware/session");
-const limiter = require("./middleware/limiter");
+const session = require('./middleware/session');
+const limiter = require('./middleware/limiter');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -18,18 +17,18 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(session);
 app.use(helmet());
-app.enable("trust proxy"); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
+app.enable('trust proxy'); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
 app.use(limiter);
 
-const routePrefix = (process.env.NODE_ENV === 'production' ? '' : '/app');
-app.use(routePrefix+'/auth/', require('./routes/auth.route'));
-app.use(routePrefix+'/api/', require('./routes'));
+const routePrefix = (isProduction ? '/' : '/app/');
+app.use(`${routePrefix}auth/`, require('./routes/auth.route'));
+app.use(`${routePrefix}api/`, require('./routes'));
 
 app.get('/*', (req, res) => {
-  res.sendFile(__dirname + '/client/build/index.html');
+  res.sendFile(`${__dirname}/client/build/index.html`);
 });
 
 // finally, let's start our server...
 const server = app.listen(process.env.PORT || 5000, () => {
-    console.log('Listening on port ' + server.address().port);
+  console.log(`Listening on port ${server.address().port}`);
 });

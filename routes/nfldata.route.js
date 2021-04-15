@@ -4,7 +4,7 @@ const authenticate = require('../middleware/authenticate');
 
 const { routeHandler } = require('./util.route');
 
-// Get all players 
+// Get all players
 router.get('/', routeHandler(nflplayer.getNFLPlayers));
 
 // Get a player's info

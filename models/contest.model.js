@@ -1,18 +1,17 @@
-const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
+module.exports = function model(sequelize, DataTypes) {
   return sequelize.define('Contest', {
     name: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     nflweek: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
     },
     LeagueId: {
       type: DataTypes.INTEGER,
       references: { model: 'Leagues' },
       allowNull: false,
-    }
-  }, {sequelize});
+    },
+  }, { sequelize });
 };

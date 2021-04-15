@@ -1,5 +1,4 @@
-const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
+module.exports = function model(sequelize, DataTypes) {
   return sequelize.define('Membership', {
     UserId: {
       type: DataTypes.INTEGER,
@@ -13,5 +12,5 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       primaryKey: true,
     },
-  }, {sequelize});
+  }, { sequelize });
 };

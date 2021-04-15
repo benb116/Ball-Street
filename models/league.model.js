@@ -1,9 +1,8 @@
-const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
+module.exports = function model(sequelize, DataTypes) {
   return sequelize.define('League', {
     name: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     adminId: {
       type: DataTypes.INTEGER,
@@ -18,6 +17,6 @@ module.exports = function(sequelize, DataTypes) {
     budget: {
       type: DataTypes.INTEGER,
       allowNull: false,
-    }
-  }, {sequelize});
+    },
+  }, { sequelize });
 };
