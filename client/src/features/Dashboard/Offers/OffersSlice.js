@@ -15,4 +15,4 @@ export const offersSlice = createSlice({
 
 export const { } = offersSlice.actions;
 
-export const offersSelector = (state) => state.user;
+export const offersSelector = (state) => state.offers;

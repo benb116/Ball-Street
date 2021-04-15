@@ -1,11 +1,11 @@
 import React, { Fragment, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
-import { leaguesSelector, getUserLeagues, getPublicLeagues, createLeague } from './LeaguesSlice';
 import Loader from 'react-loader-spinner';
 import { useHistory } from 'react-router-dom';
 import { Link } from "react-router-dom";
 
+import { leaguesSelector, getUserLeagues, getPublicLeagues, createLeague } from './LeaguesSlice';
 import League from './League';
 
 const Leagues = () => {

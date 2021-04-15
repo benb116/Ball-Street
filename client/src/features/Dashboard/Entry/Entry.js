@@ -1,48 +1,67 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { dispatch } from 'react-hot-toast';
 import { useSelector, useDispatch } from 'react-redux';
-import { userSelector, clearState } from '../User/UserSlice';
-import Loader from 'react-loader-spinner';
-import { useHistory } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { playerSelector } from '../Players/PlayersSlice';
+
+import { getEntry, entrySelector, preAdd, preDrop } from './EntrySlice';
+
 
 const Entry = () => {
-  const history = useHistory();
-
   const dispatch = useDispatch();
-  const { isFetching, isError } = useSelector(userSelector);
+  const { leagueID, contestID } = useParams();
 
-  const { username, email } = useSelector(userSelector);
-
+  const thisentry = useSelector(entrySelector);
+  const rpos = Object.keys(thisentry.roster);
   useEffect(() => {
-    if (isError) {
-      dispatch(clearState());
-      history.push('/login');
-    }
-  }, [isError]);
-
-  const onLogOut = () => {
-    history.push('/login');
-  };
+    dispatch(getEntry({leagueID, contestID}));
+  }, []);
 
   return (
     <div className="container mx-auto">
-      {isFetching ? (
-        <Loader type="Puff" color="#00BFFF" height={100} width={100} />
-      ) : (
-        <Fragment>
-          <div className="container mx-auto">
-            Welcome back <h3>{email}</h3>
-          </div>
-
-          <button
-            onClick={onLogOut}
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-          >
-            Log Out
-          </button>
-        </Fragment>
-      )}
+      Entry
+      <table>
+        <tr>
+          <th>Pos</th>
+          <th>Name</th>
+          <th>Team</th>
+          <th>Pts</th>
+          <th>Proj</th>
+          <th>Last</th>
+          <th>Bid</th>
+          <th>Ask</th>
+          <th>Drop</th>
+        </tr>
+        {rpos.map(function(pos, index){
+          return <RosterItem key={ index } position={pos} playerid={ thisentry.roster[pos] }/>;
+        })}
+      </table>
     </div>
   );
 };
+
+
+function RosterItem(props) {
+  const dispatch = useDispatch();
+  const { leagueID, contestID } = useParams();
+  const thisplayer = useSelector(playerSelector(props.playerid));
+  const onpredrop = () => {
+    dispatch(preDrop({leagueID: leagueID, contestID: contestID, nflplayerID: props.playerid}));
+  }
+  return (
+    <tr playerid={thisplayer.id}>
+      <td>{props.position}</td>
+      <td>{thisplayer.name}</td>
+      <td>{thisplayer.teamAbr}</td>
+      <td>{thisplayer.statprice}</td>
+      <td>{thisplayer.preprice}</td>
+      <td>{thisplayer.lastprice}</td>
+      <td>{thisplayer.bestbid}</td>
+      <td>{thisplayer.bestask}</td>
+      <td onClick={onpredrop}>DROP</td>
+    </tr>
+  );
+}
+
 
 export default Entry;

@@ -5,14 +5,18 @@ import {
   getpublicleaguesfunc,
   createleaguefunc,
   getleaguefunc,
+  getleaguemembersfunc,
+  getcontestsfunc,
   addmemberfunc,
-} from './Leagues.api.js';
+  createcontestfunc,
+} from './Leagues.api';
 
 const defaultState = {
     userleagues: [],
     publicleagues: [],
     thisleague: {},
     thisleaguecontests: [],
+    thisleaguemembers: [],
 };
 
 export const getUserLeagues = createAsyncThunk('leagues/getUserLeagues', getuserleaguesfunc);
@@ -20,9 +24,14 @@ export const getPublicLeagues = createAsyncThunk('leagues/getPublicLeagues', get
 
 export const createLeague = createAsyncThunk('leagues/createLeague', createleaguefunc);
 
+
 export const getLeague = createAsyncThunk('leagues/getLeague', getleaguefunc);
+export const getContests = createAsyncThunk('leagues/getContests', getcontestsfunc);
+export const getLeagueMembers = createAsyncThunk('leagues/getLeagueMembers', getleaguemembersfunc);
 
 export const addMember = createAsyncThunk('leagues/addMember', addmemberfunc);
+
+export const createContest = createAsyncThunk('leagues/createContest', createcontestfunc);
 
 export const leaguesSlice = createSlice({
   name: 'leagues',
@@ -43,6 +52,18 @@ export const leaguesSlice = createSlice({
     [getLeague.fulfilled]: (state, { payload }) => {
       state.thisleague = payload;
     },
+    [getContests.fulfilled]: (state, { payload }) => {
+      state.thisleaguecontests = payload;
+    },
+    [getLeagueMembers.fulfilled]: (state, { payload }) => {
+      state.thisleaguemembers = payload;
+    },
+    [addMember.fulfilled]: (state, { payload }) => {
+      state.thisleaguemembers.push(payload);
+    },
+    [createContest.fulfilled]: (state, { payload }) => {
+      state.thisleaguecontests.push(payload);
+    },
   },
 });
 
@@ -55,6 +76,6 @@ export const leaguesSelector = (state) => {
     };
 };
 
-export const leagueSelector = (state) => {
-  return state.leagues.thisleague;
-};
+export const leagueSelector = (state) => state.leagues.thisleague;
+export const leagueContestsSelector = (state) => state.leagues.thisleaguecontests;
+export const leagueMembersSelector = (state) => state.leagues.thisleaguemembers;
