@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Loader from 'react-loader-spinner';
 import { useHistory, useParams } from 'react-router-dom';
 
-import { getPlayers, playersSelector, filterSelector, setFilter} from './PlayersSlice';
+import { getPlayers, playersSelector, filterSelector, sortSelector, setFilter, setSort} from './PlayersSlice';
 import { isOnRosterSelector, preAdd, preDrop } from '../Entry/EntrySlice';
 
 const Players = () => {
@@ -13,40 +13,57 @@ const Players = () => {
 
   const theplayers = useSelector(playersSelector);
   const filters = useSelector(filterSelector);
-
-  const filterplayers = theplayers
+  const sorts = useSelector(sortSelector);
+  console.log(sorts)
+  const filtersortplayers = theplayers
     .filter(p => p.name.toLowerCase().includes(filters.name))
     .filter(p => (p.posName === filters.posName || filters.posName === ''))
     .filter(p => (p.teamAbr === filters.teamAbr || filters.teamAbr === ''))
+    .sort((a,b) => {
+      const out = a[sorts.sortProp] > b[sorts.sortProp];
+      return (out ? 1 : -1)*(sorts.sortDesc ? 1 : -1);
+    });
 
   useEffect(() => {
     dispatch(getPlayers({leagueID, contestID}));
   }, []);
-
 
   return (
     <div className="container mx-auto">
       Players
       <PlayerFilter />
       <table>
-        <tr>
-          <th>Name</th>
-          <th>Pos</th>
-          <th>Team</th>
-          <th>Proj</th>
-          <th>Pts</th>
-          <th>Last</th>
-          <th>Bid</th>
-          <th>Ask</th>
-          <th>Add</th>
-        </tr>
-        {filterplayers.map(function(player, index){
+        <ListHeader />
+        {filtersortplayers.map(function(player, index){
           return <PlayerItem key={ index } playerdata={ player }/>;
         })}
       </table>
     </div>
   );
 };
+
+function ListHeader() {
+  const dispatch = useDispatch();
+
+  function handleClick(evt) {
+    console.log(evt.target.getAttribute('value'));
+    dispatch(setSort(evt.target.getAttribute('value')))
+  }
+
+  return (
+    <tr>
+      <th onClick={handleClick} value="name">Name</th>
+      <th onClick={handleClick} value="posName">Pos</th>
+      <th onClick={handleClick} value="teamAbr">Team</th>
+      <th onClick={handleClick} value="preprice">Proj</th>
+      <th onClick={handleClick} value="statprice">Pts</th>
+      <th onClick={handleClick} value="last">Last</th>
+      <th onClick={handleClick} value="bid">Bid</th>
+      <th onClick={handleClick} value="ask">Ask</th>
+      <th onClick={handleClick} value="add">Add</th>
+    </tr>
+  )
+}
 
 function PlayerFilter() {
   const dispatch = useDispatch();

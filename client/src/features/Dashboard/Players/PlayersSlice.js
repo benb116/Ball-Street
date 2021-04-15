@@ -21,8 +21,16 @@ export const playersSlice = createSlice({
   reducers: {
     clear: state => state = {defaultState},
     setFilter: (state, action) => {
-      console.log(action);
       state.filter[action.payload.name] = action.payload.value;
+    },
+    setSort: (state, action) => {
+      console.log(action);
+      if (state.sortProp === action.payload) {
+        state.sortDesc = !state.sortDesc;
+      } else {
+        state.sortDesc = true;
+      }
+      state.sortProp = action.payload;
     }
   },
   extraReducers: {
@@ -37,7 +45,7 @@ export const playersSlice = createSlice({
   },
 });
 
-export const { clear, setFilter} = playersSlice.actions;
+export const { clear, setFilter, setSort} = playersSlice.actions;
 
 export const playersSelector = (state) => state.players.playerlist;
 export const playerSelector = (playerID) => {
@@ -46,3 +54,8 @@ export const playerSelector = (playerID) => {
   }
 }
 export const filterSelector = (state) => state.players.filter;
+export const sortSelector = (state) => {
+  const sortProp = state.players.sortProp
+  const sortDesc = state.players.sortDesc;
+  return {sortProp, sortDesc};
+};
