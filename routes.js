@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const authenticate = require('./middleware/authenticate');
 
+router.use('/nfldata/', require('./features/nflplayer/nfldata.route'))
+
 router.use(authenticate);
 
 const leaguesRouter = require('express').Router({mergeParams: true});

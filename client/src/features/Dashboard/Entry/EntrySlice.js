@@ -17,12 +17,22 @@ export const entrySlice = createSlice({
   },
   extraReducers: {
     [getEntry.fulfilled]: (state, { payload }) => {
-      console.log(payload)
-      // state.userleagues = payload;
+      state.balance = payload.pointtotal;
+      const rost = Object.assign({}, payload);
+      delete rost.pointtotal;
+      delete rost.UserId;
+      delete rost.ContestId;
+      delete rost.createdAt;
+      delete rost.updatedAt;
+      state.roster = rost;
+      state.roster["QB1"] = 40117;
     },
   },
 });
 
 export const { } = entrySlice.actions;
 
-export const entrySelector = (state) => state.dashboard.entry;
+export const entrySelector = (state) => state.entry;
+export const playerdataSelector = (state) => {
+  
+}

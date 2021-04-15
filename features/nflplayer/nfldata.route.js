@@ -1,6 +1,5 @@
 const router = require('express').Router({mergeParams: true});
 const nflplayer = require('./nflplayer.service');
-const authenticate = require('../middleware/authenticate');
 
 const { routeHandler } = require('../util/util.route');
 

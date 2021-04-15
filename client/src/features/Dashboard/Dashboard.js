@@ -12,12 +12,16 @@ import Leaderboard from './Leaderboard/Leaderboard'
 const Dashboard = () => {
 
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto" style={{"text-align": "left"}}>
       Dashboard
       <Entry />
+      <br/>
       <Players />
+      <br/>
       <Offers />
+      <br/>
       <Leaderboard />
+      <br/>
     </div>
   );
 };

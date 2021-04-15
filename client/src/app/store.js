@@ -13,11 +13,11 @@ export default configureStore({
     user: userSlice.reducer,
     leagues: leaguesSlice.reducer,
     contests: contestsSlice.reducer,
-    dashboard: {
+    // dashboard: {
       entry: entrySlice.reducer,
       leaderboard: leaderboardSlice.reducer,
       offers: offersSlice.reducer,
       players: playersSlice.reducer,
-    }
+    // }
   },
 });
