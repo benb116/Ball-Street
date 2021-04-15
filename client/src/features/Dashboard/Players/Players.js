@@ -17,7 +17,12 @@ const Players = () => {
   console.log(sorts)
   const filtersortplayers = theplayers
     .filter(p => p.name.toLowerCase().includes(filters.name))
-    .filter(p => (p.posName === filters.posName || filters.posName === ''))
+    .filter(p => {
+      if (filters.posName === 'FLEX') {
+        return (['RB', 'WR', 'TE'].indexOf(p.posName) > -1);
+      }
+      return (p.posName === filters.posName || filters.posName === '');
+    })
     .filter(p => (p.teamAbr === filters.teamAbr || filters.teamAbr === ''))
     .sort((a,b) => {
       const out = a[sorts.sortProp] > b[sorts.sortProp];
