@@ -31,12 +31,13 @@ async function tradeAdd(req, t) {
     const theentry = await Entry.findOne({
         where: {
             UserId: req.session.user.id,
-            ContestId: req.body.contestID
+            ContestId: req.params.contestID
         },
         transaction: t,
         lock: t.LOCK.UPDATE
     });
 
+    if (!theentry) { u.Error('No entry found', 404); }
     // Determine if user already has player on roster
     const isOnTeam = u.isPlayerOnRoster(theentry, _player);
     if (isOnTeam) { u.Error('Player is on roster', 406); }
@@ -51,7 +52,7 @@ async function tradeAdd(req, t) {
     }).then(d => d.dataValues);
     // console.log("PDATA", playerdata);
 
-    const tradeprice = req.body.price || playerdata.preprice;
+    const tradeprice = req.price || playerdata.preprice;
     // Checks
     if (!tradeprice) { u.Error("Player has no preprice", 500); }
     if (tradeprice > pts) { u.Error("User doesn't have enough points", 402); }
@@ -78,7 +79,7 @@ async function tradeAdd(req, t) {
     }
     await theentry.save({transaction: t});
 
-    return 0;
+    return theentry;
 }
 
 // Drop a player within a transaction, but don't commit
@@ -87,7 +88,7 @@ async function tradeDrop(req, t) {
     const theentry = await Entry.findOne({
         where: {
             UserId: req.session.user.id,
-            ContestId: req.body.contestID
+            ContestId: req.params.contestID
         },
         transaction: t,
         lock: t.LOCK.UPDATE
@@ -97,8 +98,8 @@ async function tradeDrop(req, t) {
     if (!isOnTeam) { u.Error('Player is not on roster', 406); }
     theentry[isOnTeam] = null;
 
-    if (req.body.price) {
-        theentry.pointtotal += req.body.price;
+    if (req.price) {
+        theentry.pointtotal += req.price;
     } else {
         // How much to add to point total
         const preprice = await NFLPlayer.findByPk(req.body.nflplayerID, {
@@ -111,7 +112,7 @@ async function tradeDrop(req, t) {
 
     await theentry.save({transaction: t});
 
-    return 0;
+    return theentry;
 }
 
 // Try to add within a transaction, errors will rollback

@@ -71,27 +71,27 @@ async function attemptFill(t, bidid, askid, price) {
 
     const bidreq = {
         session: {user: {id: biduser}},
+        param: {contestID: boffer.ContestId},
         body: {
-            contestID: boffer.ContestId,
             nflplayerID: player,
-            price: price,
-        }
+        },
+        price: price
     };
     const askreq = {
         session: {user: {id: askuser}},
+        param: {contestID: aoffer.ContestId},
         body: {
-            contestID: aoffer.ContestId,
             nflplayerID: player,
-            price: price,
-        }
+        },
+        price: price
     };
 
     const biddone = await service.tradeAdd(bidreq, t).catch(err => { console.log(err); return 1; } );
     const askdone = await service.tradeDrop(askreq, t).catch(err => { console.log(err); return 1; } );
     // if waiting for a lock, maybe return [0, 0]?
-    if (biddone === 1 && askdone === 1) { throw new Error('both'); }
-    if (biddone === 1) { throw new Error('bid'); }
-    if (askdone === 1) { throw new Error('ask'); }
+    if (Number(biddone) && Number(askdone)) { throw new Error('both'); }
+    if (Number(biddone)) { throw new Error('bid'); }
+    if (Number(askdone)) { throw new Error('ask'); }
 
     bidoffer.filled = true;
     askoffer.filled = true;

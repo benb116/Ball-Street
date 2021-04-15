@@ -22,7 +22,7 @@ app.enable("trust proxy"); // only if you're behind a reverse proxy (Heroku, Blu
 app.use(limiter);
 
 const routePrefix = (process.env.NODE_ENV === 'production' ? '' : '/app');
-app.use(routePrefix+'/auth/', require('./features/user/auth.route'));
+app.use(routePrefix+'/auth/', require('./features/user/user.route'));
 app.use(routePrefix+'/api/', require('./routes'));
 
 app.get('/*', (req, res) => {

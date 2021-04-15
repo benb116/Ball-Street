@@ -16,7 +16,12 @@ export const playersSlice = createSlice({
   },
   extraReducers: {
     [getPlayers.fulfilled]: (state, { payload }) => {
-      state.playerlist = payload;
+      const np = payload.map(p => {
+        p.teamAbr = p.NFLTeam.abr;
+        p.posName = p.NFLPosition.name;
+        return p;
+      })
+      state.playerlist = np;
     }
   },
 });

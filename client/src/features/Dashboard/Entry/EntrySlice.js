@@ -1,8 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-import { getentryfunc } from './Entry.api'
+import { getentryfunc, preaddfunc, predropfunc } from './Entry.api'
 
 export const getEntry = createAsyncThunk('entry/getEntry', getentryfunc);
+export const preAdd = createAsyncThunk('entry/preAdd', preaddfunc);
+export const preDrop = createAsyncThunk('entry/preDrop', predropfunc);
 
 const defaultState = {
   balance: 0,
@@ -17,22 +19,34 @@ export const entrySlice = createSlice({
   },
   extraReducers: {
     [getEntry.fulfilled]: (state, { payload }) => {
-      state.balance = payload.pointtotal;
-      const rost = Object.assign({}, payload);
-      delete rost.pointtotal;
-      delete rost.UserId;
-      delete rost.ContestId;
-      delete rost.createdAt;
-      delete rost.updatedAt;
-      state.roster = rost;
-      state.roster["QB1"] = 40117;
+      setEntry(state, payload);
     },
+    [preAdd.fulfilled]: (state, {payload}) => {
+      setEntry(state, payload);
+    },
+    [preDrop.fulfilled]: (state, {payload}) => {
+      setEntry(state, payload);
+    }
   },
 });
+
+function setEntry (state, payload) {
+  state.balance = payload.pointtotal;
+  const rost = Object.assign({}, payload);
+  delete rost.pointtotal;
+  delete rost.UserId;
+  delete rost.ContestId;
+  delete rost.createdAt;
+  delete rost.updatedAt;
+  state.roster = rost;
+  return state;
+}
 
 export const { } = entrySlice.actions;
 
 export const entrySelector = (state) => state.entry;
-export const playerdataSelector = (state) => {
-  
+export const isOnRosterSelector = (playerID) => {
+  return (state) => {
+    return (Object.values(state.entry.roster).indexOf(playerID) >= 0);
+  }
 }

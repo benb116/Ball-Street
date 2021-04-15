@@ -3,7 +3,7 @@
     // Get order book info about a specific player
 
 const { Op } = require("sequelize");
-const { NFLPlayer, Offer, Trade, Entry } = require('../../models');
+const { NFLPlayer, NFLTeam, NFLPosition, Offer, Trade, Entry } = require('../../models');
 const sequelize = require('../../db');
 const u = require('../util/util');
 const config = require('../../config');
@@ -16,7 +16,7 @@ module.exports = {
 
     // Get all players
     getNFLPlayers(req) {
-        return NFLPlayer.findAll().then(u.dv);
+        return NFLPlayer.findAll({ include: [{ model: NFLTeam }, { model: NFLPosition }] }).then(u.dv);
     },
 
     // Get a count of bids and asks at every price

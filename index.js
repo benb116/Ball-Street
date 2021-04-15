@@ -1,27 +1,29 @@
 
 const sequelize = require('./db');
 const models = require('./models');
-const u = require('util');
+const services = require('./services');
+const u = require('./features/util/util');
 
 const delay = ms => new Promise(res => setTimeout(res, ms));
 console.log('go');
 (async () => {
-    await require('./db/dbpopulate')(sequelize);
+    // await require('./db/dbpopulate')(sequelize);
 
-    const services = require('./services/');
 
     // services.entry.getEntry({params: {entryID: 2}});
     // services.entry.createEntry({
-    //     
-    // session: {user: {id: 3}},
-    //     params: {contestID: 1}
+    //     session: {user: {id: 5}},
+    //     params: {
+    //         leagueID: 2,
+    //         contestID: 2,
+    //     }
     // });
 
     const tradeResults = await services.trade.preTradeAdd({
         
-        session: {user: {id: 1}},
+        session: {user: {id: 5}},
+        params: {contestID: 2},
         body: {
-            contestID: 1,
             // nflplayerID: 19045,
             nflplayerID: 17923,
             rosterposition: "RB1"
@@ -30,9 +32,9 @@ console.log('go');
 
     const tradeResults2 = await services.trade.preTradeAdd({
         
-        session: {user: {id: 2}},
+        session: {user: {id: 9}},
+        params: {contestID: 2},
         body: {
-            contestID: 1,
             // nflplayerID: 19045,
             nflplayerID: 17923,
             rosterposition: "RB2"
@@ -41,9 +43,9 @@ console.log('go');
 
     const tradeResults3 = await services.trade.preTradeAdd({
         
-        session: {user: {id: 3}},
+        session: {user: {id: 5}},
+        params: {contestID: 2},
         body: {
-            contestID: 1,
             nflplayerID: 19045,
             // nflplayerID: 17923,
             rosterposition: "FLEX1"
@@ -60,61 +62,61 @@ console.log('go');
     //     }
     // }).then(u.dv).then(console.log).catch(console.error);
 
-    const offerObj3 = await services.offer.createOffer({
+    // const offerObj3 = await services.offer.createOffer({
         
-        session: {user: {id: 2}},
-        body: { offerObj: {
-            contestID: 1,
-            // nflplayerID: 19045,
-            nflplayerID: 17923,
-            isbid: false,
-            price: 900,
-        }}
-    }).then(u.dv).catch(console.error);
-    // await delay(1000);
+    //     session: {user: {id: 2}},
+    //     body: { offerObj: {
+    //         contestID: 1,
+    //         // nflplayerID: 19045,
+    //         nflplayerID: 17923,
+    //         isbid: false,
+    //         price: 900,
+    //     }}
+    // }).then(u.dv).catch(console.error);
+    // // await delay(1000);
     
-    const offerObj = await services.offer.createOffer({
+    // const offerObj = await services.offer.createOffer({
         
-        session: {user: {id: 3}},
-        body: { offerObj: {
-            contestID: 1,
-            // nflplayerID: 19045,
-            nflplayerID: 17923,
-            isbid: true,
-            price: 1000,
-            protected: true,
-        }}
-    }).then(u.dv).catch(console.error);
-    if (!offerObj) {return;}
+    //     session: {user: {id: 3}},
+    //     body: { offerObj: {
+    //         contestID: 1,
+    //         // nflplayerID: 19045,
+    //         nflplayerID: 17923,
+    //         isbid: true,
+    //         price: 1000,
+    //         protected: true,
+    //     }}
+    // }).then(u.dv).catch(console.error);
+    // if (!offerObj) {return;}
 
-    // await delay(1000);
+    // // await delay(1000);
 
-    const offerObj4 = await services.offer.createOffer({
+    // const offerObj4 = await services.offer.createOffer({
         
-        session: {user: {id: 1}},
-        body: { offerObj: {
-            contestID: 1,
-            // nflplayerID: 19045,
-            nflplayerID: 17923,
-            isbid: false,
-            price: 950,
-        }}
-    }).then(u.dv).catch(console.error);
-    // await delay(1000);
+    //     session: {user: {id: 1}},
+    //     body: { offerObj: {
+    //         contestID: 1,
+    //         // nflplayerID: 19045,
+    //         nflplayerID: 17923,
+    //         isbid: false,
+    //         price: 950,
+    //     }}
+    // }).then(u.dv).catch(console.error);
+    // // await delay(1000);
 
-    const offerObj5 = await services.offer.createOffer({
+    // const offerObj5 = await services.offer.createOffer({
         
-        session: {user: {id: 4}},
-        body: { offerObj: {
-            contestID: 1,
-            // nflplayerID: 19045,
-            nflplayerID: 17923,
-            isbid: true,
-            price: 1100,
-        }}
-    }).then(u.dv).catch(console.error);
+    //     session: {user: {id: 4}},
+    //     body: { offerObj: {
+    //         contestID: 1,
+    //         // nflplayerID: 19045,
+    //         nflplayerID: 17923,
+    //         isbid: true,
+    //         price: 1100,
+    //     }}
+    // }).then(u.dv).catch(console.error);
 
-    await delay(8000);
+    // await delay(8000);
 
     // await services.offer.cancelOffer({
     //     body: { offerID: offerObj.id }

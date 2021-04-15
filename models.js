@@ -48,6 +48,12 @@ Offer.hasOne(Trade);
 Trade.belongsTo(Offer, { foreignKey: 'bidId' });
 Trade.belongsTo(Offer, { foreignKey: 'askId' });
 
+NFLPlayer.belongsTo(NFLTeam);
+NFLTeam.hasMany(NFLPlayer);
+
+NFLPlayer.belongsTo(NFLPosition);
+NFLPosition.hasMany(NFLPlayer);
+
 module.exports = {
     League,
     Membership,

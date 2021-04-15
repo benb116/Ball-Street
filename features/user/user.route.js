@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const auth = require('./auth.service');
+const service = require('./user.service');
 const authenticate = require('../../middleware/authenticate');
 
 const { routeHandler } = require('../util/util.route');
@@ -12,7 +12,7 @@ router.post('/login',  async (req, res) => {
         return res.status(400).json('Bad request params');
     }
     try {
-        const user = await auth.login(email, password);
+        const user = await service.login(email, password);
         req.session.user = user; // add to session
         res.json(user);
     } catch(err) {
@@ -20,7 +20,7 @@ router.post('/login',  async (req, res) => {
     }
 });
 
-router.get('/account', authenticate, routeHandler(auth.getAccount));
+router.get('/account', authenticate, routeHandler(service.getAccount));
 
 router.post('/signup', async (req, res) => {
     const {name, email, password} = req.body;
@@ -28,7 +28,7 @@ router.post('/signup', async (req, res) => {
         return res.status(400).json('Bad request params');
     }
     try {
-        const user = await auth.signup(name, email, password);
+        const user = await service.signup(name, email, password);
         req.session.user = user; // add to session
         res.json(user);
     } catch(err) {

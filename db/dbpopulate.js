@@ -1,6 +1,6 @@
 const { Sequelize, Op, Model, DataTypes } = require("sequelize");
 const config = require('../config');
-const u = require('../util');
+const u = require('../features/util/util');
 
 async function PopulateDB(sequelize) {
     await sequelize.sync({ force: true });
