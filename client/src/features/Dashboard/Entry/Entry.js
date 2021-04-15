@@ -20,6 +20,7 @@ const Entry = () => {
   return (
     <div className="container mx-auto">
       Entry
+      Balance: {thisentry.balance}
       <table>
         <tr>
           <th>Pos</th>
