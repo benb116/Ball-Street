@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 
 import { getPlayers, playersSelector, filterSelector, sortSelector, setFilter, setSort} from './PlayersSlice';
 import { isOnRosterSelector, preAdd, preDrop } from '../Entry/EntrySlice';
-import { create } from '../Offers/OffersSlice';
+import { createOffer, cancelOffer, offersSelector } from '../Offers/OffersSlice';
 
 const Players = () => {
   
@@ -138,6 +138,7 @@ function PlayerFilter() {
 function PlayerItem(props) {
   const dispatch = useDispatch();
   const { leagueID, contestID } = useParams();
+  const offers = useSelector(offersSelector);
 
   const showDrop = useSelector(isOnRosterSelector(props.playerdata.id));
 
@@ -150,7 +151,7 @@ function PlayerItem(props) {
   }
 
   const onask = () => {
-    dispatch(create({leagueID, contestID, offerobj: {
+    dispatch(createOffer({leagueID, contestID, offerobj: {
       nflplayerID: props.playerdata.id,
       isbid: false,
       price: 900,
@@ -159,12 +160,19 @@ function PlayerItem(props) {
   }
 
   const onbid = () => {
-    dispatch(create({leagueID, contestID, offerobj: {
+    dispatch(createOffer({leagueID, contestID, offerobj: {
       nflplayerID: props.playerdata.id,
       isbid: true,
       price: 900,
       protected: false,
     }}));
+  }
+
+  const playerofferbids = offers.bids.find(o => o.NFLPlayerId === props.playerdata.id);
+  const playerofferasks = offers.asks.find(o => o.NFLPlayerId === props.playerdata.id);
+  const playeroffer = playerofferbids || playerofferasks;
+  const oncancelOffer = (oid) => {
+    dispatch(cancelOffer({leagueID, contestID, offerID: oid}))
   }
 
   return (
@@ -178,7 +186,10 @@ function PlayerItem(props) {
       <td>{props.playerdata.bestbid}</td>
       <td>{props.playerdata.bestask}</td>
       <td onClick={(showDrop ? onpredrop : onpreadd)}>{showDrop ? 'DROP' : 'ADD'}</td>
-      <td onClick={(showDrop ? onask : onbid)}>{showDrop ? 'ASK' : 'BID'}</td>
+      {playeroffer ? 
+        <td onClick={() => oncancelOffer(playeroffer.id)}>CANCEL</td> :
+        <td onClick={(showDrop ? onask : onbid)}>{showDrop ? 'ASK' : 'BID'}</td>
+      }
     </tr>
   );
 }
