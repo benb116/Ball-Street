@@ -22,19 +22,19 @@ function getUserOffers(req) {
             filled: false,
             cancelled: false
         }
-    }).then(u.dv).then(console.log).catch(console.error);
+    }).then(u.dv).catch(console.error);
 }
 
 function createOffer(req) {
-    let obj = req.body.offerObj;
+    let obj = req.body.offerobj;
     obj.userID = req.session.user.id;
-
+    console.log(obj);
     return sequelize.transaction(isoOption, async (t) => {
         // Find user's entry
         const theentry = await Entry.findOne({
             where: {
                 UserId: obj.userID,
-                ContestId: obj.contestID,
+                ContestId: req.params.contestID,
             }
         }, u.tobj(t));
         
@@ -59,7 +59,7 @@ function createOffer(req) {
 
         return Offer.create({
             UserId: obj.userID,
-            ContestId: obj.contestID,
+            ContestId: req.params.contestID,
             NFLPlayerId: obj.nflplayerID,
             isbid: obj.isbid,
             price: obj.price,
@@ -67,6 +67,9 @@ function createOffer(req) {
         }, {
             transaction: t,
             lock: t.LOCK.UPDATE
+        }).catch(err => {
+            console.log(err);
+            u.Error(err, 406);
         });
     })
     .then(u.dv).then(offer => {

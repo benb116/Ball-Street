@@ -6,7 +6,7 @@
 const Queue = require('bull');
 const redis = require('redis');
 const { Op } = require('sequelize');
-const u = require('../util');
+const u = require('../features/util/util');
 const config = require('../config');
 const { hashkey } = require('../db/redisSchema');
 
@@ -77,7 +77,7 @@ async function compareBidsAsks(bids, asks, bidind = 0, askind = 0) {
     console.log('EOL');
     const player = (bids[0] ? bids[0].NFLPlayerId : (asks[0] ? asks[0].NFLPlayerId : 0));
     return [bids[bidind], bids[askind]];
-  } if (bids[bidind].price > asks[askind].price) {
+  } if (bids[bidind].price >= asks[askind].price) {
     const [nextbid, nextask] = await matchOffers(bids[bidind], asks[askind]);
     if (nextbid || nextask) {
       return compareBidsAsks(bids, asks, bidind + nextbid, askind + nextask);

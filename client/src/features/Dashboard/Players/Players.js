@@ -1,10 +1,10 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import Loader from 'react-loader-spinner';
-import { useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { getPlayers, playersSelector, filterSelector, sortSelector, setFilter, setSort} from './PlayersSlice';
 import { isOnRosterSelector, preAdd, preDrop } from '../Entry/EntrySlice';
+import { create } from '../Offers/OffersSlice';
 
 const Players = () => {
   
@@ -62,12 +62,13 @@ function ListHeader() {
       <th onClick={handleClick} value="name">Name</th>
       <th onClick={handleClick} value="posName">Pos</th>
       <th onClick={handleClick} value="teamAbr">Team</th>
-      <th onClick={handleClick} value="preprice">Proj</th>
       <th onClick={handleClick} value="statprice">Pts</th>
-      <th onClick={handleClick} value="last">Last</th>
-      <th onClick={handleClick} value="bid">Bid</th>
-      <th onClick={handleClick} value="ask">Ask</th>
+      <th onClick={handleClick} value="preprice">Proj</th>
+      <th onClick={handleClick} value="last">Last Trade</th>
+      <th onClick={handleClick} value="bid">Best Bid</th>
+      <th onClick={handleClick} value="ask">Best Ask</th>
       <th onClick={handleClick} value="add">Add</th>
+      <th>Offer</th>
     </tr>
   )
 }
@@ -141,11 +142,29 @@ function PlayerItem(props) {
   const showDrop = useSelector(isOnRosterSelector(props.playerdata.id));
 
   const onpredrop = () => {
-    dispatch(preDrop({leagueID: leagueID, contestID: contestID, nflplayerID: props.playerdata.id}));
+    dispatch(preDrop({leagueID, contestID, nflplayerID: props.playerdata.id}));
   }
 
   const onpreadd = () => {
-    dispatch(preAdd({leagueID: leagueID, contestID: contestID, nflplayerID: props.playerdata.id}));
+    dispatch(preAdd({leagueID, contestID, nflplayerID: props.playerdata.id}));
+  }
+
+  const onask = () => {
+    dispatch(create({leagueID, contestID, offerobj: {
+      nflplayerID: props.playerdata.id,
+      isbid: false,
+      price: 900,
+      protected: false,
+    }}));
+  }
+
+  const onbid = () => {
+    dispatch(create({leagueID, contestID, offerobj: {
+      nflplayerID: props.playerdata.id,
+      isbid: true,
+      price: 900,
+      protected: false,
+    }}));
   }
 
   return (
@@ -153,12 +172,13 @@ function PlayerItem(props) {
       <td>{props.playerdata.name}</td>
       <td>{props.playerdata.posName}</td>
       <td>{props.playerdata.teamAbr}</td>
-      <td>{props.playerdata.preprice}</td>
       <td>{props.playerdata.statprice}</td>
+      <td>{props.playerdata.preprice}</td>
       <td>{props.playerdata.lastprice}</td>
       <td>{props.playerdata.bestbid}</td>
       <td>{props.playerdata.bestask}</td>
       <td onClick={(showDrop ? onpredrop : onpreadd)}>{showDrop ? 'DROP' : 'ADD'}</td>
+      <td onClick={(showDrop ? onask : onbid)}>{showDrop ? 'ASK' : 'BID'}</td>
     </tr>
   );
 }

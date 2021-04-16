@@ -16,9 +16,9 @@ const Dashboard = () => {
       Dashboard
       <Entry />
       <br/>
-      <Players />
-      <br/>
       <Offers />
+      <br/>
+      <Players />
       <br/>
       <Leaderboard />
       <br/>

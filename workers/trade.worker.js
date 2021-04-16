@@ -2,7 +2,7 @@
 // Could be done within Offer worker
 // Try to fill a pair of offers
 
-const u = require('../util');
+const u = require('../features/util/util');
 const config = require('../config');
 const { hashkey } = require('../db/redisSchema');
 
@@ -30,8 +30,11 @@ async function fillOffers(bidid, askid, price) {
             case 'ask':
                 console.log('ask err');
                 return [0, 1];
-            default:
+            case 'both':
                 console.log('both err');
+                return [1, 1];
+             default:
+                console.log('fill', err);
                 return [1, 1];
         }
     });
@@ -71,7 +74,7 @@ async function attemptFill(t, bidid, askid, price) {
 
     const bidreq = {
         session: {user: {id: biduser}},
-        param: {contestID: boffer.ContestId},
+        params: {contestID: boffer.ContestId},
         body: {
             nflplayerID: player,
         },
@@ -79,7 +82,7 @@ async function attemptFill(t, bidid, askid, price) {
     };
     const askreq = {
         session: {user: {id: askuser}},
-        param: {contestID: aoffer.ContestId},
+        params: {contestID: aoffer.ContestId},
         body: {
             nflplayerID: player,
         },
@@ -110,7 +113,7 @@ async function attemptFill(t, bidid, askid, price) {
     client.hmset(hashkey(contestID, player), 'lastTradePrice', price);
     client.publish('lastTrade', JSON.stringify({
             contestID: contestID,
-            nflplayerID: nflplayerID,
+            nflplayerID: player,
             price: price,
         }));
     client.publish('offerFilled', JSON.stringify({
