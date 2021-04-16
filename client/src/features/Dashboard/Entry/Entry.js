@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { playerSelector } from '../Players/PlayersSlice';
 
 import { getEntry, entrySelector, preDrop } from './EntrySlice';
-import { create } from '../Offers/OffersSlice';
+import { cancelOffer, createOffer, offersSelector } from '../Offers/OffersSlice';
 
 
 const Entry = () => {
@@ -14,6 +14,7 @@ const Entry = () => {
 
   const thisentry = useSelector(entrySelector);
   const rpos = Object.keys(thisentry.roster);
+
   useEffect(() => {
     dispatch(getEntry({leagueID, contestID}));
   }, []);
@@ -45,22 +46,34 @@ const Entry = () => {
   );
 };
 
-
 function RosterItem(props) {
   const dispatch = useDispatch();
   const { leagueID, contestID } = useParams();
   const thisplayer = useSelector(playerSelector(props.playerid));
+
+  const offers = useSelector(offersSelector);
+
   const onpredrop = () => {
-    dispatch(preDrop({leagueID: leagueID, contestID: contestID, nflplayerID: props.playerid}));
+    dispatch(preDrop({leagueID, contestID, nflplayerID: props.playerid}));
   }
   const onask = () => {
-    dispatch(create({leagueID, contestID, offerobj: {
+    dispatch(createOffer({leagueID, contestID, offerobj: {
       nflplayerID: thisplayer.id,
       isbid: false,
       price: 900,
       protected: false,
     }}));
   }
+
+  let playeroffer = null;
+  if (thisplayer) {
+    playeroffer = offers.asks.find(o => o.NFLPlayerId === thisplayer.id);
+  }
+
+  const oncancelOffer = (oid) => {
+    dispatch(cancelOffer({leagueID, contestID, offerID: oid}))
+  }
+
   return (
     <tr playerid={thisplayer.id}>
       <td>{props.position}</td>
@@ -73,6 +86,8 @@ function RosterItem(props) {
       <td>{thisplayer.bestask}</td>
       {thisplayer.id ? <td onClick={onpredrop}>DROP</td> : <td></td>}
       {thisplayer.id ? (
+        playeroffer ? 
+        <td onClick={() => oncancelOffer(playeroffer.id)}>CANCEL</td> :
         <td onClick={onask}>ASK</td>
       ) : <td></td>}
     </tr>

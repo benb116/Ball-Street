@@ -3,8 +3,8 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { createofferfunc, cancelofferfunc, getoffersfunc } from './Offers.api'
 
 export const getOffers = createAsyncThunk('offers/getOffers', getoffersfunc);
-export const create = createAsyncThunk('offers/create', createofferfunc);
-export const cancel = createAsyncThunk('offers/cancel', cancelofferfunc);
+export const createOffer = createAsyncThunk('offers/createOffer', createofferfunc);
+export const cancelOffer = createAsyncThunk('offers/cancelOffer', cancelofferfunc);
 
 const defaultState = {
   bids: [],
@@ -23,18 +23,19 @@ export const offersSlice = createSlice({
         if (o.isbid) { state.bids.push(o); } else { state.asks.push(o); }
       });
     },
-    [create.fulfilled]: (state, { payload }) => {
+    [createOffer.fulfilled]: (state, { payload }) => {
       if (payload.isbid) {
         state.bids.push(payload);
       } else {
         state.asks.push(payload);
       }
     },
-    [cancel.fulfilled]: (state, { payload }) => {
+    [cancelOffer.fulfilled]: (state, { payload }) => {
+      console.log(payload)
       if (payload.isbid) {
-        state.bids.filter(o => o.id !== payload.id);
+        state.bids = state.bids.filter(o => o.id !== payload.id);
       } else {
-        state.asks.filter(o => o.id !== payload.id);
+        state.asks = state.asks.filter(o => o.id !== payload.id);
       }
     },
   },
