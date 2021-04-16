@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
-import { getAccount, logoutUser, userSelector, statusSelector, clearStatus } from '../User/UserSlice';
+import { getAccount, logoutUser, userSelector } from '../User/UserSlice';
 import Loader from 'react-loader-spinner';
 import { useHistory } from 'react-router-dom';
 
@@ -10,22 +10,10 @@ const Home = () => {
   const history = useHistory();
 
   const { id, name, email } = useSelector(userSelector);
-  const { isFetching, isSuccess, isError, errorMessage } = useSelector(statusSelector);
 
   useEffect(() => {
     dispatch(getAccount());
   }, []);
-
-  useEffect(() => {
-    if (isError) {
-      if (!id) {
-        return loginRed();
-      }
-    }
-    if (isSuccess) {
-
-    }
-  }, [isError, isSuccess]);  
 
   const onLogOut = () => {
     dispatch(logoutUser());
@@ -33,7 +21,6 @@ const Home = () => {
   };
 
   const loginRed = () => {
-    dispatch(clearStatus());
     localStorage.setItem('isLoggedIn', false);
     history.push('/login');
     // In theory people can see this webpage as a landing if they aren't logged in

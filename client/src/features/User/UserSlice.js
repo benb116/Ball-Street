@@ -1,4 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+// import { useHistory } from 'react-router-dom';
+import toast from 'react-hot-toast';
+
+// const history = useHistory();
 
 import { signupfunc, loginfunc, logoutfunc, accountfunc } from './User.api.js';
 
@@ -8,12 +12,7 @@ const defaultState = {
     email: '',
     name: '',
   },
-  status: {
-    isPending: false,
-    isSuccess: false,
-    isError: false,
-    errorMessage: '',
-  }
+  redirect: '',
 };
 
 export const signupUser = createAsyncThunk('users/signupUser', signupfunc);
@@ -36,57 +35,33 @@ export const userSlice = createSlice({
   },
   extraReducers: {
     [signupUser.fulfilled]: (state, { payload }) => {
-      state.status.isFetching = false;
-      state.status.isSuccess = true;
-      state.status.isError = false;
       state.info = {...state.info, ...payload};
+      localStorage.setItem('isLoggedIn', true);
     },
     [signupUser.pending]: (state) => {
-      state.status.isFetching = true;
-      state.status.isSuccess = false;
-      state.status.isError = false;
     },
     [signupUser.rejected]: (state, { payload }) => {
-      state.status.isFetching = false;
-      state.status.isSuccess = false;
-      state.status.isError = true;
-      state.status.errorMessage = payload;
+      toast.error(payload);
     },
 
     [loginUser.fulfilled]: (state, { payload }) => {
-      state.status.isFetching = false;
-      state.status.isSuccess = true;
-      state.status.isError = false;
       state.info = {...state.info, ...payload};
+      localStorage.setItem('isLoggedIn', true);
     },
     [loginUser.pending]: (state) => {
-      state.status.isFetching = true;
-      state.status.isSuccess = false;
-      state.status.isError = false;
     },
     [loginUser.rejected]: (state, { payload }) => {
-      state.status.isFetching = false;
-      state.status.isSuccess = false;
-      state.status.isError = true;
-      state.status.errorMessage = payload;
+      toast.error(payload);
     },
 
-    [logoutUser.fulfilled]: (state, payload) => {
-      state.status.isFetching = false;
-      state.status.isSuccess = true;
-      state.status.isError = false;
+    [logoutUser.fulfilled]: (state, {payload}) => {
       state.info = defaultState.info;
+      localStorage.setItem('isLoggedIn', false);
     },
     [logoutUser.pending]: (state) => {
-      state.status.isFetching = true;
-      state.status.isSuccess = false;
-      state.status.isError = false;
     },
-    [logoutUser.rejected]: (state, payload) => {
-      state.status.isFetching = false;
-      state.status.isSuccess = false;
-      state.status.isError = true;
-      state.status.errorMessage = payload;
+    [logoutUser.rejected]: (state, {payload}) => {
+      toast.error(payload);
     },
 
     [getAccount.fulfilled]: (state, { payload }) => {
@@ -94,13 +69,11 @@ export const userSlice = createSlice({
     },
     [getAccount.pending]: (state) => {
     },
-    [getAccount.rejected]: (state, out) => {
-      state.status.isError = true;
-      state.status.errorMessage = out;
+    [getAccount.rejected]: (state, {payload}) => {
+      toast.error(payload);
     },
   },
 });
 
 export const { set, clearStatus, clearState } = userSlice.actions;
 export const userSelector = (state) => state.user.info;
-export const statusSelector = (state) => state.user.status;
