@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import toast from 'react-hot-toast';
 
 import { getentryfunc, preaddfunc, predropfunc } from './Entry.api'
 
@@ -24,9 +25,15 @@ export const entrySlice = createSlice({
     [preAdd.fulfilled]: (state, {payload}) => {
       setEntry(state, payload);
     },
+    [preAdd.rejected]: (state, {payload}) => {
+      toast.error(payload);
+    },
     [preDrop.fulfilled]: (state, {payload}) => {
       setEntry(state, payload);
-    }
+    },
+    [preDrop.rejected]: (state, {payload}) => {
+      toast.error(payload);
+    },
   },
 });
 

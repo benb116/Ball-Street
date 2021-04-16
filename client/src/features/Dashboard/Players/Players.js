@@ -14,7 +14,7 @@ const Players = () => {
   const theplayers = useSelector(playersSelector);
   const filters = useSelector(filterSelector);
   const sorts = useSelector(sortSelector);
-  console.log(sorts)
+
   const filtersortplayers = theplayers
     .filter(p => p.name.toLowerCase().includes(filters.name))
     .filter(p => {
@@ -38,10 +38,12 @@ const Players = () => {
       Players
       <PlayerFilter />
       <table>
-        <ListHeader />
-        {filtersortplayers.map(function(player, index){
-          return <PlayerItem key={ index } playerdata={ player }/>;
-        })}
+        <tbody>
+          <ListHeader />
+          {filtersortplayers.map(function(player, index){
+            return <PlayerItem key={ index } playerdata={ player }/>;
+          })}
+        </tbody>
       </table>
     </div>
   );

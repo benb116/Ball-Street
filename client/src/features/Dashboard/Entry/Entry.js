@@ -22,20 +22,22 @@ const Entry = () => {
       Entry
       Balance: {thisentry.balance}
       <table>
-        <tr>
-          <th>Pos</th>
-          <th>Name</th>
-          <th>Team</th>
-          <th>Pts</th>
-          <th>Proj</th>
-          <th>Last</th>
-          <th>Bid</th>
-          <th>Ask</th>
-          <th>Drop</th>
-        </tr>
-        {rpos.map(function(pos, index){
-          return <RosterItem key={ index } position={pos} playerid={ thisentry.roster[pos] }/>;
-        })}
+        <tbody>
+          <tr>
+            <th>Pos</th>
+            <th>Name</th>
+            <th>Team</th>
+            <th>Pts</th>
+            <th>Proj</th>
+            <th>Last</th>
+            <th>Bid</th>
+            <th>Ask</th>
+            <th>Drop</th>
+          </tr>
+          {rpos.map(function(pos, index){
+            return <RosterItem key={ index } position={pos} playerid={ thisentry.roster[pos] }/>;
+          })}
+        </tbody>
       </table>
     </div>
   );
