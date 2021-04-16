@@ -1,4 +1,4 @@
-module.exports = async function(thunkAPI, type, uri, body) {
+const thunkReq = async function(thunkAPI, type, uri, body) {
   console.log(type, uri, body);
   try {
     const fetchOpts = {
@@ -20,3 +20,5 @@ module.exports = async function(thunkAPI, type, uri, body) {
     return thunkAPI.rejectWithValue(e.response.data);
   }
 };
+
+export default thunkReq;

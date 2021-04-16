@@ -117,6 +117,8 @@ async function PopulateDB(sequelize) {
         obj.NFLPositionId = posind;
         obj.jersey = p.jersey;
         obj.NFLTeamId = teams[teamfullnameMap[p.team]].id;
+        obj.preprice = 1100;
+        obj.statprice = 700;
         return obj;
     }).filter(e => e !== null);
     const teamdefrecords = teamfullnamearr.map(t => {
@@ -126,6 +128,8 @@ async function PopulateDB(sequelize) {
         obj.name = t;
         obj.NFLPositionId = nflpos.DEF.id;
         obj.NFLTeamId = teams[abr].id;
+        obj.preprice = 1100;
+        obj.statprice = 700;
 
         return obj;
     });
@@ -179,7 +183,7 @@ async function PopulateDB(sequelize) {
     const entrs = usrs.map((e, i) => {
         return { UserId: i+1, ContestId: 1, pointtotal:10000 };
     });
-    await Entry.bulkCreate(entrs);
+    // await Entry.bulkCreate(entrs);
 
     // User.findAll().then(console.log);
 

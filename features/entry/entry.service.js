@@ -41,8 +41,9 @@ module.exports = {
         return sequelize.transaction(isoOption, async (t) => {
             const _league = await canUserSeeLeague(t, req.session.user.id, req.params.leagueID);
             obj.pointtotal = _league.budget;
+            console.log(obj);
             return Entry.create(obj, u.tobj(t)).then(u.dv);
         })
-        .catch(err => u.Error(err.parent.constraint, 406));
+        .catch(err => {console.log(err); u.Error(err.parent.constraint, 406)});
     }
 };
