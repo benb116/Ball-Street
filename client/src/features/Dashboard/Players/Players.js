@@ -26,7 +26,7 @@ const Players = () => {
     })
     .filter(p => (p.teamAbr === filters.teamAbr || filters.teamAbr === ''))
     .sort((a,b) => {
-      const out = a[sorts.sortProp] > b[sorts.sortProp];
+      const out = (a[sorts.sortProp] || 0) > (b[sorts.sortProp] || 0);
       return (out ? 1 : -1)*(sorts.sortDesc ? 1 : -1);
     });
 
@@ -60,15 +60,15 @@ function ListHeader() {
 
   return (
     <tr>
-      <th onClick={handleClick} value="name">Name</th>
-      <th onClick={handleClick} value="posName">Pos</th>
-      <th onClick={handleClick} value="teamAbr">Team</th>
-      <th onClick={handleClick} value="preprice">Proj</th>
-      <th onClick={handleClick} value="statprice">Pts</th>
-      <th onClick={handleClick} value="last">Last Trade</th>
-      <th onClick={handleClick} value="bid">Best Bid</th>
-      <th onClick={handleClick} value="ask">Best Ask</th>
-      <th onClick={handleClick} value="add">Add</th>
+      <th style={{cursor:'pointer'}} onClick={handleClick} value="name">Name</th>
+      <th style={{cursor:'pointer'}} onClick={handleClick} value="posName">Pos</th>
+      <th style={{cursor:'pointer'}} onClick={handleClick} value="teamAbr">Team</th>
+      <th style={{cursor:'pointer'}} onClick={handleClick} value="preprice">Proj</th>
+      <th style={{cursor:'pointer'}} onClick={handleClick} value="statprice">Pts</th>
+      <th style={{cursor:'pointer'}} onClick={handleClick} value="lastprice">Last Trade</th>
+      <th style={{cursor:'pointer'}} onClick={handleClick} value="bestbid">Best Bid</th>
+      <th style={{cursor:'pointer'}} onClick={handleClick} value="bestask">Best Ask</th>
+      <th>Add</th>
       <th>Offer</th>
     </tr>
   )

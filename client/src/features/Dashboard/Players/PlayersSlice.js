@@ -51,7 +51,11 @@ export const playersSlice = createSlice({
 
 export const { clear, setFilter, setSort, updatePrice} = playersSlice.actions;
 
-export const playersSelector = (state) => state.players.playerlist;
+export const playersSelector = (state) => {
+  return state.players.playerlist.map(p => {
+    return {...p, ...state.players.priceMap[p.id]}
+  });
+}
 export const playerSelector = (playerID) => {
   return (state) => {
     return (state.players.playerlist.find(p => p.id === playerID));

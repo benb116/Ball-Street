@@ -93,11 +93,11 @@ function RosterItem(props) {
       <td>{(priceMap && Number(priceMap.lastprice)) ? priceMap.lastprice : ""}</td>
       <td>{(priceMap && Number(priceMap.bestbid)) ? priceMap.bestbid : ""}</td>
       <td>{(priceMap && Number(priceMap.bestask)) ? priceMap.bestask : ""}</td>
-      {thisplayer.id ? <td onClick={onpredrop}>DROP</td> : <td></td>}
+      {thisplayer.id ? <td style={{cursor:'pointer'}} onClick={onpredrop}>DROP</td> : <td></td>}
       {thisplayer.id ? (
         playeroffer ? 
-        <td onClick={() => oncancelOffer(playeroffer.id)}>CANCEL</td> :
-        <td onClick={onask}>ASK</td>
+        <td style={{cursor:'pointer'}} onClick={() => oncancelOffer(playeroffer.id)}>CANCEL</td> :
+        <td style={{cursor:'pointer'}} onClick={onask}>ASK</td>
       ) : <td></td>}
     </tr>
   );

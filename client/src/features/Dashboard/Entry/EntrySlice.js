@@ -19,6 +19,7 @@ export const entrySlice = createSlice({
   reducers: {
     clear: state => state = defaultState,
     updateRoster: state => {
+      toast.success('Offer filled')
       state.rosterUpdate = true;
     },
   },

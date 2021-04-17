@@ -14,8 +14,8 @@ const PlayerFilter = () => {
 
   return (
     <form>
-      <input onChange={handleChange} name="name" value={filters.name}></input>
-      <select onChange={handleChange} name="posName" value={filters.posName}>
+      <input style={{cursor:'pointer'}} onChange={handleChange} name="name" value={filters.name}></input>
+      <select style={{cursor:'pointer'}} onChange={handleChange} name="posName" value={filters.posName}>
         <option value="">Pos</option>
         <option value="QB">QB</option>
         <option value="RB">RB</option>
@@ -25,7 +25,7 @@ const PlayerFilter = () => {
         <option value="K">K</option>
         <option value="DEF">DEF</option>
       </select>
-      <select onChange={handleChange} name="teamAbr" value={filters.team}>
+      <select style={{cursor:'pointer'}} onChange={handleChange} name="teamAbr" value={filters.team}>
         <option value="">Team</option>
         <option value="ARI">ARI</option>
         <option value="ATL">ATL</option>
