@@ -16,6 +16,10 @@ function hashkey(contestID, nflplayerID) {
   return `contest${contestID}:` + `player${nflplayerID}`;
 }
 
+function leaderHashkey(contestID) {
+  return `contest${contestID}:leaderboard`
+}
+
 function priceUpdateEncode(contestID, nflplayerID, bestbid, bestask) {
   return `${contestID}:${nflplayerID} ${bestbid} ${bestask}`;
 }
@@ -31,4 +35,5 @@ function priceUpdateDecode(str) {
 
 module.exports = {
   hashkey,
+  leaderHashkey,
 };

@@ -8,12 +8,13 @@ const express = require('express');
 const { promisify } = require('util');
 
 const config = require('../config');
-const { hashkey } = require('../db/redisSchema');
+const { hashkey, leaderHashkey } = require('../db/redisSchema');
 const playerService = require('../features/nflplayer/nflplayer.service');
 
 const client = redis.createClient();
 const client2 = redis.createClient();
 const hgetallAsync = promisify(client2.hgetall).bind(client2);
+const getAsync = promisify(client2.get).bind(client2);
 
 const session = require('../middleware/session');
 
@@ -27,6 +28,7 @@ const wss = new WebSocket.Server({ noServer: true });
 
 client.subscribe('priceUpdate');
 client.subscribe('lastTrade');
+client.subscribe('leaderUpdate');
 client.subscribe('protectedMatch');
 client.subscribe('offerFilled');
 
@@ -37,6 +39,7 @@ client.on('message', (channel, message) => {
   switch (channel) {
     case 'priceUpdate': priceUpdate(message); break;
     case 'lastTrade': lastTrade(message); break;
+    case 'leaderUpdate': leaderUpdate(); break;
     case 'protectedMatch': protectedMatch(message); break;
     case 'offerFilled': offerFilled(message); break;
     default: break;
@@ -53,6 +56,21 @@ function lastTrade(message) {
   const { contestID, nflplayerID, lastprice } = JSON.parse(message);
   if (!lastTradeMap[contestID]) { lastTradeMap[contestID] = {}; }
   lastTradeMap[contestID][nflplayerID] = { lastprice, nflplayerID };
+}
+
+function leaderUpdate() {
+  const leaderMemo = {};
+  console.log('2222')
+  contestmap.forEach(async (thecontestID, thews) => {
+    if (!leaderMemo[thecontestID]) {
+      const out = await getAsync(leaderHashkey(thecontestID))
+      console.log(out);
+      leaderMemo[thecontestID] = JSON.parse(out);
+    }
+    if (thews.readyState === 1) {
+      thews.send(JSON.stringify({event: 'leaderboard', leaderboard: leaderMemo[thecontestID]}));
+    }
+  });
 }
 
 function protectedMatch(message) {

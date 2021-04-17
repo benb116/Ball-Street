@@ -3,10 +3,12 @@
     // Getting info about a specific entry
     // Getting info about a user's entries across contests
 
-const { Entry, User } = require('../../models');
+const { Entry, User, Contest } = require('../../models');
 const u = require('../util/util');
+const { Op } = require("sequelize");
 const sequelize = require('../../db');
 const { canUserSeeLeague } = require('../util/util.service');
+const config = require('../../config');
 const isoOption = {
     // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
 };
@@ -45,5 +47,27 @@ module.exports = {
             return Entry.create(obj, u.tobj(t)).then(u.dv);
         })
         .catch(err => {console.log(err); u.Error(err.parent.constraint, 406)});
+    },
+
+    // Private - get all entries across all contests for the current week
+    async getWeekEntries() {
+        const weekcontests = await Contest.findAll({
+                where: {
+                    nflweek: config.currentNFLWeek
+                }
+            })
+            .then(u.dv)
+            .then(contests => contests.map(c => c.id));
+        return Entry.findAll({
+                where: {
+                    ContestId: {
+                        [Op.or]: weekcontests,
+                    }
+                },
+                include: {
+                    model: User
+                }
+            })
+            .then(u.dv);
     }
 };
