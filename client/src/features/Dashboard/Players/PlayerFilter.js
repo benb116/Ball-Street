@@ -1,47 +1,66 @@
-import React, { Fragment, useEffect } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { userSelector, clearState } from '../User/UserSlice';
-import Loader from 'react-loader-spinner';
-import { useHistory } from 'react-router-dom';
+import { filterSelector, setFilter } from './PlayersSlice';
 
 const PlayerFilter = () => {
-  const history = useHistory();
-
   const dispatch = useDispatch();
-  const { isFetching, isError } = useSelector(userSelector);
+  const filters = useSelector(filterSelector);
 
-  const { username, email } = useSelector(userSelector);
-
-  useEffect(() => {
-    if (isError) {
-      dispatch(clearState());
-      history.push('/login');
-    }
-  }, [isError]);
-
-  const onLogOut = () => {
-    history.push('/login');
-  };
+  function handleChange(evt) {
+    const name = evt.target.name;
+    const value = evt.target.value;
+    dispatch(setFilter({name, value}))
+  }
 
   return (
-    <div className="container mx-auto">
-      {isFetching ? (
-        <Loader type="Puff" color="#00BFFF" height={100} width={100} />
-      ) : (
-        <Fragment>
-          <div className="container mx-auto">
-            Welcome back <h3>{email}</h3>
-          </div>
-
-          <button
-            onClick={onLogOut}
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-          >
-            Log Out
-          </button>
-        </Fragment>
-      )}
-    </div>
+    <form>
+      <input onChange={handleChange} name="name" value={filters.name}></input>
+      <select onChange={handleChange} name="posName" value={filters.posName}>
+        <option value="">Pos</option>
+        <option value="QB">QB</option>
+        <option value="RB">RB</option>
+        <option value="WR">WR</option>
+        <option value="TE">TE</option>
+        <option value="FLEX">FLEX</option>
+        <option value="K">K</option>
+        <option value="DEF">DEF</option>
+      </select>
+      <select onChange={handleChange} name="teamAbr" value={filters.team}>
+        <option value="">Team</option>
+        <option value="ARI">ARI</option>
+        <option value="ATL">ATL</option>
+        <option value="BAL">BAL</option>
+        <option value="BUF">BUF</option>
+        <option value="CAR">CAR</option>
+        <option value="CHI">CHI</option>
+        <option value="CIN">CIN</option>
+        <option value="CLE">CLE</option>
+        <option value="DAL">DAL</option>
+        <option value="DEN">DEN</option>
+        <option value="DET">DET</option>
+        <option value="GB">GB</option>
+        <option value="HOU">HOU</option>
+        <option value="IND">IND</option>
+        <option value="JAX">JAX</option>
+        <option value="KC">KC</option>
+        <option value="MIA">MIA</option>
+        <option value="MIN">MIN</option>
+        <option value="NE">NE</option>
+        <option value="NO">NO</option>
+        <option value="NYG">NYG</option>
+        <option value="NYJ">NYJ</option>
+        <option value="LV">LV</option>
+        <option value="PHI">PHI</option>
+        <option value="PIT">PIT</option>
+        <option value="LAC">LAC</option>
+        <option value="SF">SF</option>
+        <option value="SEA">SEA</option>
+        <option value="LAR">LAR</option>
+        <option value="TB">TB</option>
+        <option value="TEN">TEN</option>
+        <option value="WAS">WAS</option>
+      </select>
+    </form>
   );
 };
 
