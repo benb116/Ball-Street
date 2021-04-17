@@ -1,14 +1,15 @@
 import React, { Fragment, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
-import { signupUser, } from './UserSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { signupUser, userSelector, } from './UserSlice';
 import { useHistory } from 'react-router-dom';
 
 const Signup = () => {
   const dispatch = useDispatch();
   const { register, handleSubmit } = useForm();
   const history = useHistory();
+  const { id } = useSelector(userSelector);
 
   const onSubmit = (data) => {
     dispatch(signupUser(data));
@@ -18,7 +19,7 @@ const Signup = () => {
     if (localStorage.getItem('isLoggedIn') === 'true') {
       history.push('/')          
     }
-  });
+  }, [history, id]);
 
   return (
     <Fragment>

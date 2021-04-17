@@ -10,13 +10,13 @@ const Home = () => {
 
   const { email } = useSelector(userSelector);
 
-
+  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
 
   useEffect(() => {
-    if (email) {      
+    if (isLoggedIn) {      
       dispatch(getAccount());
     }
-}, [dispatch, email]);
+  }, []);
 
   const onLogOut = () => {
     dispatch(logoutUser());
@@ -31,7 +31,7 @@ const Home = () => {
 
   return (
     <div className="container mx-auto">
-        {email ? 
+        {isLoggedIn ? 
           <Fragment>
             <div className="container mx-auto">
               Welcome back <h3>{email}</h3>
