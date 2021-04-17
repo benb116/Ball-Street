@@ -129,6 +129,7 @@ async function sendLatest(contestID) {
 setInterval(() => {
   if (Object.keys(priceUpdateMap).length) {
     contestmap.forEach((thecontestID, thews) => {
+    if (!priceUpdateMap[thecontestID]) { return ;}
       if (thews.readyState === 1) {
         thews.send(JSON.stringify({event: 'priceUpdate', pricedata: priceUpdateMap[thecontestID]}));
       }
@@ -138,6 +139,7 @@ setInterval(() => {
 
   if (Object.keys(lastTradeMap).length) {
     contestmap.forEach((thecontestID, thews) => {
+    if (!lastTradeMap[thecontestID]) { return ;}
       if (thews.readyState === 1) {
         thews.send(JSON.stringify({event: 'priceUpdate', pricedata: lastTradeMap[thecontestID]}));
       }
