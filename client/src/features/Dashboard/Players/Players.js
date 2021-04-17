@@ -182,9 +182,9 @@ function PlayerItem(props) {
       <td>{props.playerdata.teamAbr}</td>
       <td>{props.playerdata.preprice}</td>
       <td>{props.playerdata.statprice}</td>
-      <td>{priceMap ? priceMap.lastprice : ""}</td>
-      <td>{priceMap ? priceMap.bestbid : ""}</td>
-      <td>{priceMap ? priceMap.bestask : ""}</td>
+      <td>{(priceMap && Number(priceMap.lastprice)) ? priceMap.lastprice : ""}</td>
+      <td>{(priceMap && Number(priceMap.bestbid)) ? priceMap.bestbid : ""}</td>
+      <td>{(priceMap && Number(priceMap.bestask)) ? priceMap.bestask : ""}</td>
       <td onClick={(showDrop ? onpredrop : onpreadd)}>{showDrop ? 'DROP' : 'ADD'}</td>
       {playeroffer ? 
         <td onClick={() => oncancelOffer(playeroffer.id)}>CANCEL</td> :

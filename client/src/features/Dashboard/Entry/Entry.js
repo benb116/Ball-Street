@@ -91,9 +91,9 @@ function RosterItem(props) {
       <td>{thisplayer.teamAbr}</td>
       <td>{thisplayer.preprice}</td>
       <td>{thisplayer.statprice}</td>
-      <td>{priceMap ? priceMap.lastprice : ""}</td>
-      <td>{priceMap ? priceMap.bestbid : ""}</td>
-      <td>{priceMap ? priceMap.bestask : ""}</td>
+      <td>{(priceMap && Number(priceMap.lastprice)) ? priceMap.lastprice : ""}</td>
+      <td>{(priceMap && Number(priceMap.bestbid)) ? priceMap.bestbid : ""}</td>
+      <td>{(priceMap && Number(priceMap.bestask)) ? priceMap.bestask : ""}</td>
       {thisplayer.id ? <td onClick={onpredrop}>DROP</td> : <td></td>}
       {thisplayer.id ? (
         playeroffer ? 

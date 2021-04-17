@@ -34,7 +34,6 @@ let priceUpdateMap = {}; // Keep an account of changes, will be flushed on inter
 let lastTradeMap = {}; // Keep an account of changes, will be flushed on interval
 
 client.on('message', (channel, message) => {
-  console.log(channel, message);
   switch (channel) {
     case 'priceUpdate': priceUpdate(message); break;
     case 'lastTrade': lastTrade(message); break;
@@ -65,12 +64,11 @@ function protectedMatch(message) {
 function offerFilled(message) {
   const { userID, offerID } = JSON.parse(message);
   const thews = connmap.get(userID);
-  console.log(userID, thews);
   thews.send(JSON.stringify({ event: 'offerFilled', offerID }));
 }
 
 server.on('upgrade', (request, socket, head) => {
-  console.log('Parsing session from request...');
+  // console.log('Parsing session from request...');
 
   session(request, {}, () => {
     if (!request.session.user) {

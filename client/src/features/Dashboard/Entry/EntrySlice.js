@@ -18,7 +18,9 @@ export const entrySlice = createSlice({
   initialState: defaultState,
   reducers: {
     clear: state => state = defaultState,
-    updateRoster: state => state.rosterUpdate = true,
+    updateRoster: state => {
+      state.rosterUpdate = true;
+    },
   },
   extraReducers: {
     [getEntry.fulfilled]: (state, { payload }) => {

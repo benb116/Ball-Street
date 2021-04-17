@@ -88,7 +88,11 @@ function cancelOffer(req) {
         o.cancelled = true;
         await o.save({transaction: t});
         return o;
-    });
+    }).then(u.dv).then(offer => {
+        console.log('Add offer to queue');
+        offerQueue.add(offer);
+        return offer;
+    });;
 }
 
 async function getOfferBacklog() {
