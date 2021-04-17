@@ -16,7 +16,7 @@ const Home = () => {
     if (isLoggedIn) {      
       dispatch(getAccount());
     }
-  }, []);
+  }, [dispatch, isLoggedIn]);
 
   const onLogOut = () => {
     dispatch(logoutUser());
