@@ -1,5 +1,4 @@
 const thunkReq = async function(thunkAPI, type, uri, body) {
-  console.log(type, uri, body);
   try {
     const fetchOpts = {
       method: type,
@@ -13,11 +12,10 @@ const thunkReq = async function(thunkAPI, type, uri, body) {
     if (response.status === 200) {
       return data;
     } else {
-      return thunkAPI.rejectWithValue((data.error || data));
+      return thunkAPI.rejectWithValue((data.error || data || 'Unknown error'));
     }
   } catch (e) {
-    console.log('Error', e);
-    return thunkAPI.rejectWithValue(e.response.data);
+    return thunkAPI.rejectWithValue(e.response.data || e);
   }
 };
 

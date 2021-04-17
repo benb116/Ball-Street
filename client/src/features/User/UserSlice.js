@@ -67,10 +67,11 @@ export const userSlice = createSlice({
     [getAccount.pending]: (state) => {
     },
     [getAccount.rejected]: (state, {payload}) => {
-      toast.error(payload);
+      localStorage.setItem('isLoggedIn', false);
     },
   },
 });
 
 export const { set, clearStatus, clearState } = userSlice.actions;
 export const userSelector = (state) => state.user.info;
+export const isLoggedInSelector = (state) => (localStorage.getItem('isLoggedIn') === 'true');

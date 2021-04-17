@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
-import { getAccount, logoutUser, userSelector } from '../User/UserSlice';
+import { getAccount, isLoggedInSelector, logoutUser, userSelector } from '../User/UserSlice';
 import { useHistory } from 'react-router-dom';
 
 const Home = () => {
@@ -9,8 +9,7 @@ const Home = () => {
   const history = useHistory();
 
   const { email } = useSelector(userSelector);
-
-  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+  const isLoggedIn = useSelector(isLoggedInSelector);
 
   useEffect(() => {
     if (isLoggedIn) {      
