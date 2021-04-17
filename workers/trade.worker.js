@@ -3,12 +3,11 @@
 // Try to fill a pair of offers
 
 const u = require('../features/util/util');
-const config = require('../config');
 const { hashkey } = require('../db/redisSchema');
 
 const sequelize = require('../db');
-const { Transaction } = require('sequelize');
-const { Offer, Entry, Trade } = require('../models');
+const { Offer, Trade } = require('../models');
+// const { Transaction } = require('sequelize');
 const isoOption = {
     // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
 };

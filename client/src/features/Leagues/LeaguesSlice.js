@@ -67,8 +67,6 @@ export const leaguesSlice = createSlice({
   },
 });
 
-export const {} = leaguesSlice.actions;
-
 export const leaguesSelector = (state) => {
     return {
         userLeagues: state.leagues.userleagues,

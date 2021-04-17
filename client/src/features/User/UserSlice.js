@@ -1,8 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-// import { useHistory } from 'react-router-dom';
 import toast from 'react-hot-toast';
-
-// const history = useHistory();
 
 import { signupfunc, loginfunc, logoutfunc, accountfunc } from './User.api.js';
 

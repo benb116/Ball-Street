@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { userSelector, fetchUserBytoken, clearState } from './UserSlice';
+import { userSelector, clearState } from './UserSlice';
 import Loader from 'react-loader-spinner';
 import { useHistory } from 'react-router-dom';
 
@@ -10,14 +10,14 @@ const Account = () => {
   const dispatch = useDispatch();
   const { isFetching, isError } = useSelector(userSelector);
 
-  const { username, email } = useSelector(userSelector);
+  const { email } = useSelector(userSelector);
 
   useEffect(() => {
     if (isError) {
       dispatch(clearState());
       history.push('/login');
     }
-  }, [isError]);
+  }, [dispatch, history, isError]);
 
   const onLogOut = () => {
     history.push('/login');

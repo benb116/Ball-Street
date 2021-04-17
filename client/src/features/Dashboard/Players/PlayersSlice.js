@@ -36,7 +36,6 @@ export const playersSlice = createSlice({
     updatePrice: (state, {payload}) => {
       state.priceMap[payload.nflplayerID] = {...(state.priceMap[payload.nflplayerID] || {}), ...payload}
     }
-    // setprice for when get data dump
   },
   extraReducers: {
     [getPlayers.fulfilled]: (state, { payload }) => {
@@ -46,11 +45,6 @@ export const playersSlice = createSlice({
         return p;
       })
       state.playerlist = np;
-      // state.playerMap = np.reduce((m, p) => {
-      //   m[p.id] = p;
-      //   return m;
-      // }, {});
-      // console.log(state.playerMap);
     }
   },
 });

@@ -2,14 +2,13 @@ import React, { Fragment, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { getAccount, logoutUser, userSelector } from '../User/UserSlice';
-import Loader from 'react-loader-spinner';
 import { useHistory } from 'react-router-dom';
 
 const Home = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const { id, name, email } = useSelector(userSelector);
+  const { email } = useSelector(userSelector);
 
 
 
@@ -17,7 +16,7 @@ const Home = () => {
     if (email) {      
       dispatch(getAccount());
     }
-}, []);
+}, [dispatch, email]);
 
   const onLogOut = () => {
     dispatch(logoutUser());

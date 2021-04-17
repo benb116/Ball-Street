@@ -1,17 +1,14 @@
 import React, { Fragment, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useSelector, useDispatch } from 'react-redux';
-import { signupUser, userSelector, } from './UserSlice';
+import { useDispatch } from 'react-redux';
+import { signupUser, } from './UserSlice';
 import { useHistory } from 'react-router-dom';
-import toast from 'react-hot-toast';
 
 const Signup = () => {
   const dispatch = useDispatch();
-  const { register, errors, handleSubmit } = useForm();
+  const { register, handleSubmit } = useForm();
   const history = useHistory();
-
-  const { id, name, email } = useSelector(userSelector);
 
   const onSubmit = (data) => {
     dispatch(signupUser(data));

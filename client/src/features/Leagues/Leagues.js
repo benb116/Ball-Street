@@ -1,17 +1,13 @@
 import React, { Fragment, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
-import Loader from 'react-loader-spinner';
-import { useHistory } from 'react-router-dom';
 import { Link } from "react-router-dom";
 
 import { leaguesSelector, getUserLeagues, getPublicLeagues, createLeague } from './LeaguesSlice';
-import League from './League';
 
 const Leagues = () => {
-  const history = useHistory();
   const dispatch = useDispatch();
-  const { register, errors, handleSubmit } = useForm();
+  const { register, handleSubmit } = useForm();
 
   const { userLeagues, publicLeagues } = useSelector(leaguesSelector);
 
@@ -20,11 +16,10 @@ const Leagues = () => {
     dispatch(getPublicLeagues());
   };
 
-  useEffect(pullLeagues, []);
+  useEffect(pullLeagues, [dispatch]);
 
   const onSubmit = (data) => {
     dispatch(createLeague(data));
-    // pullLeagues();
   };
 
   return (

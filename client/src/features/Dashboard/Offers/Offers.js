@@ -11,7 +11,7 @@ const Offers = () => {
 
   useEffect(() => {
     dispatch(getOffers({leagueID, contestID}));
-  }, []);
+  }, [contestID, dispatch, leagueID]);
 
   const offers = useSelector(offersSelector);
 

@@ -42,8 +42,6 @@ export const contestsSlice = createSlice({
   },
 });
 
-export const {} = contestsSlice.actions;
-
 export const contestSelector = (state) => state.contests.thiscontest;
 export const entriesSelector = (state) => state.contests.thiscontestentries;
 export const myEntrySelector = (state) => state.contests.thiscontestmyentry;

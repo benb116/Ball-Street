@@ -1,8 +1,5 @@
 import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { userSelector, clearState } from '../User/UserSlice';
-import Loader from 'react-loader-spinner';
-import { useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import Entry from './Entry/Entry'
 import Players from './Players/Players'
@@ -17,7 +14,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     init(contestID);
-  }, []);
+  }, [contestID]);
 
   return (
     <div className="container mx-auto" style={{"textAlign": "left"}}>

@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { dispatch } from 'react-hot-toast';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { playerSelector, priceMapSelector } from '../Players/PlayersSlice';
@@ -18,13 +17,13 @@ const Entry = () => {
 
   useEffect(() => {
     dispatch(getEntry({leagueID, contestID}));
-  }, []);
+  }, [contestID, dispatch, leagueID]);
 
   useEffect(() => {
     if (rUpdate) {
       dispatch(getEntry({leagueID, contestID}));      
     }
-  }, [rUpdate]);
+  }, [contestID, dispatch, leagueID, rUpdate]);
 
   return (
     <div className="container mx-auto">

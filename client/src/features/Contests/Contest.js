@@ -1,15 +1,12 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
-import Loader from 'react-loader-spinner';
-import { Link, useParams, useHistory } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { contestSelector, createEntry, entriesSelector, getContest, getEntries, getMyEntry, myEntrySelector } from './ContestsSlice';
-import toast from 'react-hot-toast';
 
 const Contest = () => {
-  const history = useHistory();
   const dispatch = useDispatch();
-  const { register, errors, handleSubmit } = useForm();
+  const { handleSubmit } = useForm();
   const { leagueID, contestID } = useParams();
 
   const thiscontest = useSelector(contestSelector);
@@ -20,7 +17,7 @@ const Contest = () => {
     dispatch(getContest({leagueID, contestID}));
     dispatch(getEntries({leagueID, contestID}));
     dispatch(getMyEntry({leagueID, contestID}));
-  }, []);
+  }, [contestID, dispatch, leagueID]);
 
   const onCreateEntry = () => {
     dispatch(createEntry({leagueID: leagueID, contestID: contestID}));
