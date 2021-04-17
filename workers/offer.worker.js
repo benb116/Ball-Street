@@ -34,8 +34,8 @@ async function evalOrderBook(contestID, nflplayerID) {
     .then(([bids, asks]) => compareBidsAsks(bids, asks))
     // Output results
     .then(([nextbid, nextask]) => {
-      const bestbid = (nextbid ? nextbid.price : NaN);
-      const bestask = (nextask ? nextask.price : NaN);
+      const bestbid = (nextbid ? nextbid.price : 0);
+      const bestask = (nextask ? nextask.price : 0);
       client.hset(hashkey(contestID, nflplayerID), 'bestbid', bestbid, 'bestask', bestask);
       client.publish('priceUpdate', JSON.stringify({
         contestID,
@@ -44,7 +44,6 @@ async function evalOrderBook(contestID, nflplayerID) {
         bestask,
       }));
     });
-  // .then(console.log);
 }
 
 // Find highest bids and lowest asks
@@ -76,7 +75,7 @@ async function compareBidsAsks(bids, asks, bidind = 0, askind = 0) {
   if (!bids[bidind] || !asks[askind]) {
     console.log('EOL');
     const player = (bids[0] ? bids[0].NFLPlayerId : (asks[0] ? asks[0].NFLPlayerId : 0));
-    return [bids[bidind], bids[askind]];
+    return [bids[bidind], asks[askind]];
   } if (bids[bidind].price >= asks[askind].price) {
     const [nextbid, nextask] = await matchOffers(bids[bidind], asks[askind]);
     if (nextbid || nextask) {
@@ -84,7 +83,7 @@ async function compareBidsAsks(bids, asks, bidind = 0, askind = 0) {
     }
   } else {
     console.log('PriceMismatch');
-    return [bids[bidind], bids[askind]];
+    return [bids[bidind], asks[askind]];
   }
 }
 

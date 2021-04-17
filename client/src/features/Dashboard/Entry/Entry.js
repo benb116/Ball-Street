@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import { dispatch } from 'react-hot-toast';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { playerSelector } from '../Players/PlayersSlice';
+import { playerSelector, priceMapSelector } from '../Players/PlayersSlice';
 
-import { getEntry, entrySelector, preDrop } from './EntrySlice';
+import { getEntry, entrySelector, preDrop, rosterUpdateSelector } from './EntrySlice';
 import { cancelOffer, createOffer, offersSelector } from '../Offers/OffersSlice';
 
 
@@ -13,11 +13,18 @@ const Entry = () => {
   const { leagueID, contestID } = useParams();
 
   const thisentry = useSelector(entrySelector);
+  const rUpdate = useSelector(rosterUpdateSelector);
   const rpos = Object.keys(thisentry.roster);
 
   useEffect(() => {
     dispatch(getEntry({leagueID, contestID}));
   }, []);
+
+  useEffect(() => {
+    if (rUpdate) {
+      dispatch(getEntry({leagueID, contestID}));      
+    }
+  }, [rUpdate]);
 
   return (
     <div className="container mx-auto">
@@ -29,8 +36,8 @@ const Entry = () => {
             <th>Pos</th>
             <th>Name</th>
             <th>Team</th>
-            <th>Pts</th>
             <th>Proj</th>
+            <th>Pts</th>
             <th>Last Trade</th>
             <th>Best Bid</th>
             <th>Best Ask</th>
@@ -52,6 +59,11 @@ function RosterItem(props) {
   const thisplayer = useSelector(playerSelector(props.playerid));
 
   const offers = useSelector(offersSelector);
+  const priceMap = useSelector(priceMapSelector(props.playerid));
+
+  if (!thisplayer) {
+    return (<tr><td>{props.position}</td></tr>);
+  }
 
   const onpredrop = () => {
     dispatch(preDrop({leagueID, contestID, nflplayerID: props.playerid}));
@@ -66,9 +78,7 @@ function RosterItem(props) {
   }
 
   let playeroffer = null;
-  if (thisplayer) {
-    playeroffer = offers.asks.find(o => o.NFLPlayerId === thisplayer.id);
-  }
+  playeroffer = offers.asks.find(o => o.NFLPlayerId === thisplayer.id);
 
   const oncancelOffer = (oid) => {
     dispatch(cancelOffer({leagueID, contestID, offerID: oid}))
@@ -79,11 +89,11 @@ function RosterItem(props) {
       <td>{props.position}</td>
       <td>{thisplayer.name}</td>
       <td>{thisplayer.teamAbr}</td>
-      <td>{thisplayer.statprice}</td>
       <td>{thisplayer.preprice}</td>
-      <td>{thisplayer.lastprice}</td>
-      <td>{thisplayer.bestbid}</td>
-      <td>{thisplayer.bestask}</td>
+      <td>{thisplayer.statprice}</td>
+      <td>{(priceMap && Number(priceMap.lastprice)) ? priceMap.lastprice : ""}</td>
+      <td>{(priceMap && Number(priceMap.bestbid)) ? priceMap.bestbid : ""}</td>
+      <td>{(priceMap && Number(priceMap.bestask)) ? priceMap.bestask : ""}</td>
       {thisplayer.id ? <td onClick={onpredrop}>DROP</td> : <td></td>}
       {thisplayer.id ? (
         playeroffer ? 

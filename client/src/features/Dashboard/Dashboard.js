@@ -9,6 +9,8 @@ import Players from './Players/Players'
 import Offers from './Offers/Offers'
 import Leaderboard from './Leaderboard/Leaderboard'
 
+require('./ws');
+
 const Dashboard = () => {
 
   return (

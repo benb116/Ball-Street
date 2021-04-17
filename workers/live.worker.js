@@ -9,9 +9,11 @@ const { promisify } = require('util');
 
 const config = require('../config');
 const { hashkey } = require('../db/redisSchema');
+const playerService = require('../features/nflplayer/nflplayer.service');
 
 const client = redis.createClient();
-const hgetallAsync = promisify(client.hgetall).bind(client);
+const client2 = redis.createClient();
+const hgetallAsync = promisify(client2.hgetall).bind(client2);
 
 const session = require('../middleware/session');
 
@@ -42,33 +44,31 @@ client.on('message', (channel, message) => {
 });
 
 function priceUpdate(message) {
-  const {
-    contestID, nflplayerID, bestbid, bestask,
-  } = JSON.parse(message);
+  const { contestID, nflplayerID, bestbid, bestask, } = JSON.parse(message);
   if (!priceUpdateMap[contestID]) { priceUpdateMap[contestID] = {}; }
-  priceUpdateMap[contestID][nflplayerID] = { bid: bestbid, ask: bestask };
+  priceUpdateMap[contestID][nflplayerID] = { bestbid, bestask, nflplayerID };
 }
 
 function lastTrade(message) {
-  const { contestID, nflplayerID, price } = JSON.parse(message);
-  if (!priceUpdateMap[contestID]) { priceUpdateMap[contestID] = {}; }
-  lastTrade[contestID][nflplayerID] = { price };
+  const { contestID, nflplayerID, lastprice } = JSON.parse(message);
+  if (!lastTradeMap[contestID]) { lastTradeMap[contestID] = {}; }
+  lastTradeMap[contestID][nflplayerID] = { lastprice, nflplayerID };
 }
 
 function protectedMatch(message) {
   const { userID, offerID } = JSON.parse(message);
-  const thews = connmap(userID);
-  thews.send({ event: 'offerMatched', offerID });
+  const thews = connmap.get(userID);
+  thews.send(JSON.stringify({ event: 'offerMatched', offerID }));
 }
 
 function offerFilled(message) {
   const { userID, offerID } = JSON.parse(message);
-  const thews = connmap(userID);
-  thews.send({ event: 'offerFilled', offerID });
+  const thews = connmap.get(userID);
+  thews.send(JSON.stringify({ event: 'offerFilled', offerID }));
 }
 
 server.on('upgrade', (request, socket, head) => {
-  console.log('Parsing session from request...');
+  // console.log('Parsing session from request...');
 
   session(request, {}, () => {
     if (!request.session.user) {
@@ -84,14 +84,16 @@ server.on('upgrade', (request, socket, head) => {
 });
 
 wss.on('connection', (ws, request) => {
-  const userId = request.session.user;
+  const userId = request.session.user.id;
 
   connmap.set(userId, ws);
 
   ws.on('message', async (msg) => {
+    msg = JSON.parse(msg);
     contestmap.delete(ws);
     // Send starting data
-    ws.send(sendLatest(msg.contestID));
+    const out = await sendLatest(msg.contestID);
+    ws.send(JSON.stringify(out));
     contestmap.set(ws, msg.contestID);
   });
 
@@ -101,37 +103,43 @@ wss.on('connection', (ws, request) => {
   });
 });
 
-const playerIDs = [];
+let playerIDs = [];
+
+(async () => {
+  const out = await playerService.getNFLPlayers();
+  playerIDs = out.map(p => p.id);
+})();
 
 async function sendLatest(contestID) {
-  const outPromises = playerIDs.map((p) => {
+  const outPromises = playerIDs
+  .map(p => {
     const rkey = hashkey(contestID, p);
     return hgetallAsync(rkey).then((obj) => {
+      if (!obj) { return null; }
       const out = obj;
       out.contestID = contestID;
-      out.nflPlayerID = p;
+      out.nflplayerID = p;
       return out;
     });
-  });
+  })
   return Promise.all(outPromises);
 }
 
 // Send out new data when it's available
 setInterval(() => {
-  if (priceUpdateMap.size) {
-    wss.clients.forEach((thews) => {
-      if (thews.readyState === WebSocket.OPEN) {
-        const thecontestID = contestmap.get(thews);
-        thews.send(priceUpdateMap[thecontestID]);
+  if (Object.keys(priceUpdateMap).length) {
+    contestmap.forEach((thecontestID, thews) => {
+      if (thews.readyState === 1) {
+        thews.send(JSON.stringify({event: 'priceUpdate', pricedata: priceUpdateMap[thecontestID]}));
       }
     });
     priceUpdateMap = {};
   }
-  if (lastTradeMap.size) {
-    wss.clients.forEach((thews) => {
-      if (thews.readyState === WebSocket.OPEN) {
-        const thecontestID = contestmap.get(thews);
-        thews.send(lastTradeMap[thecontestID]);
+
+  if (Object.keys(lastTradeMap).length) {
+    contestmap.forEach((thecontestID, thews) => {
+      if (thews.readyState === 1) {
+        thews.send(JSON.stringify({event: 'priceUpdate', pricedata: lastTradeMap[thecontestID]}));
       }
     });
     lastTradeMap = {};
