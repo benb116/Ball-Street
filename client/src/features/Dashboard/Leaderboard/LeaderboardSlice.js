@@ -1,18 +1,22 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
+
+const defaultState = {
+  leaders: []
+};
 
 export const leaderboardSlice = createSlice({
   name: 'leaderboard',
-  initialState: {
-    
-  },
+  initialState: defaultState,
   reducers: {
-    
+    updateLeaders: (state, {payload}) => {
+      state.leaders = payload;
+    }
   },
   extraReducers: {
     
   },
 });
 
-export const { } = leaderboardSlice.actions;
+export const { updateLeaders } = leaderboardSlice.actions;
 
-export const leaderboardSelector = (state) => state.leaderboard;
+export const leadersSelector = (state) => state.leaderboard.leaders;

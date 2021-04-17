@@ -17,7 +17,6 @@ export const offersSlice = createSlice({
   initialState: defaultState,
   reducers: {
     removeOffer: (state, {payload}) => {
-      console.log(payload);
       state.remove.push(payload);
       state.bids = state.bids.filter(o => o.id !== payload);
       state.asks = state.asks.filter(o => o.id !== payload);
@@ -31,7 +30,6 @@ export const offersSlice = createSlice({
     },
     [createOffer.fulfilled]: (state, { payload }) => {
       if (state.remove.indexOf(payload.id) === -1) {
-          console.log(payload.id);
         if (payload.isbid) {
           state.bids.push(payload);
         } else {

@@ -91,10 +91,11 @@ async function calculateLeaderboard() {
         acc[cur.contest].push({ user: cur.username, total: cur.total });
         return acc;
     }, {});
-    console.log(contestSplit);
+    // console.log(contestSplit);
 
     contests.forEach(c => {
         const cleader = contestSplit[c];
+        cleader.sort((a, b) => (a.total < b.total) ? 1 : -1);
         client.set(leaderHashkey(c), JSON.stringify(cleader));
     })
     client2.publish('leaderUpdate', '');

@@ -60,11 +60,9 @@ function lastTrade(message) {
 
 function leaderUpdate() {
   const leaderMemo = {};
-  console.log('2222')
   contestmap.forEach(async (thecontestID, thews) => {
     if (!leaderMemo[thecontestID]) {
       const out = await getAsync(leaderHashkey(thecontestID))
-      console.log(out);
       leaderMemo[thecontestID] = JSON.parse(out);
     }
     if (thews.readyState === 1) {

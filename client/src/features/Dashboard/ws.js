@@ -2,6 +2,7 @@ import store from '../../app/store';
 import { updatePrice } from './Players/PlayersSlice';
 import { removeOffer } from './Offers/OffersSlice';
 import { updateRoster } from './Entry/EntrySlice';
+import { updateLeaders } from './Leaderboard/LeaderboardSlice';
 
 export const init = (contestID) => {
     const host = window.location.host;
@@ -30,6 +31,9 @@ export const init = (contestID) => {
                     break;
                 case 'protectedMatch':
                     break;
+                case 'leaderboard':
+                    upLead(msg.leaderboard);
+                    break;
                 case 'priceUpdate':
                     const msgs = Object.values(msg.pricedata);
                     msgs.forEach(markPrice);
@@ -45,6 +49,10 @@ export const init = (contestID) => {
 
 function markPrice(obj) {
     store.dispatch(updatePrice(obj));
+}
+
+function upLead(board) {
+    store.dispatch(updateLeaders(board));
 }
 
 function fillOffer(oid) {

@@ -1,16 +1,31 @@
-import React, { Fragment, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { userSelector, clearState } from './LeaderboardSlice';
-import Loader from 'react-loader-spinner';
-import { useHistory } from 'react-router-dom';
+import React from 'react';
+import { useSelector } from 'react-redux';
 
-const Leaderboard = () => {
-  
+import { leadersSelector } from './LeaderboardSlice';
+
+const Leaderboards = () => {
+
+  const leaders = useSelector(leadersSelector);
+
   return (
     <div className="container mx-auto">
       Leaderboard
+      <br/>
+      <ul>
+        {leaders.map(function(leader, index){
+          return <LeaderboardItem key={ index } leaderdata={ leader }/>;
+        })}
+      </ul>
     </div>
   );
 };
 
-export default Leaderboard;
+function LeaderboardItem(props) {
+  return (
+    <li>
+        {props.leaderdata.user} - {props.leaderdata.total}
+    </li>
+  );
+}
+
+export default Leaderboards;
