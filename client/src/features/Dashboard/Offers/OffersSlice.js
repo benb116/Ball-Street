@@ -31,7 +31,6 @@ export const offersSlice = createSlice({
       }
     },
     [cancelOffer.fulfilled]: (state, { payload }) => {
-      console.log(payload)
       if (payload.isbid) {
         state.bids = state.bids.filter(o => o.id !== payload.id);
       } else {

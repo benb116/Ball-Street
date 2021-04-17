@@ -110,11 +110,11 @@ async function attemptFill(t, bidid, askid, price) {
 
     const contestID = boffer.ContestId;
 
-    client.hmset(hashkey(contestID, player), 'lastTradePrice', price);
+    client.hmset(hashkey(contestID, player), 'lastprice', price);
     client.publish('lastTrade', JSON.stringify({
             contestID: contestID,
             nflplayerID: player,
-            price: price,
+            lastprice: price,
         }));
     client.publish('offerFilled', JSON.stringify({
         userID: bidoffer.UserId,

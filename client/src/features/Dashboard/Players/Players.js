@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
-import { getPlayers, playersSelector, filterSelector, sortSelector, setFilter, setSort} from './PlayersSlice';
+import { getPlayers, playersSelector, priceMapSelector, filterSelector, sortSelector, setFilter, setSort} from './PlayersSlice';
 import { isOnRosterSelector, preAdd, preDrop } from '../Entry/EntrySlice';
 import { createOffer, cancelOffer, offersSelector } from '../Offers/OffersSlice';
 
@@ -62,8 +62,8 @@ function ListHeader() {
       <th onClick={handleClick} value="name">Name</th>
       <th onClick={handleClick} value="posName">Pos</th>
       <th onClick={handleClick} value="teamAbr">Team</th>
-      <th onClick={handleClick} value="statprice">Pts</th>
       <th onClick={handleClick} value="preprice">Proj</th>
+      <th onClick={handleClick} value="statprice">Pts</th>
       <th onClick={handleClick} value="last">Last Trade</th>
       <th onClick={handleClick} value="bid">Best Bid</th>
       <th onClick={handleClick} value="ask">Best Ask</th>
@@ -141,6 +141,7 @@ function PlayerItem(props) {
   const offers = useSelector(offersSelector);
 
   const showDrop = useSelector(isOnRosterSelector(props.playerdata.id));
+  const priceMap = useSelector(priceMapSelector(props.playerdata.id));
 
   const onpredrop = () => {
     dispatch(preDrop({leagueID, contestID, nflplayerID: props.playerdata.id}));
@@ -174,17 +175,16 @@ function PlayerItem(props) {
   const oncancelOffer = (oid) => {
     dispatch(cancelOffer({leagueID, contestID, offerID: oid}))
   }
-
   return (
     <tr playerid={props.playerdata.id}>
       <td>{props.playerdata.name}</td>
       <td>{props.playerdata.posName}</td>
       <td>{props.playerdata.teamAbr}</td>
-      <td>{props.playerdata.statprice}</td>
       <td>{props.playerdata.preprice}</td>
-      <td>{props.playerdata.lastprice}</td>
-      <td>{props.playerdata.bestbid}</td>
-      <td>{props.playerdata.bestask}</td>
+      <td>{props.playerdata.statprice}</td>
+      <td>{priceMap ? priceMap.lastprice : ""}</td>
+      <td>{priceMap ? priceMap.bestbid : ""}</td>
+      <td>{priceMap ? priceMap.bestask : ""}</td>
       <td onClick={(showDrop ? onpredrop : onpreadd)}>{showDrop ? 'DROP' : 'ADD'}</td>
       {playeroffer ? 
         <td onClick={() => oncancelOffer(playeroffer.id)}>CANCEL</td> :

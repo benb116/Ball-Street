@@ -15,7 +15,7 @@ module.exports = {
     },
 
     // Get all players
-    getNFLPlayers(req) {
+    getNFLPlayers() {
         return NFLPlayer.findAll({ include: [{ model: NFLTeam }, { model: NFLPosition }] }).then(u.dv);
     },
 

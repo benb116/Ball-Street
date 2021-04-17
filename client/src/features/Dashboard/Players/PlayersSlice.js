@@ -6,6 +6,7 @@ export const getPlayers = createAsyncThunk('players/getPlayers', getplayersfunc)
 
 const defaultState = {
   playerlist: [],
+  priceMap: {},
   filter: {
     name: "",
     posName: "",
@@ -31,7 +32,11 @@ export const playersSlice = createSlice({
         state.sortDesc = true;
       }
       state.sortProp = action.payload;
+    },
+    updatePrice: (state, {payload}) => {
+      state.priceMap[payload.nflplayerID] = {...(state.priceMap[payload.nflplayerID] || {}), ...payload}
     }
+    // setprice for when get data dump
   },
   extraReducers: {
     [getPlayers.fulfilled]: (state, { payload }) => {
@@ -41,16 +46,26 @@ export const playersSlice = createSlice({
         return p;
       })
       state.playerlist = np;
+      // state.playerMap = np.reduce((m, p) => {
+      //   m[p.id] = p;
+      //   return m;
+      // }, {});
+      // console.log(state.playerMap);
     }
   },
 });
 
-export const { clear, setFilter, setSort} = playersSlice.actions;
+export const { clear, setFilter, setSort, updatePrice} = playersSlice.actions;
 
 export const playersSelector = (state) => state.players.playerlist;
 export const playerSelector = (playerID) => {
   return (state) => {
-    return (state.players.playerlist.filter(p => p.id === playerID)[0] || {});
+    return (state.players.playerlist.find(p => p.id === playerID));
+  }
+}
+export const priceMapSelector = (playerID) => {
+  return (state) => {
+    return state.players.priceMap[playerID];
   }
 }
 export const filterSelector = (state) => state.players.filter;
