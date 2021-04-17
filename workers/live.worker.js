@@ -59,13 +59,14 @@ function lastTrade(message) {
 function protectedMatch(message) {
   const { userID, offerID } = JSON.parse(message);
   const thews = connmap.get(userID);
-  // thews.send({ event: 'offerMatched', offerID });
+  thews.send(JSON.stringify({ event: 'offerMatched', offerID }));
 }
 
 function offerFilled(message) {
   const { userID, offerID } = JSON.parse(message);
   const thews = connmap.get(userID);
-  // thews.send({ event: 'offerFilled', offerID });
+  console.log(userID, thews);
+  thews.send(JSON.stringify({ event: 'offerFilled', offerID }));
 }
 
 server.on('upgrade', (request, socket, head) => {
@@ -85,7 +86,7 @@ server.on('upgrade', (request, socket, head) => {
 });
 
 wss.on('connection', (ws, request) => {
-  const userId = request.session.user;
+  const userId = request.session.user.id;
 
   connmap.set(userId, ws);
 
@@ -131,7 +132,7 @@ setInterval(() => {
   if (Object.keys(priceUpdateMap).length) {
     contestmap.forEach((thecontestID, thews) => {
       if (thews.readyState === 1) {
-        thews.send(JSON.stringify(priceUpdateMap[thecontestID]));
+        thews.send(JSON.stringify({event: 'priceUpdate', pricedata: priceUpdateMap[thecontestID]}));
       }
     });
     priceUpdateMap = {};
@@ -140,7 +141,7 @@ setInterval(() => {
   if (Object.keys(lastTradeMap).length) {
     contestmap.forEach((thecontestID, thews) => {
       if (thews.readyState === 1) {
-        thews.send(JSON.stringify(lastTradeMap[thecontestID]));
+        thews.send(JSON.stringify({event: 'priceUpdate', pricedata: lastTradeMap[thecontestID]}));
       }
     });
     lastTradeMap = {};

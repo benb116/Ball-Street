@@ -10,17 +10,20 @@ export const preDrop = createAsyncThunk('entry/preDrop', predropfunc);
 const defaultState = {
   balance: 0,
   roster: {},
+  rosterUpdate: false,
 };
 
 export const entrySlice = createSlice({
   name: 'entry',
   initialState: defaultState,
   reducers: {
-    clear: state => state = defaultState
+    clear: state => state = defaultState,
+    updateRoster: state => state.rosterUpdate = true,
   },
   extraReducers: {
     [getEntry.fulfilled]: (state, { payload }) => {
       setEntry(state, payload);
+      state.rosterUpdate = false;
     },
     [preAdd.fulfilled]: (state, {payload}) => {
       setEntry(state, payload);
@@ -49,9 +52,10 @@ function setEntry (state, payload) {
   return state;
 }
 
-export const { } = entrySlice.actions;
+export const { updateRoster } = entrySlice.actions;
 
 export const entrySelector = (state) => state.entry;
+export const rosterUpdateSelector = (state) => state.entry.rosterUpdate;
 export const isOnRosterSelector = (playerID) => {
   return (state) => {
     return (Object.values(state.entry.roster).indexOf(playerID) >= 0);

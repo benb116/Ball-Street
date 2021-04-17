@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { playerSelector, priceMapSelector } from '../Players/PlayersSlice';
 
-import { getEntry, entrySelector, preDrop } from './EntrySlice';
+import { getEntry, entrySelector, preDrop, rosterUpdateSelector } from './EntrySlice';
 import { cancelOffer, createOffer, offersSelector } from '../Offers/OffersSlice';
 
 
@@ -13,11 +13,18 @@ const Entry = () => {
   const { leagueID, contestID } = useParams();
 
   const thisentry = useSelector(entrySelector);
+  const rUpdate = useSelector(rosterUpdateSelector);
   const rpos = Object.keys(thisentry.roster);
 
   useEffect(() => {
     dispatch(getEntry({leagueID, contestID}));
   }, []);
+
+  useEffect(() => {
+    if (rUpdate) {
+      dispatch(getEntry({leagueID, contestID}));      
+    }
+  }, [rUpdate]);
 
   return (
     <div className="container mx-auto">
