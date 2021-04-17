@@ -18,9 +18,30 @@ const Offers = () => {
   return (
     <div className="container mx-auto">
       Offers
-      {JSON.stringify(offers)}
+      <br/>
+      Bids
+      <ul>
+        {offers.bids.map(function(offer, index){
+          return <OfferItem key={ index } offerdata={ offer }/>;
+        })}
+      </ul>
+      <br/>
+      Asks
+      <ul>
+        {offers.asks.map(function(offer, index){
+          return <OfferItem key={ index } offerdata={ offer }/>;
+        })}
+      </ul>
     </div>
   );
 };
+
+function OfferItem(props) {
+  return (
+    <li>
+        {props.offerdata.id} - {props.offerdata.NFLPlayerId}
+    </li>
+  );
+}
 
 export default Offers;
