@@ -11,9 +11,13 @@ const Home = () => {
 
   const { id, name, email } = useSelector(userSelector);
 
+
+
   useEffect(() => {
-    dispatch(getAccount());
-  }, []);
+    if (email) {      
+      dispatch(getAccount());
+    }
+}, []);
 
   const onLogOut = () => {
     dispatch(logoutUser());
@@ -28,19 +32,31 @@ const Home = () => {
 
   return (
     <div className="container mx-auto">
-        <Fragment>
-          <div className="container mx-auto">
-            Welcome back <h3>{email}</h3>
-          </div>
-          <Link to="/leagues">Leagues</Link>
-          <br/>
-          <button
-            onClick={onLogOut}
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-          >
-            Log Out
-          </button>
-        </Fragment>
+        {email ? 
+          <Fragment>
+            <div className="container mx-auto">
+              Welcome back <h3>{email}</h3>
+            </div>
+            <Link to="/leagues">Leagues</Link>
+            <br/>
+            <button
+              onClick={onLogOut}
+              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+            >
+              Log Out
+            </button>
+          </Fragment>
+        :
+          <Fragment>
+            <h3>Ball Street</h3>
+            <button
+              onClick={loginRed}
+              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+            >
+              Log In
+            </button>
+          </Fragment>
+        }
     </div>
   );
 };
