@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { playerSelector } from '../Players/PlayersSlice';
 
-import { getOffers, offersSelector } from './OffersSlice';
+import { cancelOffer, getOffers, offersSelector } from './OffersSlice';
 
 const Offers = () => {
 
@@ -37,9 +38,26 @@ const Offers = () => {
 };
 
 function OfferItem(props) {
+  const dispatch = useDispatch();
+  const { leagueID, contestID } = useParams();
+
+  const playerdata = useSelector(playerSelector(props.offerdata.NFLPlayerId))
+  if (!playerdata) {
+    return (<li></li>);
+  }
+
+  const oncancelOffer = (oid) => {
+    dispatch(cancelOffer({leagueID, contestID, offerID: oid}))
+  }
+
   return (
     <li>
-        {props.offerdata.id} - {props.offerdata.NFLPlayerId}
+        {playerdata.name} - {props.offerdata.price} - <span 
+          onClick={() => oncancelOffer(props.offerdata.id)}
+          style={{cursor:'pointer'}}
+        >
+          CANCEL
+        </span>
     </li>
   );
 }
