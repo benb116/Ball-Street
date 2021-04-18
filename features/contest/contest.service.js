@@ -22,7 +22,7 @@ module.exports = {
         where: {
           LeagueId: req.params.leagueID,
         },
-      }, u.tobj(t)).then(u.cl).then(u.dv);
+      }, u.tobj(t)).then(u.dv);
     });
   },
 

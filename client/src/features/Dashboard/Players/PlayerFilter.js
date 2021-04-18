@@ -2,6 +2,20 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { filterSelector, setFilter } from './PlayersSlice';
 
+function debounce(func, wait) {
+  let timeout;
+  return function() {
+    const context = this;
+    const args = arguments;
+    const later = function() {
+      timeout = null;
+      func.apply(context, args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+};
+
 const PlayerFilter = () => {
   const dispatch = useDispatch();
   const filters = useSelector(filterSelector);
@@ -12,9 +26,11 @@ const PlayerFilter = () => {
     dispatch(setFilter({name, value}))
   }
 
+  const handleChangeDebounce = debounce(handleChange, 300)
+
   return (
     <form>
-      <input style={{cursor:'pointer'}} onChange={handleChange} name="name" value={filters.name}></input>
+      <input style={{cursor:'pointer'}} onChange={handleChangeDebounce} name="name"></input>
       <select style={{cursor:'pointer'}} onChange={handleChange} name="posName" value={filters.posName}>
         <option value="">Pos</option>
         <option value="QB">QB</option>

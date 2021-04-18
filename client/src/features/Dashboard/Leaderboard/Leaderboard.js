@@ -8,9 +8,10 @@ const Leaderboards = () => {
   const leaders = useSelector(leadersSelector);
 
   return (
-    <div className="container mx-auto">
-      Leaderboard
-      <br/>
+    <div className="container mx-auto" style={{
+      height: "50%",
+    }}>
+      <h3>Leaderboard</h3>
       <ul>
         {leaders.map(function(leader, index){
           return <LeaderboardItem key={ index } leaderdata={ leader }/>;

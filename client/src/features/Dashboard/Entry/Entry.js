@@ -26,8 +26,13 @@ const Entry = () => {
   }, [contestID, dispatch, leagueID, rUpdate]);
 
   return (
-    <div className="container mx-auto">
-      Entry
+    <div className="container mx-auto" style={{
+      display: "inline-block",
+      float: "left",
+      width: "40%",
+      padding: "0.5em",
+    }}>
+      <h3>Entry</h3>
       Balance: {thisentry.balance}
       <table>
         <tbody>
@@ -35,11 +40,11 @@ const Entry = () => {
             <th>Pos</th>
             <th>Name</th>
             <th>Team</th>
-            <th>Proj</th>
             <th>Pts</th>
-            <th>Last Trade</th>
-            <th>Best Bid</th>
-            <th>Best Ask</th>
+            <th>Proj</th>
+            <th>Last</th>
+            <th>Bid</th>
+            <th>Ask</th>
             <th>Drop</th>
             <th>Ask</th>
           </tr>
@@ -88,8 +93,8 @@ function RosterItem(props) {
       <td>{props.position}</td>
       <td>{thisplayer.name}</td>
       <td>{thisplayer.teamAbr}</td>
-      <td>{thisplayer.preprice}</td>
       <td>{thisplayer.statprice}</td>
+      <td>{thisplayer.preprice}</td>
       <td>{(priceMap && Number(priceMap.lastprice)) ? priceMap.lastprice : ""}</td>
       <td>{(priceMap && Number(priceMap.bestbid)) ? priceMap.bestbid : ""}</td>
       <td>{(priceMap && Number(priceMap.bestask)) ? priceMap.bestask : ""}</td>
@@ -102,6 +107,5 @@ function RosterItem(props) {
     </tr>
   );
 }
-
 
 export default Entry;

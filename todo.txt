@@ -13,6 +13,7 @@ Backend
         update redis price hash - projprice
     Player images
     Price history
+    Trading bots
 
 Frontend
     Customize offers

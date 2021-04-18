@@ -35,8 +35,13 @@ const Players = () => {
   }, [contestID, dispatch, leagueID]);
 
   return (
-    <div className="container mx-auto">
-      Players
+    <div className="container mx-auto" style={{
+      display: "inline-block",
+      float: "left",
+      width: "40%",
+      padding: "0.5em",
+    }}>
+      <h3>Players</h3>
       <PlayerFilter />
       <table>
         <tbody>
@@ -65,9 +70,9 @@ function ListHeader() {
       <th style={{cursor:'pointer'}} onClick={handleClick} value="teamAbr">Team</th>
       <th style={{cursor:'pointer'}} onClick={handleClick} value="preprice">Proj</th>
       <th style={{cursor:'pointer'}} onClick={handleClick} value="statprice">Pts</th>
-      <th style={{cursor:'pointer'}} onClick={handleClick} value="lastprice">Last Trade</th>
-      <th style={{cursor:'pointer'}} onClick={handleClick} value="bestbid">Best Bid</th>
-      <th style={{cursor:'pointer'}} onClick={handleClick} value="bestask">Best Ask</th>
+      <th style={{cursor:'pointer'}} onClick={handleClick} value="lastprice">Last</th>
+      <th style={{cursor:'pointer'}} onClick={handleClick} value="bestbid">Bid</th>
+      <th style={{cursor:'pointer'}} onClick={handleClick} value="bestask">Ask</th>
       <th>Add</th>
       <th>Offer</th>
     </tr>

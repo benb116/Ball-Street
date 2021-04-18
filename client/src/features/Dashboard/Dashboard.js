@@ -17,16 +17,23 @@ const Dashboard = () => {
   }, [contestID]);
 
   return (
-    <div className="container mx-auto" style={{"textAlign": "left"}}>
-      Dashboard
+    <div className="container mx-auto" style={{
+        textAlign: "left",
+        height: "100%",
+        width: "100%",
+      }}>
+      {/* Dashboard */}
       <Entry />
-      <br/>
-      <Offers />
-      <br/>
-      <Leaderboard />
-      <br/>
       <Players />
-      <br/>
+      <div style={{
+        display: "inline-block",
+        float: "left",
+        padding: "0.5em",
+        height: "100%",
+      }}>
+        <Offers />
+        <Leaderboard />
+      </div>
     </div>
   );
 };

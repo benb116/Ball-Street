@@ -17,16 +17,16 @@ const Offers = () => {
   const offers = useSelector(offersSelector);
 
   return (
-    <div className="container mx-auto">
-      Offers
-      <br/>
+    <div className="container mx-auto" style={{
+      height: "50%",
+    }}>
+      <h3>Offers</h3>
       Bids
       <ul>
         {offers.bids.map(function(offer, index){
           return <OfferItem key={ index } offerdata={ offer }/>;
         })}
       </ul>
-      <br/>
       Asks
       <ul>
         {offers.asks.map(function(offer, index){
