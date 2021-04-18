@@ -17,9 +17,7 @@ module.exports = {
   getLeagueContests(req) {
     // Requires authorization or looking at a public league
     return sequelize.transaction(isoOption, async (t) => {
-      console.log('1');
       await canUserSeeLeague(t, req.session.user.id, req.params.leagueID);
-      console.log('2');
       return Contest.findAll({
         where: {
           LeagueId: req.params.leagueID,
@@ -42,9 +40,7 @@ module.exports = {
   createContest(req) {
     return sequelize.transaction(isoOption, async (t) => {
       const theleague = await canUserSeeLeague(t, req.session.user.id, req.params.leagueID);
-      console.log(theleague);
       if (theleague.ispublic) { u.Error('Cannot create contests in a public league', 403); }
-      console.log(3);
       if (req.session.user.id !== theleague.adminId) { u.Error('Must be league admin to make new contests', 403); }
       return Contest.create({
         name: req.body.name,
