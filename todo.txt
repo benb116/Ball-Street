@@ -1,0 +1,21 @@
+Backend
+    NFL Stats
+        pull data
+        store stats
+            new model NFLStat:
+                NFLPlayerId
+                nflweek
+                statcats[]
+        calculate points
+        update redis price hash - statprice
+    Live updating projections from Yahoo
+        pull data
+        update redis price hash - projprice
+    Player images
+    Price history
+
+Frontend
+    Customize offers
+        price
+        protected
+    Show current point totals
