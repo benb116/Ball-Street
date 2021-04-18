@@ -13,8 +13,8 @@ const addmemberfunc = async({leagueID, email}, thunkAPI) => {
     return thunkReq(thunkAPI, 'POST', '/app/api/leagues/'+leagueID+'/addMember', JSON.stringify({ email }));
 };
 
-const createcontestfunc = async({ leagueID, name }, thunkAPI) => {
-  return thunkReq(thunkAPI, 'POST', '/app/api/leagues/'+leagueID+'/contests/contest', JSON.stringify({ name }));
+const createcontestfunc = async({ leagueID, name, budget }, thunkAPI) => {
+  return thunkReq(thunkAPI, 'POST', '/app/api/leagues/'+leagueID+'/contests/contest', JSON.stringify({ name, budget }));
 };
 
 export {

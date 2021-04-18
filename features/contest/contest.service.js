@@ -17,12 +17,14 @@ module.exports = {
   getLeagueContests(req) {
     // Requires authorization or looking at a public league
     return sequelize.transaction(isoOption, async (t) => {
+      console.log('1');
       await canUserSeeLeague(t, req.session.user.id, req.params.leagueID);
+      console.log('2');
       return Contest.findAll({
         where: {
           LeagueId: req.params.leagueID,
         },
-      }, u.tobj(t));
+      }, u.tobj(t)).then(u.cl).then(u.dv);
     });
   },
 
@@ -40,13 +42,19 @@ module.exports = {
   createContest(req) {
     return sequelize.transaction(isoOption, async (t) => {
       const theleague = await canUserSeeLeague(t, req.session.user.id, req.params.leagueID);
+      console.log(theleague);
       if (theleague.ispublic) { u.Error('Cannot create contests in a public league', 403); }
+      console.log(3);
       if (req.session.user.id !== theleague.adminId) { u.Error('Must be league admin to make new contests', 403); }
       return Contest.create({
         name: req.body.name,
         nflweek: config.currentNFLWeek,
         LeagueId: theleague.id,
-      }, u.tobj(t)).catch((err) => u.Error(err.parent.constraint, 406));
+        budget: req.body.budget,
+      }, u.tobj(t)).catch((err) => {
+        const errmess = err.parent.constraint || err[0].message;
+        console.log(err); u.Error(errmess, 406);
+      });
     });
   },
 };

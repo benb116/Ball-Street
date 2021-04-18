@@ -241,6 +241,7 @@ async function PopulateDB(sequelize) {
     name: 'Ball Street Big One',
     LeagueId: 1,
     budget: 10000,
+    nflweek: 1,
   };
   await Contest.bulkCreate([con]);
 

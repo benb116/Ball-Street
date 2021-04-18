@@ -21,7 +21,7 @@ const Leagues = () => {
   const thisLeagueMembers = useSelector(leagueMembersSelector);
 
   const onCreateContest = (data) => {
-    dispatch(createContest({leagueID: leagueID, name: data.name}));
+    dispatch(createContest({leagueID: leagueID, name: data.name, budget: data.budget}));
   };
 
   const onAddUser = (data) => {
