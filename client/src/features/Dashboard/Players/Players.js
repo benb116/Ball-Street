@@ -89,11 +89,10 @@ function ListHeader() {
       <th style={{width: "2rem", cursor:'pointer'}} onClick={handleClick} value="lastprice">Last</th>
       <th style={{width: "2rem", cursor:'pointer'}} onClick={handleClick} value="bestbid">Bid</th>
       <th style={{width: "2rem", cursor:'pointer'}} onClick={handleClick} value="bestask">Ask</th>
-      <th style={{width: "2rem", }}>Add</th>
+      <th style={{width: "2rem", }}>+/–</th>
       <th style={{width: "2rem", }}>Offer</th>
     </tr>
   )
 }
-
 
 export default Players;

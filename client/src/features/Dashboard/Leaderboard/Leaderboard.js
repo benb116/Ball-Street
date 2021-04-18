@@ -27,9 +27,9 @@ const Leaderboards = () => {
 
 function LeaderboardItem(props) {
   return (
-    <span>
+    <div>
         {props.leaderdata.user} - {props.leaderdata.total}
-    </span>
+    </div>
   );
 }
 

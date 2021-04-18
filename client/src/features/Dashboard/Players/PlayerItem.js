@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { isOnRosterSelector, preAdd, preDrop } from '../Entry/EntrySlice';
+import { openModal, setModal } from '../Modal/ModalSlice';
 import { cancelOffer, createOffer, offersSelector } from '../Offers/OffersSlice';
 import { priceMapSelector } from './PlayersSlice';
 
@@ -22,21 +23,23 @@ function PlayerItem(props) {
   }
 
   const onask = () => {
-    dispatch(createOffer({leagueID, contestID, offerobj: {
+    dispatch(setModal({
       nflplayerID: props.playerdata.id,
+      nflplayerName: props.playerdata.name,
       isbid: false,
-      price: 900,
+      price: Number(priceMap.bestbid) || 0,
       protected: false,
-    }}));
+    }));
   }
 
   const onbid = () => {
-    dispatch(createOffer({leagueID, contestID, offerobj: {
+    dispatch(setModal({
       nflplayerID: props.playerdata.id,
+      nflplayerName: props.playerdata.name,
       isbid: true,
-      price: 900,
+      price: Number(priceMap.bestask) || 0,
       protected: false,
-    }}));
+    }));
   }
 
   const playerofferbids = offers.bids.find(o => o.NFLPlayerId === props.playerdata.id);

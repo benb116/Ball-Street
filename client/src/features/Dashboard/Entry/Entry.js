@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { playerSelector, playersSelector, priceMapSelector, pricesMapSelector } from '../Players/PlayersSlice';
+import { playerSelector, playersSelector, priceMapSelector } from '../Players/PlayersSlice';
 
 import { getEntry, entrySelector, preDrop, rosterUpdateSelector } from './EntrySlice';
-import { cancelOffer, createOffer, offersSelector } from '../Offers/OffersSlice';
+import { cancelOffer, offersSelector } from '../Offers/OffersSlice';
+import { setModal } from '../Modal/ModalSlice';
 
 
 const Entry = () => {
@@ -102,13 +103,15 @@ function RosterItem(props) {
   const onpredrop = () => {
     dispatch(preDrop({leagueID, contestID, nflplayerID: props.playerid}));
   }
+
   const onask = () => {
-    dispatch(createOffer({leagueID, contestID, offerobj: {
+    dispatch(setModal({
       nflplayerID: thisplayer.id,
+      nflplayerName: thisplayer.name,
       isbid: false,
-      price: 900,
+      price: Number(priceMap.bestbid) || 0,
       protected: false,
-    }}));
+    }));
   }
 
   let playeroffer = null;

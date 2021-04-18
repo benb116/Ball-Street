@@ -7,6 +7,7 @@ import Offers from './Offers/Offers'
 import Leaderboard from './Leaderboard/Leaderboard'
 
 import { init } from './ws'
+import OfferModal from './Modal/Modal';
 
 const Dashboard = () => {
 
@@ -37,6 +38,7 @@ const Dashboard = () => {
         <Offers />
         <Leaderboard />
       </div>
+      <OfferModal />
     </div>
   );
 };

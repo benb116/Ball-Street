@@ -14,9 +14,11 @@ Backend
     Player images
     Price history
     Trading bots
+    Allow roster change spots
 
 Frontend
     Customize offers
         price
         protected
+    Allow roster change spots
     Show current point totals

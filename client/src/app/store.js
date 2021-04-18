@@ -7,6 +7,7 @@ import { leaderboardSlice } from '../features/Dashboard/Leaderboard/LeaderboardS
 import { offersSlice } from '../features/Dashboard/Offers/OffersSlice';
 import { playersSlice } from '../features/Dashboard/Players/PlayersSlice';
 import { contestsSlice } from '../features/Contests/ContestsSlice';
+import { modalSlice } from '../features/Dashboard/Modal/ModalSlice';
 
 export default configureStore({
   reducer: {
@@ -18,6 +19,7 @@ export default configureStore({
       leaderboard: leaderboardSlice.reducer,
       offers: offersSlice.reducer,
       players: playersSlice.reducer,
+      modal: modalSlice.reducer,
     // }
   },
 });
