@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { playerSelector, priceMapSelector } from '../Players/PlayersSlice';
+import { playerSelector, playersSelector, priceMapSelector, pricesMapSelector } from '../Players/PlayersSlice';
 
 import { getEntry, entrySelector, preDrop, rosterUpdateSelector } from './EntrySlice';
 import { cancelOffer, createOffer, offersSelector } from '../Offers/OffersSlice';
@@ -31,7 +31,7 @@ const Entry = () => {
       float: "left",
       width: "40%",
       padding: "0.5em",
-      "box-sizing": "border-box",
+      "boxSizing": "border-box",
     }}>
       <h3>Entry</h3>
       Balance: {thisentry.balance}
@@ -54,11 +54,38 @@ const Entry = () => {
           {rpos.map(function(pos, index){
             return <RosterItem key={ index } position={pos} playerid={ thisentry.roster[pos] }/>;
           })}
+          <PointTotals />
         </tbody>
       </table>
     </div>
   );
 };
+
+function PointTotals() {
+  const thisentry = useSelector(entrySelector);
+  const rpos = Object.keys(thisentry.roster);
+
+  const players = useSelector(playersSelector(Object.values(thisentry.roster).filter(p => p !== null)));
+
+  const sum = rpos.reduce((acc, pos) => {
+    let out = acc;
+    const thisplayerID = thisentry.roster[pos];
+    const theplayer = players.find(p => p.id === thisplayerID);
+    if (theplayer) {
+      out[0] += Number(theplayer.statprice) || 0;
+      out[1] += Number(theplayer.preprice) || 0;
+    }
+    return out;
+  }, [thisentry.balance, thisentry.balance])
+
+  return (<tr>
+    <td>Total</td>
+    <td></td>
+    <td></td>
+    <td>{sum[0]}</td>
+    <td>{sum[1]}</td>
+  </tr>);
+}
 
 function RosterItem(props) {
   const dispatch = useDispatch();
@@ -101,7 +128,7 @@ function RosterItem(props) {
       <td>{(priceMap && Number(priceMap.lastprice)) ? priceMap.lastprice : ""}</td>
       <td>{(priceMap && Number(priceMap.bestbid)) ? priceMap.bestbid : ""}</td>
       <td>{(priceMap && Number(priceMap.bestask)) ? priceMap.bestask : ""}</td>
-      {thisplayer.id ? <td style={{cursor:'pointer', "font-weight": "bold", textAlign: "center",}} onClick={onpredrop}>–</td> : <td></td>}
+      {thisplayer.id ? <td style={{cursor:'pointer', "fontWeight": "bold", textAlign: "center",}} onClick={onpredrop}>–</td> : <td></td>}
       {thisplayer.id ? (
         playeroffer ? 
         <td style={{cursor:'pointer', textAlign: "center",}} onClick={() => oncancelOffer(playeroffer.id)}>✕</td> :

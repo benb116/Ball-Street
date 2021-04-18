@@ -19,10 +19,10 @@ const Offers = () => {
   return (
     <div className="container mx-auto" style={{
       height: "50%",
-      "box-sizing": "border-box",
+      "boxSizing": "border-box",
       flex: 1,
       display: 'flex',
-      "flex-flow": "column",
+      "flexFlow": "column",
     }}>
       <h3>Offers</h3>
       <h4 style={{
@@ -59,14 +59,13 @@ function OfferItem(props) {
   }
 
   return (
-    <span>
-        {playerdata.name} - {props.offerdata.price} - <span 
+    <div>
+        <span 
           onClick={() => oncancelOffer(props.offerdata.id)}
           style={{cursor:'pointer'}}
-        >
-          CANCEL
-        </span>
-    </span>
+        >✕ </span>
+        {playerdata.name} - {props.offerdata.price}
+    </div>
   );
 }
 

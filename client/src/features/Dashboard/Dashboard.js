@@ -31,8 +31,8 @@ const Dashboard = () => {
         padding: "0.5em",
         width: "20%",
         height: "100%",
-        "box-sizing": "border-box",
-        "flex-flow": "column",
+        "boxSizing": "border-box",
+        "flexFlow": "column",
       }}>
         <Offers />
         <Leaderboard />

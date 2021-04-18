@@ -56,7 +56,7 @@ function PlayerItem(props) {
       <td style={{width: '2rem'}}>{(priceMap && Number(priceMap.lastprice)) ? priceMap.lastprice : ""}</td>
       <td style={{width: '2rem'}}>{(priceMap && Number(priceMap.bestbid)) ? priceMap.bestbid : ""}</td>
       <td style={{width: '2rem'}}>{(priceMap && Number(priceMap.bestask)) ? priceMap.bestask : ""}</td>
-      <td style={{cursor:'pointer', width: '2rem', "font-weight": "bold", textAlign: "center",}} onClick={(showDrop ? onpredrop : onpreadd)}>{showDrop ? '–' : '+'}</td>
+      <td style={{cursor:'pointer', width: '2rem', "fontWeight": "bold", textAlign: "center",}} onClick={(showDrop ? onpredrop : onpreadd)}>{showDrop ? '–' : '+'}</td>
       {playeroffer ? 
         <td style={{cursor:'pointer', width: '2rem', textAlign: "center",}} onClick={() => oncancelOffer(playeroffer.id)}>✕</td> :
         <td style={{cursor:'pointer', width: '2rem', textAlign: "center",}} onClick={(showDrop ? onask : onbid)}>{showDrop ? 'ASK' : 'BID'}</td>

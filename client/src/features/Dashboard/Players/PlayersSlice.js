@@ -51,7 +51,7 @@ export const playersSlice = createSlice({
 
 export const { clear, setFilter, setSort, updatePrice} = playersSlice.actions;
 
-export const playersSelector = (state) => {
+export const allPlayersSelector = (state) => {
   return state.players.playerlist.map(p => {
     return {...p, ...state.players.priceMap[p.id]}
   });
@@ -61,11 +61,27 @@ export const playerSelector = (playerID) => {
     return (state.players.playerlist.find(p => p.id === playerID));
   }
 }
+export const playersSelector = (playerIDs) => {
+  return (state) => {
+    return (state.players.playerlist.filter(p => playerIDs.indexOf(p.id) > -1));
+  }
+}
 export const priceMapSelector = (playerID) => {
   return (state) => {
     return state.players.priceMap[playerID];
   }
 }
+export const pricesMapSelector = (playerIDs) => {
+  return (state) => {
+    return playerIDs.reduce((acc, cur) => {
+      const out = acc;
+      out[cur] = state.players.priceMap[cur];
+      return out;
+    }, {});
+  }
+}
+
+
 export const filterSelector = (state) => state.players.filter;
 export const sortSelector = (state) => {
   const sortProp = state.players.sortProp

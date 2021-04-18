@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
-import { getPlayers, playersSelector, filterSelector, sortSelector, setSort} from './PlayersSlice';
+import { getPlayers, allPlayersSelector, filterSelector, sortSelector, setSort} from './PlayersSlice';
 
 import PlayerFilter from './PlayerFilter'
 import PlayerItem from './PlayerItem';
@@ -12,7 +12,7 @@ const Players = () => {
   const dispatch = useDispatch();
   const { leagueID, contestID } = useParams();
 
-  const theplayers = useSelector(playersSelector);
+  const theplayers = useSelector(allPlayersSelector);
   const filters = useSelector(filterSelector);
   const sorts = useSelector(sortSelector);
 
@@ -41,8 +41,8 @@ const Players = () => {
       width: "40%",
       height: "100%",
       padding: "0.5rem",
-      "box-sizing": "border-box",
-      "flex-flow": "column",
+      "boxSizing": "border-box",
+      "flexFlow": "column",
       overflow: "hidden",
     }}>
       <h3>Players</h3>
@@ -51,7 +51,7 @@ const Players = () => {
           height: "100%",
           flex: 1,
           display: 'flex',
-          "flex-flow": "column",
+          "flexFlow": "column",
         }}>
           <thead>
             <ListHeader />
