@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import toast from 'react-hot-toast';
 
 import {
   getuserleaguesfunc,
@@ -63,6 +64,10 @@ export const leaguesSlice = createSlice({
     },
     [createContest.fulfilled]: (state, { payload }) => {
       state.thisleaguecontests.push(payload);
+    },
+    [createContest.rejected]: (state, { payload }) => {
+      console.log(payload);
+      toast.error(payload);
     },
   },
 });

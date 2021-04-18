@@ -51,7 +51,7 @@ const Leagues = () => {
           {JSON.stringify(thisLeagueMembers)}
           <br/>
 
-          <form className="space-y-6" onSubmit={handleSubmit(onCreateContest)} method="POST" >
+          {thisLeague.ispublic ? <div></div> : <form className="space-y-6" onSubmit={handleSubmit(onCreateContest)} method="POST" >
             <div>
               <label
                 htmlFor="ContestName"
@@ -101,7 +101,8 @@ const Leagues = () => {
               </button>
             </div>
           </form>
-
+          }
+          
           <br/>
           <br/>
 
