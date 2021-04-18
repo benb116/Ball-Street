@@ -31,6 +31,7 @@ const Entry = () => {
       float: "left",
       width: "40%",
       padding: "0.5em",
+      "box-sizing": "border-box",
     }}>
       <h3>Entry</h3>
       Balance: {thisentry.balance}

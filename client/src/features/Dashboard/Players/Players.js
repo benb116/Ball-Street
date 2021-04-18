@@ -40,6 +40,7 @@ const Players = () => {
       float: "left",
       width: "40%",
       padding: "0.5em",
+      "box-sizing": "border-box",
     }}>
       <h3>Players</h3>
       <PlayerFilter />

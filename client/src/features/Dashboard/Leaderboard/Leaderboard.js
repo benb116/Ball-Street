@@ -12,20 +12,20 @@ const Leaderboards = () => {
       height: "50%",
     }}>
       <h3>Leaderboard</h3>
-      <ul>
+      <div>
         {leaders.map(function(leader, index){
           return <LeaderboardItem key={ index } leaderdata={ leader }/>;
         })}
-      </ul>
+      </div>
     </div>
   );
 };
 
 function LeaderboardItem(props) {
   return (
-    <li>
+    <span>
         {props.leaderdata.user} - {props.leaderdata.total}
-    </li>
+    </span>
   );
 }
 

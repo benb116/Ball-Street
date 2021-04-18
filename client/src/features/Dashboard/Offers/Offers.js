@@ -21,18 +21,22 @@ const Offers = () => {
       height: "50%",
     }}>
       <h3>Offers</h3>
-      Bids
-      <ul>
+      <h4 style={{
+        margin: 0,
+      }}>Bids</h4>
+      <div>
         {offers.bids.map(function(offer, index){
           return <OfferItem key={ index } offerdata={ offer }/>;
         })}
-      </ul>
-      Asks
-      <ul>
+      </div>
+      <h4 style={{
+        margin: 0,
+      }}>Asks</h4>
+      <div>
         {offers.asks.map(function(offer, index){
           return <OfferItem key={ index } offerdata={ offer }/>;
         })}
-      </ul>
+      </div>
     </div>
   );
 };
@@ -43,7 +47,7 @@ function OfferItem(props) {
 
   const playerdata = useSelector(playerSelector(props.offerdata.NFLPlayerId))
   if (!playerdata) {
-    return (<li></li>);
+    return (<span></span>);
   }
 
   const oncancelOffer = (oid) => {
@@ -51,14 +55,14 @@ function OfferItem(props) {
   }
 
   return (
-    <li>
+    <span>
         {playerdata.name} - {props.offerdata.price} - <span 
           onClick={() => oncancelOffer(props.offerdata.id)}
           style={{cursor:'pointer'}}
         >
           CANCEL
         </span>
-    </li>
+    </span>
   );
 }
 

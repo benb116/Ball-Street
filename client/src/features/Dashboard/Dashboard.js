@@ -27,9 +27,11 @@ const Dashboard = () => {
       <Players />
       <div style={{
         display: "inline-block",
-        float: "left",
+        float: "right",
         padding: "0.5em",
+        width: "20%",
         height: "100%",
+        "box-sizing": "border-box",
       }}>
         <Offers />
         <Leaderboard />
