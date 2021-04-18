@@ -13,5 +13,9 @@ module.exports = function model(sequelize, DataTypes) {
       references: { model: 'Leagues' },
       allowNull: false,
     },
+    budget: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   }, { sequelize });
 };

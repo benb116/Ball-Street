@@ -2,8 +2,8 @@ import thunkReq from "../../helpers/thunkReqWrapper";
 
 const getuserleaguesfunc = async(body, thunkAPI) => thunkReq(thunkAPI, 'GET', '/app/api/leagues/');
 const getpublicleaguesfunc = async(body, thunkAPI) => thunkReq(thunkAPI, 'GET', '/app/api/leagues/public/');
-const createleaguefunc = async({ name, budget }, thunkAPI) => {
-    return thunkReq(thunkAPI, 'POST', '/app/api/leagues/league', JSON.stringify({ name, budget }));
+const createleaguefunc = async({ name }, thunkAPI) => {
+    return thunkReq(thunkAPI, 'POST', '/app/api/leagues/league', JSON.stringify({ name }));
 };
 const getleaguefunc = async(leagueID, thunkAPI) => thunkReq(thunkAPI, 'GET', '/app/api/leagues/'+leagueID);
 const getcontestsfunc = async(leagueID, thunkAPI) => thunkReq(thunkAPI, 'GET', '/app/api/leagues/'+leagueID+'/contests');

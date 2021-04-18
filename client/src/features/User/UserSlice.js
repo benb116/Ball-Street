@@ -62,7 +62,11 @@ export const userSlice = createSlice({
     },
 
     [getAccount.fulfilled]: (state, { payload }) => {
-      state.info = {...state.info, ...payload};
+      if (!payload) {
+        localStorage.setItem('isLoggedIn', false);
+      } else {
+        state.info = {...state.info, ...payload};
+      }
     },
     [getAccount.pending]: (state) => {
     },

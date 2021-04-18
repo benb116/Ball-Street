@@ -14,9 +14,5 @@ module.exports = function model(sequelize, DataTypes) {
       allowNull: false,
       default: true,
     },
-    budget: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
   }, { sequelize });
 };

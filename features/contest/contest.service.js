@@ -45,8 +45,7 @@ module.exports = {
                 name: req.body.name,
                 nflweek: config.currentNFLWeek,
                 LeagueId: _league.id,
-            }, u.tobj(t));
+            }, u.tobj(t)).catch(err => u.Error(err.parent.constraint, 406));;
         })
-        .catch(err => u.Error(err.parent.constraint, 406));
     },
 };

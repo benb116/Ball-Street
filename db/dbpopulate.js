@@ -141,21 +141,21 @@ async function PopulateDB(sequelize) {
         where: { name: ['Jalen Hurts']},
         attributes: ['id']
     }).then(data => data.dataValues.id);
-    await NFLPlayer.update({ preprice: 17000 }, { where: { id: hurtsID } });
+    // await NFLPlayer.update({ preprice: 17000 }, { where: { id: hurtsID } });
 
     // Give Ezekiel Elliott a preprice
     const EllID = await NFLPlayer.findOne({
         where: { name: 'Ezekiel Elliott'},
         attributes: ['id']
     }).then(data => data.dataValues.id);
-    await NFLPlayer.update({ preprice: 1700 }, { where: { id: EllID } });
+    // await NFLPlayer.update({ preprice: 1700 }, { where: { id: EllID } });
 
     // Give Ezekiel Elliott a preprice
     const AJID = await NFLPlayer.findOne({
         where: { name: 'Aaron Jones'},
         attributes: ['id']
     }).then(data => data.dataValues.id);
-    await NFLPlayer.update({ preprice: 2000 }, { where: { id: AJID } });
+    // await NFLPlayer.update({ preprice: 2000 }, { where: { id: AJID } });
 
     // Define Users
     const usrs = [ 'email1@gmail.com', 'email2@gmail.com', 'email3@gmail.com', 'email4@gmail.com' ];
@@ -167,7 +167,6 @@ async function PopulateDB(sequelize) {
         name: 'Ball Street',
         adminId: 1,
         ispublic: true,
-        budget: 10000,
     };
     await League.bulkCreate([lea]);
 
@@ -175,7 +174,8 @@ async function PopulateDB(sequelize) {
     const con = {
         id: 1,
         name: 'Ball Street Big One',
-        LeagueId: 1
+        LeagueId: 1,
+        budget: 10000,
     };
     await Contest.bulkCreate([con]);
 

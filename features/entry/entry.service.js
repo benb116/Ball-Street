@@ -42,7 +42,8 @@ module.exports = {
         // Only allow if user is in contest's league
         return sequelize.transaction(isoOption, async (t) => {
             const _league = await canUserSeeLeague(t, req.session.user.id, req.params.leagueID);
-            obj.pointtotal = _league.budget;
+            const contestBudget = await Contest.findByPk(req.params.contestID).then(u.dv).then(c => c.budget);
+            obj.pointtotal = contestBudget;
             console.log(obj);
             return Entry.create(obj, u.tobj(t)).then(u.dv);
         })

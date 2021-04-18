@@ -59,7 +59,6 @@ module.exports = {
         obj.adminId = req.session.user.id;
         obj.name = req.body.name;
         obj.ispublic = false;
-        obj.budget = req.body.budget;
         return sequelize.transaction(isoOption, async (t) => {
             const newleague = await League.create(obj, {transaction: t}).then(u.dv);
             await Membership.create({
