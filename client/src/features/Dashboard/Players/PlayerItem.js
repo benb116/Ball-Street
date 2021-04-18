@@ -2,8 +2,8 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { isOnRosterSelector, preAdd, preDrop } from '../Entry/EntrySlice';
-import { openModal, setModal } from '../Modal/ModalSlice';
-import { cancelOffer, createOffer, offersSelector } from '../Offers/OffersSlice';
+import { setModal } from '../Modal/ModalSlice';
+import { cancelOffer, offersSelector } from '../Offers/OffersSlice';
 import { priceMapSelector } from './PlayersSlice';
 
 function PlayerItem(props) {
@@ -27,7 +27,7 @@ function PlayerItem(props) {
       nflplayerID: props.playerdata.id,
       nflplayerName: props.playerdata.name,
       isbid: false,
-      price: Number(priceMap.bestbid) || 0,
+      price: (priceMap ? Number(priceMap.bestbid || 0) : 0),
       protected: false,
     }));
   }
@@ -37,7 +37,7 @@ function PlayerItem(props) {
       nflplayerID: props.playerdata.id,
       nflplayerName: props.playerdata.name,
       isbid: true,
-      price: Number(priceMap.bestask) || 0,
+      price: (priceMap ? Number(priceMap.bestask || 0) : 0),
       protected: false,
     }));
   }

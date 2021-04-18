@@ -109,7 +109,7 @@ function RosterItem(props) {
       nflplayerID: thisplayer.id,
       nflplayerName: thisplayer.name,
       isbid: false,
-      price: Number(priceMap.bestbid) || 0,
+      price: (priceMap ? Number(priceMap.bestbid || 0) : 0),
       protected: false,
     }));
   }
