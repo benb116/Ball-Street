@@ -37,20 +37,19 @@ module.exports = {
     // Find a league's membership list (only private leagues)
     getLeagueUsers(req) {
         return sequelize.transaction(isoOption, async (t) => {
-            // Can search through memberships because we're ignoring all public leagues (incl. non-joined ones)
             const _league = await canUserSeeLeague(t, req.session.user.id, req.params.leagueID);
-            const includeObj = (_league.ispublic ? {} : { model: User });
-            return Membership.findAll({
+            if (_league.ispublic) { return []; }
+            const queryObj = {
                 where: {
                     LeagueId: req.params.leagueID,
                 },
-                include: includeObj,
-            }, u.tobj(t))
+                include: {
+                    model: User
+                }
+            };
+            return Membership.findAll(queryObj, u.tobj(t)).then(u.dv)
             .then(records => records.map(r => r.User))
-            .then(u.dv)
-            .then(users => {
-                return users.map(u => u.name);
-            });
+            .then(users => users.map(u => u.name));
         });
     },
 
@@ -63,7 +62,7 @@ module.exports = {
         obj.budget = req.body.budget;
         return sequelize.transaction(isoOption, async (t) => {
             const newleague = await League.create(obj, {transaction: t}).then(u.dv);
-            const newMember = await Membership.create({
+            await Membership.create({
                 UserId: obj.adminId,
                 LeagueId: newleague.id,
             }, u.tobj(t))

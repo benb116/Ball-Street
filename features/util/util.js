@@ -60,4 +60,9 @@ out.Error = function(msg, status=500) {
     throw err;
 };
 
+out.cl = function(input) {
+    console.log(input);
+    return input;
+}
+
 module.exports = out;
