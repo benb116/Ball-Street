@@ -32,6 +32,7 @@ const Dashboard = () => {
         width: "20%",
         height: "100%",
         "box-sizing": "border-box",
+        "flex-flow": "column",
       }}>
         <Offers />
         <Leaderboard />

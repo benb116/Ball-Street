@@ -36,22 +36,37 @@ const Players = () => {
 
   return (
     <div className="container mx-auto" style={{
-      display: "inline-block",
+      display: "flex",
       float: "left",
       width: "40%",
-      padding: "0.5em",
+      height: "100%",
+      padding: "0.5rem",
       "box-sizing": "border-box",
+      "flex-flow": "column",
+      overflow: "hidden",
     }}>
       <h3>Players</h3>
       <PlayerFilter />
-      <table>
-        <tbody>
-          <ListHeader />
-          {filtersortplayers.map(function(player, index){
-            return <PlayerItem key={ index } playerdata={ player }/>;
-          })}
-        </tbody>
-      </table>
+        <table style={{
+          height: "100%",
+          flex: 1,
+          display: 'flex',
+          "flex-flow": "column",
+        }}>
+          <thead>
+            <ListHeader />
+          </thead>
+          <tbody style={{
+            height: "100%",
+            display: 'flex',
+            overflowY: "scroll",
+            flexDirection: "column",
+          }}>
+            {filtersortplayers.map(function(player, index){
+              return <PlayerItem key={ index } playerdata={ player }/>;
+            })}
+          </tbody>
+        </table>
     </div>
   );
 };
@@ -65,17 +80,17 @@ function ListHeader() {
   }
 
   return (
-    <tr>
-      <th style={{cursor:'pointer'}} onClick={handleClick} value="name">Name</th>
-      <th style={{cursor:'pointer'}} onClick={handleClick} value="posName">Pos</th>
-      <th style={{cursor:'pointer'}} onClick={handleClick} value="teamAbr">Team</th>
-      <th style={{cursor:'pointer'}} onClick={handleClick} value="preprice">Proj</th>
-      <th style={{cursor:'pointer'}} onClick={handleClick} value="statprice">Pts</th>
-      <th style={{cursor:'pointer'}} onClick={handleClick} value="lastprice">Last</th>
-      <th style={{cursor:'pointer'}} onClick={handleClick} value="bestbid">Bid</th>
-      <th style={{cursor:'pointer'}} onClick={handleClick} value="bestask">Ask</th>
-      <th>Add</th>
-      <th>Offer</th>
+    <tr style={{ fontSize: ".8rem", }}>
+      <th style={{width: "10rem", cursor:'pointer'}} onClick={handleClick} value="name">Name</th>
+      <th style={{width: "2.2rem", cursor:'pointer'}} onClick={handleClick} value="posName">Pos</th>
+      <th style={{width: "2.2rem", cursor:'pointer'}} onClick={handleClick} value="teamAbr">Team</th>
+      <th style={{width: "2rem", cursor:'pointer'}} onClick={handleClick} value="preprice">Proj</th>
+      <th style={{width: "2rem", cursor:'pointer'}} onClick={handleClick} value="statprice">Pts</th>
+      <th style={{width: "2rem", cursor:'pointer'}} onClick={handleClick} value="lastprice">Last</th>
+      <th style={{width: "2rem", cursor:'pointer'}} onClick={handleClick} value="bestbid">Bid</th>
+      <th style={{width: "2rem", cursor:'pointer'}} onClick={handleClick} value="bestask">Ask</th>
+      <th style={{width: "2rem", }}>Add</th>
+      <th style={{width: "2rem", }}>Offer</th>
     </tr>
   )
 }

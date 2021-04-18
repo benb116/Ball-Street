@@ -48,18 +48,18 @@ function PlayerItem(props) {
 
   return (
     <tr playerid={props.playerdata.id}>
-      <td>{props.playerdata.name}</td>
-      <td>{props.playerdata.posName}</td>
-      <td>{props.playerdata.teamAbr}</td>
-      <td>{props.playerdata.preprice}</td>
-      <td>{props.playerdata.statprice}</td>
-      <td>{(priceMap && Number(priceMap.lastprice)) ? priceMap.lastprice : ""}</td>
-      <td>{(priceMap && Number(priceMap.bestbid)) ? priceMap.bestbid : ""}</td>
-      <td>{(priceMap && Number(priceMap.bestask)) ? priceMap.bestask : ""}</td>
-      <td style={{cursor:'pointer'}} onClick={(showDrop ? onpredrop : onpreadd)}>{showDrop ? 'DROP' : 'ADD'}</td>
+      <td style={{width: '10rem', overflow: 'hidden', }}>{props.playerdata.name}</td>
+      <td style={{width: '2.2rem'}}>{props.playerdata.posName}</td>
+      <td style={{width: '2.2rem'}}>{props.playerdata.teamAbr}</td>
+      <td style={{width: '2rem'}}>{props.playerdata.preprice}</td>
+      <td style={{width: '2rem'}}>{props.playerdata.statprice}</td>
+      <td style={{width: '2rem'}}>{(priceMap && Number(priceMap.lastprice)) ? priceMap.lastprice : ""}</td>
+      <td style={{width: '2rem'}}>{(priceMap && Number(priceMap.bestbid)) ? priceMap.bestbid : ""}</td>
+      <td style={{width: '2rem'}}>{(priceMap && Number(priceMap.bestask)) ? priceMap.bestask : ""}</td>
+      <td style={{cursor:'pointer', width: '2rem', "font-weight": "bold", textAlign: "center",}} onClick={(showDrop ? onpredrop : onpreadd)}>{showDrop ? '–' : '+'}</td>
       {playeroffer ? 
-        <td style={{cursor:'pointer'}} onClick={() => oncancelOffer(playeroffer.id)}>CANCEL</td> :
-        <td style={{cursor:'pointer'}} onClick={(showDrop ? onask : onbid)}>{showDrop ? 'ASK' : 'BID'}</td>
+        <td style={{cursor:'pointer', width: '2rem', textAlign: "center",}} onClick={() => oncancelOffer(playeroffer.id)}>✕</td> :
+        <td style={{cursor:'pointer', width: '2rem', textAlign: "center",}} onClick={(showDrop ? onask : onbid)}>{showDrop ? 'ASK' : 'BID'}</td>
       }
     </tr>
   );

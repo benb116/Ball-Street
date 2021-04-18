@@ -36,19 +36,21 @@ const Entry = () => {
       <h3>Entry</h3>
       Balance: {thisentry.balance}
       <table>
-        <tbody>
-          <tr>
-            <th>Pos</th>
-            <th>Name</th>
-            <th>Team</th>
-            <th>Pts</th>
-            <th>Proj</th>
-            <th>Last</th>
-            <th>Bid</th>
-            <th>Ask</th>
-            <th>Drop</th>
-            <th>Ask</th>
+        <thead>
+          <tr style={{ fontSize: ".8rem", }}>
+            <th style={{width: "2.2rem", }}>Pos</th>
+            <th style={{width: "10rem", }}>Name</th>
+            <th style={{width: "2.2rem", }}>Team</th>
+            <th style={{width: "2rem", }}>Pts</th>
+            <th style={{width: "2rem", }}>Proj</th>
+            <th style={{width: "2rem", }}>Last</th>
+            <th style={{width: "2rem", }}>Bid</th>
+            <th style={{width: "2rem", }}>Ask</th>
+            <th style={{width: "2rem", }}>Drop</th>
+            <th style={{width: "2rem", }}>Ask</th>
           </tr>
+          </thead>
+          <tbody>
           {rpos.map(function(pos, index){
             return <RosterItem key={ index } position={pos} playerid={ thisentry.roster[pos] }/>;
           })}
@@ -99,11 +101,11 @@ function RosterItem(props) {
       <td>{(priceMap && Number(priceMap.lastprice)) ? priceMap.lastprice : ""}</td>
       <td>{(priceMap && Number(priceMap.bestbid)) ? priceMap.bestbid : ""}</td>
       <td>{(priceMap && Number(priceMap.bestask)) ? priceMap.bestask : ""}</td>
-      {thisplayer.id ? <td style={{cursor:'pointer'}} onClick={onpredrop}>DROP</td> : <td></td>}
+      {thisplayer.id ? <td style={{cursor:'pointer', "font-weight": "bold", textAlign: "center",}} onClick={onpredrop}>–</td> : <td></td>}
       {thisplayer.id ? (
         playeroffer ? 
-        <td style={{cursor:'pointer'}} onClick={() => oncancelOffer(playeroffer.id)}>CANCEL</td> :
-        <td style={{cursor:'pointer'}} onClick={onask}>ASK</td>
+        <td style={{cursor:'pointer', textAlign: "center",}} onClick={() => oncancelOffer(playeroffer.id)}>✕</td> :
+        <td style={{cursor:'pointer', textAlign: "center",}} onClick={onask}>ASK</td>
       ) : <td></td>}
     </tr>
   );
