@@ -120,12 +120,12 @@ async function attemptFill(t, bidid, askid, tprice) {
     lastprice: price,
   }));
   client.publish('offerFilled', JSON.stringify({
-    userID: bidoffer.UserId,
-    offerID: bidoffer.id,
+    userID: boffer.UserId,
+    offerID: boffer.id,
   }));
   client.publish('offerFilled', JSON.stringify({
-    userID: askoffer.UserId,
-    offerID: askoffer.id,
+    userID: aoffer.UserId,
+    offerID: aoffer.id,
   }));
   console.log('finish trade', price);
   return [1, 1];

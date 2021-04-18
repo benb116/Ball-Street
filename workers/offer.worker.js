@@ -76,17 +76,25 @@ async function compareBidsAsks(bids, asks, bidind = 0, askind = 0) {
   if (!bids[bidind] || !asks[askind]) {
     console.log('EOL');
     // const player = (bids[0] ? bids[0].NFLPlayerId : (asks[0] ? asks[0].NFLPlayerId : 0));
-    return [bids[bidind], asks[askind]];
+    return [bids[0], asks[askind]];
   } if (bids[bidind].price >= asks[askind].price) {
     const [nextbid, nextask] = await matchOffers(bids[bidind], asks[askind]);
-    if (nextbid || nextask) {
-      return compareBidsAsks(bids, asks, bidind + nextbid, askind + nextask);
+    let newbidind = bidind;
+    let newaskind = askind;
+    if (nextbid === -1) { newbidind = bidind + 1; }
+    if (nextask === -1) { newaskind = askind + 1; }
+
+    if (nextbid === 1) { bids.shift(); }
+    if (nextask === 1) { asks.shift(); }
+
+    if (!nextbid && !nextask) {
+      return compareBidsAsks(bids, asks, newbidind, newaskind);
     }
   } else {
     console.log('PriceMismatch');
-    return [bids[bidind], asks[askind]];
+    return [bids[0], asks[askind]];
   }
-  return [bids[bidind], asks[askind]];
+  return [bids[0], asks[askind]];
 }
 
 // Try to match two offers
@@ -105,7 +113,7 @@ async function matchOffers(bid, ask) {
   } else {
     // Add delayed to protected queue
     await addToProtectedMatchQueue(oldOffer, newOffer);
-    nextind = [Number(!isBidOld), Number(isBidOld)];
+    nextind = [-1 * Number(isBidOld), -1 * Number(!isBidOld)];
   }
   console.log('nextind', nextind);
   return nextind;
@@ -170,7 +178,10 @@ async function findProtectedMatches(proffer, ispbid) {
         // eslint-disable-next-line no-await-in-loop
         const out = await fillOffers(bidoffer.id, askoffer.id);
         // if out[!ispbid] is 1, then the protected offer was filled or errored
-        if (out[Number(!ispbid)]) { break; }
+        if (out[Number(!ispbid)]) {
+          evalOrderBook(poffer.ContestId, poffer.NFLPlayerId);
+          break;
+        }
         if (out[ispbid]) { // There was something wrong with the matching offer, get new random
           offers.splice(randomInd, 1);
         }
