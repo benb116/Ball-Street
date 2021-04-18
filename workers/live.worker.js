@@ -167,5 +167,6 @@ setInterval(() => {
 }, config.RefreshTime * 1000);
 
 server.listen(8080, () => {
+  // eslint-disable-next-line no-console
   console.log('Listening on port 8080');
 });

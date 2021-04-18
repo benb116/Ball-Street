@@ -49,7 +49,7 @@ module.exports = {
         budget: req.body.budget,
       }, u.tobj(t)).catch((err) => {
         const errmess = err.parent.constraint || err[0].message;
-        console.log(err); u.Error(errmess, 406);
+        u.Error(errmess, 406);
       });
     });
   },

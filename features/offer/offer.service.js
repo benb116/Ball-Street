@@ -24,7 +24,7 @@ function getUserOffers(req) {
       filled: false,
       cancelled: false,
     },
-  }).then(u.dv).catch(console.error);
+  }).then(u.dv).catch(u.Error);
 }
 
 function createOffer(req) {
@@ -69,12 +69,10 @@ function createOffer(req) {
       transaction: t,
       lock: t.LOCK.UPDATE,
     }).catch((err) => {
-      console.log(err);
       u.Error(err, 406);
     });
   })
     .then(u.dv).then((offer) => {
-      console.log('Add offer to queue');
       offerQueue.add(offer);
       return offer;
     });
@@ -90,7 +88,6 @@ function cancelOffer(req) {
     await o.save({ transaction: t });
     return o;
   }).then(u.dv).then((offer) => {
-    console.log('Add offer to queue (to update prices)');
     offerQueue.add(offer);
     return offer;
   });

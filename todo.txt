@@ -17,8 +17,5 @@ Backend
     Allow roster change spots
 
 Frontend
-    Customize offers
-        price
-        protected
     Allow roster change spots
     Show current point totals

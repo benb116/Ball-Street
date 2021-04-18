@@ -48,7 +48,10 @@ module.exports = {
       obj.pointtotal = contestBudget;
       return Entry.create(obj, u.tobj(t)).then(u.dv);
     })
-      .catch((err) => { console.log(err); u.Error(err.parent.constraint, 406); });
+      .catch((err) => {
+        const errmess = err.parent.constraint || err[0].message;
+        u.Error(errmess, 406);
+      });
   },
 
   // Private - get all entries across all contests for the current week

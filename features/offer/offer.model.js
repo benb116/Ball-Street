@@ -1,34 +1,35 @@
 const Sequelize = require('sequelize');
 const config = require('../../config');
-module.exports = function(sequelize, DataTypes) {
+
+module.exports = function model(sequelize, DataTypes) {
   return sequelize.define('Offer', {
     id: {
       type: DataTypes.UUID,
       defaultValue: Sequelize.UUIDV4,
-      primaryKey: true
+      primaryKey: true,
     },
     isbid: {
       type: DataTypes.BOOLEAN,
-      allowNull: false
+      allowNull: false,
     },
     price: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
     },
     protected: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: config.DefaultProtected
+      defaultValue: config.DefaultProtected,
     },
     filled: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: false
+      defaultValue: false,
     },
     cancelled: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: false
+      defaultValue: false,
     },
     UserId: {
       type: DataTypes.INTEGER,
@@ -45,7 +46,7 @@ module.exports = function(sequelize, DataTypes) {
       references: { model: 'NFLPlayers' },
       allowNull: false,
     },
-    
+
   }, {
     sequelize,
     indexes: [
@@ -54,8 +55,8 @@ module.exports = function(sequelize, DataTypes) {
         fields: ['id'],
         where: {
           filled: false,
-          cancelled: false
-        }
+          cancelled: false,
+        },
       },
       { // Can only have one offer per user per contest per player that's active
         name: 'IX_Offer-OneActive',
@@ -63,9 +64,9 @@ module.exports = function(sequelize, DataTypes) {
         fields: ['UserId', 'ContestId', 'NFLPlayerId'],
         where: {
           filled: false,
-          cancelled: false
-        }
-      }
-    ]
+          cancelled: false,
+        },
+      },
+    ],
   });
 };

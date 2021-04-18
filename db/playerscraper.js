@@ -2,8 +2,6 @@ const baseurl = 'https://api.lineups.com/nfl/fetch/players?page=';
 
 const https = require('https');
 
-const players = [];
-
 function sendreq(pagenum = 1) {
   https.get(baseurl + pagenum, (resp) => {
     let data = '';
@@ -16,11 +14,13 @@ function sendreq(pagenum = 1) {
     resp.on('end', () => {
       const res = JSON.parse(data);
       res.results.map((p) => {
-        if (p.position === 'PK') { p.position = 'K'; }
-        return p;
+        const np = p;
+        if (np.position === 'PK') { np.position = 'K'; }
+        return np;
       });
+      // eslint-disable-next-line no-console
       console.log(res.results);
-      if (res.next) { sendreq(pagenum + 1); } else { console.log(players); }
+      if (res.next) { sendreq(pagenum + 1); }
     });
   });
 }
