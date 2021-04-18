@@ -6,39 +6,41 @@ const { routeHandler } = require('../util/util.route');
 
 // TODO validation
 
-router.post('/login',  async (req, res) => {
-    const {email, password} = req.body;
-    if (!email || !password) {
-        return res.status(400).json('Bad request params');
-    }
-    try {
-        const user = await service.login(email, password);
-        req.session.user = user; // add to session
-        res.json(user);
-    } catch(err) {
-        res.status(401).json(err);
-    }
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json('Bad request params');
+  }
+  try {
+    const user = await service.login(email, password);
+    req.session.user = user; // add to session
+    res.json(user);
+  } catch (err) {
+    res.status(401).json(err);
+  }
+  return 0;
 });
 
 router.get('/account', authenticate, routeHandler(service.getAccount));
 
 router.post('/signup', async (req, res) => {
-    const {name, email, password} = req.body;
-    if (!name || !email || !password) {
-        return res.status(400).json('Bad request params');
-    }
-    try {
-        const user = await service.signup(name, email, password);
-        req.session.user = user; // add to session
-        res.json(user);
-    } catch(err) {
-        res.status(401).json(err);
-    }
+  const { name, email, password } = req.body;
+  if (!name || !email || !password) {
+    return res.status(400).json('Bad request params');
+  }
+  try {
+    const user = await service.signup(name, email, password);
+    req.session.user = user; // add to session
+    res.json(user);
+  } catch (err) {
+    res.status(401).json(err);
+  }
+  return 0;
 });
 
-router.delete('/logout', authenticate, function (req, res) {
-    console.log('logout');
-  req.session.destroy(function () {
+router.delete('/logout', authenticate, (req, res) => {
+  console.log('logout');
+  req.session.destroy(() => {
     res.send({ result: 'OK', message: 'Session destroyed' });
   });
 });

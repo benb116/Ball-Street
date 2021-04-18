@@ -1,5 +1,4 @@
-const bcrypt = require('bcrypt');
-const router = require('express').Router({mergeParams: true});
+const router = require('express').Router({ mergeParams: true });
 const league = require('./league.service');
 
 const { routeHandler } = require('../util/util.route');

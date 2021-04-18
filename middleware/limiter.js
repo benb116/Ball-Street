@@ -1,5 +1,5 @@
-const rateLimit = require("express-rate-limit");
-const RedisStore = require("rate-limit-redis");
+const rateLimit = require('express-rate-limit');
+const RedisStore = require('rate-limit-redis');
 
 module.exports = rateLimit({
   windowMs: 60 * 1000, // 1 minute

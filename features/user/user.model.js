@@ -1,7 +1,6 @@
 // TODO add more here
 
-const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
+module.exports = function out(sequelize, DataTypes) {
   return sequelize.define('User', {
     id: {
       type: DataTypes.INTEGER,
@@ -13,8 +12,8 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       unique: true,
       validate: {
-        isEmail: true
-      }
+        isEmail: true,
+      },
     },
     pwHash: {
       type: DataTypes.STRING,
@@ -23,7 +22,7 @@ module.exports = function(sequelize, DataTypes) {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
-    }
+    },
   }, {
     defaultScope: {
       attributes: { exclude: ['pwHash'] },
@@ -31,7 +30,7 @@ module.exports = function(sequelize, DataTypes) {
     scopes: {
       withPassword: {
         attributes: { },
-      }
-    }
+      },
+    },
   });
 };

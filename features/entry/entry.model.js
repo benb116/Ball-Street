@@ -1,5 +1,5 @@
-const { Sequelize, DataTypes } = require('sequelize');
-const u = require('../util/util');
+const { DataTypes } = require('sequelize');
+// const u = require('../util/util');
 const config = require('../../config');
 
 // The model has common columns (UserId, ContestId, pointtotal)
@@ -7,38 +7,37 @@ const config = require('../../config');
 // So it will add a "QB1" column, a "FLEX2" column, etc. All with allowNull = true
 // Those columns store the NFLPlayerId of the player in that roster position
 
-function model(sequelize) {
-    let modelobj = {
-        pointtotal: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
-        UserId: {
-            type: DataTypes.INTEGER,
-            references: { model: 'Users' },
-            primaryKey: true,
-        },
-        ContestId: {
-            type: DataTypes.INTEGER,
-            references: { model: 'Contests' },
-            primaryKey: true,
-        },
+function model() {
+  const modelobj = {
+    pointtotal: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    UserId: {
+      type: DataTypes.INTEGER,
+      references: { model: 'Users' },
+      primaryKey: true,
+    },
+    ContestId: {
+      type: DataTypes.INTEGER,
+      references: { model: 'Contests' },
+      primaryKey: true,
+    },
+  };
+
+  // Add position columns as defined by config
+  const rpos = Object.keys(config.Roster);
+  rpos.forEach((p) => {
+    modelobj[p] = {
+      type: DataTypes.INTEGER,
+      references: { model: 'NFLPlayers' },
+      allowNull: true,
     };
+  });
 
-    // Add position columns as defined by config
-    const rpos = Object.keys(config.Roster);
-    rpos.forEach((p, i) => {
-        modelobj[p] = {
-            type: DataTypes.INTEGER,
-            references: { model: 'NFLPlayers' },
-            allowNull: true,
-        };
-    });
-
-    return modelobj;
+  return modelobj;
 }
 
-
-module.exports = function(sequelize, DataTypes) {
-    return sequelize.define('Entry', model(sequelize), { sequelize });
+module.exports = function out(sequelize) {
+  return sequelize.define('Entry', model(sequelize), { sequelize });
 };

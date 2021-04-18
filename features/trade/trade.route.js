@@ -1,4 +1,4 @@
-const router = require('express').Router({mergeParams: true});
+const router = require('express').Router({ mergeParams: true });
 const trade = require('./trade.service');
 
 const { routeHandler } = require('../util/util.route');

@@ -15,10 +15,10 @@ function sendreq(pagenum = 1) {
     // The whole response has been received. Print out the result.
     resp.on('end', () => {
       const res = JSON.parse(data);
-      res.results.map(p => {
-        if (p.position === 'PK') {p.position = 'K'}
-          return p;
-      })
+      res.results.map((p) => {
+        if (p.position === 'PK') { p.position = 'K'; }
+        return p;
+      });
       console.log(res.results);
       if (res.next) { sendreq(pagenum + 1); } else { console.log(players); }
     });

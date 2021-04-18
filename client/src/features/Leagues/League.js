@@ -147,7 +147,7 @@ function ContestItem(props) {
   return (
     <li>
       <Link to={`/leagues/${props.leagueID}/contests/${props.contestdata.id}`}>
-        {props.contestdata.name} - {props.contestdata.nflweek}
+        {props.contestdata.name} - {props.contestdata.nflweek} - {props.contestdata.budget}
       </Link>
     </li>
   );

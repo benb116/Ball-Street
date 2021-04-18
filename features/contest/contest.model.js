@@ -6,7 +6,7 @@ module.exports = function model(sequelize, DataTypes) {
     },
     nflweek: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: false,
     },
     LeagueId: {
       type: DataTypes.INTEGER,

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // Offer server worker
 // Processes jobs on the offer queue
 // Tries to reduce order book whenever an offer comes in
@@ -74,7 +75,7 @@ async function compareBidsAsks(bids, asks, bidind = 0, askind = 0) {
   console.log('bidaskind', bidind, askind, bids.length, asks.length);
   if (!bids[bidind] || !asks[askind]) {
     console.log('EOL');
-    const player = (bids[0] ? bids[0].NFLPlayerId : (asks[0] ? asks[0].NFLPlayerId : 0));
+    // const player = (bids[0] ? bids[0].NFLPlayerId : (asks[0] ? asks[0].NFLPlayerId : 0));
     return [bids[bidind], asks[askind]];
   } if (bids[bidind].price >= asks[askind].price) {
     const [nextbid, nextask] = await matchOffers(bids[bidind], asks[askind]);
@@ -85,6 +86,7 @@ async function compareBidsAsks(bids, asks, bidind = 0, askind = 0) {
     console.log('PriceMismatch');
     return [bids[bidind], asks[askind]];
   }
+  return [bids[bidind], asks[askind]];
 }
 
 // Try to match two offers

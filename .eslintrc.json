@@ -20,6 +20,6 @@
     "rules": {
         "no-useless-concat": "off",
         "no-use-before-define": ["error", { "functions": false, "classes": true }],
-        "allowForLoopAfterthoughts": true
+        "no-plusplus": [2, { "allowForLoopAfterthoughts": true }]
     }
 }

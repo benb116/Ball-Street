@@ -47,7 +47,9 @@ client.on('message', (channel, message) => {
 });
 
 function priceUpdate(message) {
-  const { contestID, nflplayerID, bestbid, bestask, } = JSON.parse(message);
+  const {
+    contestID, nflplayerID, bestbid, bestask,
+  } = JSON.parse(message);
   if (!priceUpdateMap[contestID]) { priceUpdateMap[contestID] = {}; }
   priceUpdateMap[contestID][nflplayerID] = { bestbid, bestask, nflplayerID };
 }
@@ -62,11 +64,11 @@ function leaderUpdate() {
   const leaderMemo = {};
   contestmap.forEach(async (thecontestID, thews) => {
     if (!leaderMemo[thecontestID]) {
-      const out = await getAsync(leaderHashkey(thecontestID))
+      const out = await getAsync(leaderHashkey(thecontestID));
       leaderMemo[thecontestID] = JSON.parse(out);
     }
     if (thews.readyState === 1) {
-      thews.send(JSON.stringify({event: 'leaderboard', leaderboard: leaderMemo[thecontestID]}));
+      thews.send(JSON.stringify({ event: 'leaderboard', leaderboard: leaderMemo[thecontestID] }));
     }
   });
 }
@@ -105,12 +107,12 @@ wss.on('connection', (ws, request) => {
   connmap.set(userId, ws);
 
   ws.on('message', async (msg) => {
-    msg = JSON.parse(msg);
+    const pmsg = JSON.parse(msg);
     contestmap.delete(ws);
     // Send starting data
-    const out = await sendLatest(msg.contestID);
+    const out = await sendLatest(pmsg.contestID);
     ws.send(JSON.stringify(out));
-    contestmap.set(ws, msg.contestID);
+    contestmap.set(ws, pmsg.contestID);
   });
 
   ws.on('close', () => {
@@ -123,21 +125,21 @@ let playerIDs = [];
 
 (async () => {
   const out = await playerService.getNFLPlayers();
-  playerIDs = out.map(p => p.id);
+  playerIDs = out.map((p) => p.id);
 })();
 
 async function sendLatest(contestID) {
   const outPromises = playerIDs
-  .map(p => {
-    const rkey = hashkey(contestID, p);
-    return hgetallAsync(rkey).then((obj) => {
-      if (!obj) { return null; }
-      const out = obj;
-      out.contestID = contestID;
-      out.nflplayerID = p;
-      return out;
+    .map((p) => {
+      const rkey = hashkey(contestID, p);
+      return hgetallAsync(rkey).then((obj) => {
+        if (!obj) { return null; }
+        const out = obj;
+        out.contestID = contestID;
+        out.nflplayerID = p;
+        return out;
+      });
     });
-  })
   return Promise.all(outPromises);
 }
 
@@ -145,9 +147,9 @@ async function sendLatest(contestID) {
 setInterval(() => {
   if (Object.keys(priceUpdateMap).length) {
     contestmap.forEach((thecontestID, thews) => {
-    if (!priceUpdateMap[thecontestID]) { return ;}
+      if (!priceUpdateMap[thecontestID]) { return; }
       if (thews.readyState === 1) {
-        thews.send(JSON.stringify({event: 'priceUpdate', pricedata: priceUpdateMap[thecontestID]}));
+        thews.send(JSON.stringify({ event: 'priceUpdate', pricedata: priceUpdateMap[thecontestID] }));
       }
     });
     priceUpdateMap = {};
@@ -155,9 +157,9 @@ setInterval(() => {
 
   if (Object.keys(lastTradeMap).length) {
     contestmap.forEach((thecontestID, thews) => {
-    if (!lastTradeMap[thecontestID]) { return ;}
+      if (!lastTradeMap[thecontestID]) { return; }
       if (thews.readyState === 1) {
-        thews.send(JSON.stringify({event: 'priceUpdate', pricedata: lastTradeMap[thecontestID]}));
+        thews.send(JSON.stringify({ event: 'priceUpdate', pricedata: lastTradeMap[thecontestID] }));
       }
     });
     lastTradeMap = {};

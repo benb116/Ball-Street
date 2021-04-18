@@ -84,7 +84,7 @@ function LeagueItem(props) {
   return (
     <li>
       <Link to={`/leagues/${props.leaguedata.id}`}>
-        {props.leaguedata.name} - {props.leaguedata.budget}
+        {props.leaguedata.name}
       </Link>
     </li>
   );

@@ -2,7 +2,7 @@ const { Sequelize } = require('sequelize');
 const secret = require('../secret');
 
 const dbOptions = {
-  // logging: false,
+  logging: false,
   // isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE
 };
 

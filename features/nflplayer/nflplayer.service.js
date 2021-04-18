@@ -1,83 +1,90 @@
 // NFL service covers:
-    // Getting info about a specific player
-    // Get order book info about a specific player
+// Getting info about a specific player
+// Get order book info about a specific player
 
-const { Op } = require("sequelize");
-const { NFLPlayer, NFLTeam, NFLPosition, Offer, Trade, Entry } = require('../../models');
+const { Op } = require('sequelize');
+const {
+  NFLPlayer, NFLTeam, NFLPosition, Offer, Entry,
+} = require('../../models');
 const sequelize = require('../../db');
 const u = require('../util/util');
 const config = require('../../config');
+const { canUserSeeLeague } = require('../util/util.service');
+
+const isoOption = {
+  // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
+};
 
 module.exports = {
-    // Get a specific player
-    getNFLPlayer(req) {
-        return NFLPlayer.findOne({ where: { NFLPlayerId: req.params.nflplayerID } }).then(u.dv);
-    },
+  // Get a specific player
+  getNFLPlayer(req) {
+    return NFLPlayer.findOne({ where: { NFLPlayerId: req.params.nflplayerID } }).then(u.dv);
+  },
 
-    // Get all players
-    getNFLPlayers() {
-        return NFLPlayer.findAll({ include: [{ model: NFLTeam }, { model: NFLPosition }] }).then(u.dv);
-    },
+  // Get all players
+  getNFLPlayers() {
+    return NFLPlayer.findAll({ include: [{ model: NFLTeam }, { model: NFLPosition }] }).then(u.dv);
+  },
 
-    // Get a count of bids and asks at every price
-    getNFLPlayerOfferSummary(req) {
-        return sequelize.transaction(isoOption, async (t) => {
-            const _league = await canUserSeeLeague(t, req.session.user.id, req.params.leagueID);
-            const bids = Offer.count({
-                group: 'price',
-                where: {
-                    NFLPlayerId: req.params.nflplayerID,
-                    ContestId: req.params.contestID,
-                    filled: false,
-                    cancelled: false,
-                    isbid: true
-                },
-                attributes: ['price'],
-            }, u.tobj(t));
-            const asks = Offer.count({
-                group: 'price',
-                where: {
-                    NFLPlayerId: req.params.nflplayerID,
-                    ContestId: req.params.contestID,
-                    filled: false,
-                    cancelled: false,
-                    isbid: false
-                },
-                attributes: ['price'],
-            }, u.tobj(t));
+  // Get a count of bids and asks at every price
+  getNFLPlayerOfferSummary(req) {
+    return sequelize.transaction(isoOption, async (t) => {
+      await canUserSeeLeague(t, req.session.user.id, req.params.leagueID);
+      const bids = Offer.count({
+        group: 'price',
+        where: {
+          NFLPlayerId: req.params.nflplayerID,
+          ContestId: req.params.contestID,
+          filled: false,
+          cancelled: false,
+          isbid: true,
+        },
+        attributes: ['price'],
+      }, u.tobj(t));
+      const asks = Offer.count({
+        group: 'price',
+        where: {
+          NFLPlayerId: req.params.nflplayerID,
+          ContestId: req.params.contestID,
+          filled: false,
+          cancelled: false,
+          isbid: false,
+        },
+        attributes: ['price'],
+      }, u.tobj(t));
 
-            return Promise.all([bids, asks]).then(u.dv);
-        });
-    },
-    getNFLPlayerTradeVolume(req) {
-        return sequelize.transaction(isoOption, async (t) => {
-            const _league = await canUserSeeLeague(t, req.session.user.id, req.params.leagueID);
-            return Offer.count({
-                where: {
-                    ContestId: req.params.contestID,
-                    NFLPlayerId: req.params.nflplayerID
-                }
-            }, u.tobj(t)).then(u.dv).then(out => out / 2);
-        });
-    },
-    getNFLPlayerNumAdds(req) {
-        return sequelize.transaction(isoOption, async (t) => {
-            const _league = await canUserSeeLeague(t, req.session.user.id, req.params.leagueID);
-            return Entry.count({
-                where: {
-                    ContestId: req.params.contestID,
-                    [Op.or]: gen(req.params.nflplayerID)
-                }
-            }, u.tobj(t)).then(u.dv);
-        });
+      return Promise.all([bids, asks]).then(u.dv);
+    });
+  },
+  getNFLPlayerTradeVolume(req) {
+    return sequelize.transaction(isoOption, async (t) => {
+      await canUserSeeLeague(t, req.session.user.id, req.params.leagueID);
+      return Offer.count({
+        where: {
+          ContestId: req.params.contestID,
+          NFLPlayerId: req.params.nflplayerID,
+        },
+      }, u.tobj(t)).then(u.dv).then((out) => out / 2);
+    });
+  },
+  getNFLPlayerNumAdds(req) {
+    return sequelize.transaction(isoOption, async (t) => {
+      await canUserSeeLeague(t, req.session.user.id, req.params.leagueID);
+      return Entry.count({
+        where: {
+          ContestId: req.params.contestID,
+          [Op.or]: gen(req.params.nflplayerID),
+        },
+      }, u.tobj(t)).then(u.dv);
+    });
 
-        function gen(_player) {
-            const rpos = Object.keys(config.Roster);
-            return rpos.map(r => {
-                let out = {};
-                out[r] = _player;
-                return out;
-            });
-        }
+    function gen(_player) {
+      const rpos = Object.keys(config.Roster);
+      return rpos.map((r) => {
+        const out = {};
+        out[r] = _player;
+        return out;
+      });
     }
+  },
 };

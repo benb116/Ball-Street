@@ -1,33 +1,33 @@
+const { DataTypes } = require('sequelize');
 const sequelize = require('./db');
-const DataTypes = require("sequelize").DataTypes;
 
-const _contest = require("./features/contest/contest.model");
-const _league = require("./features/league/league.model");
-const _membership = require("./features/membership/membership.model");
-const _entry = require("./features/entry/entry.model");
-const _nfldivision = require("./features/nfldivision/nfldivision.model");
-const _nflplayer = require("./features/nflplayer/nflplayer.model");
-const _nflposition = require("./features/nflposition/nflposition.model");
-const _nflteam = require("./features/nflteam/nflteam.model");
-const _offer = require("./features/offer/offer.model");
-const _protectedmatch = require("./features/protectedmatch/protectedmatch.model");
-const _rosterposition = require("./features/rosterposition/rosterposition.model");
-const _trade = require("./features/trade/trade.model");
-const _user = require("./features/user/user.model");
+const mcontest = require('./features/contest/contest.model');
+const mleague = require('./features/league/league.model');
+const mmembership = require('./features/membership/membership.model');
+const mentry = require('./features/entry/entry.model');
+const mnfldivision = require('./features/nfldivision/nfldivision.model');
+const mnflplayer = require('./features/nflplayer/nflplayer.model');
+const mnflposition = require('./features/nflposition/nflposition.model');
+const mnflteam = require('./features/nflteam/nflteam.model');
+const moffer = require('./features/offer/offer.model');
+const mprotectedmatch = require('./features/protectedmatch/protectedmatch.model');
+const mrosterposition = require('./features/rosterposition/rosterposition.model');
+const mtrade = require('./features/trade/trade.model');
+const muser = require('./features/user/user.model');
 
-const Contest = _contest(sequelize, DataTypes);
-const League = _league(sequelize, DataTypes);
-const Membership = _membership(sequelize, DataTypes);
-const Entry = _entry(sequelize, DataTypes);
-const NFLDivision = _nfldivision(sequelize, DataTypes);
-const NFLPlayer = _nflplayer(sequelize, DataTypes);
-const NFLPosition = _nflposition(sequelize, DataTypes);
-const NFLTeam = _nflteam(sequelize, DataTypes);
-const Offer = _offer(sequelize, DataTypes);
-const ProtectedMatch = _protectedmatch(sequelize, DataTypes);
-const RosterPosition = _rosterposition(sequelize, DataTypes);
-const Trade = _trade(sequelize, DataTypes);
-const User = _user(sequelize, DataTypes);
+const Contest = mcontest(sequelize, DataTypes);
+const League = mleague(sequelize, DataTypes);
+const Membership = mmembership(sequelize, DataTypes);
+const Entry = mentry(sequelize, DataTypes);
+const NFLDivision = mnfldivision(sequelize, DataTypes);
+const NFLPlayer = mnflplayer(sequelize, DataTypes);
+const NFLPosition = mnflposition(sequelize, DataTypes);
+const NFLTeam = mnflteam(sequelize, DataTypes);
+const Offer = moffer(sequelize, DataTypes);
+const ProtectedMatch = mprotectedmatch(sequelize, DataTypes);
+const RosterPosition = mrosterposition(sequelize, DataTypes);
+const Trade = mtrade(sequelize, DataTypes);
+const User = muser(sequelize, DataTypes);
 
 League.hasMany(Membership);
 Membership.belongsTo(League);
@@ -55,19 +55,19 @@ NFLPlayer.belongsTo(NFLPosition);
 NFLPosition.hasMany(NFLPlayer);
 
 module.exports = {
-    League,
-    Membership,
-    Contest,
-    Entry,
-    NFLDivision,
-    NFLPlayer,
-    NFLPosition,
-    NFLTeam,
-    Offer,
-    ProtectedMatch,
-    RosterPosition,
-    Trade,
-    User,
+  League,
+  Membership,
+  Contest,
+  Entry,
+  NFLDivision,
+  NFLPlayer,
+  NFLPosition,
+  NFLTeam,
+  Offer,
+  ProtectedMatch,
+  RosterPosition,
+  Trade,
+  User,
 };
 
 module.exports.sequelize = sequelize;

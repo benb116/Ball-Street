@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import toast from 'react-hot-toast';
 
 import { createofferfunc, cancelofferfunc, getoffersfunc } from './Offers.api'
 
@@ -9,7 +10,7 @@ export const cancelOffer = createAsyncThunk('offers/cancelOffer', cancelofferfun
 const defaultState = {
   bids: [],
   asks: [],
-  remove: []
+  remove: [],
 };
 
 export const offersSlice = createSlice({
@@ -35,7 +36,11 @@ export const offersSlice = createSlice({
         } else {
           state.asks.push(payload);
         }
+        toast.success("Offer submitted");
       }
+    },
+    [createOffer.rejected]: (state, { payload }) => {
+      if (payload) { toast.error(payload); }
     },
     [cancelOffer.fulfilled]: (state, { payload }) => {
       if (payload.isbid) {
@@ -43,6 +48,10 @@ export const offersSlice = createSlice({
       } else {
         state.asks = state.asks.filter(o => o.id !== payload.id);
       }
+      toast.success("Offer cancelled");
+    },
+    [cancelOffer.rejected]: (state, { payload }) => {
+      if (payload) { toast.error(payload); }
     },
   },
 });
