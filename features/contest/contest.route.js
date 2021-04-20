@@ -1,6 +1,6 @@
 const router = require('express').Router({ mergeParams: true });
-const contest = require('./contest.service');
 
+const contest = require('./contest.service');
 const { routeHandler } = require('../util/util.route');
 
 // Get all contests in a league

@@ -18,6 +18,7 @@ const client = redis.createClient();
 
 const service = require('../features/trade/trade.service');
 
+// Try to fill the offers or return which one is done
 async function fillOffers(bidid, askid, price) {
   console.log('begin:', bidid, askid);
   const out = sequelize.transaction(isoOption,
@@ -90,6 +91,7 @@ async function attemptFill(t, bidid, askid, tprice) {
     price,
   };
 
+  // Try to fill both
   const biddone = await service.tradeAdd(bidreq, t)
     .catch((err) => { console.log(err); return 1; });
   const askdone = await service.tradeDrop(askreq, t)

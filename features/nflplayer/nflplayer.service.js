@@ -1,14 +1,12 @@
-// NFL service covers:
-// Getting info about a specific player
-// Get order book info about a specific player
-
 const { Op } = require('sequelize');
+
+const u = require('../util/util');
+const config = require('../../config');
+
+const sequelize = require('../../db');
 const {
   NFLPlayer, NFLTeam, NFLPosition, Offer, Entry,
 } = require('../../models');
-const sequelize = require('../../db');
-const u = require('../util/util');
-const config = require('../../config');
 const { canUserSeeLeague } = require('../util/util.service');
 
 const isoOption = {

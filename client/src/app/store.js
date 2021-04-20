@@ -15,11 +15,11 @@ export default configureStore({
     leagues: leaguesSlice.reducer,
     contests: contestsSlice.reducer,
     // dashboard: {
-      entry: entrySlice.reducer,
-      leaderboard: leaderboardSlice.reducer,
-      offers: offersSlice.reducer,
-      players: playersSlice.reducer,
-      modal: modalSlice.reducer,
+    entry: entrySlice.reducer,
+    leaderboard: leaderboardSlice.reducer,
+    offers: offersSlice.reducer,
+    players: playersSlice.reducer,
+    modal: modalSlice.reducer,
     // }
   },
 });

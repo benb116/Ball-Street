@@ -4,34 +4,33 @@ import { filterSelector, setFilter } from './PlayersSlice';
 
 function debounce(func, wait) {
   let timeout;
-  return function() {
+  return function d(...args) {
     const context = this;
-    const args = arguments;
-    const later = function() {
+    const later = function l() {
       timeout = null;
       func.apply(context, args);
     };
     clearTimeout(timeout);
     timeout = setTimeout(later, wait);
   };
-};
+}
 
 const PlayerFilter = () => {
   const dispatch = useDispatch();
   const filters = useSelector(filterSelector);
 
   function handleChange(evt) {
-    const name = evt.target.name;
-    const value = evt.target.value;
-    dispatch(setFilter({name, value}))
+    const { name } = evt.target;
+    const { value } = evt.target;
+    dispatch(setFilter({ name, value }));
   }
 
-  const handleChangeDebounce = debounce(handleChange, 300)
+  const handleChangeDebounce = debounce(handleChange, 300);
 
   return (
     <form>
-      <input style={{cursor:'pointer'}} onChange={handleChangeDebounce} name="name"></input>
-      <select style={{cursor:'pointer'}} onChange={handleChange} name="posName" value={filters.posName}>
+      <input style={{ cursor: 'pointer' }} onChange={handleChangeDebounce} name="name" />
+      <select style={{ cursor: 'pointer' }} onChange={handleChange} name="posName" value={filters.posName}>
         <option value="">Pos</option>
         <option value="QB">QB</option>
         <option value="RB">RB</option>
@@ -41,7 +40,7 @@ const PlayerFilter = () => {
         <option value="K">K</option>
         <option value="DEF">DEF</option>
       </select>
-      <select style={{cursor:'pointer'}} onChange={handleChange} name="teamAbr" value={filters.team}>
+      <select style={{ cursor: 'pointer' }} onChange={handleChange} name="teamAbr" value={filters.team}>
         <option value="">Team</option>
         <option value="ARI">ARI</option>
         <option value="ATL">ATL</option>

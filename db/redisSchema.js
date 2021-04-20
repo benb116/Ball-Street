@@ -1,3 +1,5 @@
+// Common functions for dealing with redis
+
 function hashkey(contestID, nflplayerID) {
   return `contest${contestID}:` + `player${nflplayerID}`;
 }

@@ -39,5 +39,5 @@ function model() {
 }
 
 module.exports = function out(sequelize) {
-  return sequelize.define('Entry', model(sequelize), { sequelize });
+  return sequelize.define('Entry', model(), { sequelize });
 };

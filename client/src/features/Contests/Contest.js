@@ -1,8 +1,17 @@
 import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { Link, useParams } from 'react-router-dom';
-import { contestSelector, createEntry, entriesSelector, getContest, getEntries, getMyEntry, myEntrySelector } from './ContestsSlice';
+import {
+  contestSelector,
+  createEntry,
+  entriesSelector,
+  getContest,
+  getEntries,
+  getMyEntry,
+  myEntrySelector,
+} from './ContestsSlice';
 
 const Contest = () => {
   const dispatch = useDispatch();
@@ -14,62 +23,67 @@ const Contest = () => {
   const thiscontestmyentry = useSelector(myEntrySelector);
 
   useEffect(() => {
-    dispatch(getContest({leagueID, contestID}));
-    dispatch(getEntries({leagueID, contestID}));
-    dispatch(getMyEntry({leagueID, contestID}));
+    dispatch(getContest({ leagueID, contestID }));
+    dispatch(getEntries({ leagueID, contestID }));
+    dispatch(getMyEntry({ leagueID, contestID }));
   }, [contestID, dispatch, leagueID]);
 
   const onCreateEntry = () => {
-    dispatch(createEntry({leagueID: leagueID, contestID: contestID}));
+    dispatch(createEntry({ leagueID, contestID }));
   };
 
   return (
     <div className="container mx-auto">
       <span>Contest info</span>
-      <br/>
+      <br />
       {JSON.stringify(thiscontest)}
-      <br/>
-      <br/>
+      <br />
+      <br />
       Contest entries
-      <br/>
+      <br />
       <ul>
-        {thiscontestentries.map(function(entry, index){
-          return <EntryItem key={ index } entrydata={ entry } leagueID={leagueID} contestID={contestID}/>;
-        })}
+        {thiscontestentries.map((entry) => (
+          <EntryItem
+            key={entry.UserId}
+            entrydata={entry}
+            leagueID={leagueID}
+            contestID={contestID}
+          />
+        ))}
       </ul>
 
-      <br/>
-      <br/>
-      {!thiscontestmyentry ?
-      <form className="space-y-6" onSubmit={handleSubmit(onCreateEntry)} method="POST" >
-        <div>
-          <label
-            htmlFor="ContestName"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Create Entry
-          </label>
-        </div>
-
-        <div>
-          <button
-            type="submit"
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            Create entry
-          </button>
-        </div>
-      </form>
-      :
-      <Link to={`/leagues/${leagueID}/contests/${contestID}/dashboard`}>Go to dashboard</Link>}
+      <br />
+      <br />
+      {!thiscontestmyentry
+        ? (
+          <form className="space-y-6" onSubmit={handleSubmit(onCreateEntry)} method="POST">
+            <div>
+              <button
+                type="submit"
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                Create entry
+              </button>
+            </div>
+          </form>
+        )
+        : <Link to={`/leagues/${leagueID}/contests/${contestID}/dashboard`}>Go to dashboard</Link>}
     </div>
   );
 };
 
-function EntryItem(props) {
+function EntryItem({ UserId }) {
   return (
-    <li> {props.entrydata.UserId} </li>
+    <li>
+      {' '}
+      {UserId}
+      {' '}
+    </li>
   );
 }
+
+EntryItem.propTypes = {
+  UserId: PropTypes.string.isRequired,
+};
 
 export default Contest;

@@ -1,21 +1,30 @@
-import thunkReq from "../../helpers/thunkReqWrapper";
+import thunkReq from '../../helpers/thunkReqWrapper';
 
-const getuserleaguesfunc = async(body, thunkAPI) => thunkReq(thunkAPI, 'GET', '/app/api/leagues/');
-const getpublicleaguesfunc = async(body, thunkAPI) => thunkReq(thunkAPI, 'GET', '/app/api/leagues/public/');
-const createleaguefunc = async({ name }, thunkAPI) => {
-    return thunkReq(thunkAPI, 'POST', '/app/api/leagues/league', JSON.stringify({ name }));
-};
-const getleaguefunc = async(leagueID, thunkAPI) => thunkReq(thunkAPI, 'GET', '/app/api/leagues/'+leagueID);
-const getcontestsfunc = async(leagueID, thunkAPI) => thunkReq(thunkAPI, 'GET', '/app/api/leagues/'+leagueID+'/contests');
-const getleaguemembersfunc = async(leagueID, thunkAPI) => thunkReq(thunkAPI, 'GET', '/app/api/leagues/'+leagueID+'/members')
+function getuserleaguesfunc(body, thunkAPI) {
+  return thunkReq(thunkAPI, 'GET', '/app/api/leagues/');
+}
+function getpublicleaguesfunc(body, thunkAPI) {
+  return thunkReq(thunkAPI, 'GET', '/app/api/leagues/public/');
+}
+function getleaguefunc(leagueID, thunkAPI) {
+  return thunkReq(thunkAPI, 'GET', `/app/api/leagues/${leagueID}`);
+}
+function getcontestsfunc(leagueID, thunkAPI) {
+  return thunkReq(thunkAPI, 'GET', `/app/api/leagues/${leagueID}/contests`);
+}
+function getleaguemembersfunc(leagueID, thunkAPI) {
+  return thunkReq(thunkAPI, 'GET', `/app/api/leagues/${leagueID}/members`);
+}
 
-const addmemberfunc = async({leagueID, email}, thunkAPI) => {
-    return thunkReq(thunkAPI, 'POST', '/app/api/leagues/'+leagueID+'/addMember', JSON.stringify({ email }));
-};
-
-const createcontestfunc = async({ leagueID, name, budget }, thunkAPI) => {
-  return thunkReq(thunkAPI, 'POST', '/app/api/leagues/'+leagueID+'/contests/contest', JSON.stringify({ name, budget }));
-};
+function createleaguefunc({ name }, thunkAPI) {
+  return thunkReq(thunkAPI, 'POST', '/app/api/leagues/league', JSON.stringify({ name }));
+}
+function addmemberfunc({ leagueID, email }, thunkAPI) {
+  return thunkReq(thunkAPI, 'POST', `/app/api/leagues/${leagueID}/addMember`, JSON.stringify({ email }));
+}
+function createcontestfunc({ leagueID, name, budget }, thunkAPI) {
+  thunkReq(thunkAPI, 'POST', `/app/api/leagues/${leagueID}/contests/contest`, JSON.stringify({ name, budget }));
+}
 
 export {
   getuserleaguesfunc,

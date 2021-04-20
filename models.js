@@ -1,3 +1,4 @@
+// Set up models with associations
 const { DataTypes } = require('sequelize');
 const sequelize = require('./db');
 

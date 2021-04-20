@@ -1,11 +1,8 @@
-// Contest service covers:
-// Getting info about a specific contest
-// Getting info about a user's contests
-
-const { Contest } = require('../../models');
-const u = require('../util/util');
-const sequelize = require('../../db');
 const config = require('../../config');
+const u = require('../util/util');
+
+const sequelize = require('../../db');
+const { Contest } = require('../../models');
 const { canUserSeeLeague } = require('../util/util.service');
 
 const isoOption = {

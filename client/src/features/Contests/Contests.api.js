@@ -1,12 +1,18 @@
-import thunkReq from "../../helpers/thunkReqWrapper";
+import thunkReq from '../../helpers/thunkReqWrapper';
 
-const getcontestfunc = async({leagueID, contestID}, thunkAPI) => thunkReq(thunkAPI, 'GET', '/app/api/leagues/'+leagueID+'/contests/'+contestID+'/');
-const getmyentryfunc = async({leagueID, contestID}, thunkAPI) => thunkReq(thunkAPI, 'GET', '/app/api/leagues/'+leagueID+'/contests/'+contestID+'/entry');
-const getentriesfunc = async({leagueID, contestID}, thunkAPI) => thunkReq(thunkAPI, 'GET', '/app/api/leagues/'+leagueID+'/contests/'+contestID+'/entries');
+function getcontestfunc({ leagueID, contestID }, thunkAPI) {
+  return thunkReq(thunkAPI, 'GET', `/app/api/leagues/${leagueID}/contests/${contestID}/`);
+}
+function getmyentryfunc({ leagueID, contestID }, thunkAPI) {
+  return thunkReq(thunkAPI, 'GET', `/app/api/leagues/${leagueID}/contests/${contestID}/entry`);
+}
+function getentriesfunc({ leagueID, contestID }, thunkAPI) {
+  return thunkReq(thunkAPI, 'GET', `/app/api/leagues/${leagueID}/contests/${contestID}/entries`);
+}
 
-const createentryfunc = async({ leagueID, contestID }, thunkAPI) => {
-  return thunkReq(thunkAPI, 'POST', '/app/api/leagues/'+leagueID+'/contests/'+contestID+'/entry', JSON.stringify({}));
-};
+function createentryfunc({ leagueID, contestID }, thunkAPI) {
+  return thunkReq(thunkAPI, 'POST', `/app/api/leagues/${leagueID}/contests/${contestID}/entry`, JSON.stringify({}));
+}
 
 export {
   getcontestfunc,

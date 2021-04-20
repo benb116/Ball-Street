@@ -1,9 +1,19 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
-import { leagueSelector, leagueContestsSelector, leagueMembersSelector, getLeague, getLeagueMembers, addMember, getContests, createContest } from './LeaguesSlice';
-import { useParams } from 'react-router-dom';
-import { Link } from "react-router-dom";
+import { useParams, Link } from 'react-router-dom';
+
+import {
+  leagueSelector,
+  leagueContestsSelector,
+  leagueMembersSelector,
+  getLeague,
+  getLeagueMembers,
+  addMember,
+  getContests,
+  createContest,
+} from './LeaguesSlice';
 
 const Leagues = () => {
   const { leagueID } = useParams();
@@ -21,63 +31,52 @@ const Leagues = () => {
   const thisLeagueMembers = useSelector(leagueMembersSelector);
 
   const onCreateContest = (data) => {
-    dispatch(createContest({leagueID: leagueID, name: data.name, budget: data.budget}));
+    dispatch(createContest({ leagueID, name: data.name, budget: data.budget }));
   };
 
   const onAddUser = (data) => {
-    console.log(data);
-    dispatch(addMember({leagueID: leagueID, email: data.email}));
+    dispatch(addMember({ leagueID, email: data.email }));
   };
 
   return (
     <div className="container mx-auto">
-      <Fragment>
+      <>
         <div className="container mx-auto">
 
           <span>League info</span>
-          <br/>
+          <br />
           {JSON.stringify(thisLeague)}
-          <br/>
-          <br/>
+          <br />
+          <br />
           League Contests
-          <br/>
+          <br />
           <ul>
-            {thisLeagueContests.map(function(contest, index){
-              return <ContestItem key={ index } leagueID={leagueID} contestdata={ contest }/>;
-            })}
+            {thisLeagueContests.map((contest) => (
+              <ContestItem key={contest.id} leagueID={leagueID} contestdata={contest} />))}
           </ul>
-          <br/>
-          <br/>
+          <br />
+          <br />
           {JSON.stringify(thisLeagueMembers)}
-          <br/>
+          <br />
 
-          {thisLeague.ispublic ? <div></div> : <form className="space-y-6" onSubmit={handleSubmit(onCreateContest)} method="POST" >
-            <div>
-              <label
-                htmlFor="ContestName"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Contest Name
-              </label>
-              <div className="mt-1">
-                <input
-                  {...register('name')}
-                  id="name"
-                  name="name"
-                  type="name"
-                  autoComplete="name"
-                  required
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
+          {thisLeague.ispublic ? <div /> : (
+            <form className="space-y-6" onSubmit={handleSubmit(onCreateContest)} method="POST">
+              <div>
+                <span>Contest Name</span>
+                <div className="mt-1">
+                  <input
+                    {...register('name')}
+                    id="name"
+                    name="name"
+                    type="name"
+                    autoComplete="name"
+                    required
+                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  />
+                </div>
               </div>
-            </div>
-            <div>
-                <label
-                  htmlFor="budget"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Budget
-                </label>
+              <div>
+                <span>Budget</span>
                 <div className="mt-1">
                   <input
                     {...register('budget')}
@@ -92,28 +91,23 @@ const Leagues = () => {
                 </div>
               </div>
 
-            <div>
-              <button
-                type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                Create contest
-              </button>
-            </div>
-          </form>
-          }
-          
-          <br/>
-          <br/>
+              <div>
+                <button
+                  type="submit"
+                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  Create contest
+                </button>
+              </div>
+            </form>
+          )}
 
-          <form className="space-y-6" onSubmit={handleSubmit(onAddUser)} method="POST" >
+          <br />
+          <br />
+
+          <form className="space-y-6" onSubmit={handleSubmit(onAddUser)} method="POST">
             <div>
-              <label
-                htmlFor="UserName"
-                className="block text-sm font-medium text-gray-700"
-              >
-                User email
-              </label>
+              <span>User email</span>
               <div className="mt-1">
                 <input
                   {...register('email')}
@@ -138,19 +132,35 @@ const Leagues = () => {
           </form>
 
         </div>
-      </Fragment>
+      </>
     </div>
   );
 };
 
-function ContestItem(props) {
+function ContestItem({ leagueID, contestdata }) {
   return (
     <li>
-      <Link to={`/leagues/${props.leagueID}/contests/${props.contestdata.id}`}>
-        {props.contestdata.name} - {props.contestdata.nflweek} - {props.contestdata.budget}
+      <Link to={`/leagues/${leagueID}/contests/${contestdata.id}`}>
+        {contestdata.name}
+        {' '}
+        -
+        {contestdata.nflweek}
+        {' '}
+        -
+        {contestdata.budget}
       </Link>
     </li>
   );
 }
+
+ContestItem.propTypes = {
+  contestdata: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    nflweek: PropTypes.number.isRequired,
+    budget: PropTypes.number.isRequired,
+  }).isRequired,
+  leagueID: PropTypes.number.isRequired,
+};
 
 export default Leagues;

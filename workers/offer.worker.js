@@ -7,6 +7,7 @@
 const Queue = require('bull');
 const redis = require('redis');
 const { Op } = require('sequelize');
+
 const u = require('../features/util/util');
 const config = require('../config');
 const { hashkey } = require('../db/redisSchema');
@@ -81,6 +82,7 @@ async function compareBidsAsks(bids, asks, bidind = 0, askind = 0) {
     const [nextbid, nextask] = await matchOffers(bids[bidind], asks[askind]);
     let newbidind = bidind;
     let newaskind = askind;
+
     if (nextbid === -1) { newbidind = bidind + 1; }
     if (nextask === -1) { newaskind = askind + 1; }
 

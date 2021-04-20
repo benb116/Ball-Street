@@ -1,11 +1,9 @@
-// Trade service covers:
-// Adding and dropping pregame
-// Submitting and cancelling offers
+const u = require('../util/util');
+
 const sequelize = require('../../db');
 const {
   Entry, NFLPlayer, Offer, Trade, User,
 } = require('../../models');
-const u = require('../util/util');
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ

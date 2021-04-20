@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 import {
@@ -11,19 +12,18 @@ const defaultState = {
   thiscontest: {},
   thiscontestentries: [],
   thiscontestmyentry: {},
-}
+};
 
 export const getContest = createAsyncThunk('contests/getContest', getcontestfunc);
 export const getEntries = createAsyncThunk('contests/getEntries', getentriesfunc);
 export const getMyEntry = createAsyncThunk('contests/getMyEntry', getmyentryfunc);
-
 export const createEntry = createAsyncThunk('leagues/createEntry', createentryfunc);
 
 export const contestsSlice = createSlice({
   name: 'contests',
   initialState: defaultState,
   reducers: {
-    
+
   },
   extraReducers: {
     [getContest.fulfilled]: (state, { payload }) => {

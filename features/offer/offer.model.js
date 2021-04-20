@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+
 const config = require('../../config');
 
 module.exports = function model(sequelize, DataTypes) {

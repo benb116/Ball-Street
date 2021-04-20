@@ -1,4 +1,8 @@
+// This outputs the common sequelize object that is used for DB calls and transactions
+// Can set app-wide DB settings
+
 const { Sequelize } = require('sequelize');
+
 const secret = require('../secret');
 
 const dbOptions = {

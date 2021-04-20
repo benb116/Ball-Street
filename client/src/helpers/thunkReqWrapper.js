@@ -1,8 +1,8 @@
-const thunkReq = async function(thunkAPI, type, uri, body) {
+const thunkReq = async function tr(thunkAPI, type, uri, body) {
   try {
     const fetchOpts = {
       method: type,
-      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', },
+      headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
       credentials: 'same-origin',
     };
     if (body) { fetchOpts.body = body; }
@@ -11,9 +11,8 @@ const thunkReq = async function(thunkAPI, type, uri, body) {
 
     if (response.status === 200) {
       return data;
-    } else {
-      return thunkAPI.rejectWithValue((data.error || data || 'Unknown error'));
     }
+    return thunkAPI.rejectWithValue((data.error || data || 'Unknown error'));
   } catch (e) {
     return thunkAPI.rejectWithValue(e.response.data || e);
   }

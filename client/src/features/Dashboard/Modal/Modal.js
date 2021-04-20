@@ -3,23 +3,23 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 
+import { useParams } from 'react-router';
 import { modalSelector, modalStatusSelector, closeModal } from './ModalSlice';
 import { createOffer } from '../Offers/OffersSlice';
-import { useParams } from 'react-router';
 
 const customStyles = {
-  content : {
-    top                   : '50%',
-    left                  : '50%',
-    right                 : 'auto',
-    bottom                : 'auto',
-    marginRight           : '-50%',
-    transform             : 'translate(-50%, -50%)'
-  }
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+  },
 };
 
 // Make sure to bind modal to your appElement (https://reactcommunity.org/react-modal/accessibility/)
-Modal.setAppElement('#root')
+Modal.setAppElement('#root');
 
 const OfferModal = () => {
   const dispatch = useDispatch();
@@ -33,15 +33,13 @@ const OfferModal = () => {
     // references are now sync'd and can be accessed.
   }
 
-  console.log(modalIsOpen, modalInfo);
-
-  function close(){
+  function close() {
     dispatch(closeModal());
   }
-  // {leagueID, contestID, offerobj: 
+  // {leagueID, contestID, offerobj:
   function handleClick(data) {
     const offerobj = { ...modalInfo, ...data };
-    dispatch(createOffer({leagueID, contestID, offerobj}));
+    dispatch(createOffer({ leagueID, contestID, offerobj }));
     close();
   }
 
@@ -54,21 +52,27 @@ const OfferModal = () => {
         style={customStyles}
         contentLabel="Offer Modal"
       >
-        <span>{modalInfo.isbid ? "Bid" : "Ask"} - {modalInfo.nflplayerName}</span>
+        <span>
+          {modalInfo.isbid ? 'Bid' : 'Ask'}
+          {' '}
+          -
+          {' '}
+          {modalInfo.nflplayerName}
+        </span>
         <form>
-          <label>Price</label>
-          <input {...register('price')} defaultValue={modalInfo.price}/>
-          <br/>
-          <label>Protected</label>
-          <input {...register('protected')}type="checkbox"></input>
+          <span>Price</span>
+          <input {...register('price')} defaultValue={modalInfo.price} />
           <br />
-          <button onClick={handleSubmit(handleClick)}>Submit offer</button>
+          <span>Protected</span>
+          <input {...register('protected')} type="checkbox" />
+          <br />
+          <button onClick={handleSubmit(handleClick)} type="button">Submit offer</button>
         </form>
-        <button onClick={close}>close</button>
+        <button onClick={close} type="button">close</button>
 
       </Modal>
     </div>
   );
-}
+};
 
 export default OfferModal;

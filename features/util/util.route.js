@@ -1,3 +1,8 @@
+// Common route handler function
+// When a request is received, run the specified service function
+// and return the results
+// If there's an error, return the specified status and error message.
+
 function routeHandler(service) {
   return async function routeHandlerInner(req, res) {
     try {

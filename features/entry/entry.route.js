@@ -1,6 +1,6 @@
 const router = require('express').Router({ mergeParams: true });
-const entry = require('./entry.service');
 
+const entry = require('./entry.service');
 const { routeHandler } = require('../util/util.route');
 
 // Get all entries in a contest

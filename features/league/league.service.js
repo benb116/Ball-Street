@@ -1,10 +1,7 @@
-// League service covers:
-// Getting info about a specific league
-// Getting info about a user's leagues
-
-const { League, Membership, User } = require('../../models');
-const sequelize = require('../../db');
 const u = require('../util/util');
+
+const sequelize = require('../../db');
+const { League, Membership, User } = require('../../models');
 const { canUserSeeLeague } = require('../util/util.service');
 
 const isoOption = {

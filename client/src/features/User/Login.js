@@ -1,9 +1,8 @@
-import React, { Fragment, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginUser, userSelector, } from './UserSlice';
-import { useHistory } from 'react-router-dom';
+import { loginUser, userSelector } from './UserSlice';
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -17,12 +16,12 @@ const Login = () => {
 
   useEffect(() => {
     if (localStorage.getItem('isLoggedIn') === 'true') {
-      history.push('/')          
+      history.push('/');
     }
   }, [history, id]);
 
   return (
-    <Fragment>
+    <>
       <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
@@ -37,12 +36,7 @@ const Login = () => {
               method="POST"
             >
               <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Email address
-                </label>
+                <span>Email address</span>
                 <div className="mt-1">
                   <input
                     {...register('email')}
@@ -57,12 +51,7 @@ const Login = () => {
               </div>
 
               <div>
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Password
-                </label>
+                <span>Password</span>
                 <div className="mt-1">
                   <input
                     {...register('password')}
@@ -89,7 +78,9 @@ const Login = () => {
               <div className="relative">
                 <div className="relative flex justify-center text-sm">
                   <span className="px-2 bg-white text-gray-500">
-                    Or <Link to="signup"> Signup</Link>
+                    Or
+                    {' '}
+                    <Link to="signup"> Signup</Link>
                   </span>
                 </div>
               </div>
@@ -97,7 +88,7 @@ const Login = () => {
           </div>
         </div>
       </div>
-    </Fragment>
+    </>
   );
 };
 

@@ -1,7 +1,8 @@
-import thunkReq from "../../../helpers/thunkReqWrapper";
+import thunkReq from '../../../helpers/thunkReqWrapper';
 
-const getplayersfunc = async({leagueID, contestID}, thunkAPI) => thunkReq(thunkAPI, 'GET', '/app/api/nfldata/');
-
+function getplayersfunc({}, thunkAPI) {
+  return thunkReq(thunkAPI, 'GET', '/app/api/nfldata/');
+}
 export {
   getplayersfunc,
-}
+};

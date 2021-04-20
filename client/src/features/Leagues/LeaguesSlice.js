@@ -13,32 +13,27 @@ import {
 } from './Leagues.api';
 
 const defaultState = {
-    userleagues: [],
-    publicleagues: [],
-    thisleague: {},
-    thisleaguecontests: [],
-    thisleaguemembers: [],
+  userleagues: [],
+  publicleagues: [],
+  thisleague: {},
+  thisleaguecontests: [],
+  thisleaguemembers: [],
 };
 
 export const getUserLeagues = createAsyncThunk('leagues/getUserLeagues', getuserleaguesfunc);
 export const getPublicLeagues = createAsyncThunk('leagues/getPublicLeagues', getpublicleaguesfunc);
-
-export const createLeague = createAsyncThunk('leagues/createLeague', createleaguefunc);
-
-
 export const getLeague = createAsyncThunk('leagues/getLeague', getleaguefunc);
 export const getContests = createAsyncThunk('leagues/getContests', getcontestsfunc);
 export const getLeagueMembers = createAsyncThunk('leagues/getLeagueMembers', getleaguemembersfunc);
-
+export const createLeague = createAsyncThunk('leagues/createLeague', createleaguefunc);
 export const addMember = createAsyncThunk('leagues/addMember', addmemberfunc);
-
 export const createContest = createAsyncThunk('leagues/createContest', createcontestfunc);
 
 export const leaguesSlice = createSlice({
   name: 'leagues',
   initialState: defaultState,
   reducers: {
-    
+
   },
   extraReducers: {
     [getUserLeagues.fulfilled]: (state, { payload }) => {
@@ -66,18 +61,15 @@ export const leaguesSlice = createSlice({
       state.thisleaguecontests.push(payload);
     },
     [createContest.rejected]: (state, { payload }) => {
-      console.log(payload);
       toast.error(payload);
     },
   },
 });
 
-export const leaguesSelector = (state) => {
-    return {
-        userLeagues: state.leagues.userleagues,
-        publicLeagues: state.leagues.publicleagues
-    };
-};
+export const leaguesSelector = (state) => ({
+  userLeagues: state.leagues.userleagues,
+  publicLeagues: state.leagues.publicleagues,
+});
 
 export const leagueSelector = (state) => state.leagues.thisleague;
 export const leagueContestsSelector = (state) => state.leagues.thisleaguecontests;

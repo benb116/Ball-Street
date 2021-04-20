@@ -15,6 +15,6 @@ module.exports = session({
     host: 'localhost',
     port: 6379,
     client: redisClient,
-    ttl: 86400,
+    ttl: 86400, // 1 day
   }),
 });

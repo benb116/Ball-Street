@@ -10,17 +10,21 @@ import Leagues from './features/Leagues/Leagues';
 import League from './features/Leagues/League';
 import Contest from './features/Contests/Contest';
 import Dashboard from './features/Dashboard/Dashboard';
-import { PrivateRoute } from './helpers/PrivateRoute';
+import PrivateRoute from './helpers/PrivateRoute';
 
 function App() {
   return (
-    <div className="App" id="root" style={{
-      position: "absolute",
-      top: 0,
-      left: 0,
-      bottom: 0,
-      right: 0,
-    }}>
+    <div
+      className="App"
+      id="root"
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0,
+      }}
+    >
       <Router>
         <Switch>
           <Route exact component={Home} path="/" />

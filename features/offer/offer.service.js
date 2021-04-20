@@ -1,13 +1,12 @@
-// Offer service covers:
-// Creating and deleting an offer
-// Getting info about a user's offers across contests
 const Queue = require('bull');
+
+const config = require('../../config');
+const u = require('../util/util');
+
 const sequelize = require('../../db');
 const {
   Offer, Entry, NFLPlayer,
 } = require('../../models');
-const u = require('../util/util');
-const config = require('../../config');
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
@@ -38,6 +37,7 @@ function createOffer(req) {
         ContestId: req.params.contestID,
       },
     }, u.tobj(t));
+    if (!theentry) { u.Error('No entry found', 404); }
 
     // Player should be in entry for ask, not for bid
     const isOnTeam = u.isPlayerOnRoster(theentry, obj.nflplayerID);

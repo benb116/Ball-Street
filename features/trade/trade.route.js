@@ -1,6 +1,6 @@
 const router = require('express').Router({ mergeParams: true });
-const trade = require('./trade.service');
 
+const trade = require('./trade.service');
 const { routeHandler } = require('../util/util.route');
 
 // Show a user's trades in a contest

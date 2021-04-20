@@ -1,7 +1,7 @@
 const router = require('express').Router();
+
 const service = require('./user.service');
 const authenticate = require('../../middleware/authenticate');
-
 const { routeHandler } = require('../util/util.route');
 
 // TODO validation

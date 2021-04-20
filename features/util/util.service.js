@@ -1,20 +1,8 @@
-const { Contest, Membership, League } = require('../../models');
+const { Membership, League } = require('../../models');
 const u = require('./util');
 
-async function canUserSeeContest(t, userID, contestID) {
-  const thecontest = await Contest.findByPk(contestID, {
-    include: {
-      model: League,
-    },
-  }, { transaction: t }).then(u.dv);
-  if (!thecontest) { u.Error('No contest found', 404); }
-  const theleague = thecontest.League;
-  if (!theleague.ispublic) {
-    await canUserSeeLeague(t, userID, thecontest.LeagueId);
-  }
-  return [thecontest, theleague];
-}
-
+// Is a user allowed to see a league
+// Yes if league is public OR if user is a member
 async function canUserSeeLeague(t, userID, leagueID) {
   const tobj = (t ? { transaction: t } : {});
   const theleague = await League.findByPk(leagueID, tobj).then(u.dv);
@@ -34,6 +22,5 @@ async function canUserSeeLeague(t, userID, leagueID) {
 }
 
 module.exports = {
-  canUserSeeContest,
   canUserSeeLeague,
 };

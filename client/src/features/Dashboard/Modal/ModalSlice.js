@@ -7,14 +7,14 @@ const defaultState = {
     isbid: true,
     price: 0,
     protected: false,
-  }
+  },
 };
 
 export const modalSlice = createSlice({
   name: 'modal',
   initialState: defaultState,
   reducers: {
-    setModal: (state, {payload}) => {
+    setModal: (state, { payload }) => {
       state.info = payload;
       state.modalIsOpen = true;
     },
@@ -29,11 +29,13 @@ export const modalSlice = createSlice({
     },
   },
   extraReducers: {
-    
+
   },
 });
 
-export const { setModal, openModal, closeModal, toggleModal } = modalSlice.actions;
+export const {
+  setModal, openModal, closeModal, toggleModal,
+} = modalSlice.actions;
 
 export const modalStatusSelector = (state) => state.modal.modalIsOpen;
 export const modalSelector = (state) => state.modal.info;

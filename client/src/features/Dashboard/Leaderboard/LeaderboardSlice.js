@@ -1,19 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const defaultState = {
-  leaders: []
+  leaders: [],
 };
 
 export const leaderboardSlice = createSlice({
   name: 'leaderboard',
   initialState: defaultState,
   reducers: {
-    updateLeaders: (state, {payload}) => {
+    updateLeaders: (state, { payload }) => {
       state.leaders = payload;
-    }
+    },
   },
   extraReducers: {
-    
+
   },
 });
 

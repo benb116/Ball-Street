@@ -1,6 +1,6 @@
 const router = require('express').Router({ mergeParams: true });
-const nflplayer = require('./nflplayer.service');
 
+const nflplayer = require('./nflplayer.service');
 const { routeHandler } = require('../util/util.route');
 
 // Get all players

@@ -1,14 +1,11 @@
-// Entry service covers:
-// Creating and deleting an entry
-// Getting info about a specific entry
-// Getting info about a user's entries across contests
-
 const { Op } = require('sequelize');
-const { Entry, User, Contest } = require('../../models');
+
 const u = require('../util/util');
-const sequelize = require('../../db');
-const { canUserSeeLeague } = require('../util/util.service');
 const config = require('../../config');
+
+const sequelize = require('../../db');
+const { Entry, User, Contest } = require('../../models');
+const { canUserSeeLeague } = require('../util/util.service');
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ

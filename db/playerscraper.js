@@ -1,6 +1,7 @@
-const baseurl = 'https://api.lineups.com/nfl/fetch/players?page=';
-
+// Pull player data from an API
 const https = require('https');
+
+const baseurl = 'https://api.lineups.com/nfl/fetch/players?page=';
 
 function sendreq(pagenum = 1) {
   https.get(baseurl + pagenum, (resp) => {

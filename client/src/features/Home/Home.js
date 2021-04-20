@@ -1,8 +1,9 @@
-import React, { Fragment, useEffect } from 'react';
-import { Link } from "react-router-dom";
+import React, { useEffect } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { getAccount, isLoggedInSelector, logoutUser, userSelector } from '../User/UserSlice';
-import { useHistory } from 'react-router-dom';
+import {
+  getAccount, isLoggedInSelector, logoutUser, userSelector,
+} from '../User/UserSlice';
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -12,15 +13,10 @@ const Home = () => {
   const isLoggedIn = useSelector(isLoggedInSelector);
 
   useEffect(() => {
-    if (isLoggedIn) {      
+    if (isLoggedIn) {
       dispatch(getAccount());
     }
   }, [dispatch, isLoggedIn]);
-
-  const onLogOut = () => {
-    dispatch(logoutUser());
-    loginRed();
-  };
 
   const loginRed = () => {
     localStorage.setItem('isLoggedIn', false);
@@ -28,33 +24,44 @@ const Home = () => {
     // In theory people can see this webpage as a landing if they aren't logged in
   };
 
+  const onLogOut = () => {
+    dispatch(logoutUser());
+    loginRed();
+  };
+
   return (
     <div className="container mx-auto">
-        {isLoggedIn ? 
-          <Fragment>
+      {isLoggedIn
+        ? (
+          <>
             <div className="container mx-auto">
-              Welcome back <h3>{email}</h3>
+              Welcome back
+              {' '}
+              <h3>{email}</h3>
             </div>
             <Link to="/leagues">Leagues</Link>
-            <br/>
+            <br />
             <button
               onClick={onLogOut}
               className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+              type="button"
             >
               Log Out
             </button>
-          </Fragment>
-        :
-          <Fragment>
+          </>
+        )
+        : (
+          <>
             <h3>Ball Street</h3>
             <button
               onClick={loginRed}
               className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+              type="button"
             >
               Log In
             </button>
-          </Fragment>
-        }
+          </>
+        )}
     </div>
   );
 };
