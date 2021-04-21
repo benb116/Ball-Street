@@ -63,7 +63,7 @@ const OfferModal = () => {
           <span>Price</span>
           <input {...register('price')} defaultValue={modalInfo.price} />
           <br />
-          <span>Protected</span>
+          <span>🔒 Protected</span>
           <input {...register('protected')} type="checkbox" />
           <br />
           <button onClick={handleSubmit(handleClick)} type="button">Submit offer</button>

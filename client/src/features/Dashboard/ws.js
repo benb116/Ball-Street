@@ -1,6 +1,6 @@
 import store from '../../app/store';
 import { updatePrice } from './Players/PlayersSlice';
-import { removeOffer } from './Offers/OffersSlice';
+import { removeOffer, alertProtMatch } from './Offers/OffersSlice';
 import { updateRoster } from './Entry/EntrySlice';
 import { updateLeaders } from './Leaderboard/LeaderboardSlice';
 
@@ -31,6 +31,7 @@ const initWS = (contestID) => {
           upRost();
           break;
         case 'protectedMatch':
+          protMatch(msg);
           break;
         case 'leaderboard':
           upLead(msg.leaderboard);
@@ -50,16 +51,20 @@ function markPrice(obj) {
   store.dispatch(updatePrice(obj));
 }
 
-function upLead(board) {
-  store.dispatch(updateLeaders(board));
-}
-
 function fillOffer(oid) {
   store.dispatch(removeOffer(oid));
 }
 
 function upRost() {
   store.dispatch(updateRoster());
+}
+
+function protMatch({ offerID, expire }) {
+  store.dispatch(alertProtMatch({ offerID, expire }));
+}
+
+function upLead(board) {
+  store.dispatch(updateLeaders(board));
 }
 
 export default initWS;

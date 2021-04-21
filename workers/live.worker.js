@@ -68,9 +68,9 @@ function leaderUpdate() {
 
 // When a protected match is made, alert the user via ws
 function protectedMatch(message) {
-  const { userID, offerID } = JSON.parse(message);
+  const { userID, offerID, expire } = JSON.parse(message);
   const thews = liveState.connmap.get(userID);
-  thews.send(JSON.stringify({ event: 'offerMatched', offerID }));
+  thews.send(JSON.stringify({ event: 'protectedMatch', offerID, expire }));
 }
 
 // When a offer is filled, alert the user via ws

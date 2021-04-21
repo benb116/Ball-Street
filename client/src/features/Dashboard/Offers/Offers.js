@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -51,6 +51,8 @@ const Offers = () => {
 };
 
 function OfferItem({ offerdata }) {
+  const [value, setValue] = useState(true); // integer state
+  const [count, setCount] = useState(0); // integer state
   const dispatch = useDispatch();
   const { leagueID, contestID } = useParams();
 
@@ -62,6 +64,11 @@ function OfferItem({ offerdata }) {
   const oncancelOffer = (oid) => {
     dispatch(cancelOffer({ leagueID, contestID, offerID: oid }));
   };
+
+  if (offerdata.expire && value) {
+    setValue(false);
+    setInterval(() => { setCount((c) => c+1); }, 1000);
+  }
 
   return (
     <div>
@@ -76,16 +83,21 @@ function OfferItem({ offerdata }) {
       {playerdata.name}
       {' '}
       -
+      {' '}
       {offerdata.price}
+      {offerdata.protected ? '🔒' : ''}
+      {offerdata.expire ? (` Fills in ${Math.round((offerdata.expire - Date.now()) / 1000)}`) : ''}
     </div>
   );
 }
 
 OfferItem.propTypes = {
   offerdata: PropTypes.shape({
-    id: PropTypes.number.isRequired,
+    id: PropTypes.string.isRequired,
     NFLPlayerId: PropTypes.number.isRequired,
     price: PropTypes.number.isRequired,
+    protected: PropTypes.bool.isRequired,
+    expire: PropTypes.number,
   }).isRequired,
 };
 

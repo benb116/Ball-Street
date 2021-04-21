@@ -137,6 +137,7 @@ async function addToProtectedMatchQueue(eOffer, nOffer) {
   client.publish('protectedMatch', JSON.stringify({
     userID: eOffer.UserId,
     offerID: eOffer.id,
+    expire: Date.now() + config.ProtectionDelay * 1000,
   }));
   return 1;
 }

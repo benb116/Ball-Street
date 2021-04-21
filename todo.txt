@@ -16,7 +16,11 @@ Backend
     Trading bots
     Allow roster change spots
     Security
+    Caching
 
 Frontend
     Allow roster change spots
     Show current point totals
+    Matched protected offer
+
+Testing

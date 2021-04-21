@@ -22,6 +22,16 @@ export const offersSlice = createSlice({
       state.bids = state.bids.filter((o) => o.id !== payload);
       state.asks = state.asks.filter((o) => o.id !== payload);
     },
+    alertProtMatch: (state, { payload }) => {
+      console.log(payload);
+      state.bids.forEach((o) => {
+        if (o.id === payload.offerID) { o.expire = payload.expire; }
+      });
+      state.asks.forEach((o) => {
+        if (o.id === payload.offerID) { o.expire = payload.expire; }
+      });
+      toast('Protected offer matched!', { icon: '🔒' });
+    },
   },
   extraReducers: {
     [getOffers.fulfilled]: (state, { payload }) => {
@@ -56,6 +66,6 @@ export const offersSlice = createSlice({
   },
 });
 
-export const { removeOffer } = offersSlice.actions;
+export const { removeOffer, alertProtMatch } = offersSlice.actions;
 
 export const offersSelector = (state) => state.offers;
