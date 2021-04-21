@@ -21,7 +21,6 @@ const Contest = () => {
   const thiscontest = useSelector(contestSelector);
   const thiscontestentries = useSelector(entriesSelector);
   const thiscontestmyentry = useSelector(myEntrySelector);
-
   useEffect(() => {
     dispatch(getContest({ leagueID, contestID }));
     dispatch(getEntries({ leagueID, contestID }));
@@ -72,18 +71,19 @@ const Contest = () => {
   );
 };
 
-function EntryItem({ UserId }) {
+function EntryItem({ entrydata }) {
   return (
     <li>
       {' '}
-      {UserId}
+      {entrydata.UserId}
       {' '}
     </li>
   );
 }
 
 EntryItem.propTypes = {
-  UserId: PropTypes.string.isRequired,
+  entrydata: PropTypes.shape({
+    UserId: PropTypes.number.isRequired,
+  }).isRequired,
 };
-
 export default Contest;
