@@ -10,10 +10,10 @@ router.get('/', routeHandler(league.getUserLeagues));
 router.get('/public', routeHandler(league.getPublicLeagues, 15));
 
 // Get a specific league
-router.get('/:leagueID', routeHandler(league.getLeague));
+router.get('/:leagueID', routeHandler(league.getLeague, 15));
 
 // Get a specific league's members
-router.get('/:leagueID/members', routeHandler(league.getLeagueUsers));
+router.get('/:leagueID/members', routeHandler(league.getLeagueUsers, 15));
 
 // Make a new league
 router.post('/league', routeHandler(league.createLeague));
