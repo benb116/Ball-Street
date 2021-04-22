@@ -16,7 +16,6 @@ Backend
     Trading bots
     Allow roster change spots
     Security & validation
-    Caching
 
 Frontend
     Allow roster change spots

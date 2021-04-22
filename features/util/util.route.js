@@ -3,10 +3,26 @@
 // and return the results
 // If there's an error, return the specified status and error message.
 
-function routeHandler(service) {
+const redis = require('redis');
+const { promisify } = require('util');
+
+const client = redis.createClient();
+const getAsync = promisify(client.get).bind(client);
+const setAsync = promisify(client.set).bind(client);
+
+function routeHandler(service, cacheExpiry) {
   return async function routeHandlerInner(req, res) {
     try {
+      if (cacheExpiry && req.method === 'GET') {
+        const cacheout = await getAsync(req.originalUrl);
+        if (cacheout) {
+          return res.send(cacheout);
+        }
+      }
       const out = await service(req);
+      if (cacheExpiry && req.method === 'GET') {
+        await setAsync(req.originalUrl, JSON.stringify(out), 'EX', cacheExpiry);
+      }
       return res.json(out);
     } catch (err) {
       // eslint-disable-next-line no-console

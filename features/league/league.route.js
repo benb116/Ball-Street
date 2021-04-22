@@ -7,7 +7,7 @@ const { routeHandler } = require('../util/util.route');
 router.get('/', routeHandler(league.getUserLeagues));
 
 // Get all public leagues
-router.get('/public', routeHandler(league.getPublicLeagues));
+router.get('/public', routeHandler(league.getPublicLeagues, 15));
 
 // Get a specific league
 router.get('/:leagueID', routeHandler(league.getLeague));

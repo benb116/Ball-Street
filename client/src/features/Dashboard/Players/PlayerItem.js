@@ -29,7 +29,7 @@ function PlayerItem({ playerdata }) {
       nflplayerName: playerdata.name,
       isbid: false,
       price: (priceMap ? Number(priceMap.bestbid || playerdata.preprice) : playerdata.preprice),
-      protected: false,
+      protected: true,
     }));
   };
 
@@ -39,7 +39,7 @@ function PlayerItem({ playerdata }) {
       nflplayerName: playerdata.name,
       isbid: true,
       price: (priceMap ? Number(priceMap.bestask || playerdata.preprice) : playerdata.preprice),
-      protected: false,
+      protected: true,
     }));
   };
 

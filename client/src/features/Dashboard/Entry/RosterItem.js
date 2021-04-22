@@ -30,7 +30,7 @@ function RosterItem({ playerid, position }) {
       nflplayerName: thisplayer.name,
       isbid: false,
       price: (priceMap ? Number(priceMap.bestbid || 0) : 0),
-      protected: false,
+      protected: true,
     }));
   };
 
