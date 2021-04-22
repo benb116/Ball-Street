@@ -52,7 +52,7 @@ const Leagues = () => {
           <br />
           <ul>
             {thisLeagueContests.map((contest) => (
-              <ContestItem key={contest.id} leagueID={leagueID} contestdata={contest} />))}
+              <ContestItem key={contest.id} leagueID={Number(leagueID)} contestdata={contest} />))}
           </ul>
           <br />
           <br />

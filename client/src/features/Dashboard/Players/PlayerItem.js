@@ -28,7 +28,7 @@ function PlayerItem({ playerdata }) {
       nflplayerID: playerdata.id,
       nflplayerName: playerdata.name,
       isbid: false,
-      price: (priceMap ? Number(priceMap.bestbid || 0) : 0),
+      price: (priceMap ? Number(priceMap.bestbid || playerdata.preprice) : playerdata.preprice),
       protected: false,
     }));
   };
@@ -38,7 +38,7 @@ function PlayerItem({ playerdata }) {
       nflplayerID: playerdata.id,
       nflplayerName: playerdata.name,
       isbid: true,
-      price: (priceMap ? Number(priceMap.bestask || 0) : 0),
+      price: (priceMap ? Number(priceMap.bestask || playerdata.preprice) : playerdata.preprice),
       protected: false,
     }));
   };

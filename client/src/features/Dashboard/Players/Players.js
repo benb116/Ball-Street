@@ -87,13 +87,13 @@ function ListHeader() {
       <th style={{ width: '10rem', cursor: 'pointer' }} onClick={handleClick} value="name">Name</th>
       <th style={{ width: '2.2rem', cursor: 'pointer' }} onClick={handleClick} value="posName">Pos</th>
       <th style={{ width: '2.2rem', cursor: 'pointer' }} onClick={handleClick} value="teamAbr">Team</th>
-      <th style={{ width: '2rem', cursor: 'pointer' }} onClick={handleClick} value="preprice">Proj</th>
-      <th style={{ width: '2rem', cursor: 'pointer' }} onClick={handleClick} value="statprice">Pts</th>
-      <th style={{ width: '2rem', cursor: 'pointer' }} onClick={handleClick} value="lastprice">Last</th>
-      <th style={{ width: '2rem', cursor: 'pointer' }} onClick={handleClick} value="bestbid">Bid</th>
-      <th style={{ width: '2rem', cursor: 'pointer' }} onClick={handleClick} value="bestask">Ask</th>
-      <th style={{ width: '2rem' }}>+/–</th>
-      <th style={{ width: '2rem' }}>Offer</th>
+      <th style={{ width: '2rem', cursor: 'pointer', textAlign: 'right' }} onClick={handleClick} value="preprice">Proj</th>
+      <th style={{ width: '2rem', cursor: 'pointer', textAlign: 'right' }} onClick={handleClick} value="statprice">Pts</th>
+      <th style={{ width: '2rem', cursor: 'pointer', textAlign: 'right' }} onClick={handleClick} value="lastprice">Last</th>
+      <th style={{ width: '2rem', cursor: 'pointer', textAlign: 'right' }} onClick={handleClick} value="bestbid">Bid</th>
+      <th style={{ width: '2rem', cursor: 'pointer', textAlign: 'right' }} onClick={handleClick} value="bestask">Ask</th>
+      <th style={{ width: '2rem', textAlign: 'center' }}>+/–</th>
+      <th style={{ width: '2rem', textAlign: 'center' }}>Offer</th>
     </tr>
   );
 }

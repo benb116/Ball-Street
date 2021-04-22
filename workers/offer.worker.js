@@ -77,7 +77,7 @@ async function compareBidsAsks(bids, asks, bidind = 0, askind = 0) {
   if (!bids[bidind] || !asks[askind]) {
     console.log('EOL');
     // const player = (bids[0] ? bids[0].NFLPlayerId : (asks[0] ? asks[0].NFLPlayerId : 0));
-    return [bids[0], asks[askind]];
+    return [bids[0], asks[0]];
   } if (bids[bidind].price >= asks[askind].price) {
     const [nextbid, nextask] = await matchOffers(bids[bidind], asks[askind]);
     let newbidind = bidind;
@@ -94,9 +94,9 @@ async function compareBidsAsks(bids, asks, bidind = 0, askind = 0) {
     }
   } else {
     console.log('PriceMismatch');
-    return [bids[0], asks[askind]];
+    return [bids[0], asks[0]];
   }
-  return [bids[0], asks[askind]];
+  return [bids[0], asks[0]];
 }
 
 // Try to match two offers
