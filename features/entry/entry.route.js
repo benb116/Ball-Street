@@ -4,7 +4,7 @@ const entry = require('./entry.service');
 const { routeHandler } = require('../util/util.route');
 
 // Get all entries in a contest
-router.get('/entries', routeHandler(entry.getContestEntries, 15));
+router.get('/entries', routeHandler(entry.getContestEntries));
 
 // Get a user's entry in a contest
 router.get('/entry', routeHandler(entry.getEntry));
