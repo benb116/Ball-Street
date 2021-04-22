@@ -4,12 +4,12 @@ const nflplayer = require('./nflplayer.service');
 const { routeHandler } = require('../util/util.route');
 
 // Get a player's orderbook in a contest
-router.get('/players/:nflplayerID/orderbook', routeHandler(nflplayer.getNFLPlayerOfferSummary));
+router.get('/players/:nflplayerID/orderbook', routeHandler(nflplayer.getNFLPlayerOfferSummary), 15);
 
 // Get a player's trade statistics in a contest
-router.get('/players/:nflplayerID/tradestats', routeHandler(nflplayer.getNFLPlayerTradeVolume));
+router.get('/players/:nflplayerID/tradestats', routeHandler(nflplayer.getNFLPlayerTradeVolume), 15);
 
 // Get a player's add statistics in a contest
-router.get('/players/:nflplayerID/addstats', routeHandler(nflplayer.getNFLPlayerNumAdds));
+router.get('/players/:nflplayerID/addstats', routeHandler(nflplayer.getNFLPlayerNumAdds), 15);
 
 module.exports = router;
