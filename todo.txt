@@ -22,3 +22,5 @@ Frontend
     Show current point totals
 
 Testing
+Payments
+CSRF

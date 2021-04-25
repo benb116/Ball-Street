@@ -83,13 +83,17 @@ async function compareBidsAsks(bids, asks, bidind = 0, askind = 0) {
     let newbidind = bidind;
     let newaskind = askind;
 
+    // If -1, that means the offer was protected
+    // Leave in list to show best price
     if (nextbid === -1) { newbidind = bidind + 1; }
     if (nextask === -1) { newaskind = askind + 1; }
 
+    // If 1, offer was filled or errored
+    // Remove from list
     if (nextbid === 1) { bids.shift(); }
     if (nextask === 1) { asks.shift(); }
 
-    if (!nextbid && !nextask) {
+    if (nextbid || nextask) {
       return compareBidsAsks(bids, asks, newbidind, newaskind);
     }
   } else {
@@ -107,18 +111,22 @@ async function matchOffers(bid, ask) {
   const oldOffer = (isBidOld ? bid : ask);
   const newOffer = (!isBidOld ? bid : ask);
   const isOldProtected = oldOffer.protected;
-  let nextind = [];
+  let nextinds = [];
 
   if (!isOldProtected) {
     // Try to trade rn
-    nextind = await initTrade(bid, ask);
+    nextinds = await initTrade(bid, ask);
   } else {
     // Add delayed to protected queue
     await addToProtectedMatchQueue(oldOffer, newOffer);
-    nextind = [-1 * Number(isBidOld), -1 * Number(!isBidOld)];
+    // Returns a negative one for the protected index
+    // This tells the compareBidAsks function to leave the offer in the list
+    // but advance the "head" to the next offer
+    // That means the protected offer will still be the best price reported at the end
+    nextinds = [-1 * Number(isBidOld), -1 * Number(!isBidOld)];
   }
-  console.log('nextind', nextind);
-  return nextind;
+  console.log('nextinds', nextinds);
+  return nextinds;
 }
 
 async function initTrade(bid, ask, price) {
@@ -170,8 +178,7 @@ async function findProtectedMatches(proffer, ispbid) {
       cancelled: false,
       price: priceobj,
     },
-  })
-    .then(u.dv)
+  }).then(u.dv)
     .then(async (offers) => {
       while (offers.length) {
         const randomInd = Math.floor(Math.random() * offers.length);

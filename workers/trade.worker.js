@@ -92,10 +92,11 @@ async function attemptFill(t, bidid, askid, tprice) {
   };
 
   // Try to fill both
-  const biddone = await service.tradeAdd(bidreq, t)
+  const bidProm = service.tradeAdd(bidreq, t)
     .catch((err) => { console.log(err); return 1; });
-  const askdone = await service.tradeDrop(askreq, t)
+  const askProm = service.tradeDrop(askreq, t)
     .catch((err) => { console.log(err); return 1; });
+  const [biddone, askdone] = await Promise.all([bidProm, askProm]);
   // if waiting for a lock, maybe return [0, 0]?
   if (Number(biddone) && Number(askdone)) { throw new Error('both'); }
   if (Number(biddone)) { throw new Error('bid'); }
