@@ -24,25 +24,23 @@ server.on('upgrade', (request, socket, head) => {
       socket.destroy();
       return;
     }
-
     wss.handleUpgrade(request, socket, head, (ws) => {
       wss.emit('connection', ws, request);
     });
   });
 });
 
-wss.on('connection', (ws, request) => {
+wss.on('connection', async (ws, request) => {
   const userId = request.session.user.id;
   liveState.connmap.set(userId, ws);
 
-  ws.on('message', async (msg) => {
-    const pmsg = JSON.parse(msg);
-    liveState.contestmap.delete(ws);
-    // Send starting data
-    const out = await sendLatest(pmsg.contestID);
-    ws.send(JSON.stringify(out));
-    liveState.contestmap.set(ws, pmsg.contestID);
-  });
+  const contestID = request.url.split('/')[2];
+  liveState.contestmap.delete(ws);
+  liveState.contestmap.set(ws, contestID);
+
+  // Send starting data
+  const out = await sendLatest(contestID);
+  ws.send(JSON.stringify(out));
 
   ws.on('close', () => {
     liveState.connmap.delete(userId);

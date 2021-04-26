@@ -6,9 +6,9 @@ import { updateLeaders } from './Leaderboard/LeaderboardSlice';
 
 const initWS = (contestID) => {
   const { host } = window.location;
-  let url = 'ws://localhost:8080/';
+  let url = `ws://localhost:8080/contest/${contestID}`;
   if (!host.includes('localhost')) {
-    url = `wss://${host}/ballstreetlive`;
+    url = `wss://${host}/ballstreetlive/contest/${contestID}`;
   }
   const socket = new WebSocket(url);
 
