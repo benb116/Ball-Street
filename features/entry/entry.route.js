@@ -12,4 +12,7 @@ router.get('/entry', routeHandler(entry.getEntry));
 // Create a user's entry in a contest
 router.post('/entry', routeHandler(entry.createEntry));
 
+// Reorder a roster in an entry
+router.put('/entry', routeHandler(entry.reorderRoster));
+
 module.exports = router;
