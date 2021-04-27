@@ -21,6 +21,7 @@ const Contest = () => {
   const thiscontest = useSelector(contestSelector);
   const thiscontestentries = useSelector(entriesSelector);
   const thiscontestmyentry = useSelector(myEntrySelector);
+
   useEffect(() => {
     dispatch(getContest({ leagueID, contestID }));
     dispatch(getEntries({ leagueID, contestID }));

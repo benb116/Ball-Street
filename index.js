@@ -6,21 +6,21 @@ const u = require('./features/util/util');
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 console.log('go');
 (async () => {
-  await require('./db/dbpopulate')(sequelize);
+  // await require('./db/dbpopulate')(sequelize);
 
   // services.entry.getEntry({params: {entryID: 2}});
   // services.entry.createEntry({
-  //     session: {user: {id: 5}},
-  //     params: {
-  //         leagueID: 2,
-  //         contestID: 2,
-  //     }
+  //   session: { user: { id: 5 } },
+  //   params: {
+  //     leagueID: 1,
+  //     contestID: 1,
+  //   },
   // });
 
   const tradeResults = await services.trade.preTradeAdd({
 
     session: { user: { id: 5 } },
-    params: { contestID: 2 },
+    params: { contestID: 1 },
     body: {
       // nflplayerID: 19045,
       nflplayerID: 17923,
@@ -30,8 +30,8 @@ console.log('go');
 
   const tradeResults2 = await services.trade.preTradeAdd({
 
-    session: { user: { id: 9 } },
-    params: { contestID: 2 },
+    session: { user: { id: 6 } },
+    params: { contestID: 1 },
     body: {
       // nflplayerID: 19045,
       nflplayerID: 17923,
@@ -42,7 +42,7 @@ console.log('go');
   const tradeResults3 = await services.trade.preTradeAdd({
 
     session: { user: { id: 5 } },
-    params: { contestID: 2 },
+    params: { contestID: 1 },
     body: {
       nflplayerID: 19045,
       // nflplayerID: 17923,
@@ -73,19 +73,21 @@ console.log('go');
   // }).then(u.dv).catch(console.error);
   // // await delay(1000);
 
-  // const offerObj = await services.offer.createOffer({
+  const offerObj = await services.offer.createOffer({
 
-  //     session: {user: {id: 3}},
-  //     body: { offerObj: {
-  //         contestID: 1,
-  //         // nflplayerID: 19045,
-  //         nflplayerID: 17923,
-  //         isbid: true,
-  //         price: 1000,
-  //         protected: true,
-  //     }}
-  // }).then(u.dv).catch(console.error);
-  // if (!offerObj) {return;}
+    session: { user: { id: 5 } },
+    body: {
+      offerObj: {
+        contestID: 1,
+        // nflplayerID: 19045,
+        nflplayerID: 17923,
+        isbid: true,
+        price: 1000,
+        protected: true,
+      },
+    },
+  }).then(u.dv).catch(console.error);
+  if (!offerObj) { return; }
 
   // // await delay(1000);
 

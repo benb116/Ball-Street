@@ -53,6 +53,7 @@ const Offers = () => {
 function OfferItem({ offerdata }) {
   const [value, setValue] = useState(true); // integer state
   const [count, setCount] = useState(0); // integer state
+
   const dispatch = useDispatch();
   const { leagueID, contestID } = useParams();
 
@@ -65,9 +66,12 @@ function OfferItem({ offerdata }) {
     dispatch(cancelOffer({ leagueID, contestID, offerID: oid }));
   };
 
+  // Want to rerender this once a second if the expire flag is set
+  // value flag says whether the countdown has started
+  // update a dummy count in state to trigger rerender
   if (offerdata.expire && value) {
     setValue(false);
-    setInterval(() => { setCount((c) => c+1); }, 1000);
+    setInterval(() => { setCount((c) => c + 1); }, 1000);
   }
 
   return (
