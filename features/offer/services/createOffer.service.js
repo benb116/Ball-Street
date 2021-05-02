@@ -23,7 +23,7 @@ const schema = Joi.object({
   }).required(),
   body: Joi.object().keys({
     offerobj: Joi.object().keys({
-      nflplayerID: Joi.string().alphanum().trim().required(),
+      nflplayerID: Joi.number().required(),
       isbid: Joi.boolean().required(),
       price: Joi.number().integer().greater(0).required(),
       protected: Joi.boolean().required(),

@@ -39,6 +39,7 @@ const OfferModal = () => {
   // {leagueID, contestID, offerobj:
   function handleClick(data) {
     const offerobj = { ...modalInfo, ...data };
+    delete offerobj.nflplayerName;
     dispatch(createOffer({ leagueID, contestID, offerobj }));
     close();
   }

@@ -17,10 +17,9 @@ const schema = Joi.object({
   params: Joi.object().keys({
     leagueID: Joi.string().alphanum().trim().optional(),
     contestID: Joi.string().alphanum().trim().required(),
-    nflplayerID: Joi.string().alphanum().trim().required(),
   }).required(),
   body: Joi.object().keys({
-    offerID: Joi.string().token().trim().required(),
+    offerID: Joi.string().trim().required(),
   }).required(),
 });
 
