@@ -7,7 +7,7 @@ const { NFLPlayer } = require('../../../models');
 const schema = Joi.object({
   user: Joi.number().integer().greater(0).required(),
   params: Joi.object().keys({
-    nflplayerID: Joi.string().alphanum().trim().required(),
+    nflplayerID: Joi.number().required(),
   }).required(),
   body: Joi.object().length(0),
 });

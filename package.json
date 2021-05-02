@@ -4,7 +4,6 @@
   "description": "ball-street",
   "main": "index.js",
   "dependencies": {
-    "ajv": "^6.10.2",
     "bcrypt": "^5.0.1",
     "bull": "^3.21.1",
     "connect-redis": "^5.1.0",

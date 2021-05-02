@@ -75,20 +75,20 @@ async function attemptFill(t, bidid, askid, tprice) {
   }
 
   const bidreq = {
-    session: { user: { id: biduser } },
+    user: biduser,
     params: { contestID: boffer.ContestId },
     body: {
       nflplayerID: player,
+      price,
     },
-    price,
   };
   const askreq = {
-    session: { user: { id: askuser } },
+    user: askuser,
     params: { contestID: aoffer.ContestId },
     body: {
       nflplayerID: player,
+      price,
     },
-    price,
   };
 
   // Try to fill both
