@@ -19,7 +19,7 @@ function routeHandler(service, cacheExpiry) {
           return res.send(cacheout);
         }
       }
-      const out = await service(req);
+      const out = await service(stripReq(req));
       if (cacheExpiry && req.method === 'GET') {
         await setAsync(req.originalUrl, JSON.stringify(out), 'EX', cacheExpiry);
       }
@@ -30,6 +30,14 @@ function routeHandler(service, cacheExpiry) {
       return res.status((err.status || 500)).json({ error: err.message });
     }
   };
+}
+
+function stripReq(inp) {
+  const out = {};
+  out.user = inp.session.user.id;
+  out.params = inp.params;
+  out.body = inp.body;
+  return out;
 }
 
 module.exports = { routeHandler };

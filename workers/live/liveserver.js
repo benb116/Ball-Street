@@ -31,7 +31,7 @@ server.on('upgrade', (request, socket, head) => {
 });
 
 wss.on('connection', async (ws, request) => {
-  const userId = request.session.user.id;
+  const userId = request.user;
   liveState.connmap.set(userId, ws);
 
   const contestID = request.url.split('/')[2];

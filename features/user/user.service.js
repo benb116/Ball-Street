@@ -19,7 +19,7 @@ async function login(email, password) {
 
 async function getAccount(req) {
   try {
-    return User.findByPk(req.session.user.id).then(u.dv);
+    return User.findByPk(req.user).then(u.dv);
   } catch (err) {
     return u.Error('User not found', 404);
   }
