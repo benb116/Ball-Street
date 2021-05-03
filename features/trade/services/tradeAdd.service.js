@@ -48,7 +48,7 @@ async function tradeAdd(req, t) {
   }).then((d) => d.dataValues);
     // console.log("PDATA", playerdata);
 
-  const tradeprice = value.price || playerdata.preprice;
+  const tradeprice = value.body.price || playerdata.preprice;
   // Checks
   if (!tradeprice) { u.Error('Player has no preprice', 500); }
   if (tradeprice > pts) { u.Error("User doesn't have enough points", 402); }

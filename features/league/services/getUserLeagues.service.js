@@ -14,7 +14,7 @@ const schema = Joi.object({
 function getUserLeagues(req) {
   const { value, error } = schema.validate(req);
   if (error) { u.Error(error, 400); }
-  console.log(value);
+
   return Membership.findAll({
     where: { UserId: value.user },
     include: { model: League },

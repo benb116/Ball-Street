@@ -34,8 +34,8 @@ async function tradeDrop(req, t) {
   if (!isOnTeam) { u.Error('Player is not on roster', 406); }
   theentry[isOnTeam] = null;
 
-  if (value.price) {
-    theentry.pointtotal += value.price;
+  if (value.body.price) {
+    theentry.pointtotal += value.body.price;
   } else {
     // How much to add to point total
     const preprice = await NFLPlayer.findByPk(value.body.nflplayerID, {

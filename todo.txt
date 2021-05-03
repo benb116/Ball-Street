@@ -14,8 +14,7 @@ Backend
     Player images
     Price history
     Trading bots
-    Allow roster change spots
-    Security & validation
+    Security
 
 Frontend
     Allow roster change spots
