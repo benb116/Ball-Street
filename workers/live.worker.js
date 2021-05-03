@@ -56,6 +56,7 @@ function lastTrade(message) {
 function leaderUpdate() {
   const leaderMemo = {};
   liveState.contestmap.forEach(async (thecontestID, thews) => {
+    if (!thews) { liveState.contestmap.delete(thews); return; }
     if (!leaderMemo[thecontestID]) {
       const out = await getAsync(leaderHashkey(thecontestID));
       leaderMemo[thecontestID] = JSON.parse(out);
@@ -70,6 +71,7 @@ function leaderUpdate() {
 function protectedMatch(message) {
   const { userID, offerID, expire } = JSON.parse(message);
   const thews = liveState.connmap.get(userID);
+  if (!thews) { liveState.connmap.delete(userID); return; }
   thews.send(JSON.stringify({ event: 'protectedMatch', offerID, expire }));
 }
 
@@ -77,6 +79,7 @@ function protectedMatch(message) {
 function offerFilled(message) {
   const { userID, offerID } = JSON.parse(message);
   const thews = liveState.connmap.get(userID);
+  if (!thews) { liveState.connmap.delete(userID); return; }
   thews.send(JSON.stringify({ event: 'offerFilled', offerID }));
 }
 
@@ -84,6 +87,7 @@ function offerFilled(message) {
 setInterval(() => {
   if (Object.keys(liveState.priceUpdateMap).length) {
     liveState.contestmap.forEach((thecontestID, thews) => {
+      if (!thews) { liveState.contestmap.delete(thews); return; }
       if (!liveState.priceUpdateMap[thecontestID]) { return; }
       if (thews.readyState === 1) {
         thews.send(JSON.stringify({ event: 'priceUpdate', pricedata: liveState.priceUpdateMap[thecontestID] }));
@@ -94,6 +98,7 @@ setInterval(() => {
 
   if (Object.keys(liveState.lastTradeMap).length) {
     liveState.contestmap.forEach((thecontestID, thews) => {
+      if (!thews) { liveState.contestmap.delete(thews); return; }
       if (!liveState.lastTradeMap[thecontestID]) { return; }
       if (thews.readyState === 1) {
         thews.send(JSON.stringify({ event: 'priceUpdate', pricedata: liveState.lastTradeMap[thecontestID] }));

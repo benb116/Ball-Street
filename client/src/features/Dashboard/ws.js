@@ -45,6 +45,18 @@ const initWS = (contestID) => {
       }
     }
   });
+
+  socket.addEventListener('close', () => {
+    setTimeout(() => {
+      initWS(contestID);
+    }, 2000);
+  });
+
+  socket.addEventListener('error', (err) => {
+    // eslint-disable-next-line no-console
+    console.error('Socket encountered error: ', err.message, 'Closing socket');
+    socket.close();
+  });
 };
 
 function markPrice(obj) {

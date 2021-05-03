@@ -15,10 +15,14 @@ Backend
     Price history
     Trading bots
     Security
+    Mobile notifications
+    Live server graceful exit
 
 Frontend
     Allow roster change spots
     Show current point totals
+    Reconnect to ws if necessary
+    Mobile
 
 Testing
 Payments
