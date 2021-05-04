@@ -4,24 +4,27 @@ const u = require('../../util/util');
 
 const sequelize = require('../../../db');
 const { Membership, League, User } = require('../../../models');
+const { validators } = require('../../util/util.schema');
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
 };
 
 const schema = Joi.object({
-  user: Joi.number().integer().greater(0).required(),
+  user: validators.user,
   params: Joi.object().keys({
-    leagueID: Joi.number().required(),
+    leagueID: validators.leagueID,
   }).required(),
   body: Joi.object().keys({
-    email: Joi.string().trim().required(),
+    email: Joi.string().trim().required().messages({
+      'string.base': 'Email is invalid',
+      'any.required': 'Please specify a email',
+    }),
   }).required(),
 });
 
 async function addMember(req) {
-  const { value, error } = schema.validate(req);
-  if (error) { u.Error(error, 400); }
+  const value = u.validate(req, schema);
 
   return sequelize.transaction(isoOption, async (t) => {
     const theleague = await League.findByPk(value.params.leagueID, u.tobj(t)).then(u.dv);

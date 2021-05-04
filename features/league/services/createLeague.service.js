@@ -4,22 +4,25 @@ const u = require('../../util/util');
 
 const sequelize = require('../../../db');
 const { Membership, League } = require('../../../models');
+const { validators } = require('../../util/util.schema');
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
 };
 
 const schema = Joi.object({
-  user: Joi.number().integer().greater(0).required(),
-  params: Joi.object().length(0),
+  user: validators.user,
+  params: validators.noObj,
   body: Joi.object().keys({
-    name: Joi.string().trim().required(),
+    name: Joi.string().trim().required().messages({
+      'string.base': 'Name is invalid',
+      'any.required': 'Please specify a name',
+    }),
   }).required(),
 });
 
 async function createLeague(req) {
-  const { value, error } = schema.validate(req);
-  if (error) { u.Error(error, 400); }
+  const value = u.validate(req, schema);
 
   const obj = {};
   obj.adminId = value.user;

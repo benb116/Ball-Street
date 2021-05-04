@@ -1,19 +1,19 @@
 const Joi = require('joi');
 
 const u = require('../../util/util');
+const { validators } = require('../../util/util.schema');
 
 const { Membership, League } = require('../../../models');
 
 const schema = Joi.object({
-  user: Joi.number().integer().greater(0).required(),
-  params: Joi.object().length(0),
-  body: Joi.object().length(0),
+  user: validators.user,
+  params: validators.noObj,
+  body: validators.noObj,
 });
 
 // Get info for a specific contest
 function getUserLeagues(req) {
-  const { value, error } = schema.validate(req);
-  if (error) { u.Error(error, 400); }
+  const value = u.validate(req, schema);
 
   return Membership.findAll({
     where: { UserId: value.user },

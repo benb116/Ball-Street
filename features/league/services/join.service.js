@@ -1,6 +1,7 @@
 const Joi = require('joi');
 
 const u = require('../../util/util');
+const { validators } = require('../../util/util.schema');
 
 const sequelize = require('../../../db');
 const { Membership, League } = require('../../../models');
@@ -10,16 +11,15 @@ const isoOption = {
 };
 
 const schema = Joi.object({
-  user: Joi.number().integer().greater(0).required(),
+  user: validators.user,
   params: Joi.object().keys({
-    leagueID: Joi.number().required(),
+    leagueID: validators.leagueID,
   }).required(),
-  body: Joi.object().length(0),
+  body: validators.noObj,
 });
 
 async function join(req) {
-  const { value, error } = schema.validate(req);
-  if (error) { u.Error(error, 400); }
+  const value = u.validate(req, schema);
 
   return sequelize.transaction(isoOption, async (t) => {
     const theleague = League.findByPk(value.params.leagueID, u.tobj(t)).then(u.dv);

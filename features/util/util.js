@@ -75,4 +75,10 @@ out.cl = function cl(input) {
   return input;
 };
 
+out.validate = function validate(input, schema) {
+  const { value, error } = schema.validate(input);
+  if (error) { out.Error(error.details[0].message, 400); }
+  return value;
+};
+
 module.exports = out;

@@ -1,26 +1,33 @@
 const Joi = require('joi');
 
 const u = require('../../util/util');
+const { validators } = require('../../util/util.schema');
 
 const { Entry, NFLPlayer } = require('../../../models');
 
 const schema = Joi.object({
-  user: Joi.number().integer().greater(0).required(),
+  user: validators.user,
   params: Joi.object().keys({
-    leagueID: Joi.number().optional(),
-    contestID: Joi.number().required(),
+    leagueID: validators.leagueIDOptional,
+    contestID: validators.contestID,
   }).required(),
   body: Joi.object().keys({
-    nflplayerID: Joi.number().required(),
-    price: Joi.number().integer().greater(0).optional(),
-    rosterposition: Joi.string().alphanum().optional(),
+    nflplayerID: validators.nflplayerID,
+    price: Joi.number().integer().greater(0).optional()
+      .messages({
+        'number.base': 'Price is invalid',
+        'number.integer': 'Price is invalid',
+        'number.greater': 'Price must be greater than 0',
+      }),
+    rosterposition: Joi.string().alphanum().optional().messages({
+      'string.base': 'Second position is invalid',
+    }),
   }).required(),
 });
 
 // Add a player within a transaction, but don't commit
 async function tradeAdd(req, t) {
-  const { value, error } = schema.validate(req);
-  if (error) { u.Error(error, 400); }
+  const value = u.validate(req, schema);
 
   const theplayer = value.body.nflplayerID;
   // Get user entry

@@ -6,26 +6,32 @@ const config = require('../../../config');
 const sequelize = require('../../../db');
 const { Entry } = require('../../../models');
 const { canUserSeeLeague } = require('../../util/util.service');
+const { validators } = require('../../util/util.schema');
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
 };
 
 const schema = Joi.object({
-  user: Joi.number().integer().greater(0).required(),
+  user: validators.user,
   params: Joi.object().keys({
-    leagueID: Joi.number().required(),
-    contestID: Joi.number().required(),
+    leagueID: validators.leagueID,
+    contestID: validators.contestID,
   }).required(),
   body: Joi.object().keys({
-    pos1: Joi.string().trim().required(),
-    pos2: Joi.string().trim().required(),
+    pos1: Joi.string().trim().required().messages({
+      'string.base': 'First position is invalid',
+      'any.required': 'Please specify a first position',
+    }),
+    pos2: Joi.string().trim().required().messages({
+      'string.base': 'Second position is invalid',
+      'any.required': 'Please specify a second position',
+    }),
   }).required(),
 });
 
 async function reorderRoster(req) {
-  const { value, error } = schema.validate(req);
-  if (error) { u.Error(error, 400); }
+  const value = u.validate(req, schema);
 
   return sequelize.transaction(isoOption, async (t) => {
     const postype1 = config.Roster[value.body.pos1];

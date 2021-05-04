@@ -5,24 +5,24 @@ const u = require('../../util/util');
 const sequelize = require('../../../db');
 const { Contest } = require('../../../models');
 const { canUserSeeLeague } = require('../../util/util.service');
+const { validators } = require('../../util/util.schema');
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
 };
 
 const schema = Joi.object({
-  user: Joi.number().integer().greater(0).required(),
+  user: validators.user,
   params: Joi.object().keys({
-    leagueID: Joi.number().required(),
-    contestID: Joi.number().required(),
+    leagueID: validators.leagueID,
+    contestID: validators.contestID,
   }).required(),
-  body: Joi.object().length(0),
+  body: validators.noObj,
 });
 
 // Get info for a specific contest
 function getContest(req) {
-  const { value, error } = schema.validate(req);
-  if (error) { u.Error(error, 400); }
+  const value = u.validate(req, schema);
   // Requires authorization or looking at a public league
   return sequelize.transaction(isoOption, async (t) => {
     const theleague = await canUserSeeLeague(t, value.user, value.params.leagueID);

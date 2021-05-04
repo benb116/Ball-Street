@@ -6,26 +6,35 @@ const u = require('../../util/util');
 const sequelize = require('../../../db');
 const { Contest } = require('../../../models');
 const { canUserSeeLeague } = require('../../util/util.service');
+const { validators } = require('../../util/util.schema');
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
 };
 
 const schema = Joi.object({
-  user: Joi.number().integer().greater(0).required(),
+  user: validators.user,
   params: Joi.object().keys({
-    leagueID: Joi.number().required(),
+    leagueID: validators.leagueID,
   }).required(),
   body: Joi.object().keys({
-    name: Joi.string().trim().required(),
-    budget: Joi.number().integer().greater(0).required(),
+    name: Joi.string().trim().required().messages({
+      'string.base': 'Name is invalid',
+      'any.required': 'Please specify a name',
+    }),
+    budget: Joi.number().integer().greater(0).required()
+      .messages({
+        'number.base': 'Budget is invalid',
+        'number.integer': 'Budget is invalid',
+        'number.greater': 'Budget must be greater than 0',
+        'any.required': 'Please specify a budget',
+      }),
   }).required(),
 });
 
 // Get info for a specific contest
 function createContest(req) {
-  const { value, error } = schema.validate(req);
-  if (error) { u.Error(error, 400); }
+  const value = u.validate(req, schema);
   return sequelize.transaction(isoOption, async (t) => {
     const theleague = await canUserSeeLeague(t, value.user, value.params.leagueID);
     if (theleague.ispublic) { u.Error('Cannot create contests in a public league', 403); }

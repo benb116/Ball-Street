@@ -3,19 +3,19 @@ const Joi = require('joi');
 const u = require('../../util/util');
 
 const { canUserSeeLeague } = require('../../util/util.service');
+const { validators } = require('../../util/util.schema');
 
 const schema = Joi.object({
-  user: Joi.number().integer().greater(0).required(),
+  user: validators.user,
   params: Joi.object().keys({
-    leagueID: Joi.number().required(),
+    leagueID: validators.leagueID,
   }).required(),
-  body: Joi.object().length(0),
+  body: validators.noObj,
 });
 
 // Get info for a specific contest
 async function getLeague(req) {
-  const { value, error } = schema.validate(req);
-  if (error) { u.Error(error, 400); }
+  const value = u.validate(req, schema);
 
   return canUserSeeLeague(0, value.user, value.params.leagueID);
 }

@@ -6,6 +6,7 @@ const config = require('../../../config');
 
 const sequelize = require('../../../db');
 const { canUserSeeLeague } = require('../../util/util.service');
+const { validators } = require('../../util/util.schema');
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
@@ -13,18 +14,17 @@ const isoOption = {
 const { Entry } = require('../../../models');
 
 const schema = Joi.object({
-  user: Joi.number().integer().greater(0).required(),
+  user: validators.user,
   params: Joi.object().keys({
-    leagueID: Joi.number().required(),
-    contestID: Joi.number().required(),
-    nflplayerID: Joi.number().required(),
+    leagueID: validators.leagueID,
+    contestID: validators.contestID,
+    nflplayerID: validators.nflplayerID,
   }).required(),
-  body: Joi.object().length(0),
+  body: validators.noObj,
 });
 
 function getNFLPlayerNumAdds(req) {
-  const { value, error } = schema.validate(req);
-  if (error) { u.Error(error, 400); }
+  const value = u.validate(req, schema);
 
   return sequelize.transaction(isoOption, async (t) => {
     await canUserSeeLeague(t, value.user, value.params.leagueID);

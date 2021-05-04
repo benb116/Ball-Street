@@ -4,6 +4,7 @@ const Joi = require('joi');
 const offerQueue = new Queue('offer-queue');
 
 const u = require('../../util/util');
+const { validators } = require('../../util/util.schema');
 
 const sequelize = require('../../../db');
 const { Offer } = require('../../../models');
@@ -13,19 +14,21 @@ const isoOption = {
 };
 
 const schema = Joi.object({
-  user: Joi.number().integer().greater(0).required(),
+  user: validators.user,
   params: Joi.object().keys({
     leagueID: Joi.number().optional(),
-    contestID: Joi.number().required(),
+    contestID: validators.contestID,
   }).required(),
   body: Joi.object().keys({
-    offerID: Joi.string().trim().required(),
+    offerID: Joi.string().trim().required().messages({
+      'string.base': 'Offer ID is invalid',
+      'any.required': 'Please specify a offer',
+    }),
   }).required(),
 });
 
 function cancelOffer(req) {
-  const { value, error } = schema.validate(req);
-  if (error) { u.Error(error, 400); }
+  const value = u.validate(req, schema);
 
   // Cancel offer, but if it's filled, let user know
   return sequelize.transaction(isoOption, async (t) => {

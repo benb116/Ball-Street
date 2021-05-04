@@ -3,20 +3,20 @@ const Joi = require('joi');
 const u = require('../../util/util');
 
 const { Entry } = require('../../../models');
+const { validators } = require('../../util/util.schema');
 
 const schema = Joi.object({
-  user: Joi.number().integer().greater(0).required(),
+  user: validators.user,
   params: Joi.object().keys({
     leagueID: Joi.number().optional(),
-    contestID: Joi.number().required(),
+    contestID: validators.contestID,
   }).required(),
-  body: Joi.object().length(0),
+  body: validators.noObj,
 });
 
 // Get info for a specific contest
 function getEntry(req) {
-  const { value, error } = schema.validate(req);
-  if (error) { u.Error(error, 400); }
+  const value = u.validate(req, schema);
 
   return Entry.findOne({
     where: {

@@ -1,23 +1,26 @@
 const Joi = require('joi');
 
 const u = require('../../util/util');
+const { validators } = require('../../util/util.schema');
 
 const { Offer, Trade, User } = require('../../../models');
 
 const schema = Joi.object({
-  user: Joi.number().integer().greater(0).required(),
+  user: validators.user,
   params: Joi.object().keys({
-    leagueID: Joi.number().optional(),
-    contestID: Joi.number().required(),
+    leagueID: validators.leagueIDOptional,
+    contestID: validators.contestID,
   }).required(),
   body: Joi.object().keys({
-    offerobj: Joi.object().required(),
+    offerobj: Joi.object().required().messages({
+      'object.base': 'Offer is invalid',
+      'any.required': 'Please specify the offer details',
+    }),
   }).required(),
 });
 
 function getUserTrades(req) {
-  const { value, error } = schema.validate(req);
-  if (error) { u.Error(error, 400); }
+  const value = u.validate(req, schema);
 
   return Trade.findAll({
     include: [

@@ -5,36 +5,42 @@ const offerQueue = new Queue('offer-queue');
 
 const config = require('../../../config');
 const u = require('../../util/util');
+const { validators } = require('../../util/util.schema');
 
 const sequelize = require('../../../db');
-const {
-  Offer, Entry, NFLPlayer,
-} = require('../../../models');
+const { Offer, Entry, NFLPlayer } = require('../../../models');
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
 };
 
 const schema = Joi.object({
-  user: Joi.number().integer().greater(0).required(),
+  user: validators.user,
   params: Joi.object().keys({
-    leagueID: Joi.number().optional(),
-    contestID: Joi.number().required(),
+    leagueID: validators.leagueIDOptional,
+    contestID: validators.contestID,
   }).required(),
   body: Joi.object().keys({
     offerobj: Joi.object().keys({
-      nflplayerID: Joi.number().required(),
-      isbid: Joi.boolean().required(),
-      price: Joi.number().integer().greater(0).required(),
+      nflplayerID: validators.nflplayerID,
+      isbid: Joi.boolean().required().messages({
+        'boolean.base': 'Offer type is invalid',
+        'any.required': 'Please specify bid or ask',
+      }),
+      price: Joi.number().integer().greater(0).required()
+        .messages({
+          'number.base': 'Price is invalid',
+          'number.integer': 'Price is invalid',
+          'number.greater': 'Price must be greater than 0',
+          'any.required': 'Please specify a price',
+        }),
       protected: Joi.boolean().required(),
     }).required(),
   }).required(),
 });
 
 function createOffer(req) {
-  const { value, error } = schema.validate(req);
-  if (error) { u.Error(error, 400); }
-
+  const value = u.validate(req, schema);
   const obj = value.body.offerobj;
   obj.userID = value.user;
   return sequelize.transaction(isoOption, async (t) => {
