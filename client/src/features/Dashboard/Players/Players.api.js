@@ -1,6 +1,6 @@
 import thunkReq from '../../../helpers/thunkReqWrapper';
 
-function getplayersfunc({}, thunkAPI) {
+function getplayersfunc(a, thunkAPI) {
   return thunkReq(thunkAPI, 'GET', '/app/api/nfldata/');
 }
 export {

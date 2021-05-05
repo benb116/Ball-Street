@@ -18,6 +18,7 @@ Backend
     Mobile notifications
     Live server graceful exit
     User Validation
+    Logging
 
 Frontend
     Allow roster change spots

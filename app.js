@@ -27,5 +27,6 @@ app.get('/*', (req, res) => {
 
 // finally, let's start our server...
 const server = app.listen(process.env.PORT || 5000, () => {
+  // eslint-disable-next-line no-console
   console.log(`Listening on port ${server.address().port}`);
 });

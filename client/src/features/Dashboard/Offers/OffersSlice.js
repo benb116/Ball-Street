@@ -23,7 +23,6 @@ export const offersSlice = createSlice({
       state.asks = state.asks.filter((o) => o.id !== payload);
     },
     alertProtMatch: (state, { payload }) => {
-      console.log(payload);
       state.bids.forEach((o) => {
         if (o.id === payload.offerID) { o.expire = payload.expire; }
       });
