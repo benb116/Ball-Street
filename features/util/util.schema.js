@@ -2,7 +2,13 @@ const Joi = require('joi');
 
 const validators = {};
 
-validators.user = Joi.number().integer().greater(0).required();
+validators.user = Joi.number().integer().greater(0).required()
+  .messages({
+    'number.base': 'User ID is invalid',
+    'number.integer': 'User ID is invalid',
+    'number.greater': 'User ID is invalid',
+    'any.required': 'You must be logged in',
+  });
 
 validators.leagueIDOptional = Joi.number().optional();
 validators.leagueID = Joi.number().integer().required().messages({
