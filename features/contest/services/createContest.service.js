@@ -37,6 +37,7 @@ function createContest(req) {
   const value = u.validate(req, schema);
   return sequelize.transaction(isoOption, async (t) => {
     const theleague = await canUserSeeLeague(t, value.user, value.params.leagueID);
+    if (!theleague) { u.Error('No league found', 404); }
     if (theleague.ispublic) { u.Error('Cannot create contests in a public league', 403); }
     if (value.user !== theleague.adminId) { u.Error('Must be league admin to make new contests', 403); }
     return Contest.create({

@@ -242,14 +242,12 @@ async function PopulateDB(sequelize) {
 
   // Define existing contest
   const con = {
-    id: 1,
     name: 'Ball Street Big One',
     LeagueId: 1,
     budget: 10000,
     nflweek: 1,
   };
   const con2 = {
-    id: 3,
     name: 'Private Contest',
     LeagueId: 2,
     budget: 10000,
@@ -258,7 +256,7 @@ async function PopulateDB(sequelize) {
   await Contest.bulkCreate([con, con2]);
 
   const entrs = usrs.map((e, i) => ({ UserId: i + 1, ContestId: 1, pointtotal: 10000 }));
-  const entr2s = usrs.map((e, i) => ({ UserId: i + 1, ContestId: 3, pointtotal: 10000 }));
+  const entr2s = usrs.map((e, i) => ({ UserId: i + 1, ContestId: 2, pointtotal: 10000 }));
   await Entry.bulkCreate(entrs);
   await Entry.bulkCreate(entr2s);
 }

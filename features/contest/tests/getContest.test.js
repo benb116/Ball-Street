@@ -2,7 +2,7 @@ const service = require('../services/getContest.service');
 const { ErrorTest, ObjectTest } = require('../../util/util');
 
 describe('getContest service', () => {
-  test('Request from public league returns data', ObjectTest(
+  test('Valid request from public league returns data', ObjectTest(
     service, { user: 1, params: { leagueID: 1, contestID: 1 }, body: {} },
     {
       LeagueId: 1, budget: 10000, id: 1, name: 'Ball Street Big One', nflweek: 1,
@@ -10,14 +10,14 @@ describe('getContest service', () => {
   ));
 
   test('Valid request from private league returns data', ObjectTest(
-    service, { user: 1, params: { leagueID: 2, contestID: 3 }, body: {} },
+    service, { user: 1, params: { leagueID: 2, contestID: 2 }, body: {} },
     {
-      LeagueId: 2, budget: 10000, id: 3, name: 'Private Contest', nflweek: 1,
+      LeagueId: 2, budget: 10000, id: 2, name: 'Private Contest', nflweek: 1,
     },
   ));
 
   test('Invalid request from private league returns error 403', ErrorTest(
-    service, { user: 3, params: { leagueID: 2, contestID: 3 }, body: {} },
+    service, { user: 3, params: { leagueID: 2, contestID: 2 }, body: {} },
     403, 'You are not a member of that league',
   ));
 
@@ -36,18 +36,18 @@ describe('getContest service', () => {
     400, 'You must be logged in',
   ));
 
-  test('Non-existent league+contest returns error 400', ErrorTest(
-    service, { params: { leagueID: 1, contestID: 1 }, body: {} },
-    400, 'You must be logged in',
+  test('Non-existent league+contest returns error 406', ErrorTest(
+    service, { user: 2, params: { leagueID: 2, contestID: 1 }, body: {} },
+    406, 'Contest and league do not match',
   ));
 
   test('Non-existent contest returns error 404', ErrorTest(
-    service, { user: 1, params: { leagueID: 2, contestID: 2 }, body: {} },
+    service, { user: 1, params: { leagueID: 2, contestID: 80 }, body: {} },
     404, 'No contest found',
   ));
 
   test('Non-existent league returns error 404', ErrorTest(
-    service, { user: 1, params: { leagueID: 3, contestID: 3 }, body: {} },
+    service, { user: 1, params: { leagueID: 80, contestID: 2 }, body: {} },
     404, 'No league found',
   ));
 });
