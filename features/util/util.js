@@ -81,6 +81,12 @@ out.validate = function validate(input, schema) {
   return value;
 };
 
+out.ObjectTest = function ObjectTest(service, req, contains) {
+  return async () => service(req).then((resp) => {
+    expect(resp).toEqual(expect.objectContaining(contains));
+  });
+};
+
 out.ErrorTest = function ErrorTest(service, req, statusNumber, message) {
   return async function errortest() {
     try {

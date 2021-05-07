@@ -1,27 +1,25 @@
 const service = require('../services/getContest.service');
-const { ErrorTest } = require('../../util/util');
+const { ErrorTest, ObjectTest } = require('../../util/util');
 
 describe('getContest service', () => {
-  test('Valid request 1 returns data', () => {
-    const req = {
-      user: 1,
-      params: {
-        contestID: 1,
-        leagueID: 1,
-      },
-      body: {},
-    };
+  test('Request from public league returns data', ObjectTest(
+    service, { user: 1, params: { leagueID: 1, contestID: 1 }, body: {} },
+    {
+      LeagueId: 1, budget: 10000, id: 1, name: 'Ball Street Big One', nflweek: 1,
+    },
+  ));
 
-    return service(req).then((out) => {
-      expect(out).toEqual(expect.objectContaining({
-        LeagueId: 1,
-        budget: 10000,
-        id: 1,
-        name: 'Ball Street Big One',
-        nflweek: 1,
-      }));
-    });
-  });
+  test('Valid request from private league returns data', ObjectTest(
+    service, { user: 1, params: { leagueID: 2, contestID: 3 }, body: {} },
+    {
+      LeagueId: 2, budget: 10000, id: 3, name: 'Private Contest', nflweek: 1,
+    },
+  ));
+
+  test('Invalid request from private league returns error 403', ErrorTest(
+    service, { user: 3, params: { leagueID: 2, contestID: 3 }, body: {} },
+    403, 'You are not a member of that league',
+  ));
 
   test('Missing contestID returns error 400', ErrorTest(
     service, { user: 2, params: { leagueID: 1 }, body: {} },
