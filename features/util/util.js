@@ -81,4 +81,31 @@ out.validate = function validate(input, schema) {
   return value;
 };
 
+out.ObjectTest = function ObjectTest(service, req, contains) {
+  return async () => service(req).then((resp) => {
+    expect(resp).toEqual(expect.objectContaining(contains));
+  });
+};
+
+out.ArrayTest = function ArrayTest(service, req, items) {
+  return async () => service(req).then((resp) => {
+    items.forEach((e) => {
+      expect(resp).toContainEqual(expect.objectContaining(e));
+    });
+  });
+};
+
+out.ErrorTest = function ErrorTest(service, req, statusNumber, message) {
+  return async function errortest() {
+    try {
+      await service(req);
+    } catch (err) {
+      expect(err.status).toEqual(statusNumber);
+    }
+    expect(async () => {
+      await service(req);
+    }).rejects.toThrow(message);
+  };
+};
+
 module.exports = out;

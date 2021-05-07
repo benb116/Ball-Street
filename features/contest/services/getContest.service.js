@@ -27,7 +27,10 @@ function getContest(req) {
   return sequelize.transaction(isoOption, async (t) => {
     const theleague = await canUserSeeLeague(t, value.user, value.params.leagueID);
     if (!theleague) { u.Error('No league found', 404); }
-    return Contest.findByPk(value.params.contestID, u.tobj(t));
+    const thecontest = await Contest.findByPk(value.params.contestID, u.tobj(t)).then(u.dv);
+    if (!thecontest) { u.Error('No contest found', 404); }
+    if (thecontest.LeagueId !== value.params.leagueID) { u.Error('Contest and league do not match', 406); }
+    return thecontest;
   });
 }
 

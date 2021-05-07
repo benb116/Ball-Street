@@ -23,7 +23,7 @@ function addmemberfunc({ leagueID, email }, thunkAPI) {
   return thunkReq(thunkAPI, 'POST', `/app/api/leagues/${leagueID}/addMember`, JSON.stringify({ email }));
 }
 function createcontestfunc({ leagueID, name, budget }, thunkAPI) {
-  thunkReq(thunkAPI, 'POST', `/app/api/leagues/${leagueID}/contests/contest`, JSON.stringify({ name, budget }));
+  return thunkReq(thunkAPI, 'POST', `/app/api/leagues/${leagueID}/contests/contest`, JSON.stringify({ name, budget }));
 }
 
 export {
