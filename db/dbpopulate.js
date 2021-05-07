@@ -220,7 +220,13 @@ async function PopulateDB(sequelize) {
     adminId: 2,
     ispublic: false,
   };
-  await League.bulkCreate([lea, lea2]);
+
+  const lea3 = {
+    name: 'Ball Street Public2',
+    adminId: 1,
+    ispublic: true,
+  };
+  await League.bulkCreate([lea, lea2, lea3]);
 
   // Define memberships
   const mem = usrs.map((e, i) => ({
@@ -253,7 +259,13 @@ async function PopulateDB(sequelize) {
     budget: 10000,
     nflweek: 1,
   };
-  await Contest.bulkCreate([con, con2]);
+  const con3 = {
+    name: 'Public Contest 2',
+    LeagueId: 1,
+    budget: 10000,
+    nflweek: 1,
+  };
+  await Contest.bulkCreate([con, con2, con3]);
 
   const entrs = usrs.map((e, i) => ({ UserId: i + 1, ContestId: 1, pointtotal: 10000 }));
   const entr2s = usrs.map((e, i) => ({ UserId: i + 1, ContestId: 2, pointtotal: 10000 }));

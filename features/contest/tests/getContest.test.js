@@ -5,14 +5,14 @@ describe('getContest service', () => {
   test('Valid request from public league returns data', ObjectTest(
     service, { user: 1, params: { leagueID: 1, contestID: 1 }, body: {} },
     {
-      LeagueId: 1, budget: 10000, id: 1, name: 'Ball Street Big One', nflweek: 1,
+      LeagueId: 1, budget: 10000, name: 'Ball Street Big One', nflweek: 1,
     },
   ));
 
   test('Valid request from private league returns data', ObjectTest(
     service, { user: 1, params: { leagueID: 2, contestID: 2 }, body: {} },
     {
-      LeagueId: 2, budget: 10000, id: 2, name: 'Private Contest', nflweek: 1,
+      LeagueId: 2, budget: 10000, name: 'Private Contest', nflweek: 1,
     },
   ));
 

@@ -87,6 +87,14 @@ out.ObjectTest = function ObjectTest(service, req, contains) {
   });
 };
 
+out.ArrayTest = function ArrayTest(service, req, items) {
+  return async () => service(req).then((resp) => {
+    items.forEach((e) => {
+      expect(resp).toContainEqual(expect.objectContaining(e));
+    });
+  });
+};
+
 out.ErrorTest = function ErrorTest(service, req, statusNumber, message) {
   return async function errortest() {
     try {

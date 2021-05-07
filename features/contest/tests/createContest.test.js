@@ -5,7 +5,7 @@ describe('createContest service', () => {
   test('Valid request in private league returns data', ObjectTest(
     service, { user: 2, params: { leagueID: 2 }, body: { name: 'New Contest', budget: 10000 } },
     {
-      id: 3, LeagueId: 2, name: 'New Contest', budget: 10000, nflweek: 1,
+      LeagueId: 2, name: 'New Contest', budget: 10000, nflweek: 1,
     },
   ));
 
