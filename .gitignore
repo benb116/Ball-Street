@@ -2,3 +2,5 @@ node_modules/
 secret.js
 server/node_modules/
 server/secret.js
+server/index.js
+server/stats.js
