@@ -98,8 +98,12 @@ out.ArrayTest = function ArrayTest(service, req, items) {
 out.ErrorTest = function ErrorTest(service, req, statusNumber, message) {
   return async function errortest() {
     try {
-      await service(req);
+      const o = await service(req);
+      // eslint-disable-next-line no-console
+      console.log(o);
     } catch (err) {
+      // eslint-disable-next-line no-console
+      if (!err.status) { console.log(err); }
       expect(err.status).toEqual(statusNumber);
     }
     expect(async () => {

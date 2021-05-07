@@ -267,10 +267,12 @@ async function PopulateDB(sequelize) {
   };
   await Contest.bulkCreate([con, con2, con3]);
 
-  const entrs = usrs.map((e, i) => ({ UserId: i + 1, ContestId: 1, pointtotal: 10000 }));
-  const entr2s = usrs.map((e, i) => ({ UserId: i + 1, ContestId: 2, pointtotal: 10000 }));
+  const entrs = usrs.map((e, i) => ({
+    UserId: i + 1, ContestId: 1, pointtotal: 10000, RB1: 20933,
+  }));
+  // const entr2s = usrs.map((e, i) => ({ UserId: i + 1, ContestId: 2, pointtotal: 10000 }));
   await Entry.bulkCreate(entrs);
-  await Entry.bulkCreate(entr2s);
+  // await Entry.bulkCreate(entr2s);
 }
 
 module.exports = PopulateDB;

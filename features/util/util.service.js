@@ -1,4 +1,4 @@
-const { Membership, League } = require('../../models');
+const { Membership, League, Contest } = require('../../models');
 const u = require('./util');
 
 // Is a user allowed to see a league
@@ -21,6 +21,17 @@ async function canUserSeeLeague(t, userID, leagueID) {
   return theleague;
 }
 
+async function canUserSeeContest(t, userID, leagueID, contestID) {
+  const tobj = (t ? { transaction: t } : {});
+  const thecontest = await Contest.findByPk(contestID, tobj).then(u.dv);
+  if (!thecontest) { u.Error('No contest found', 404); }
+  const theleague = await canUserSeeLeague(t, userID, leagueID)
+    .catch((e) => u.Error(e.message, e.status));
+  if (thecontest.LeagueId !== leagueID) { u.Error('Contest and league do not match', 406); }
+  return [theleague, thecontest];
+}
+
 module.exports = {
   canUserSeeLeague,
+  canUserSeeContest,
 };

@@ -5,7 +5,7 @@ const config = require('../../../config');
 
 const sequelize = require('../../../db');
 const { Entry } = require('../../../models');
-const { canUserSeeLeague } = require('../../util/util.service');
+const { canUserSeeContest } = require('../../util/util.service');
 const { validators } = require('../../util/util.schema');
 
 const isoOption = {
@@ -37,21 +37,32 @@ async function reorderRoster(req) {
     const postype1 = config.Roster[value.body.pos1];
     const postype2 = config.Roster[value.body.pos2];
 
-    if (postype1 === 0 && !config.NFLPosTypes[postype2].canflex) {
-      u.Error('Cannot put a non-flex player in a flex position', 406);
-    } else if (postype2 === 0 && !config.NFLPosTypes[postype1].canflex) {
-      u.Error('Cannot put a non-flex player in a flex position', 406);
-    } else if (postype1 !== postype2) {
-      u.Error('Cannot put that player in that position', 406);
+    if (postype1 !== postype2) {
+      if (postype1 === config.FlexNFLPositionId || postype2 === config.FlexNFLPositionId) {
+        if (postype1 === config.FlexNFLPositionId && !config.NFLPosTypes[postype2].canflex) {
+          u.Error('Cannot put a non-flex player in a flex position', 406);
+        } else if (postype2 === config.FlexNFLPositionId && !config.NFLPosTypes[postype1].canflex) {
+          u.Error('Cannot put a non-flex player in a flex position', 406);
+        }
+      } else {
+        u.Error('Cannot put that player in that position', 406);
+      }
     }
 
-    await canUserSeeLeague(t, value.user, value.params.leagueID);
+    await canUserSeeContest(
+      t,
+      value.user,
+      value.params.leagueID,
+      value.params.contestID,
+    );
+
     const theentry = await Entry.findOne({
       where: {
         UserId: value.user,
         ContestId: value.params.contestID,
       },
-    }, u.tobj(t)).then(u.dv);
+    }, u.tobj(t));
+    if (!theentry) { u.Error('No entry found', 404); }
 
     const playerIDin1 = theentry[value.body.pos1];
     const playerIDin2 = theentry[value.body.pos2];
@@ -64,9 +75,10 @@ async function reorderRoster(req) {
     theentry[value.body.pos2] = playerIDin1;
 
     await theentry.save({ transaction: t });
-    return theentry;
+    return u.dv(theentry);
   })
     .catch((err) => {
+      if (err.status) { u.Error(err.message, err.status); }
       const errmess = err.parent.constraint || err[0].message;
       u.Error(errmess, 406);
     });

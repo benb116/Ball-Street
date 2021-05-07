@@ -3,8 +3,8 @@ const Joi = require('joi');
 const u = require('../../util/util');
 
 const sequelize = require('../../../db');
-const { Entry, Contest } = require('../../../models');
-const { canUserSeeLeague } = require('../../util/util.service');
+const { Entry } = require('../../../models');
+const { canUserSeeContest } = require('../../util/util.service');
 const { validators } = require('../../util/util.schema');
 
 const isoOption = {
@@ -29,13 +29,14 @@ function createEntry(req) {
   obj.ContestId = value.params.contestID;
   // Only allow if user is in contest's league
   return sequelize.transaction(isoOption, async (t) => {
-    await canUserSeeLeague(t, value.user, value.params.leagueID);
-    const contestBudget = await Contest.findByPk(value.params.contestID).then(u.dv)
-      .then((c) => c.budget);
-    obj.pointtotal = contestBudget;
+    const [, thecontest] = await canUserSeeContest(
+      t, value.user, value.params.leagueID, value.params.contestID,
+    );
+    obj.pointtotal = thecontest.budget;
     return Entry.create(obj, u.tobj(t)).then(u.dv);
   })
     .catch((err) => {
+      if (err.status) { u.Error(err.message, err.status); }
       const errmess = err.parent.constraint || err[0].message;
       u.Error(errmess, 406);
     });
