@@ -48,21 +48,6 @@ describe('getContestEntries service', () => {
       WR1: null,
       WR2: null,
       pointtotal: 10000,
-    },
-    {
-      ContestId: 1,
-      DEF1: null,
-      FLEX1: null,
-      FLEX2: null,
-      K1: null,
-      QB1: null,
-      RB1: 20933,
-      RB2: null,
-      TE1: null,
-      UserId: 4,
-      WR1: null,
-      WR2: null,
-      pointtotal: 10000,
     }],
   ));
 

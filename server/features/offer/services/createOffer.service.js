@@ -34,7 +34,7 @@ const schema = Joi.object({
           'number.greater': 'Price must be greater than 0',
           'any.required': 'Please specify a price',
         }),
-      protected: Joi.boolean().required(),
+      protected: Joi.boolean().optional(),
     }).required(),
   }).required(),
 });
@@ -82,13 +82,17 @@ function createOffer(req) {
     }, {
       transaction: t,
       lock: t.LOCK.UPDATE,
-    }).catch((err) => {
-      u.Error(err, 406);
     });
   })
     .then(u.dv).then((offer) => {
       offerQueue.add(offer);
       return offer;
+    })
+    .catch((err) => {
+      if (err.status) { u.Error(err.message, err.status); }
+      const errmess = err.parent.constraint || err[0].message;
+      if (errmess === 'IX_Offer-OneActive') { u.Error('An offer already exists for this player', 406); }
+      u.Error(errmess, 406);
     });
 }
 

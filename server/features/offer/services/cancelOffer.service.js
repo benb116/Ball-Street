@@ -17,7 +17,7 @@ const schema = Joi.object({
   user: validators.user,
   params: Joi.object().keys({
     leagueID: Joi.number().optional(),
-    contestID: validators.contestID,
+    contestID: Joi.number().optional(),
   }).required(),
   body: Joi.object().keys({
     offerID: Joi.string().trim().required().messages({
@@ -34,7 +34,9 @@ function cancelOffer(req) {
   return sequelize.transaction(isoOption, async (t) => {
     const o = await Offer.findByPk(value.body.offerID, u.tobj(t));
     if (!o) { u.Error('No offer found', 404); }
+    if (o.UserId !== value.user) { u.Error('Unauthorized', 403); }
     if (o.filled) { u.Error('Offer already filled', 406); }
+    if (o.cancelled) { u.Error('Offer already cancelled', 406); }
     o.cancelled = true;
     await o.save({ transaction: t });
     return o;

@@ -15,6 +15,7 @@ async function PopulateDB(sequelize) {
     Entry,
     League,
     Membership,
+    Offer,
   } = models;
 
   // Define NFL positions
@@ -266,18 +267,58 @@ async function PopulateDB(sequelize) {
   };
   const con3 = {
     name: 'Public Contest 2',
-    LeagueId: 1,
+    LeagueId: 3,
     budget: 10000,
     nflweek: 1,
   };
   await Contest.bulkCreate([con, con2, con3]);
 
-  const entrs = usrs.map((e, i) => ({
+  const entrs = pubusrs.map((e, i) => ({
     UserId: i + 1, ContestId: 1, pointtotal: 10000, RB1: 20933,
   }));
-  // const entr2s = usrs.map((e, i) => ({ UserId: i + 1, ContestId: 2, pointtotal: 10000 }));
+  const entrs2 = [{
+    UserId: 1, ContestId: 2, pointtotal: 10000, RB1: 20933, K1: 19041,
+  }, {
+    UserId: 2, ContestId: 2, pointtotal: 10000, RB1: 20933, K1: 19041,
+  }];
   await Entry.bulkCreate(entrs);
-  // await Entry.bulkCreate(entr2s);
+  await Entry.bulkCreate(entrs2);
+
+  const offs = [{
+    id: '16c94b61-3c76-4078-8fbc-67fac7ed26c2',
+    UserId: 1,
+    ContestId: 1,
+    NFLPlayerId: 20933,
+    isbid: false,
+    price: 8000,
+  },
+  {
+    id: '16c94b61-3c76-4078-8fbc-67fac7ed26c3',
+    UserId: 2,
+    ContestId: 1,
+    NFLPlayerId: 20933,
+    isbid: false,
+    price: 8000,
+    cancelled: true,
+  },
+  {
+    id: '16c94b61-3c76-4078-8fbc-67fac7ed26c4',
+    UserId: 3,
+    ContestId: 1,
+    NFLPlayerId: 20933,
+    isbid: false,
+    price: 8000,
+    filled: true,
+  },
+  {
+    id: '16c94b61-3c76-4078-8fbc-67fac7ed26c5',
+    UserId: 2,
+    ContestId: 2,
+    NFLPlayerId: 20933,
+    isbid: false,
+    price: 8000,
+  }];
+  await Offer.bulkCreate(offs);
 }
 
 module.exports = PopulateDB;

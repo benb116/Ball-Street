@@ -20,5 +20,3 @@ describe('getPublicLeagues service', () => {
     ],
   ));
 });
-
-// Cannot create contests in a public league

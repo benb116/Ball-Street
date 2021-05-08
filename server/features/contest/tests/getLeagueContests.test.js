@@ -6,8 +6,6 @@ describe('getLeagueContests service', () => {
     service, { user: 1, params: { leagueID: 1 }, body: {} },
     [{
       LeagueId: 1, budget: 10000, id: 1, name: 'Ball Street Big One', nflweek: 1,
-    }, {
-      LeagueId: 1, budget: 10000, id: 3, name: 'Public Contest 2', nflweek: 1,
     }],
   ));
 
@@ -38,5 +36,3 @@ describe('getLeagueContests service', () => {
     404, 'No league found',
   ));
 });
-
-// Cannot create contests in a public league

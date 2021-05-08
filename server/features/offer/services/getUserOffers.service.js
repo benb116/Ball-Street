@@ -16,7 +16,6 @@ const schema = Joi.object({
 
 function getUserOffers(req) {
   const value = u.validate(req, schema);
-
   return Offer.findAll({
     where: {
       UserId: value.user,
@@ -24,7 +23,12 @@ function getUserOffers(req) {
       filled: false,
       cancelled: false,
     },
-  }).then(u.dv).catch(u.Error);
+  }).then(u.dv)
+    .catch((err) => {
+      if (err.status) { u.Error(err.message, err.status); }
+      const errmess = err.parent.constraint || err[0].message;
+      u.Error(errmess, 406);
+    });
 }
 
 module.exports = getUserOffers;

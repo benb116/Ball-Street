@@ -3,9 +3,9 @@ const { ErrorTest, ObjectTest } = require('../../util/util');
 
 describe('createEntry service', () => {
   test('Valid request in private league returns data', ObjectTest(
-    service, { user: 1, params: { leagueID: 2, contestID: 2 }, body: {} },
+    service, { user: 1, params: { leagueID: 3, contestID: 3 }, body: {} },
     {
-      ContestId: 2,
+      ContestId: 3,
       DEF1: null,
       FLEX1: null,
       FLEX2: null,
@@ -61,5 +61,3 @@ describe('createEntry service', () => {
     404, 'No contest found',
   ));
 });
-
-// Cannot create contests in a public league

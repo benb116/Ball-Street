@@ -49,5 +49,3 @@ describe('createContest service', () => {
     404, 'No league found',
   ));
 });
-
-// Cannot create contests in a public league
