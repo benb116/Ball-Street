@@ -20,7 +20,7 @@ const schema = Joi.object({
         'number.greater': 'Price must be greater than 0',
       }),
     rosterposition: Joi.string().alphanum().optional().messages({
-      'string.base': 'Second position is invalid',
+      'string.base': 'Position is invalid',
     }),
   }).required(),
 });

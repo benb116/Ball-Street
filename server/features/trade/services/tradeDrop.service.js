@@ -34,6 +34,7 @@ async function tradeDrop(req, t) {
     transaction: t,
     lock: t.LOCK.UPDATE,
   });
+  if (!theentry) { u.Error('No entry found', 404); }
 
   const isOnTeam = u.isPlayerOnRoster(theentry, value.body.nflplayerID);
   if (!isOnTeam) { u.Error('Player is not on roster', 406); }
@@ -53,7 +54,7 @@ async function tradeDrop(req, t) {
 
   await theentry.save({ transaction: t });
 
-  return theentry;
+  return u.dv(theentry);
 }
 
 module.exports = tradeDrop;

@@ -16,6 +16,7 @@ async function PopulateDB(sequelize) {
     League,
     Membership,
     Offer,
+    Trade,
   } = models;
 
   // Define NFL positions
@@ -279,7 +280,7 @@ async function PopulateDB(sequelize) {
   const entrs2 = [{
     UserId: 1, ContestId: 2, pointtotal: 10000, RB1: 20933, K1: 19041,
   }, {
-    UserId: 2, ContestId: 2, pointtotal: 10000, RB1: 20933, K1: 19041,
+    UserId: 2, ContestId: 2, pointtotal: 500, RB1: 20933, K1: 19041,
   }];
   await Entry.bulkCreate(entrs);
   await Entry.bulkCreate(entrs2);
@@ -310,6 +311,16 @@ async function PopulateDB(sequelize) {
     price: 8000,
     filled: true,
   },
+
+  {
+    id: '16c94b61-3c76-4078-8fbc-67fac7ed26c6',
+    UserId: 1,
+    ContestId: 1,
+    NFLPlayerId: 20933,
+    isbid: true,
+    price: 8000,
+    filled: true,
+  },
   {
     id: '16c94b61-3c76-4078-8fbc-67fac7ed26c5',
     UserId: 2,
@@ -319,6 +330,15 @@ async function PopulateDB(sequelize) {
     price: 8000,
   }];
   await Offer.bulkCreate(offs);
+
+  const trds = [
+    {
+      bidId: '16c94b61-3c76-4078-8fbc-67fac7ed26c6',
+      askId: '16c94b61-3c76-4078-8fbc-67fac7ed26c4',
+      price: 8000,
+    },
+  ];
+  await Trade.bulkCreate(trds);
 }
 
 module.exports = PopulateDB;

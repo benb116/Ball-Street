@@ -2,7 +2,7 @@ const service = require('../services/createOffer.service');
 const { ErrorTest, ObjectTest } = require('../../util/util');
 
 describe('createOffer service', () => {
-  test('Valid request in private league returns data', ObjectTest(
+  test('Valid request returns data', ObjectTest(
     service, {
       user: 1,
       params: { leagueID: 2, contestID: 2 },

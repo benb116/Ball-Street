@@ -3,7 +3,7 @@ const Joi = require('joi');
 const u = require('../../util/util');
 const { validators } = require('../../util/util.schema');
 
-const { Offer, Trade, User } = require('../../../models');
+const { Offer, Trade } = require('../../../models');
 
 const schema = Joi.object({
   user: validators.user,
@@ -11,33 +11,33 @@ const schema = Joi.object({
     leagueID: validators.leagueIDOptional,
     contestID: validators.contestID,
   }).required(),
-  body: Joi.object().keys({
-    offerobj: Joi.object().required().messages({
-      'object.base': 'Offer is invalid',
-      'any.required': 'Please specify the offer details',
-    }),
-  }).required(),
+  body: validators.noObj,
 });
 
-function getUserTrades(req) {
+async function getUserTrades(req) {
   const value = u.validate(req, schema);
 
-  return Trade.findAll({
-    include: [
-      {
-        model: User,
-        where: {
-          id: value.user,
-        },
+  const allbids = await Trade.findAll({
+    include: [{
+      model: Offer,
+      as: 'bid',
+      where: {
+        ContestId: value.params.contestID,
+        UserId: value.user,
       },
-      {
-        model: Offer,
-        where: {
-          ContestId: value.params.contestID,
-        },
-      },
-    ],
+    }],
   }).then(u.dv);
+  const allasks = await Trade.findAll({
+    include: [{
+      model: Offer,
+      as: 'ask',
+      where: {
+        ContestId: value.params.contestID,
+        UserId: value.user,
+      },
+    }],
+  }).then(u.dv);
+  return allbids.concat(allasks);
 }
 
 module.exports = getUserTrades;

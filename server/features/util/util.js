@@ -105,6 +105,7 @@ out.ErrorTest = function ErrorTest(service, req, statusNumber, message) {
       const o = await service(req);
       // eslint-disable-next-line no-console
       console.log(o);
+      throw new Error('Unexpected pass');
     } catch (err) {
       // eslint-disable-next-line no-console
       if (!err.status) { console.log(err); }
