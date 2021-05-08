@@ -17,7 +17,12 @@ function getUserLeagues(req) {
 
   return Membership.findAll({
     where: { UserId: value.user },
-    include: { model: League },
+    include: {
+      model: League,
+      where: {
+        ispublic: false,
+      },
+    },
   }).then(u.dv).then((ships) => ships.map((m) => m.League));
 }
 

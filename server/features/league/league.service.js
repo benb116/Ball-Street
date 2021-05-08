@@ -4,7 +4,7 @@ const getLeague = require('./services/getLeague.service');
 const getLeagueUsers = require('./services/getLeagueUsers.service');
 const createLeague = require('./services/createLeague.service');
 const addMember = require('./services/addMember.service');
-const join = require('./services/join.service');
+const joinLeague = require('./services/joinLeague.service');
 
 module.exports = {
   getUserLeagues,
@@ -13,5 +13,5 @@ module.exports = {
   getLeagueUsers,
   createLeague,
   addMember,
-  join,
+  joinLeague,
 };

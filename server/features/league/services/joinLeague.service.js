@@ -18,18 +18,23 @@ const schema = Joi.object({
   body: validators.noObj,
 });
 
-async function join(req) {
+async function joinLeague(req) {
   const value = u.validate(req, schema);
 
   return sequelize.transaction(isoOption, async (t) => {
-    const theleague = League.findByPk(value.params.leagueID, u.tobj(t)).then(u.dv);
-    if (!theleague.ispublic) { u.Error('No league found', 404); }
+    const theleague = await League.findByPk(value.params.leagueID, u.tobj(t)).then(u.dv);
+    if (!theleague) { u.Error('No league found', 404); }
+    if (!theleague.ispublic) { u.Error('Cannot join private league', 406); }
     return Membership.create({
       UserId: value.user,
       LeagueId: value.params.leagueID,
-    }, u.tobj(t))
-      .catch((err) => u.Error(err.parent.constraint, 406));
-  });
+    }, u.tobj(t));
+  })
+    .catch((err) => {
+      if (err.status) { u.Error(err.message, err.status); }
+      const errmess = err.parent.constraint || err[0].message;
+      u.Error(errmess, 406);
+    });
 }
 
-module.exports = join;
+module.exports = joinLeague;

@@ -16,7 +16,6 @@ Backend
     Trading bots
     Security
     Mobile notifications
-    Live server graceful exit
     User Validation
     Logging
 

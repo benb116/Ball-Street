@@ -229,7 +229,8 @@ async function PopulateDB(sequelize) {
   await League.bulkCreate([lea, lea2, lea3]);
 
   // Define memberships
-  const mem = usrs.map((e, i) => ({
+  const pubusrs = usrs.slice(0, 3);
+  const mem = pubusrs.map((e, i) => ({
     UserId: i + 1,
     LeagueId: 1,
   }));
@@ -241,6 +242,10 @@ async function PopulateDB(sequelize) {
     {
       UserId: 2,
       LeagueId: 2,
+    },
+    {
+      UserId: 1,
+      LeagueId: 3,
     },
   ];
   await Membership.bulkCreate(mem);

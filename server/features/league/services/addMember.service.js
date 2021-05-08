@@ -3,8 +3,9 @@ const Joi = require('joi');
 const u = require('../../util/util');
 
 const sequelize = require('../../../db');
-const { Membership, League, User } = require('../../../models');
+const { Membership, User } = require('../../../models');
 const { validators } = require('../../util/util.schema');
+const { canUserSeeLeague } = require('../../util/util.service');
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
@@ -18,7 +19,7 @@ const schema = Joi.object({
   body: Joi.object().keys({
     email: Joi.string().trim().required().messages({
       'string.base': 'Email is invalid',
-      'any.required': 'Please specify a email',
+      'any.required': 'Please specify an email',
     }),
   }).required(),
 });
@@ -27,8 +28,8 @@ async function addMember(req) {
   const value = u.validate(req, schema);
 
   return sequelize.transaction(isoOption, async (t) => {
-    const theleague = await League.findByPk(value.params.leagueID, u.tobj(t)).then(u.dv);
-    if (!theleague) { u.Error('No league found', 404); }
+    const theleague = await canUserSeeLeague(t, value.user, value.params.leagueID);
+    if (theleague.ispublic) { u.Error('Cannot add others in a public league', 406); }
 
     if (value.user !== theleague.adminId) { u.Error('You are not admin, cannot add new member', 403); }
 

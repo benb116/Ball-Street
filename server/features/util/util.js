@@ -90,7 +90,11 @@ out.ObjectTest = function ObjectTest(service, req, contains) {
 out.ArrayTest = function ArrayTest(service, req, items) {
   return async () => service(req).then((resp) => {
     items.forEach((e) => {
-      expect(resp).toContainEqual(expect.objectContaining(e));
+      let check = e;
+      if (typeof check === 'object' && check !== null) {
+        check = expect.objectContaining(e);
+      }
+      expect(resp).toContainEqual(check);
     });
   });
 };

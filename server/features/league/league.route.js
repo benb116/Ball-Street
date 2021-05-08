@@ -22,6 +22,6 @@ router.post('/league', routeHandler(league.createLeague));
 router.post('/:leagueID/addMember', routeHandler(league.addMember));
 
 // Join a public league
-router.post('/:leagueID/join', routeHandler(league.join));
+router.post('/:leagueID/join', routeHandler(league.joinLeague));
 
 module.exports = router;
