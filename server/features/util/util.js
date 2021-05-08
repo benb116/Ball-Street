@@ -109,10 +109,11 @@ out.ErrorTest = function ErrorTest(service, req, statusNumber, message) {
       // eslint-disable-next-line no-console
       if (!err.status) { console.log(err); }
       expect(err.status).toEqual(statusNumber);
+      expect(err.message).toEqual(message);
     }
-    expect(async () => {
-      await service(req);
-    }).rejects.toThrow(message);
+    // expect(async () => {
+    //   await service(req);
+    // }).rejects.toThrow(message);
   };
 };
 
