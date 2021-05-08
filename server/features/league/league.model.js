@@ -3,6 +3,7 @@ module.exports = function model(sequelize, DataTypes) {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     adminId: {
       type: DataTypes.INTEGER,

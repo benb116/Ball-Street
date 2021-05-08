@@ -21,6 +21,11 @@ describe('createEntry service', () => {
     },
   ));
 
+  test('Duplicate entry returns error 406', ErrorTest(
+    service, { user: 1, params: { leagueID: 1, contestID: 1 }, body: {} },
+    406, 'An entry already exists',
+  ));
+
   test('Non member request in private league returns error 403', ErrorTest(
     service, { user: 3, params: { leagueID: 2, contestID: 2 }, body: {} },
     403, 'You are not a member of that league',

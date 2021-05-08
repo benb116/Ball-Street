@@ -9,6 +9,11 @@ describe('createLeague service', () => {
     },
   ));
 
+  test('Duplicate league name returns error 406', ErrorTest(
+    service, { user: 2, params: { }, body: { name: 'Ball Street' } },
+    406, 'A league already exists with that name',
+  ));
+
   test('Missing userID returns error 400', ErrorTest(
     service, { params: { }, body: { name: 'PL 1' } },
     400, 'You must be logged in',

@@ -36,7 +36,13 @@ async function createLeague(req) {
     }, u.tobj(t))
       .catch((err) => u.Error(err.parent.constraint, 406));
     return newleague;
-  });
+  })
+    .catch((err) => {
+      if (err.status) { u.Error(err.message, err.status); }
+      const errmess = err.parent.constraint || err[0].message;
+      if (errmess === 'Leagues_name_key') { u.Error('A league already exists with that name', 406); }
+      u.Error(errmess, 406);
+    });
 }
 
 module.exports = createLeague;

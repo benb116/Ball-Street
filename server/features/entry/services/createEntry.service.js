@@ -38,6 +38,7 @@ function createEntry(req) {
     .catch((err) => {
       if (err.status) { u.Error(err.message, err.status); }
       const errmess = err.parent.constraint || err[0].message;
+      if (errmess === 'Entries_pkey') { u.Error('An entry already exists', 406); }
       u.Error(errmess, 406);
     });
 }
