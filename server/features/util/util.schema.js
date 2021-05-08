@@ -2,6 +2,18 @@ const Joi = require('joi');
 
 const validators = {};
 
+validators.email = Joi.string().email().required().messages({
+  'string.base': 'Email is invalid',
+  'string.email': 'Email is invalid',
+  'any.required': 'Email is required',
+});
+
+validators.password = Joi.string().min(8).required().messages({
+  'string.base': 'Password is invalid',
+  'string.min': 'Password must be at least 8 characters long',
+  'any.required': 'Password is required',
+});
+
 validators.user = Joi.number().integer().greater(0).required()
   .messages({
     'number.base': 'User ID is invalid',

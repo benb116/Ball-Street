@@ -16,7 +16,7 @@ Backend
     Trading bots
     Security
     Mobile notifications
-    User Validation
+    User Validation & testing
     Logging
 
 Frontend
@@ -24,8 +24,9 @@ Frontend
     Show current point totals
     Reconnect to ws if necessary
     Mobile
+    Testing
+    Header/footer
 
-Testing
 Payments
 CSRF
 CI/CD

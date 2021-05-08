@@ -54,7 +54,7 @@ const Contest = () => {
 
       <br />
       <br />
-      {!thiscontestmyentry
+      {!(Object.keys(thiscontestmyentry).length)
         ? (
           <form className="space-y-6" onSubmit={handleSubmit(onCreateEntry)} method="POST">
             <div>

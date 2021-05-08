@@ -25,8 +25,11 @@ function routeHandler(service, cacheExpiry) {
       }
       return res.json(out);
     } catch (err) {
-      // eslint-disable-next-line no-console
-      if (!err) { console.log(err); }
+      if (!err) {
+        // eslint-disable-next-line no-console
+        console.log(err);
+        return res.status(500).json({ error: 'Unexpected error' });
+      }
       return res.status((err.status || 500)).json({ error: err.message });
     }
   };
@@ -34,7 +37,7 @@ function routeHandler(service, cacheExpiry) {
 
 function stripReq(inp) {
   const out = {};
-  out.user = inp.session.user.id;
+  out.user = (inp.session ? inp.session.user.id : null);
   out.params = inp.params;
   out.body = inp.body;
   return out;

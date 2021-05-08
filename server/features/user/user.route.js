@@ -4,38 +4,45 @@ const service = require('./user.service');
 const authenticate = require('../../middleware/authenticate');
 const { routeHandler } = require('../util/util.route');
 
-// TODO validation
-
 router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return res.status(400).json('Bad request params');
-  }
+  const inp = {
+    email: req.body.email,
+    password: req.body.password,
+  };
   try {
-    const user = await service.login(email, password);
+    const user = await service.login(inp);
     req.session.user = user; // add to session
-    res.json(user);
+    return res.json(user);
   } catch (err) {
-    return res.status((err.status || 500)).json({ error: err.message });
+    if (!err) {
+      // eslint-disable-next-line no-console
+      console.log(err);
+      return res.status(500).json({ error: 'Unexpected error' });
+    }
+    return res.status((err.status || 500)).json({ error: err.message || 'Unexpected error' });
   }
-  return 0;
 });
 
 router.get('/account', authenticate, routeHandler(service.getAccount));
 
 router.post('/signup', async (req, res) => {
-  const { name, email, password } = req.body;
-  if (!name || !email || !password) {
-    return res.status(400).json('Bad request params');
-  }
+  const inp = {
+    name: req.body.name,
+    email: req.body.email,
+    password: req.body.password,
+  };
   try {
-    const user = await service.signup(name, email, password);
+    const user = await service.signup(inp);
     req.session.user = user; // add to session
-    res.json(user);
+    return res.json(user);
   } catch (err) {
-    return res.status((err.status || 500)).json({ error: err.message });
+    if (!err) {
+      // eslint-disable-next-line no-console
+      console.log(err);
+      return res.status(500).json({ error: 'Unexpected error' });
+    }
+    return res.status((err.status || 500)).json({ error: err.message || 'Unexpected error' });
   }
-  return 0;
 });
 
 router.delete('/logout', authenticate, (req, res) => {
