@@ -54,7 +54,7 @@ async function setLatest() {
   const randplayers = getRandom(playerIDs, 100);
   const outPromises = randplayers.map((p) => {
     const projPrice = getRandomInt(2000).toString();
-    const statPrice = getRandomInt(1000);
+    const statPrice = getRandomInt(1000).toString();
     client2.publish('statUpdate', JSON.stringify({
       nflplayerID: p,
       projPrice,

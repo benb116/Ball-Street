@@ -41,22 +41,29 @@ function priceUpdate(message) {
   } = JSON.parse(message);
   if (!liveState.priceUpdateMap[contestID]) { liveState.priceUpdateMap[contestID] = {}; }
   liveState.priceUpdateMap[contestID][nflplayerID] = {
+    nflplayerID,
     bestbid,
     bestask,
-    nflplayerID,
   };
 }
 
 function statUpdate(message) {
   const { nflplayerID, statPrice, projPrice } = JSON.parse(message);
-  liveState.statUpdateMap[nflplayerID] = { nflplayerID, statPrice: Number(statPrice), projPrice };
+  liveState.statUpdateMap[nflplayerID] = {
+    nflplayerID,
+    statPrice,
+    projPrice,
+  };
 }
 
 // Add a last trade update to the map
 function lastTrade(message) {
   const { contestID, nflplayerID, lastprice } = JSON.parse(message);
   if (!liveState.lastTradeMap[contestID]) { liveState.lastTradeMap[contestID] = {}; }
-  liveState.lastTradeMap[contestID][nflplayerID] = { lastprice, nflplayerID };
+  liveState.lastTradeMap[contestID][nflplayerID] = {
+    nflplayerID,
+    lastprice,
+  };
 }
 
 // When new leaderboards come in, send out to the correct ws

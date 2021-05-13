@@ -103,7 +103,7 @@ PlayerItem.propTypes = {
     posName: PropTypes.string.isRequired,
     teamAbr: PropTypes.string.isRequired,
     projPrice: PropTypes.string.isRequired,
-    statprice: PropTypes.number.isRequired,
+    statPrice: PropTypes.string.isRequired,
   }).isRequired,
 };
 
