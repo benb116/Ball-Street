@@ -62,6 +62,7 @@ async function calculateLeaderboard() {
     }, []);
     out.contest = e.ContestId;
     out.username = e.User.name;
+    out.userID = e.User.id;
     return out;
   });
   // console.log(normalizedEntries);
@@ -101,7 +102,7 @@ async function calculateLeaderboard() {
   // Bin entries in an array for each contest
   const contestSplit = projTotals.reduce((acc, cur) => {
     if (!acc[cur.contest]) { acc[cur.contest] = []; }
-    acc[cur.contest].push({ user: cur.username, total: cur.total });
+    acc[cur.contest].push({ user: cur.username, id: cur.userID, total: cur.total });
     return acc;
   }, {});
   // console.log(contestSplit);

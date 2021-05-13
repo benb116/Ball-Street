@@ -20,7 +20,7 @@ const Leaderboards = () => {
     >
       <h3>Leaderboard</h3>
       <div>
-        {leaders.map((leader) => <LeaderboardItem key={leader.user} leaderdata={leader} />)}
+        {leaders.map((leader) => <LeaderboardItem key={leader.id} leaderdata={leader} />)}
       </div>
     </div>
   );

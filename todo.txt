@@ -16,13 +16,10 @@ Backend
     Trading bots
     Security
     Mobile notifications
-    User Validation & testing
     Logging
 
 Frontend
     Allow roster change spots
-    Show current point totals
-    Reconnect to ws if necessary
     Mobile
     Testing
     Header/footer
