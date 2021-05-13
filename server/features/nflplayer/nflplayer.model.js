@@ -18,7 +18,7 @@ module.exports = function out(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
-    statprice: { // If games ended now, how many points would he be worth
+    statprice: { // How many points is the player worth after a game
       type: DataTypes.INTEGER,
       allowNull: true,
     },
