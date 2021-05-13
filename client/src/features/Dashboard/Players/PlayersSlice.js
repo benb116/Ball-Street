@@ -34,9 +34,14 @@ export const playersSlice = createSlice({
       }
       state.sortProp = action.payload;
     },
-    updatePrice: (state, { payload }) => {
-      const pm = state.priceMap[payload.nflplayerID] || {};
-      state.priceMap[payload.nflplayerID] = { ...(pm), ...payload };
+    updatePrices: (state, { payload }) => {
+      if (!payload.length) { payload = [payload]; }
+      const ns = state;
+      payload.forEach((p) => {
+        const pm = ns.priceMap[p.nflplayerID] || {};
+        ns.priceMap[p.nflplayerID] = { ...(pm), ...p };
+      });
+      state = ns;
     },
   },
   extraReducers: {
@@ -52,7 +57,7 @@ export const playersSlice = createSlice({
 });
 
 export const {
-  clear, setFilter, setSort, updatePrice,
+  clear, setFilter, setSort, updatePrices,
 } = playersSlice.actions;
 
 export const allPlayersSelector = (state) => (

@@ -16,6 +16,7 @@ const client2 = redis.createClient();
 const getAsync = promisify(client2.get).bind(client2);
 
 client.subscribe('priceUpdate');
+client.subscribe('statUpdate');
 client.subscribe('lastTrade');
 client.subscribe('leaderUpdate');
 client.subscribe('protectedMatch');
@@ -24,6 +25,7 @@ client.subscribe('offerFilled');
 client.on('message', (channel, message) => {
   switch (channel) {
     case 'priceUpdate': priceUpdate(message); break;
+    case 'statUpdate': statUpdate(message); break;
     case 'lastTrade': lastTrade(message); break;
     case 'leaderUpdate': leaderUpdate(); break;
     case 'protectedMatch': protectedMatch(message); break;
@@ -39,17 +41,22 @@ function priceUpdate(message) {
   } = JSON.parse(message);
   if (!liveState.priceUpdateMap[contestID]) { liveState.priceUpdateMap[contestID] = {}; }
   liveState.priceUpdateMap[contestID][nflplayerID] = {
-    bestbid: Number(bestbid),
-    bestask: Number(bestask),
+    bestbid,
+    bestask,
     nflplayerID,
   };
+}
+
+function statUpdate(message) {
+  const { nflplayerID, statPrice, projPrice } = JSON.parse(message);
+  liveState.statUpdateMap[nflplayerID] = { nflplayerID, statPrice: Number(statPrice), projPrice };
 }
 
 // Add a last trade update to the map
 function lastTrade(message) {
   const { contestID, nflplayerID, lastprice } = JSON.parse(message);
   if (!liveState.lastTradeMap[contestID]) { liveState.lastTradeMap[contestID] = {}; }
-  liveState.lastTradeMap[contestID][nflplayerID] = { lastprice: Number(lastprice), nflplayerID };
+  liveState.lastTradeMap[contestID][nflplayerID] = { lastprice, nflplayerID };
 }
 
 // When new leaderboards come in, send out to the correct ws
@@ -94,6 +101,16 @@ setInterval(() => {
       }
     });
     liveState.priceUpdateMap = {};
+  }
+
+  if (Object.keys(liveState.statUpdateMap).length) {
+    liveState.contestmap.forEach((thecontestID, thews) => {
+      if (!thews) { liveState.contestmap.delete(thews); return; }
+      if (thews.readyState === 1) {
+        thews.send(JSON.stringify({ event: 'statUpdate', pricedata: liveState.statUpdateMap }));
+      }
+    });
+    liveState.statUpdateMap = {};
   }
 
   if (Object.keys(liveState.lastTradeMap).length) {

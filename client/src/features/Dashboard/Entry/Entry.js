@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { playersSelector } from '../Players/PlayersSlice';
+import { playersSelector, pricesMapSelector } from '../Players/PlayersSlice';
 
 import { getEntry, entrySelector, rosterUpdateSelector } from './EntrySlice';
 
@@ -83,14 +83,15 @@ function PointTotals() {
 
   const rosterPlayerIDs = Object.values(thisentry.roster).filter((p) => p !== null);
   const players = useSelector(playersSelector(rosterPlayerIDs));
+  const priceMaps = useSelector(pricesMapSelector(rosterPlayerIDs));
 
   const sum = rpos.reduce((acc, pos) => {
     const out = acc;
     const thisplayerID = thisentry.roster[pos];
     const theplayer = players.find((p) => p.id === thisplayerID);
     if (theplayer) {
-      out[0] += Number(theplayer.statprice) || 0;
-      out[1] += Number(theplayer.preprice) || 0;
+      out[0] += Number(priceMaps[thisplayerID].statPrice) || 0;
+      out[1] += Number(priceMaps[thisplayerID].projPrice) || 0;
     }
     return out;
   }, [thisentry.balance, thisentry.balance]);

@@ -5,7 +5,7 @@ const redis = require('redis');
 const { promisify } = require('util');
 
 const session = require('../../middleware/session');
-const { hashkey } = require('../../db/redisSchema');
+const { hashkey, statHashkey } = require('../../db/redisSchema');
 
 const liveState = require('./livestate'); // Data stored in memory
 
@@ -40,7 +40,7 @@ wss.on('connection', async (ws, request) => {
 
   // Send starting data
   const out = await sendLatest(contestID);
-  ws.send(JSON.stringify(out));
+  ws.send(JSON.stringify({ event: 'priceUpdate', pricedata: out }));
 
   ws.on('close', () => {
     liveState.connmap.delete(userId);
@@ -66,11 +66,11 @@ let playerIDs = [];
 async function sendLatest(contestID) {
   const outPromises = playerIDs
     .map((p) => {
-      const rkey = hashkey(contestID, p);
-      return hgetallAsync(rkey).then((obj) => {
-        if (!obj) { return null; }
-        const out = obj;
-        out.contestID = contestID;
+      const contestPromise = hgetallAsync(hashkey(contestID, p));
+      const statPromise = hgetallAsync(statHashkey(p));
+      return Promise.all([contestPromise, statPromise]).then((objarr) => {
+        if (!objarr) { return null; }
+        const out = { ...objarr[0], ...objarr[1] };
         out.nflplayerID = p;
         return out;
       });

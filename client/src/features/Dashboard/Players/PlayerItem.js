@@ -55,8 +55,8 @@ function PlayerItem({ playerdata }) {
       <td style={{ width: '10rem', overflow: 'hidden' }}>{playerdata.name}</td>
       <td style={{ width: '2.2rem' }}>{playerdata.posName}</td>
       <td style={{ width: '2.2rem' }}>{playerdata.teamAbr}</td>
-      <td style={{ width: '2rem' }}>{playerdata.preprice}</td>
-      <td style={{ width: '2rem' }}>{playerdata.statprice}</td>
+      <td style={{ width: '2rem' }}>{playerdata.projPrice}</td>
+      <td style={{ width: '2rem' }}>{playerdata.statPrice}</td>
       <td style={{ width: '2rem' }}>{(priceMap && Number(priceMap.lastprice)) ? priceMap.lastprice : ''}</td>
       <td style={{ width: '2rem' }}>{(priceMap && Number(priceMap.bestbid)) ? priceMap.bestbid : ''}</td>
       <td style={{ width: '2rem' }}>{(priceMap && Number(priceMap.bestask)) ? priceMap.bestask : ''}</td>
@@ -102,7 +102,7 @@ PlayerItem.propTypes = {
     name: PropTypes.string.isRequired,
     posName: PropTypes.string.isRequired,
     teamAbr: PropTypes.string.isRequired,
-    preprice: PropTypes.number.isRequired,
+    projPrice: PropTypes.string.isRequired,
     statprice: PropTypes.number.isRequired,
   }).isRequired,
 };

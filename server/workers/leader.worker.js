@@ -5,7 +5,7 @@ const redis = require('redis');
 const { promisify } = require('util');
 
 const config = require('../config');
-const { hashkey, leaderHashkey } = require('../db/redisSchema');
+const { leaderHashkey, statHashkey } = require('../db/redisSchema');
 
 const entryService = require('../features/entry/entry.service');
 const playerService = require('../features/nflplayer/nflplayer.service');
@@ -13,6 +13,7 @@ const playerService = require('../features/nflplayer/nflplayer.service');
 const client = redis.createClient();
 const client2 = redis.createClient();
 const hgetallAsync = promisify(client.hgetall).bind(client);
+const hsetAsync = promisify(client.hset).bind(client);
 
 // Get a list of all player IDs
 let playerIDs = [];
@@ -22,19 +23,46 @@ let playerIDs = [];
 })();
 
 // Pull all latest price info from redis for all players
-async function sendLatest(contestID) {
+async function sendLatest() {
   const outPromises = playerIDs.map((p) => {
-    const rkey = hashkey(contestID, p); // Get the hash key for a player
+    const rkey = statHashkey(p); // Get the hash key for a player
 
     return hgetallAsync(rkey).then((obj) => { // Get all price info into price obj
-      if (!obj) { return null; }
-      const out = obj;
-      out.contestID = contestID;
+      const out = (obj || {});
       out.nflplayerID = p;
-      out.projPrice = getRandomInt(1000);
       return out;
     });
   });
+  return Promise.all(outPromises);
+}
+
+function getRandom(arr, n) {
+  const result = new Array(n);
+  let len = arr.length;
+  const taken = new Array(len);
+  if (n > len) throw new RangeError('getRandom: more elements taken than available');
+  while (n--) {
+    const x = Math.floor(Math.random() * len);
+    result[n] = arr[x in taken ? taken[x] : x];
+    taken[x] = --len in taken ? taken[len] : len;
+  }
+  return result;
+}
+
+// Pull all latest price info from redis for all players
+async function setLatest() {
+  const randplayers = getRandom(playerIDs, 100);
+  const outPromises = randplayers.map((p) => {
+    const projPrice = getRandomInt(2000).toString();
+    const statPrice = getRandomInt(1000);
+    client2.publish('statUpdate', JSON.stringify({
+      nflplayerID: p,
+      projPrice,
+      statPrice,
+    }));
+    return hsetAsync(statHashkey(p), 'projPrice', projPrice, 'statPrice', statPrice);
+  });
+
   return Promise.all(outPromises);
 }
 
@@ -70,28 +98,26 @@ async function calculateLeaderboard() {
   const contests = normalizedEntries.map((e) => e.contest).filter(onlyUnique);
 
   // Pull latest price info for all contests
-  const pricemaps = contests.map(sendLatest);
   // Build one big price map
-  const priceMap = await Promise.all(pricemaps)
-    .then((arrs) => arrs.reduce((acc, cArray, i) => {
+  const priceMap = await sendLatest()
+    .then((arr) => {
     // Make a subobject for each contest
-      const pMap = acc;
-      pMap[contests[i]] = cArray // For each priceobj in a contest
-        .filter((e) => e !== null) // Get rid of nulls
-        .reduce((subpMap, priceObj) => { // Populate the subobject by nflplayerID
-          const out2 = subpMap;
+      const pMap = arr // For each priceobj in a contest
+        // .filter((e) => e !== null) // Get rid of nulls
+        .reduce((accpMap, priceObj) => { // Populate the subobject by nflplayerID
+          const out2 = accpMap;
           out2[priceObj.nflplayerID] = priceObj;
           return out2;
         }, {});
       return pMap;
-    }, {}));
+    }, {});
   // console.log(priceMap);
 
   // Sum each entry based on the price map
   const projTotals = normalizedEntries.map((e) => {
     e.total = e.roster.reduce((acc, cur) => {
       // If player has price info, add that, otherwise 0
-      const out = acc + (priceMap[e.contest][cur] ? Number(priceMap[e.contest][cur].projPrice) : 0);
+      const out = acc + (priceMap[cur] ? Number(priceMap[cur].projPrice) : 0);
       return out;
     }, e.balance);
     return e;
@@ -117,4 +143,8 @@ async function calculateLeaderboard() {
   client2.publish('leaderUpdate', '');
 }
 
+setTimeout(setLatest, 1000);
+setInterval(setLatest, 10000);
+
+calculateLeaderboard();
 setInterval(calculateLeaderboard, 10000);
