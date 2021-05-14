@@ -55,11 +55,11 @@ function PlayerItem({ playerdata }) {
       <td style={{ width: '10rem', overflow: 'hidden' }}>{playerdata.name}</td>
       <td style={{ width: '2.2rem' }}>{playerdata.posName}</td>
       <td style={{ width: '2.2rem' }}>{playerdata.teamAbr}</td>
-      <td style={{ width: '2rem' }}>{playerdata.preprice}</td>
-      <td style={{ width: '2rem' }}>{playerdata.statprice}</td>
-      <td style={{ width: '2rem' }}>{(priceMap && Number(priceMap.lastprice)) ? priceMap.lastprice : ''}</td>
-      <td style={{ width: '2rem' }}>{(priceMap && Number(priceMap.bestbid)) ? priceMap.bestbid : ''}</td>
-      <td style={{ width: '2rem' }}>{(priceMap && Number(priceMap.bestask)) ? priceMap.bestask : ''}</td>
+      <td style={{ width: '2rem', textAlign: 'right' }}>{playerdata.preprice}</td>
+      <td style={{ width: '2rem', textAlign: 'right' }}>{playerdata.statprice}</td>
+      <td style={{ width: '2rem', textAlign: 'right' }}>{(priceMap && Number(priceMap.lastprice)) ? priceMap.lastprice : ''}</td>
+      <td style={{ width: '2rem', textAlign: 'right' }}>{(priceMap && Number(priceMap.bestbid)) ? priceMap.bestbid : ''}</td>
+      <td style={{ width: '2rem', textAlign: 'right' }}>{(priceMap && Number(priceMap.bestask)) ? priceMap.bestask : ''}</td>
       <td>
         <button
           style={{

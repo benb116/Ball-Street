@@ -65,11 +65,11 @@ function RosterHeader() {
         <th style={{ width: '2.2rem' }}>Pos</th>
         <th style={{ width: '10rem' }}>Name</th>
         <th style={{ width: '2.2rem' }}>Team</th>
-        <th style={{ width: '2rem' }}>Pts</th>
-        <th style={{ width: '2rem' }}>Proj</th>
-        <th style={{ width: '2rem' }}>Last</th>
-        <th style={{ width: '2rem' }}>Bid</th>
-        <th style={{ width: '2rem' }}>Ask</th>
+        <th style={{ width: '2rem', textAlign: 'right' }}>Pts</th>
+        <th style={{ width: '2rem', textAlign: 'right' }}>Proj</th>
+        <th style={{ width: '2rem', textAlign: 'right' }}>Last</th>
+        <th style={{ width: '2rem', textAlign: 'right' }}>Bid</th>
+        <th style={{ width: '2rem', textAlign: 'right' }}>Ask</th>
         <th style={{ width: '2rem' }}>Drop</th>
         <th style={{ width: '2rem' }}>Ask</th>
       </tr>
@@ -100,8 +100,8 @@ function PointTotals() {
       <td>Total</td>
       <td />
       <td />
-      <td>{sum[0]}</td>
-      <td>{sum[1]}</td>
+      <td style={{ textAlign: 'right' }}>{sum[0]}</td>
+      <td style={{ textAlign: 'right' }}>{sum[1]}</td>
     </tr>
   );
 }
