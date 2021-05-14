@@ -18,8 +18,8 @@ const seasonString = '2020REG';
 const weekString = '1';
 const projectedURL = `https://fly.sportsdata.io/v3/nfl/projections/json/PlayerGameProjectionStatsByWeek/${seasonString}/${weekString}?key=${sportsdataio}`;
 const statURL = `https://fly.sportsdata.io/v3/nfl/stats/json/PlayerGameStatsByWeek/${seasonString}/${weekString}?key=${sportsdataio}`;
-axios.get(projectedURL).then(setDBPrePrices);
-axios.get(statURL).then(setDBStatPrices);
+// axios.get(projectedURL).then(setDBPrePrices);
+// axios.get(statURL).then(setDBStatPrices);
 
 function setDBPrePrices({ data }) {
   const all = data.map((p) => {
@@ -53,6 +53,18 @@ function setDBStatPrices({ data }) {
   return Promise.all(all);
 }
 
+function simURL(n) {
+  return `https://fly.sportsdata.io/v3/nfl/stats/json/SimulatedBoxScoresV3/${n}?key=${sportsdataio}`;
+}
+
+let count = 0;
+
+setInterval(() => {
+  console.log(count);
+  axios.get(simURL(count)).then(setStatPrices);
+  count += 1;
+}, 5000);
+
 const livemap = {};
 
 function setProjPrices({ data }) {
@@ -69,12 +81,14 @@ function setProjPrices({ data }) {
 }
 
 function setStatPrices({ data }) {
-  return Promise.all(data.map((p) => {
+  const out = data[1].PlayerGames;
+  return Promise.all(out.map((p) => {
     const { PlayerID, FantasyPoints } = p;
     if (!livemap[PlayerID]) { livemap[PlayerID] = {}; }
-    if (!livemap[PlayerID].statPrice) { livemap[PlayerID].statPrice = null; }
+    if (!livemap[PlayerID].statPrice > 0) { livemap[PlayerID].statPrice = 0; }
 
-    if (!livemap[PlayerID].statPrice !== FantasyPoints) {
+    if (livemap[PlayerID].statPrice !== FantasyPoints) {
+      livemap[PlayerID].statPrice = FantasyPoints;
       return setLatest(PlayerID, null, FantasyPoints);
     }
     return Promise.resolve();
@@ -83,10 +97,12 @@ function setStatPrices({ data }) {
 
 // Pull all latest price info from redis for all players
 async function setLatest(nflplayerID, projPrice, statPrice) {
+  projPrice = (projPrice ? Math.round(projPrice * 100).toString() : projPrice);
+  statPrice = (statPrice ? Math.round(statPrice * 100).toString() : statPrice);
   const argarray = [statHashkey(nflplayerID)];
   let pubobj = { nflplayerID };
-  if (projPrice) { argarray.push('projPrice', projPrice); pubobj = { ...pubobj, projPrice }; }
-  if (statPrice) { argarray.push('statPrice', statPrice); pubobj = { ...pubobj, statPrice }; }
+  if (projPrice !== null && projPrice !== undefined) { argarray.push('projPrice', projPrice); pubobj = { ...pubobj, projPrice }; }
+  if (statPrice !== null && statPrice !== undefined) { argarray.push('statPrice', statPrice); pubobj = { ...pubobj, statPrice }; }
   return hsetAsync(argarray)
     .then(() => {
       client.publish('statUpdate', JSON.stringify(pubobj));
@@ -99,3 +115,5 @@ async function setLatest(nflplayerID, projPrice, statPrice) {
 // Projected Player Game Stats by Week (w/ Injuries, Lineups, DFS Salaries) => "FantasyPoints"
 // Fantasy Defense Game Stats
 // Projected Fantasy Defense Game Stats (w/ DFS Salaries)
+
+// Box Scores V3 Simulation
