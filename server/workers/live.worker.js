@@ -49,11 +49,9 @@ function priceUpdate(message) {
 
 function statUpdate(message) {
   const { nflplayerID, statPrice, projPrice } = JSON.parse(message);
-  liveState.statUpdateMap[nflplayerID] = {
-    nflplayerID,
-    statPrice,
-    projPrice,
-  };
+  liveState.statUpdateMap[nflplayerID] = { nflplayerID };
+  if (statPrice !== null) { liveState.statUpdateMap[nflplayerID].statPrice = statPrice; }
+  if (projPrice !== null) { liveState.statUpdateMap[nflplayerID].projPrice = projPrice; }
 }
 
 // Add a last trade update to the map

@@ -13,7 +13,6 @@ const playerService = require('../features/nflplayer/nflplayer.service');
 const client = redis.createClient();
 const client2 = redis.createClient();
 const hgetallAsync = promisify(client.hgetall).bind(client);
-const hsetAsync = promisify(client.hset).bind(client);
 
 // Get a list of all player IDs
 let playerIDs = [];
@@ -35,44 +34,9 @@ async function sendLatest() {
   });
   return Promise.all(outPromises);
 }
-
-function getRandom(arr, n) {
-  const result = new Array(n);
-  let len = arr.length;
-  const taken = new Array(len);
-  if (n > len) throw new RangeError('getRandom: more elements taken than available');
-  while (n--) {
-    const x = Math.floor(Math.random() * len);
-    result[n] = arr[x in taken ? taken[x] : x];
-    taken[x] = --len in taken ? taken[len] : len;
-  }
-  return result;
-}
-
-// Pull all latest price info from redis for all players
-async function setLatest() {
-  const randplayers = getRandom(playerIDs, 100);
-  const outPromises = randplayers.map((p) => {
-    const projPrice = getRandomInt(2000).toString();
-    const statPrice = getRandomInt(1000).toString();
-    client2.publish('statUpdate', JSON.stringify({
-      nflplayerID: p,
-      projPrice,
-      statPrice,
-    }));
-    return hsetAsync(statHashkey(p), 'projPrice', projPrice, 'statPrice', statPrice);
-  });
-
-  return Promise.all(outPromises);
-}
-
 // Filter out duplicates
 function onlyUnique(value, index, self) {
   return self.indexOf(value) === index;
-}
-
-function getRandomInt(max) {
-  return Math.floor(Math.random() * max);
 }
 
 async function calculateLeaderboard() {
@@ -143,9 +107,6 @@ async function calculateLeaderboard() {
   // Announce new results
   client2.publish('leaderUpdate', '');
 }
-
-setTimeout(setLatest, 1000);
-setInterval(setLatest, 10000);
 
 calculateLeaderboard();
 setInterval(calculateLeaderboard, 10000);

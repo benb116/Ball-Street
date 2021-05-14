@@ -14,10 +14,10 @@ const hsetAsync = promisify(client2.hset).bind(client2);
 const { NFLPlayer } = require('../models');
 
 // Get projected points before the game
-const seasonString = '2020REG';
-const weekString = '1';
-const projectedURL = `https://fly.sportsdata.io/v3/nfl/projections/json/PlayerGameProjectionStatsByWeek/${seasonString}/${weekString}?key=${sportsdataio}`;
-const statURL = `https://fly.sportsdata.io/v3/nfl/stats/json/PlayerGameStatsByWeek/${seasonString}/${weekString}?key=${sportsdataio}`;
+// const seasonString = '2020REG';
+// const weekString = '1';
+// const projectedURL = `https://fly.sportsdata.io/v3/nfl/projections/json/PlayerGameProjectionStatsByWeek/${seasonString}/${weekString}?key=${sportsdataio}`;
+// const statURL = `https://fly.sportsdata.io/v3/nfl/stats/json/PlayerGameStatsByWeek/${seasonString}/${weekString}?key=${sportsdataio}`;
 // axios.get(projectedURL).then(setDBPrePrices);
 // axios.get(statURL).then(setDBStatPrices);
 
@@ -96,13 +96,13 @@ function setStatPrices({ data }) {
 }
 
 // Pull all latest price info from redis for all players
-async function setLatest(nflplayerID, projPrice, statPrice) {
-  projPrice = (projPrice ? Math.round(projPrice * 100).toString() : projPrice);
-  statPrice = (statPrice ? Math.round(statPrice * 100).toString() : statPrice);
+async function setLatest(nflplayerID, inprojPrice, instatPrice) {
+  const projPrice = (inprojPrice ? Math.round(inprojPrice * 100).toString() : inprojPrice);
+  const statPrice = (instatPrice ? Math.round(instatPrice * 100).toString() : instatPrice);
   const argarray = [statHashkey(nflplayerID)];
   let pubobj = { nflplayerID };
-  if (projPrice !== null && projPrice !== undefined) { argarray.push('projPrice', projPrice); pubobj = { ...pubobj, projPrice }; }
-  if (statPrice !== null && statPrice !== undefined) { argarray.push('statPrice', statPrice); pubobj = { ...pubobj, statPrice }; }
+  if (projPrice !== null) { argarray.push('projPrice', projPrice); pubobj = { ...pubobj, projPrice }; }
+  if (statPrice !== null) { argarray.push('statPrice', statPrice); pubobj = { ...pubobj, statPrice }; }
   return hsetAsync(argarray)
     .then(() => {
       client.publish('statUpdate', JSON.stringify(pubobj));
