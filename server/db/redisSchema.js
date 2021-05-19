@@ -8,7 +8,17 @@ function leaderHashkey(contestID) {
   return `contest${contestID}:leaderboard`;
 }
 
+function gamePhaseKey() {
+  return 'gamePhase'; // "pre", "mid", "post"
+}
+
+function currentWeekKey() {
+  return 'currentWeek';
+}
+
 module.exports = {
   hashkey,
   leaderHashkey,
+  gamePhaseKey,
+  currentWeekKey,
 };

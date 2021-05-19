@@ -15,7 +15,7 @@ describe('createContest service', () => {
   ));
 
   test('Non member request in private league returns error 403', ErrorTest(
-    service, { user: 3, params: { leagueID: 2 }, body: { name: 'New Contest 3', budget: 10000 } },
+    service, { user: 4, params: { leagueID: 2 }, body: { name: 'New Contest 3', budget: 10000 } },
     403, 'You are not a member of that league',
   ));
 

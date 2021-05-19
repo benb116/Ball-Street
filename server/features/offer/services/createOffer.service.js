@@ -6,6 +6,7 @@ const offerQueue = new Queue('offer-queue');
 const config = require('../../../config');
 const u = require('../../util/util');
 const { validators } = require('../../util/util.schema');
+const { getGamePhase } = require('../../util/util.service');
 
 const sequelize = require('../../../db');
 const { Offer, Entry, NFLPlayer } = require('../../../models');
@@ -39,8 +40,14 @@ const schema = Joi.object({
   }).required(),
 });
 
-function createOffer(req) {
+async function createOffer(req) {
   const value = u.validate(req, schema);
+
+  const phase = await getGamePhase();
+  if (phase !== 'mid') {
+    u.Error("Can't make an offer before or after games", 406);
+  }
+
   const obj = value.body.offerobj;
   obj.userID = value.user;
   return sequelize.transaction(isoOption, async (t) => {

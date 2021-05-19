@@ -2,6 +2,7 @@ const Joi = require('joi');
 
 const u = require('../../util/util');
 const { validators } = require('../../util/util.schema');
+const { getGamePhase } = require('../../util/util.service');
 
 const sequelize = require('../../../db');
 
@@ -23,8 +24,14 @@ const schema = Joi.object({
 });
 
 // Try to add within a transaction, errors will rollback
-function preTradeDrop(req) {
+async function preTradeDrop(req) {
   const value = u.validate(req, schema);
+
+  const phase = await getGamePhase();
+  if (phase !== 'pre') {
+    u.Error("Can't drop during or after games", 406);
+  }
+
   return sequelize.transaction(isoOption, async (t) => tradeDrop(value, t)
     .catch((err) => {
       if (err.status) { u.Error(err.message, err.status); }

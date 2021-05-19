@@ -1,5 +1,10 @@
 const service = require('../services/preTradeDrop.service');
 const { ErrorTest, ObjectTest } = require('../../util/util');
+const { setGamePhase } = require('../../util/util.service');
+
+beforeEach(() => {
+  setGamePhase('pre');
+});
 
 describe('preTradeDrop service', () => {
   test('Valid request in private league returns data', ObjectTest(
@@ -23,7 +28,7 @@ describe('preTradeDrop service', () => {
       UserId: 2,
       WR1: null,
       WR2: null,
-      pointtotal: 1600,
+      pointtotal: 2600,
     },
   ));
 
@@ -40,7 +45,7 @@ describe('preTradeDrop service', () => {
 
   test('No entry returns error 404', ErrorTest(
     service, {
-      user: 3,
+      user: 4,
       params: { leagueID: 2, contestID: 2 },
       body: {
         nflplayerID: 19415,
@@ -69,4 +74,19 @@ describe('preTradeDrop service', () => {
     },
     400, 'You must be logged in',
   ));
+
+  test('Not pre games returns error 406', async () => {
+    await setGamePhase('mid');
+    await ErrorTest(
+      service, {
+        user: 2,
+        params: { leagueID: 2, contestID: 2 },
+        body: {
+          nflplayerID: 19041,
+        },
+      },
+      406, "Can't drop during or after games",
+    )();
+    await setGamePhase('pre');
+  });
 });

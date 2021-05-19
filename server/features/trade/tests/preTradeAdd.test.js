@@ -1,5 +1,10 @@
 const service = require('../services/preTradeAdd.service');
 const { ErrorTest, ObjectTest } = require('../../util/util');
+const { setGamePhase } = require('../../util/util.service');
+
+beforeEach(() => {
+  setGamePhase('pre');
+});
 
 describe('preTradeAdd service', () => {
   test('Valid request returns data', ObjectTest(
@@ -42,11 +47,11 @@ describe('preTradeAdd service', () => {
 
   test('Insufficient funds returns error 402', ErrorTest(
     service, {
-      user: 2,
+      user: 3,
       params: { leagueID: 2, contestID: 2 },
       body: {
-        nflplayerID: 21178,
-        rosterposition: 'TE1',
+        nflplayerID: 19067,
+        rosterposition: 'FLEX1',
       },
     },
     402, "User doesn't have enough points",
@@ -77,7 +82,7 @@ describe('preTradeAdd service', () => {
 
   test('No entry returns error 404', ErrorTest(
     service, {
-      user: 3,
+      user: 4,
       params: { leagueID: 2, contestID: 2 },
       body: {
         nflplayerID: 20933,
@@ -109,4 +114,20 @@ describe('preTradeAdd service', () => {
     },
     400, 'You must be logged in',
   ));
+
+  test('Not pre games returns error 406', async () => {
+    await setGamePhase('mid');
+    await ErrorTest(
+      service, {
+        user: 1,
+        params: { leagueID: 1, contestID: 1 },
+        body: {
+          nflplayerID: 20933,
+          rosterposition: 'TE1',
+        },
+      },
+      406, "Can't add during or after games",
+    )();
+    await setGamePhase('pre');
+  });
 });

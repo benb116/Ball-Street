@@ -1,11 +1,10 @@
 const Joi = require('joi');
 
-const config = require('../../../config');
 const u = require('../../util/util');
 
 const sequelize = require('../../../db');
 const { Contest } = require('../../../models');
-const { canUserSeeLeague } = require('../../util/util.service');
+const { canUserSeeLeague, getCurrentWeek } = require('../../util/util.service');
 const { validators } = require('../../util/util.schema');
 
 const isoOption = {
@@ -42,7 +41,7 @@ function createContest(req) {
     if (value.user !== theleague.adminId) { u.Error('Must be league admin to make new contests', 403); }
     return Contest.create({
       name: value.body.name,
-      nflweek: config.currentNFLWeek,
+      nflweek: await getCurrentWeek(),
       LeagueId: theleague.id,
       budget: value.body.budget,
     }, u.tobj(t)).catch((err) => {

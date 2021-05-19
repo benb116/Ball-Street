@@ -17,7 +17,7 @@ describe('getLeagueContests service', () => {
   ));
 
   test('Invalid request from private league returns error 403', ErrorTest(
-    service, { user: 3, params: { leagueID: 2 }, body: {} },
+    service, { user: 4, params: { leagueID: 2 }, body: {} },
     403, 'You are not a member of that league',
   ));
 

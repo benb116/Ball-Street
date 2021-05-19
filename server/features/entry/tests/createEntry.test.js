@@ -1,5 +1,10 @@
 const service = require('../services/createEntry.service');
 const { ErrorTest, ObjectTest } = require('../../util/util');
+const { setGamePhase } = require('../../util/util.service');
+
+beforeEach(() => {
+  setGamePhase('pre');
+});
 
 describe('createEntry service', () => {
   test('Valid request in private league returns data', ObjectTest(
@@ -27,7 +32,7 @@ describe('createEntry service', () => {
   ));
 
   test('Non member request in private league returns error 403', ErrorTest(
-    service, { user: 3, params: { leagueID: 2, contestID: 2 }, body: {} },
+    service, { user: 4, params: { leagueID: 2, contestID: 2 }, body: {} },
     403, 'You are not a member of that league',
   ));
 
@@ -60,4 +65,13 @@ describe('createEntry service', () => {
     service, { user: 1, params: { leagueID: 1, contestID: 80 }, body: {} },
     404, 'No contest found',
   ));
+
+  test('Not pre games returns error 406', async () => {
+    await setGamePhase('mid');
+    await ErrorTest(
+      service, { user: 1, params: { leagueID: 1, contestID: 1 }, body: {} },
+      406, "Can't make an entry during or after games",
+    )();
+    await setGamePhase('pre');
+  });
 });

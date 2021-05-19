@@ -5,6 +5,7 @@ const offerQueue = new Queue('offer-queue');
 
 const u = require('../../util/util');
 const { validators } = require('../../util/util.schema');
+const { getGamePhase } = require('../../util/util.service');
 
 const sequelize = require('../../../db');
 const { Offer } = require('../../../models');
@@ -27,8 +28,13 @@ const schema = Joi.object({
   }).required(),
 });
 
-function cancelOffer(req) {
+async function cancelOffer(req) {
   const value = u.validate(req, schema);
+
+  const phase = await getGamePhase();
+  if (phase !== 'mid') {
+    u.Error("Can't cancel an offer before or after games", 406);
+  }
 
   // Cancel offer, but if it's filled, let user know
   return sequelize.transaction(isoOption, async (t) => {

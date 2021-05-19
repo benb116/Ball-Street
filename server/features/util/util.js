@@ -20,7 +20,8 @@ out.isInvalidSpot = function isInvalidSpot(playerType, rosterPosName) {
   const rosterType = config.Roster[rosterPosName];
   if (playerType === rosterType) {
     return false;
-  } if (rosterType === config.FlexNFLPositionId) {
+  }
+  if (rosterType === config.FlexNFLPositionId) {
     const playercanflex = config.NFLPosTypes[playerType].canflex;
     if (playercanflex) {
       return false;
@@ -109,8 +110,8 @@ out.ErrorTest = function ErrorTest(service, req, statusNumber, message) {
     } catch (err) {
       // eslint-disable-next-line no-console
       if (!err.status) { console.log(err); }
-      expect(err.status).toEqual(statusNumber);
       expect(err.message).toEqual(message);
+      expect(err.status).toEqual(statusNumber);
     }
     // expect(async () => {
     //   await service(req);

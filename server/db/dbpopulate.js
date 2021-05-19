@@ -1,5 +1,6 @@
 const models = require('../models');
 const InitDB = require('./init');
+const { setCurrentWeek, setGamePhase } = require('../features/util/util.service');
 
 async function PopulateDB(sequelize) {
   await InitDB(sequelize);
@@ -14,7 +15,7 @@ async function PopulateDB(sequelize) {
   } = models;
 
   // Define Users
-  const usrs = ['email1@gmail.com', 'email2@gmail.com', 'email3@gmail.com', 'email4@gmail.com'];
+  const usrs = ['email1@gmail.com', 'email2@gmail.com', 'email3@gmail.com', 'email4@gmail.com', 'email5@gmail.com'];
   // hash is password1
   await User.bulkCreate(usrs.map((u) => ({ email: u, pwHash: '$2b$10$v3qgumBibz8Uouevm5xeTOFWheNtLVRyLeGqp2tZbfdMJ.iHQtgVq', name: 'bot' })));
 
@@ -53,6 +54,10 @@ async function PopulateDB(sequelize) {
       LeagueId: 2,
     },
     {
+      UserId: 3,
+      LeagueId: 2,
+    },
+    {
       UserId: 1,
       LeagueId: 3,
     },
@@ -87,7 +92,9 @@ async function PopulateDB(sequelize) {
   const entrs2 = [{
     UserId: 1, ContestId: 2, pointtotal: 10000, RB1: 20933, K1: 19041,
   }, {
-    UserId: 2, ContestId: 2, pointtotal: 500, RB1: 20933, K1: 19041,
+    UserId: 2, ContestId: 2, pointtotal: 1500, RB1: 20933, K1: 19041,
+  }, {
+    UserId: 3, ContestId: 2, pointtotal: 500, RB1: 20933, K1: 19041,
   }];
   await Entry.bulkCreate(entrs);
   await Entry.bulkCreate(entrs2);
@@ -146,6 +153,9 @@ async function PopulateDB(sequelize) {
     },
   ];
   await Trade.bulkCreate(trds);
+
+  await setGamePhase('pre');
+  await setCurrentWeek(1);
 }
 
 module.exports = PopulateDB;

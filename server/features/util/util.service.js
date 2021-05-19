@@ -1,5 +1,13 @@
+const redis = require('redis');
+const { promisify } = require('util');
+
+const client = redis.createClient();
+const getAsync = promisify(client.get).bind(client);
+const setAsync = promisify(client.set).bind(client);
+
 const { Membership, League, Contest } = require('../../models');
 const u = require('./util');
+const { gamePhaseKey, currentWeekKey } = require('../../db/redisSchema');
 
 // Is a user allowed to see a league
 // Yes if league is public OR if user is a member
@@ -31,7 +39,37 @@ async function canUserSeeContest(t, userID, leagueID, contestID) {
   return [theleague, thecontest];
 }
 
+async function getGamePhase() {
+  return getAsync(gamePhaseKey());
+}
+
+async function getCurrentWeek() {
+  return getAsync(currentWeekKey()).then(Number);
+}
+
+async function setGamePhase(str) {
+  if (['pre', 'mid', 'post'].includes(str)) {
+    return setAsync(gamePhaseKey(), str);
+  }
+  // eslint-disable-next-line no-console
+  console.log(`Can't set game phase to ${str}`);
+  return Promise.reject();
+}
+
+async function setCurrentWeek(weeknum) {
+  if (Number.isInteger(weeknum)) {
+    return setAsync(currentWeekKey(), weeknum.toString());
+  }
+  // eslint-disable-next-line no-console
+  console.log(`Can't set weeknum to ${weeknum}`);
+  return Promise.reject();
+}
+
 module.exports = {
   canUserSeeLeague,
   canUserSeeContest,
+  getGamePhase,
+  setGamePhase,
+  getCurrentWeek,
+  setCurrentWeek,
 };

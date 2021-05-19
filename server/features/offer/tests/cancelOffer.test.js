@@ -1,5 +1,10 @@
 const service = require('../services/cancelOffer.service');
 const { ErrorTest, ObjectTest } = require('../../util/util');
+const { setGamePhase } = require('../../util/util.service');
+
+beforeEach(() => {
+  setGamePhase('mid');
+});
 
 describe('cancelOffer service', () => {
   test('Valid request returns cancelled offer', ObjectTest(
@@ -29,4 +34,13 @@ describe('cancelOffer service', () => {
     service, { user: 1, params: { leagueID: 2, contestID: 2 }, body: { } },
     400, 'Please specify a offer',
   ));
+
+  test('Not mid games returns error 406', async () => {
+    await setGamePhase('pre');
+    await ErrorTest(
+      service, { user: 1, params: { leagueID: 1, contestID: 1 }, body: { offerID: '16c94b61-3c76-4078-8fbc-67fac7ed26c2' } },
+      406, "Can't cancel an offer before or after games",
+    )();
+    await setGamePhase('mid');
+  });
 });

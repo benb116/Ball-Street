@@ -4,7 +4,7 @@ const u = require('../../util/util');
 
 const sequelize = require('../../../db');
 const { Entry } = require('../../../models');
-const { canUserSeeContest } = require('../../util/util.service');
+const { canUserSeeContest, getGamePhase } = require('../../util/util.service');
 const { validators } = require('../../util/util.schema');
 
 const isoOption = {
@@ -21,8 +21,13 @@ const schema = Joi.object({
 });
 
 // Get info for a specific contest
-function createEntry(req) {
+async function createEntry(req) {
   const value = u.validate(req, schema);
+
+  const phase = await getGamePhase();
+  if (phase !== 'pre') {
+    u.Error("Can't make an entry during or after games", 406);
+  }
 
   const obj = {};
   obj.UserId = value.user;

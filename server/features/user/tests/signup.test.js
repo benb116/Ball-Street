@@ -4,7 +4,7 @@ const { ErrorTest, ObjectTest } = require('../../util/util');
 describe('signup service', () => {
   test('Valid request returns data', ObjectTest(
     service, { name: 'Ben', email: '123@gmail.com', password: 'password1' },
-    { email: '123@gmail.com', id: 5, name: 'Ben' },
+    { email: '123@gmail.com', id: 6, name: 'Ben' },
   ));
 
   test('Existing email returns 406', ErrorTest(

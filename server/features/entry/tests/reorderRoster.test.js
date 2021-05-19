@@ -70,7 +70,7 @@ describe('reorderRoster service', () => {
   ));
 
   test('Non member request in private league returns error 403', ErrorTest(
-    service, { user: 3, params: { leagueID: 2, contestID: 2 }, body: { pos1: 'RB1', pos2: 'FLEX1' } },
+    service, { user: 4, params: { leagueID: 2, contestID: 2 }, body: { pos1: 'RB1', pos2: 'FLEX1' } },
     403, 'You are not a member of that league',
   ));
 

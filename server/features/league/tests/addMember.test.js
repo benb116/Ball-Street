@@ -3,8 +3,8 @@ const { ErrorTest, ObjectTest } = require('../../util/util');
 
 describe('addMember service', () => {
   test('Valid request in private league returns data', ObjectTest(
-    service, { user: 2, params: { leagueID: 2 }, body: { email: 'email4@gmail.com' } },
-    { LeagueId: 2, UserId: 4 },
+    service, { user: 2, params: { leagueID: 2 }, body: { email: 'email5@gmail.com' } },
+    { LeagueId: 2, UserId: 5 },
   ));
 
   test('Invalid request in public league returns error 403', ErrorTest(
@@ -18,7 +18,7 @@ describe('addMember service', () => {
   ));
 
   test('Non member request in private league returns error 403', ErrorTest(
-    service, { user: 3, params: { leagueID: 2 }, body: { email: 'test3@email.com' } },
+    service, { user: 4, params: { leagueID: 2 }, body: { email: 'test3@email.com' } },
     403, 'You are not a member of that league',
   ));
 
