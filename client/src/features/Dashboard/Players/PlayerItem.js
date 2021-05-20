@@ -5,12 +5,13 @@ import { useParams } from 'react-router-dom';
 import { isOnRosterSelector, preAdd, preDrop } from '../Entry/EntrySlice';
 import { setModal } from '../Modal/ModalSlice';
 import { cancelOffer, offersSelector } from '../Offers/OffersSlice';
-import { priceMapSelector } from './PlayersSlice';
+import { phaseSelector, priceMapSelector } from './PlayersSlice';
 
 function PlayerItem({ playerdata }) {
   const dispatch = useDispatch();
   const { leagueID, contestID } = useParams();
   const offers = useSelector(offersSelector);
+  const thephase = useSelector(phaseSelector);
 
   const showDrop = useSelector(isOnRosterSelector(playerdata.id));
   const priceMap = useSelector(priceMapSelector(playerdata.id));
@@ -60,38 +61,46 @@ function PlayerItem({ playerdata }) {
       <td style={{ width: '2rem', textAlign: 'right' }}>{(priceMap && Number(priceMap.lastprice)) ? priceMap.lastprice : ''}</td>
       <td style={{ width: '2rem', textAlign: 'right' }}>{(priceMap && Number(priceMap.bestbid)) ? priceMap.bestbid : ''}</td>
       <td style={{ width: '2rem', textAlign: 'right' }}>{(priceMap && Number(priceMap.bestask)) ? priceMap.bestask : ''}</td>
-      <td>
-        <button
-          style={{
-            cursor: 'pointer', width: '2rem', fontWeight: 'bold', textAlign: 'center',
-          }}
-          onClick={(showDrop ? onpredrop : onpreadd)}
-          type="button"
-        >
-          {showDrop ? '–' : '+'}
-        </button>
-      </td>
-      {playeroffer ? (
+      {thephase === 'pre' ? (
         <td>
           <button
-            style={{ cursor: 'pointer', width: '2rem', textAlign: 'center' }}
-            onClick={() => oncancelOffer(playeroffer.id)}
+            style={{
+              cursor: 'pointer', width: '2rem', fontWeight: 'bold', textAlign: 'center',
+            }}
+            onClick={(showDrop ? onpredrop : onpreadd)}
             type="button"
           >
-            ✕
+            {showDrop ? '–' : '+'}
           </button>
         </td>
-      ) : (
-        <td>
-          <button
-            style={{ cursor: 'pointer', width: '2rem', textAlign: 'center' }}
-            onClick={(showDrop ? onask : onbid)}
-            type="button"
-          >
-            {showDrop ? 'ASK' : 'BID'}
-          </button>
-        </td>
-      )}
+      )
+        : <td />}
+
+      {thephase === 'mid' ? (
+        playeroffer ? (
+          <td>
+            <button
+              style={{ cursor: 'pointer', width: '2rem', textAlign: 'center' }}
+              onClick={() => oncancelOffer(playeroffer.id)}
+              type="button"
+            >
+              ✕
+            </button>
+          </td>
+        ) : (
+          <td>
+            <button
+              style={{ cursor: 'pointer', width: '2rem', textAlign: 'center' }}
+              onClick={(showDrop ? onask : onbid)}
+              type="button"
+            >
+              {showDrop ? 'ASK' : 'BID'}
+            </button>
+          </td>
+        )
+      )
+      : 
+      <td />}
     </tr>
   );
 }

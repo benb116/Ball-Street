@@ -1,5 +1,5 @@
 import store from '../../app/store';
-import { updatePrice } from './Players/PlayersSlice';
+import { setPhase, updatePrice } from './Players/PlayersSlice';
 import { removeOffer, alertProtMatch } from './Offers/OffersSlice';
 import { updateRoster } from './Entry/EntrySlice';
 import { updateLeaders } from './Leaderboard/LeaderboardSlice';
@@ -35,6 +35,9 @@ const initWS = (contestID) => {
           break;
         case 'leaderboard':
           upLead(msg.leaderboard);
+          break;
+        case 'phaseChange':
+          newPhase(msg.phase);
           break;
         case 'priceUpdate':
         //   msgs = Object.values(msg.pricedata);
@@ -77,6 +80,10 @@ function protMatch({ offerID, expire }) {
 
 function upLead(board) {
   store.dispatch(updateLeaders(board));
+}
+
+function newPhase(nphase) {
+  store.dispatch(setPhase(nphase));
 }
 
 export default initWS;

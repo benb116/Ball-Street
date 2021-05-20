@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { playersSelector } from '../Players/PlayersSlice';
+import { phaseSelector, playersSelector } from '../Players/PlayersSlice';
 
 import { getEntry, entrySelector, rosterUpdateSelector } from './EntrySlice';
 
@@ -59,6 +59,8 @@ const Entry = () => {
 };
 
 function RosterHeader() {
+  const thephase = useSelector(phaseSelector);
+
   return (
     <thead>
       <tr style={{ fontSize: '.8rem' }}>
@@ -70,8 +72,8 @@ function RosterHeader() {
         <th style={{ width: '2rem', textAlign: 'right' }}>Last</th>
         <th style={{ width: '2rem', textAlign: 'right' }}>Bid</th>
         <th style={{ width: '2rem', textAlign: 'right' }}>Ask</th>
-        <th style={{ width: '2rem' }}>Drop</th>
-        <th style={{ width: '2rem' }}>Ask</th>
+        {thephase === 'pre' ? <th style={{ width: '2rem' }}>Drop</th> : <th />}
+        {thephase === 'mid' ? <th style={{ width: '2rem' }}>Offer</th> : <th />}
       </tr>
     </thead>
   );
