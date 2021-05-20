@@ -20,6 +20,7 @@ client.subscribe('lastTrade');
 client.subscribe('leaderUpdate');
 client.subscribe('protectedMatch');
 client.subscribe('offerFilled');
+client.subscribe('phaseChange');
 
 client.on('message', (channel, message) => {
   switch (channel) {
@@ -28,6 +29,7 @@ client.on('message', (channel, message) => {
     case 'leaderUpdate': leaderUpdate(); break;
     case 'protectedMatch': protectedMatch(message); break;
     case 'offerFilled': offerFilled(message); break;
+    case 'phaseChange': phaseChange(message); break;
     default: break;
   }
 });
@@ -63,6 +65,16 @@ function leaderUpdate() {
     }
     if (thews.readyState === 1) {
       thews.send(JSON.stringify({ event: 'leaderboard', leaderboard: leaderMemo[thecontestID] }));
+    }
+  });
+}
+
+// When new leaderboards come in, send out to the correct ws
+function phaseChange(message) {
+  liveState.contestmap.forEach(async (thecontestID, thews) => {
+    if (!thews) { liveState.contestmap.delete(thews); return; }
+    if (thews.readyState === 1) {
+      thews.send(JSON.stringify({ event: 'phaseChange', phase: message }));
     }
   });
 }
