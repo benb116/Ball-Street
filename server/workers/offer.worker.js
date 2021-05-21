@@ -5,14 +5,13 @@
 // Sends out matches to be filled
 
 const Queue = require('bull');
-const redis = require('redis');
 const { Op } = require('sequelize');
 
 const u = require('../features/util/util');
 const config = require('../config');
 const { hashkey } = require('../db/redisSchema');
 
-const client = redis.createClient();
+const { client } = require('../db/redis');
 
 const offerQueue = new Queue('offer-queue');
 const protectedQueue = new Queue('protected-queue');

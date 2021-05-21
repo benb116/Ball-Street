@@ -1,9 +1,8 @@
 // phaseChange
 
-const redis = require('redis');
 const { setGamePhase } = require('../features/util/util.service');
 
-const client = redis.createClient();
+const { client } = require('../db/redis');
 
 async function setPhase(newphase) {
   await setGamePhase(newphase);

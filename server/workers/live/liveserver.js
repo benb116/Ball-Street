@@ -1,7 +1,6 @@
 const WebSocket = require('ws');
 const http = require('http');
 const express = require('express');
-const redis = require('redis');
 const { promisify } = require('util');
 
 const session = require('../../middleware/session');
@@ -57,8 +56,9 @@ server.listen(8080, () => {
   console.log('Listening on port 8080');
 });
 
-const client2 = redis.createClient();
-const hgetallAsync = promisify(client2.hgetall).bind(client2);
+const { client } = require('../../db/redis');
+
+const hgetallAsync = promisify(client.hgetall).bind(client);
 
 let playerIDs = [];
 

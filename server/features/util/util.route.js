@@ -3,10 +3,11 @@
 // and return the results
 // If there's an error, return the specified status and error message.
 
-const redis = require('redis');
+// const redis = require('redis');
 const { promisify } = require('util');
 
-const client = redis.createClient();
+const { client } = require('../../db/redis');
+
 const getAsync = promisify(client.get).bind(client);
 const setAsync = promisify(client.set).bind(client);
 

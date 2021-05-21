@@ -1,7 +1,7 @@
-const redis = require('redis');
 const { promisify } = require('util');
 
-const client = redis.createClient();
+const { client } = require('../../db/redis');
+
 const getAsync = promisify(client.get).bind(client);
 const setAsync = promisify(client.set).bind(client);
 

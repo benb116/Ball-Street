@@ -3,7 +3,6 @@
 // Could be done within Offer worker
 // Try to fill a pair of offers
 
-const redis = require('redis');
 const u = require('../features/util/util');
 const { hashkey } = require('../db/redisSchema');
 
@@ -14,7 +13,7 @@ const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
 };
 
-const client = redis.createClient();
+const { client } = require('../db/redis');
 
 const service = require('../features/trade/trade.service');
 

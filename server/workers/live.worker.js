@@ -1,7 +1,6 @@
 // Websocket server worker
 // Subscribe to redis updates and push out to clients
 
-const redis = require('redis');
 const { promisify } = require('util');
 
 const config = require('../config');
@@ -11,18 +10,18 @@ const liveState = require('./live/livestate'); // Data stored in memory
 require('./live/liveserver'); // WS server
 
 // Two clients - one to subscribe, one to read and write
-const client = redis.createClient();
-const client2 = redis.createClient();
-const getAsync = promisify(client2.get).bind(client2);
+const { client, subscriber } = require('../db/redis');
 
-client.subscribe('priceUpdate');
-client.subscribe('lastTrade');
-client.subscribe('leaderUpdate');
-client.subscribe('protectedMatch');
-client.subscribe('offerFilled');
-client.subscribe('phaseChange');
+const getAsync = promisify(client.get).bind(client);
 
-client.on('message', (channel, message) => {
+subscriber.subscribe('priceUpdate');
+subscriber.subscribe('lastTrade');
+subscriber.subscribe('leaderUpdate');
+subscriber.subscribe('protectedMatch');
+subscriber.subscribe('offerFilled');
+subscriber.subscribe('phaseChange');
+
+subscriber.on('message', (channel, message) => {
   switch (channel) {
     case 'priceUpdate': priceUpdate(message); break;
     case 'lastTrade': lastTrade(message); break;

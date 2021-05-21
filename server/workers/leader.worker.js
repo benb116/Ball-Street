@@ -1,7 +1,6 @@
 // Leader worker
 // Calculates live leaderboards
 
-const redis = require('redis');
 const { promisify } = require('util');
 
 const config = require('../config');
@@ -10,8 +9,8 @@ const { hashkey, leaderHashkey } = require('../db/redisSchema');
 const entryService = require('../features/entry/entry.service');
 const playerService = require('../features/nflplayer/nflplayer.service');
 
-const client = redis.createClient();
-const client2 = redis.createClient();
+const { client } = require('../db/redis');
+
 const hgetallAsync = promisify(client.hgetall).bind(client);
 
 // Get a list of all player IDs
@@ -115,7 +114,7 @@ async function calculateLeaderboard() {
   });
 
   // Announce new results
-  client2.publish('leaderUpdate', '');
+  client.publish('leaderUpdate', '');
 }
 
 setInterval(calculateLeaderboard, 10000);
