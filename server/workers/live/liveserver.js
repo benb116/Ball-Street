@@ -1,3 +1,5 @@
+// Main websocket server code
+
 const WebSocket = require('ws');
 const http = require('http');
 const express = require('express');
@@ -32,10 +34,13 @@ server.on('upgrade', (request, socket, head) => {
   });
 });
 
+// New ws connection
 wss.on('connection', async (ws, request) => {
+  // Add to connection map (ws <-> user)
   const userId = request.session.user.id;
   liveState.connmap.set(userId, ws);
 
+  // Add to contest map (ws <-> contest)
   const contestID = request.url.split('/')[2];
   liveState.contestmap.delete(ws);
   liveState.contestmap.set(ws, contestID);
@@ -58,6 +63,7 @@ server.listen(8080, () => {
   console.log('Listening on port 8080');
 });
 
+// Get latest price data
 let playerIDs = [];
 
 (async () => {

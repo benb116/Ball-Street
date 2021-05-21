@@ -1,4 +1,5 @@
-// phaseChange
+// Phase worker
+// Change the game phase (pre, mid, post)
 
 const { client, set } = require('../db/redis');
 

@@ -10,6 +10,7 @@ const dbOptions = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE
 };
 
+// Should we use the test database?
 const testSuffix = process.env.NODE_ENV === 'test' ? '-test' : '';
 
 // const sequelize = new Sequelize('sqlite::memory:', dbOptions); // Example for sqlite

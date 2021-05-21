@@ -76,18 +76,22 @@ out.cl = function cl(input) {
   return input;
 };
 
+// Validate an object based on a Joi schema
 out.validate = function validate(input, schema) {
   const { value, error } = schema.validate(input);
   if (error) { out.Error(error.details[0].message, 400); }
   return value;
 };
 
+// Functions used in Jest testing
+// Ensures that a service call returns an object with specific properties
 out.ObjectTest = function ObjectTest(service, req, contains) {
   return async () => service(req).then((resp) => {
     expect(resp).toEqual(expect.objectContaining(contains));
   });
 };
 
+// Ensures that a service call returns an array with specific elements
 out.ArrayTest = function ArrayTest(service, req, items) {
   return async () => service(req).then((resp) => {
     items.forEach((e) => {
@@ -100,6 +104,7 @@ out.ArrayTest = function ArrayTest(service, req, items) {
   });
 };
 
+// Ensures that a service call throws an error with specific status number and message
 out.ErrorTest = function ErrorTest(service, req, statusNumber, message) {
   return async function errortest() {
     try {
@@ -113,9 +118,6 @@ out.ErrorTest = function ErrorTest(service, req, statusNumber, message) {
       expect(err.message).toEqual(message);
       expect(err.status).toEqual(statusNumber);
     }
-    // expect(async () => {
-    //   await service(req);
-    // }).rejects.toThrow(message);
   };
 };
 

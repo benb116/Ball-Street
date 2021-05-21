@@ -21,6 +21,7 @@ async function canUserSeeLeague(t, userID, leagueID) {
   return theleague;
 }
 
+// Search for contest and check if user is in league
 async function canUserSeeContest(t, userID, leagueID, contestID) {
   const tobj = (t ? { transaction: t } : {});
   const thecontest = await Contest.findByPk(contestID, tobj).then(u.dv);

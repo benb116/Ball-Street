@@ -1,3 +1,5 @@
+// Common validators for object properties
+
 const Joi = require('joi');
 
 const validators = {};

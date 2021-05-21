@@ -14,7 +14,9 @@ const setAsync = promisify(client.set).bind(client);
 function routeHandler(service, cacheExpiry) {
   return async function routeHandlerInner(req, res) {
     try {
+      // If a get request should be cached
       if (cacheExpiry && req.method === 'GET') {
+        // Check if it's been cached already
         const cacheout = await getAsync(req.originalUrl);
         if (cacheout) {
           return res.send(cacheout);
@@ -22,6 +24,7 @@ function routeHandler(service, cacheExpiry) {
       }
       const out = await service(stripReq(req));
       if (cacheExpiry && req.method === 'GET') {
+        // Cache results
         await setAsync(req.originalUrl, JSON.stringify(out), 'EX', cacheExpiry);
       }
       return res.json(out);
@@ -36,6 +39,7 @@ function routeHandler(service, cacheExpiry) {
   };
 }
 
+// Strip extraneous info from input
 function stripReq(inp) {
   const out = {};
   out.user = (inp.session ? inp.session.user.id : null);

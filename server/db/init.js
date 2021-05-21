@@ -1,3 +1,5 @@
+// Set up the database with proper tables and NFL data
+
 const config = require('../config');
 const players = require('./nflplayers.json');
 const models = require('../models');

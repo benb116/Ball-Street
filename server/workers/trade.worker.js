@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
-// Trade worker
-// Could be done within Offer worker
+// Trade functions
+// Used by offer worker
 // Try to fill a pair of offers
 
 const u = require('../features/util/util');
