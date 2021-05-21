@@ -4,8 +4,9 @@ const u = require('../../util/util');
 
 const sequelize = require('../../../db');
 const { Contest } = require('../../../models');
-const { canUserSeeLeague, getCurrentWeek } = require('../../util/util.service');
+const { canUserSeeLeague } = require('../../util/util.service');
 const { validators } = require('../../util/util.schema');
+const { get } = require('../../../db/redis');
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
@@ -41,7 +42,7 @@ function createContest(req) {
     if (value.user !== theleague.adminId) { u.Error('Must be league admin to make new contests', 403); }
     return Contest.create({
       name: value.body.name,
-      nflweek: await getCurrentWeek(),
+      nflweek: await get.CurrentWeek(),
       LeagueId: theleague.id,
       budget: value.body.budget,
     }, u.tobj(t)).catch((err) => {

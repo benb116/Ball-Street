@@ -9,9 +9,10 @@ const { Op } = require('sequelize');
 
 const u = require('../features/util/util');
 const config = require('../config');
-const { hashkey } = require('../db/redisSchema');
 
-const { client } = require('../db/redis');
+const { client, rediskeys } = require('../db/redis');
+
+const { hash } = rediskeys;
 
 const offerQueue = new Queue('offer-queue');
 const protectedQueue = new Queue('protected-queue');
@@ -37,7 +38,7 @@ async function evalOrderBook(contestID, nflplayerID) {
     .then(([nextbid, nextask]) => {
       const bestbid = (nextbid ? nextbid.price : 0);
       const bestask = (nextask ? nextask.price : 0);
-      client.hset(hashkey(contestID, nflplayerID), 'bestbid', bestbid, 'bestask', bestask);
+      client.hset(hash(contestID, nflplayerID), 'bestbid', bestbid, 'bestask', bestask);
       client.publish('priceUpdate', JSON.stringify({
         contestID,
         nflplayerID,

@@ -1,9 +1,9 @@
 const service = require('../services/createEntry.service');
 const { ErrorTest, ObjectTest } = require('../../util/util');
-const { setGamePhase } = require('../../util/util.service');
+const { set } = require('../../../db/redis');
 
 beforeEach(() => {
-  setGamePhase('pre');
+  set.GamePhase('pre');
 });
 
 describe('createEntry service', () => {
@@ -67,11 +67,11 @@ describe('createEntry service', () => {
   ));
 
   test('Not pre games returns error 406', async () => {
-    await setGamePhase('mid');
+    await set.GamePhase('mid');
     await ErrorTest(
       service, { user: 1, params: { leagueID: 1, contestID: 1 }, body: {} },
       406, "Can't make an entry during or after games",
     )();
-    await setGamePhase('pre');
+    await set.GamePhase('pre');
   });
 });

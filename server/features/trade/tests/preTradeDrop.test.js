@@ -1,9 +1,9 @@
 const service = require('../services/preTradeDrop.service');
 const { ErrorTest, ObjectTest } = require('../../util/util');
-const { setGamePhase } = require('../../util/util.service');
+const { set } = require('../../../db/redis');
 
 beforeEach(() => {
-  setGamePhase('pre');
+  set.GamePhase('pre');
 });
 
 describe('preTradeDrop service', () => {
@@ -76,7 +76,7 @@ describe('preTradeDrop service', () => {
   ));
 
   test('Not pre games returns error 406', async () => {
-    await setGamePhase('mid');
+    await set.GamePhase('mid');
     await ErrorTest(
       service, {
         user: 2,
@@ -87,6 +87,6 @@ describe('preTradeDrop service', () => {
       },
       406, "Can't drop during or after games",
     )();
-    await setGamePhase('pre');
+    await set.GamePhase('pre');
   });
 });

@@ -1,9 +1,9 @@
 const service = require('../services/createOffer.service');
 const { ErrorTest, ObjectTest } = require('../../util/util');
-const { setGamePhase } = require('../../util/util.service');
+const { set } = require('../../../db/redis');
 
 beforeEach(() => {
-  setGamePhase('mid');
+  set.GamePhase('mid');
 });
 
 describe('createOffer service', () => {
@@ -151,7 +151,7 @@ describe('createOffer service', () => {
   ));
 
   test('Not mid games returns error 406', async () => {
-    await setGamePhase('pre');
+    await set.GamePhase('pre');
     await ErrorTest(
       service, {
         user: 2,
@@ -166,6 +166,6 @@ describe('createOffer service', () => {
       },
       406, "Can't make an offer before or after games",
     )();
-    await setGamePhase('mid');
+    await set.GamePhase('mid');
   });
 });

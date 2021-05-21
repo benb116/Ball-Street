@@ -6,10 +6,10 @@ const offerQueue = new Queue('offer-queue');
 const config = require('../../../config');
 const u = require('../../util/util');
 const { validators } = require('../../util/util.schema');
-const { getGamePhase } = require('../../util/util.service');
 
 const sequelize = require('../../../db');
 const { Offer, Entry, NFLPlayer } = require('../../../models');
+const { get } = require('../../../db/redis');
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
@@ -43,7 +43,7 @@ const schema = Joi.object({
 async function createOffer(req) {
   const value = u.validate(req, schema);
 
-  const phase = await getGamePhase();
+  const phase = await get.GamePhase();
   if (phase !== 'mid') {
     u.Error("Can't make an offer before or after games", 406);
   }

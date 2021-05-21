@@ -4,13 +4,13 @@
 const { promisify } = require('util');
 
 const config = require('../config');
-const { hashkey, leaderHashkey } = require('../db/redisSchema');
 
 const entryService = require('../features/entry/entry.service');
 const playerService = require('../features/nflplayer/nflplayer.service');
 
-const { client } = require('../db/redis');
+const { client, rediskeys } = require('../db/redis');
 
+const { hash, leaderHash } = rediskeys;
 const hgetallAsync = promisify(client.hgetall).bind(client);
 
 // Get a list of all player IDs
@@ -23,7 +23,7 @@ let playerIDs = [];
 // Pull all latest price info from redis for all players
 async function sendLatest(contestID) {
   const outPromises = playerIDs.map((p) => {
-    const rkey = hashkey(contestID, p); // Get the hash key for a player
+    const rkey = hash(contestID, p); // Get the hash key for a player
 
     return hgetallAsync(rkey).then((obj) => { // Get all price info into price obj
       if (!obj) { return null; }
@@ -110,7 +110,7 @@ async function calculateLeaderboard() {
   contests.forEach((c) => {
     const cleader = contestSplit[c];
     cleader.sort((a, b) => ((a.total < b.total) ? 1 : -1));
-    client.set(leaderHashkey(c), JSON.stringify(cleader));
+    client.set(leaderHash(c), JSON.stringify(cleader));
   });
 
   // Announce new results

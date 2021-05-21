@@ -1,9 +1,9 @@
 const service = require('../services/preTradeAdd.service');
 const { ErrorTest, ObjectTest } = require('../../util/util');
-const { setGamePhase } = require('../../util/util.service');
+const { set } = require('../../../db/redis');
 
 beforeEach(() => {
-  setGamePhase('pre');
+  set.GamePhase('pre');
 });
 
 describe('preTradeAdd service', () => {
@@ -116,7 +116,7 @@ describe('preTradeAdd service', () => {
   ));
 
   test('Not pre games returns error 406', async () => {
-    await setGamePhase('mid');
+    await set.GamePhase('mid');
     await ErrorTest(
       service, {
         user: 1,
@@ -128,6 +128,6 @@ describe('preTradeAdd service', () => {
       },
       406, "Can't add during or after games",
     )();
-    await setGamePhase('pre');
+    await set.GamePhase('pre');
   });
 });

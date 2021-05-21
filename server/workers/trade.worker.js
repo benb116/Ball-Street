@@ -4,7 +4,6 @@
 // Try to fill a pair of offers
 
 const u = require('../features/util/util');
-const { hashkey } = require('../db/redisSchema');
 
 const sequelize = require('../db');
 const { Offer, Trade } = require('../models');
@@ -13,7 +12,9 @@ const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
 };
 
-const { client } = require('../db/redis');
+const { client, rediskeys } = require('../db/redis');
+
+const { hash } = rediskeys;
 
 const service = require('../features/trade/trade.service');
 
@@ -115,7 +116,7 @@ async function attemptFill(t, bidid, askid, tprice) {
 
   const contestID = boffer.ContestId;
 
-  client.hmset(hashkey(contestID, player), 'lastprice', price);
+  client.hmset(hash(contestID, player), 'lastprice', price);
   client.publish('lastTrade', JSON.stringify({
     contestID,
     nflplayerID: player,

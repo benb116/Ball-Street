@@ -3,13 +3,15 @@ const http = require('http');
 const express = require('express');
 const { promisify } = require('util');
 
+const { client, rediskeys, get } = require('../../db/redis');
+
+const hgetallAsync = promisify(client.hgetall).bind(client);
+
 const session = require('../../middleware/session');
-const { hashkey } = require('../../db/redisSchema');
 
 const liveState = require('./livestate'); // Data stored in memory
 
 const playerService = require('../../features/nflplayer/nflplayer.service');
-const { getGamePhase } = require('../../features/util/util.service');
 
 // WS server on top of express
 const app = express();
@@ -42,7 +44,7 @@ wss.on('connection', async (ws, request) => {
   const out = await sendLatest(contestID);
   ws.send(JSON.stringify(out.filter((e) => e !== null)));
 
-  const phase = await getGamePhase();
+  const phase = await get.GamePhase();
   ws.send(JSON.stringify({ event: 'phaseChange', phase }));
 
   ws.on('close', () => {
@@ -56,10 +58,6 @@ server.listen(8080, () => {
   console.log('Listening on port 8080');
 });
 
-const { client } = require('../../db/redis');
-
-const hgetallAsync = promisify(client.hgetall).bind(client);
-
 let playerIDs = [];
 
 (async () => {
@@ -70,7 +68,7 @@ let playerIDs = [];
 async function sendLatest(contestID) {
   const outPromises = playerIDs
     .map((p) => {
-      const rkey = hashkey(contestID, p);
+      const rkey = rediskeys.hash(contestID, p);
       return hgetallAsync(rkey).then((obj) => {
         if (!obj) { return null; }
         const out = obj;

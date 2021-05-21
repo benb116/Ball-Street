@@ -4,14 +4,14 @@
 const { promisify } = require('util');
 
 const config = require('../config');
-const { leaderHashkey } = require('../db/redisSchema');
 
 const liveState = require('./live/livestate'); // Data stored in memory
 require('./live/liveserver'); // WS server
 
 // Two clients - one to subscribe, one to read and write
-const { client, subscriber } = require('../db/redis');
+const { client, subscriber, rediskeys } = require('../db/redis');
 
+const { leaderHash } = rediskeys;
 const getAsync = promisify(client.get).bind(client);
 
 subscriber.subscribe('priceUpdate');
@@ -59,7 +59,7 @@ function leaderUpdate() {
   liveState.contestmap.forEach(async (thecontestID, thews) => {
     if (!thews) { liveState.contestmap.delete(thews); return; }
     if (!leaderMemo[thecontestID]) {
-      const out = await getAsync(leaderHashkey(thecontestID));
+      const out = await getAsync(leaderHash(thecontestID));
       leaderMemo[thecontestID] = JSON.parse(out);
     }
     if (thews.readyState === 1) {

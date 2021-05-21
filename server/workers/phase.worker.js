@@ -1,11 +1,9 @@
 // phaseChange
 
-const { setGamePhase } = require('../features/util/util.service');
-
-const { client } = require('../db/redis');
+const { client, set } = require('../db/redis');
 
 async function setPhase(newphase) {
-  await setGamePhase(newphase);
+  await set.GamePhase(newphase);
   client.publish('phaseChange', newphase);
 }
 

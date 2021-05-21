@@ -2,11 +2,11 @@ const Joi = require('joi');
 
 const u = require('../../util/util');
 const { validators } = require('../../util/util.schema');
-const { getGamePhase } = require('../../util/util.service');
 
 const sequelize = require('../../../db');
 
 const tradeDrop = require('./tradeDrop.service');
+const { get } = require('../../../db/redis');
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
@@ -27,7 +27,7 @@ const schema = Joi.object({
 async function preTradeDrop(req) {
   const value = u.validate(req, schema);
 
-  const phase = await getGamePhase();
+  const phase = await get.GamePhase();
   if (phase !== 'pre') {
     u.Error("Can't drop during or after games", 406);
   }

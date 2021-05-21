@@ -1,6 +1,6 @@
 const models = require('../models');
 const InitDB = require('./init');
-const { setCurrentWeek, setGamePhase } = require('../features/util/util.service');
+const { set } = require('./redis');
 
 async function PopulateDB(sequelize) {
   await InitDB(sequelize);
@@ -154,8 +154,8 @@ async function PopulateDB(sequelize) {
   ];
   await Trade.bulkCreate(trds);
 
-  await setGamePhase('pre');
-  await setCurrentWeek(1);
+  await set.GamePhase('pre');
+  await set.CurrentWeek(1);
 }
 
 module.exports = PopulateDB;
