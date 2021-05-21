@@ -69,7 +69,7 @@ function leaderUpdate() {
   });
 }
 
-// When new leaderboards come in, send out to the correct ws
+// When the game phase changes
 function phaseChange(message) {
   liveState.contestmap.forEach(async (thecontestID, thews) => {
     if (!thews) { liveState.contestmap.delete(thews); return; }

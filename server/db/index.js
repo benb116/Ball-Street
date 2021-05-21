@@ -10,7 +10,9 @@ const dbOptions = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE
 };
 
+const testSuffix = process.env.NODE_ENV === 'test' ? '-test' : '';
+
 // const sequelize = new Sequelize('sqlite::memory:', dbOptions); // Example for sqlite
-const sequelize = new Sequelize(`postgres://${db.user}:${db.pass}@${db.host}${db.name}`, dbOptions); // Example for postgres
+const sequelize = new Sequelize(`postgres://${db.user}:${db.pass}@${db.host}${db.name}${testSuffix}`, dbOptions); // Example for postgres
 
 module.exports = sequelize;
