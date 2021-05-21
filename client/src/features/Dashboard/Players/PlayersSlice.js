@@ -1,4 +1,6 @@
+/* eslint-disable no-param-reassign */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import toast from 'react-hot-toast';
 
 import { getplayersfunc } from './Players.api';
 
@@ -51,6 +53,9 @@ export const playersSlice = createSlice({
         return p;
       });
       state.playerlist = np;
+    },
+    [getPlayers.rejected]: (state, { payload }) => {
+      if (payload) { toast.error(payload); }
     },
   },
 });

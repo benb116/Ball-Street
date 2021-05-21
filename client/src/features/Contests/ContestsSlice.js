@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import toast from 'react-hot-toast';
 
 import {
   getcontestfunc,
@@ -29,15 +30,27 @@ export const contestsSlice = createSlice({
     [getContest.fulfilled]: (state, { payload }) => {
       state.thiscontest = payload;
     },
+    [getContest.rejected]: (state, { payload }) => {
+      if (payload) { toast.error(payload); }
+    },
     [getEntries.fulfilled]: (state, { payload }) => {
       state.thiscontestentries = payload;
+    },
+    [getEntries.rejected]: (state, { payload }) => {
+      if (payload) { toast.error(payload); }
     },
     [getMyEntry.fulfilled]: (state, { payload }) => {
       state.thiscontestmyentry = payload;
     },
+    [getMyEntry.rejected]: (state, { payload }) => {
+      if (payload) { toast.error(payload); }
+    },
     [createEntry.fulfilled]: (state, { payload }) => {
       state.thiscontestentries.push(payload);
       state.thiscontestmyentry = payload;
+    },
+    [createEntry.rejected]: (state, { payload }) => {
+      if (payload) { toast.error(payload); }
     },
   },
 });

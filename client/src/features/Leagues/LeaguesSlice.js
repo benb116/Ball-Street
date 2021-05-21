@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
 
@@ -39,23 +40,44 @@ export const leaguesSlice = createSlice({
     [getUserLeagues.fulfilled]: (state, { payload }) => {
       state.userleagues = payload;
     },
+    [getUserLeagues.rejected]: (state, { payload }) => {
+      if (payload) { toast.error(payload); }
+    },
     [getPublicLeagues.fulfilled]: (state, { payload }) => {
       state.publicleagues = payload;
+    },
+    [getPublicLeagues.rejected]: (state, { payload }) => {
+      if (payload) { toast.error(payload); }
     },
     [createLeague.fulfilled]: (state, { payload }) => {
       state.userleagues.push(payload);
     },
+    [createLeague.rejected]: (state, { payload }) => {
+      if (payload) { toast.error(payload); }
+    },
     [getLeague.fulfilled]: (state, { payload }) => {
       state.thisleague = payload;
+    },
+    [getLeague.rejected]: (state, { payload }) => {
+      if (payload) { toast.error(payload); }
     },
     [getContests.fulfilled]: (state, { payload }) => {
       state.thisleaguecontests = payload;
     },
+    [getContests.rejected]: (state, { payload }) => {
+      if (payload) { toast.error(payload); }
+    },
     [getLeagueMembers.fulfilled]: (state, { payload }) => {
       state.thisleaguemembers = payload;
     },
+    [getLeagueMembers.rejected]: (state, { payload }) => {
+      if (payload) { toast.error(payload); }
+    },
     [addMember.fulfilled]: (state, { payload }) => {
       state.thisleaguemembers.push(payload);
+    },
+    [addMember.rejected]: (state, { payload }) => {
+      if (payload) { toast.error(payload); }
     },
     [createContest.fulfilled]: (state, { payload }) => {
       state.thisleaguecontests.push(payload);

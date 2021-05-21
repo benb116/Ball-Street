@@ -31,17 +31,20 @@ export const entrySlice = createSlice({
       setEntry(state, payload);
       state.rosterUpdate = false;
     },
+    [getEntry.rejected]: (state, { payload }) => {
+      if (payload) { toast.error(payload); }
+    },
     [preAdd.fulfilled]: (state, { payload }) => {
       setEntry(state, payload);
     },
     [preAdd.rejected]: (state, { payload }) => {
-      toast.error(payload);
+      if (payload) { toast.error(payload); }
     },
     [preDrop.fulfilled]: (state, { payload }) => {
       setEntry(state, payload);
     },
     [preDrop.rejected]: (state, { payload }) => {
-      toast.error(payload);
+      if (payload) { toast.error(payload); }
     },
   },
 });

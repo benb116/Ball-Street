@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
 
@@ -37,6 +38,9 @@ export const offersSlice = createSlice({
       payload.forEach((o) => {
         if (o.isbid) { state.bids.push(o); } else { state.asks.push(o); }
       });
+    },
+    [getOffers.rejected]: (state, { payload }) => {
+      if (payload) { toast.error(payload); }
     },
     [createOffer.fulfilled]: (state, { payload }) => {
       if (state.remove.indexOf(payload.id) === -1) {
