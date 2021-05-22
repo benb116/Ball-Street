@@ -61,7 +61,7 @@ export const playersSlice = createSlice({
 });
 
 export const {
-  clear, setFilter, setSort, updatePrice, setPhase
+  clear, setFilter, setSort, updatePrice, setPhase,
 } = playersSlice.actions;
 
 export const allPlayersSelector = (state) => (

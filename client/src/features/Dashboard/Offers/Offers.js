@@ -52,7 +52,7 @@ const Offers = () => {
 
 function OfferItem({ offerdata }) {
   const [value, setValue] = useState(true); // integer state
-  const [count, setCount] = useState(0); // integer state
+  const [, setCount] = useState(0); // integer state
 
   const dispatch = useDispatch();
   const { leagueID, contestID } = useParams();

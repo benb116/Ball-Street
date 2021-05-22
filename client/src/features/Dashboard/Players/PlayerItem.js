@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
@@ -99,8 +100,7 @@ function PlayerItem({ playerdata }) {
           </td>
         )
       )
-      : 
-      <td />}
+        : <td />}
     </tr>
   );
 }

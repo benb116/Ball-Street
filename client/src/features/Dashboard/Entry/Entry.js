@@ -72,8 +72,8 @@ function RosterHeader() {
         <th style={{ width: '2rem', textAlign: 'right' }}>Last</th>
         <th style={{ width: '2rem', textAlign: 'right' }}>Bid</th>
         <th style={{ width: '2rem', textAlign: 'right' }}>Ask</th>
-        {thephase === 'pre' ? <th style={{ width: '2rem' }}>Drop</th> : <th />}
-        {thephase === 'mid' ? <th style={{ width: '2rem' }}>Offer</th> : <th />}
+        {thephase === 'pre' ? <th style={{ width: '2rem' }}>Drop</th> : <th aria-label="header" />}
+        {thephase === 'mid' ? <th style={{ width: '2rem' }}>Offer</th> : <th aria-label="header" />}
       </tr>
     </thead>
   );
