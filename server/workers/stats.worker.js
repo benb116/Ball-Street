@@ -1,15 +1,13 @@
-const redis = require('redis');
 const { promisify } = require('util');
 const axios = require('axios');
 
 // const config = require('../config');
 const { sportsdataio } = require('../secret');
-const { statHashkey } = require('../db/redisSchema');
 
 // Two clients - one to subscribe, one to read and write
-const client = redis.createClient();
-const client2 = redis.createClient();
-const hsetAsync = promisify(client2.hset).bind(client2);
+const { client, rediskeys } = require('../db/redis');
+
+const hsetAsync = promisify(client.hset).bind(client);
 
 const { NFLPlayer } = require('../models');
 
@@ -106,7 +104,7 @@ function setStatPrices({ data }) {
 async function setLatest(nflplayerID, inprojPrice, instatPrice) {
   const projPrice = (inprojPrice ? Math.round(inprojPrice * 100).toString() : inprojPrice);
   const statPrice = (instatPrice ? Math.round(instatPrice * 100).toString() : instatPrice);
-  const argarray = [statHashkey(nflplayerID)];
+  const argarray = [rediskeys.statHash(nflplayerID)];
   let pubobj = { nflplayerID };
   if (projPrice !== null) { argarray.push('projPrice', projPrice); pubobj = { ...pubobj, projPrice }; }
   if (statPrice !== null) { argarray.push('statPrice', statPrice); pubobj = { ...pubobj, statPrice }; }

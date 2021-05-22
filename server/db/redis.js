@@ -25,6 +25,10 @@ function leaderHash(contestID) {
   return `contest${contestID}:leaderboard`;
 }
 
+function statHash(nflplayerID) {
+  return `${nflplayerID}:stat`;
+}
+
 function gamePhase() {
   return 'gamePhase';
 }
@@ -63,6 +67,7 @@ async function setCurrentWeek(weeknum) {
 const rediskeys = {
   hash,
   leaderHash,
+  statHash,
   gamePhase,
   currentWeek,
 };

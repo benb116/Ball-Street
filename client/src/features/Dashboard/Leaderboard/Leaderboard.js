@@ -41,7 +41,7 @@ function LeaderboardItem({ leaderdata }) {
 LeaderboardItem.propTypes = {
   leaderdata: PropTypes.shape({
     user: PropTypes.string.isRequired,
-    total: PropTypes.number.isRequired,
+    total: 0,
   }).isRequired,
 };
 
