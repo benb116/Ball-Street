@@ -10,7 +10,7 @@ const playerService = require('../features/nflplayer/nflplayer.service');
 
 const { client, rediskeys } = require('../db/redis');
 
-const { hash, leaderHash } = rediskeys;
+const { statHash, leaderHash } = rediskeys;
 const hgetallAsync = promisify(client.hgetall).bind(client);
 
 // Get a list of all player IDs
@@ -21,29 +21,21 @@ let playerIDs = [];
 })();
 
 // Pull all latest price info from redis for all players
-async function sendLatest(contestID) {
+async function sendLatest() {
   const outPromises = playerIDs.map((p) => {
-    const rkey = hash(contestID, p); // Get the hash key for a player
+    const rkey = statHash(p); // Get the hash key for a player
 
     return hgetallAsync(rkey).then((obj) => { // Get all price info into price obj
-      if (!obj) { return null; }
-      const out = obj;
-      out.contestID = contestID;
+      const out = (obj || {});
       out.nflplayerID = p;
-      out.projPrice = getRandomInt(1000);
       return out;
     });
   });
   return Promise.all(outPromises);
 }
-
 // Filter out duplicates
 function onlyUnique(value, index, self) {
   return self.indexOf(value) === index;
-}
-
-function getRandomInt(max) {
-  return Math.floor(Math.random() * max);
 }
 
 async function calculateLeaderboard() {
@@ -70,28 +62,26 @@ async function calculateLeaderboard() {
   const contests = normalizedEntries.map((e) => e.contest).filter(onlyUnique);
 
   // Pull latest price info for all contests
-  const pricemaps = contests.map(sendLatest);
   // Build one big price map
-  const priceMap = await Promise.all(pricemaps)
-    .then((arrs) => arrs.reduce((acc, cArray, i) => {
+  const priceMap = await sendLatest()
+    .then((arr) => {
     // Make a subobject for each contest
-      const pMap = acc;
-      pMap[contests[i]] = cArray // For each priceobj in a contest
-        .filter((e) => e !== null) // Get rid of nulls
-        .reduce((subpMap, priceObj) => { // Populate the subobject by nflplayerID
-          const out2 = subpMap;
+      const pMap = arr // For each priceobj in a contest
+        // .filter((e) => e !== null) // Get rid of nulls
+        .reduce((accpMap, priceObj) => { // Populate the subobject by nflplayerID
+          const out2 = accpMap;
           out2[priceObj.nflplayerID] = priceObj;
           return out2;
         }, {});
       return pMap;
-    }, {}));
+    }, {});
   // console.log(priceMap);
 
   // Sum each entry based on the price map
   const projTotals = normalizedEntries.map((e) => {
     e.total = e.roster.reduce((acc, cur) => {
       // If player has price info, add that, otherwise 0
-      const out = acc + (priceMap[e.contest][cur] ? Number(priceMap[e.contest][cur].projPrice) : 0);
+      const out = acc + (priceMap[cur] ? Number(priceMap[cur].projPrice) : 0);
       return out;
     }, e.balance);
     return e;
@@ -117,4 +107,5 @@ async function calculateLeaderboard() {
   client.publish('leaderUpdate', '');
 }
 
+calculateLeaderboard();
 setInterval(calculateLeaderboard, 10000);

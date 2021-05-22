@@ -47,7 +47,7 @@ wss.on('connection', async (ws, request) => {
 
   // Send starting data
   const out = await sendLatest(contestID);
-  ws.send(JSON.stringify(out.filter((e) => e !== null)));
+  ws.send(JSON.stringify({ event: 'priceUpdate', pricedata: out.filter((e) => e !== null) }));
 
   const phase = await get.GamePhase();
   ws.send(JSON.stringify({ event: 'phaseChange', phase }));
@@ -74,11 +74,11 @@ let playerIDs = [];
 async function sendLatest(contestID) {
   const outPromises = playerIDs
     .map((p) => {
-      const rkey = rediskeys.hash(contestID, p);
-      return hgetallAsync(rkey).then((obj) => {
-        if (!obj) { return null; }
-        const out = obj;
-        out.contestID = contestID;
+      const contestPromise = hgetallAsync(rediskeys.hash(contestID, p));
+      const statPromise = hgetallAsync(rediskeys.statHash(p));
+      return Promise.all([contestPromise, statPromise]).then((objarr) => {
+        if (!objarr) { return null; }
+        const out = { ...objarr[0], ...objarr[1] };
         out.nflplayerID = p;
         return out;
       });

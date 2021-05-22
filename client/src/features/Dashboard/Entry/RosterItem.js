@@ -48,8 +48,8 @@ function RosterItem({ playerid, position }) {
       <td>{position}</td>
       <td>{thisplayer.name}</td>
       <td>{thisplayer.teamAbr}</td>
-      <td style={{ textAlign: 'right' }}>{thisplayer.statprice}</td>
-      <td style={{ textAlign: 'right' }}>{thisplayer.preprice}</td>
+      <td style={{ textAlign: 'right' }}>{thisplayer.statPrice}</td>
+      <td style={{ textAlign: 'right' }}>{thisplayer.projPrice}</td>
       <td style={{ textAlign: 'right' }}>{(priceMap && Number(priceMap.lastprice)) ? priceMap.lastprice : ''}</td>
       <td style={{ textAlign: 'right' }}>{(priceMap && Number(priceMap.bestbid)) ? priceMap.bestbid : ''}</td>
       <td style={{ textAlign: 'right' }}>{(priceMap && Number(priceMap.bestask)) ? priceMap.bestask : ''}</td>

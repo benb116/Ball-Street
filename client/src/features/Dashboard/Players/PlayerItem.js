@@ -17,6 +17,9 @@ function PlayerItem({ playerdata }) {
   const showDrop = useSelector(isOnRosterSelector(playerdata.id));
   const priceMap = useSelector(priceMapSelector(playerdata.id));
 
+  const dispProj = thephase === 'pre' ? playerdata.preprice : playerdata.projPrice;
+  const dispStat = thephase === 'pre' ? playerdata.statprice : playerdata.statPrice;
+
   const onpredrop = () => {
     dispatch(preDrop({ leagueID, contestID, nflplayerID: playerdata.id }));
   };
@@ -30,7 +33,7 @@ function PlayerItem({ playerdata }) {
       nflplayerID: playerdata.id,
       nflplayerName: playerdata.name,
       isbid: false,
-      price: (priceMap ? Number(priceMap.bestbid || playerdata.preprice) : playerdata.preprice),
+      price: (priceMap ? Number(priceMap.bestbid || dispProj) : dispProj),
       protected: true,
     }));
   };
@@ -40,7 +43,7 @@ function PlayerItem({ playerdata }) {
       nflplayerID: playerdata.id,
       nflplayerName: playerdata.name,
       isbid: true,
-      price: (priceMap ? Number(priceMap.bestask || playerdata.preprice) : playerdata.preprice),
+      price: (priceMap ? Number(priceMap.bestask || dispProj) : dispProj),
       protected: true,
     }));
   };
@@ -57,8 +60,8 @@ function PlayerItem({ playerdata }) {
       <td style={{ width: '10rem', overflow: 'hidden' }}>{playerdata.name}</td>
       <td style={{ width: '2.2rem' }}>{playerdata.posName}</td>
       <td style={{ width: '2.2rem' }}>{playerdata.teamAbr}</td>
-      <td style={{ width: '2rem', textAlign: 'right' }}>{playerdata.preprice}</td>
-      <td style={{ width: '2rem', textAlign: 'right' }}>{playerdata.statprice}</td>
+      <td style={{ width: '2rem', textAlign: 'right' }}>{dispProj}</td>
+      <td style={{ width: '2rem', textAlign: 'right' }}>{dispStat}</td>
       <td style={{ width: '2rem', textAlign: 'right' }}>{(priceMap && Number(priceMap.lastprice)) ? priceMap.lastprice : ''}</td>
       <td style={{ width: '2rem', textAlign: 'right' }}>{(priceMap && Number(priceMap.bestbid)) ? priceMap.bestbid : ''}</td>
       <td style={{ width: '2rem', textAlign: 'right' }}>{(priceMap && Number(priceMap.bestask)) ? priceMap.bestask : ''}</td>
@@ -111,8 +114,10 @@ PlayerItem.propTypes = {
     name: PropTypes.string.isRequired,
     posName: PropTypes.string.isRequired,
     teamAbr: PropTypes.string.isRequired,
-    preprice: PropTypes.number.isRequired,
-    statprice: PropTypes.number.isRequired,
+    preprice: 0,
+    statprice: 0,
+    projPrice: 0,
+    statPrice: 0,
   }).isRequired,
 };
 

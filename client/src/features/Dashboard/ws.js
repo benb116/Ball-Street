@@ -1,5 +1,5 @@
 import store from '../../app/store';
-import { setPhase, updatePrice } from './Players/PlayersSlice';
+import { setPhase, updatePrices } from './Players/PlayersSlice';
 import { removeOffer, alertProtMatch } from './Offers/OffersSlice';
 import { updateRoster } from './Entry/EntrySlice';
 import { updateLeaders } from './Leaderboard/LeaderboardSlice';
@@ -40,8 +40,10 @@ const initWS = (contestID) => {
           newPhase(msg.phase);
           break;
         case 'priceUpdate':
-        //   msgs = Object.values(msg.pricedata);
-          Object.values(msg.pricedata).forEach(markPrice);
+          markPrice(Object.values(msg.pricedata));
+          break;
+        case 'statUpdate':
+          markPrice(Object.values(msg.pricedata));
           break;
         default:
           break;
@@ -62,8 +64,8 @@ const initWS = (contestID) => {
   });
 };
 
-function markPrice(obj) {
-  store.dispatch(updatePrice(obj));
+function markPrice(arr) {
+  store.dispatch(updatePrices(arr));
 }
 
 function fillOffer(oid) {
