@@ -14,12 +14,15 @@ const hsetAsync = promisify(client2.hset).bind(client2);
 const { NFLPlayer } = require('../models');
 
 // Get projected points before the game
-// const seasonString = '2020REG';
-// const weekString = '1';
-// const projectedURL = `https://fly.sportsdata.io/v3/nfl/projections/json/PlayerGameProjectionStatsByWeek/${seasonString}/${weekString}?key=${sportsdataio}`;
-// const statURL = `https://fly.sportsdata.io/v3/nfl/stats/json/PlayerGameStatsByWeek/${seasonString}/${weekString}?key=${sportsdataio}`;
-// axios.get(projectedURL).then(setDBPrePrices);
-// axios.get(statURL).then(setDBStatPrices);
+const seasonString = '2020REG';
+const weekString = '1';
+const projectedURL = `https://fly.sportsdata.io/v3/nfl/projections/json/PlayerGameProjectionStatsByWeek/${seasonString}/${weekString}?key=${sportsdataio}`;
+const statURL = `https://fly.sportsdata.io/v3/nfl/stats/json/PlayerGameStatsByWeek/${seasonString}/${weekString}?key=${sportsdataio}`;
+
+function dbSet() {
+  axios.get(projectedURL).then(setDBPrePrices);
+  axios.get(statURL).then(setDBStatPrices);
+}
 
 function setDBPrePrices({ data }) {
   const all = data.map((p) => {
@@ -57,18 +60,22 @@ function simURL(n) {
   return `https://fly.sportsdata.io/v3/nfl/stats/json/SimulatedBoxScoresV3/${n}?key=${sportsdataio}`;
 }
 
-let count = 0;
+function statSim() {
+  let count = 0;
 
-setInterval(() => {
-  console.log(count);
-  axios.get(simURL(count)).then(setStatPrices);
-  count += 1;
-}, 5000);
+  setInterval(() => {
+    // eslint-disable-next-line no-console
+    console.log(count);
+    axios.get(simURL(count)).then(setStatPrices);
+    count += 1;
+  }, 5000);
+}
 
 const livemap = {};
 
 function setProjPrices({ data }) {
-  return Promise.all(data.map((p) => {
+  const out = data[1].PlayerGames;
+  return Promise.all(out.map((p) => {
     const { PlayerID, FantasyPoints } = p;
     if (!livemap[PlayerID]) { livemap[PlayerID] = {}; }
     if (!livemap[PlayerID].projPrice) { livemap[PlayerID].projPrice = null; }
@@ -117,3 +124,7 @@ async function setLatest(nflplayerID, inprojPrice, instatPrice) {
 // Projected Fantasy Defense Game Stats (w/ DFS Salaries)
 
 // Box Scores V3 Simulation
+module.exports = {
+  dbSet,
+  statSim,
+};
