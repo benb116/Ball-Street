@@ -22,6 +22,9 @@ function RosterItem({ playerid, position }) {
     return (<tr><td>{position}</td></tr>);
   }
 
+  const dispProj = thephase === 'pre' ? thisplayer.preprice : thisplayer.projPrice;
+  const dispStat = thephase === 'pre' ? thisplayer.postprice : thisplayer.statPrice;
+
   const onpredrop = () => {
     dispatch(preDrop({ leagueID, contestID, nflplayerID: playerid }));
   };
@@ -31,7 +34,7 @@ function RosterItem({ playerid, position }) {
       nflplayerID: thisplayer.id,
       nflplayerName: thisplayer.name,
       isbid: false,
-      price: (priceMap ? Number(priceMap.bestbid || 0) : 0),
+      price: (priceMap ? Number(priceMap.bestbid || 0) : dispProj),
       protected: true,
     }));
   };
@@ -48,8 +51,8 @@ function RosterItem({ playerid, position }) {
       <td>{position}</td>
       <td>{thisplayer.name}</td>
       <td>{thisplayer.teamAbr}</td>
-      <td style={{ textAlign: 'right' }}>{thisplayer.statPrice}</td>
-      <td style={{ textAlign: 'right' }}>{thisplayer.projPrice}</td>
+      <td style={{ textAlign: 'right' }}>{dispStat}</td>
+      <td style={{ textAlign: 'right' }}>{dispProj}</td>
       <td style={{ textAlign: 'right' }}>{(priceMap && Number(priceMap.lastprice)) ? priceMap.lastprice : ''}</td>
       <td style={{ textAlign: 'right' }}>{(priceMap && Number(priceMap.bestbid)) ? priceMap.bestbid : ''}</td>
       <td style={{ textAlign: 'right' }}>{(priceMap && Number(priceMap.bestask)) ? priceMap.bestask : ''}</td>

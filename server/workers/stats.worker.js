@@ -5,7 +5,7 @@ const axios = require('axios');
 const { sportsdataio } = require('../secret');
 
 // Two clients - one to subscribe, one to read and write
-const { client, rediskeys } = require('../db/redis');
+const { client, rediskeys, set } = require('../db/redis');
 
 const hsetAsync = promisify(client.hset).bind(client);
 
@@ -34,21 +34,22 @@ function setDBPrePrices({ data }) {
       },
     });
   });
-
   return Promise.all(all);
 }
 
 function setDBStatPrices({ data }) {
-  const all = data.map((p) => {
+  const all = data.map(async (p) => {
     const { PlayerID, FantasyPoints } = p;
-    return NFLPlayer.update({
-      statprice: Math.round(FantasyPoints * 100),
+    const redisPromise = hsetAsync(rediskeys.statHash(PlayerID), 'projPrice', FantasyPoints);
+    const dbPromise = NFLPlayer.update({
+      postprice: Math.round(FantasyPoints * 100),
     },
     {
       where: {
         id: PlayerID,
       },
     });
+    return Promise.all([redisPromise, dbPromise]);
   });
 
   return Promise.all(all);

@@ -18,7 +18,7 @@ function PlayerItem({ playerdata }) {
   const priceMap = useSelector(priceMapSelector(playerdata.id));
 
   const dispProj = thephase === 'pre' ? playerdata.preprice : playerdata.projPrice;
-  const dispStat = thephase === 'pre' ? playerdata.statprice : playerdata.statPrice;
+  const dispStat = thephase === 'pre' ? playerdata.postprice : playerdata.statPrice;
 
   const onpredrop = () => {
     dispatch(preDrop({ leagueID, contestID, nflplayerID: playerdata.id }));
@@ -115,7 +115,7 @@ PlayerItem.propTypes = {
     posName: PropTypes.string.isRequired,
     teamAbr: PropTypes.string.isRequired,
     preprice: 0,
-    statprice: 0,
+    postprice: 0,
     projPrice: 0,
     statPrice: 0,
   }).isRequired,

@@ -67,7 +67,7 @@ async function tradeAdd(req, t) {
   if (value.body.rosterposition) { // If a roster position was specified
     // Is it a valid one?
     const isinvalid = u.isInvalidSpot(playerType, value.body.rosterposition);
-    if (isinvalid) { u.Error(isinvalid); }
+    if (isinvalid) { u.Error(isinvalid, 406); }
     // Is it an empty one?
     if (theentry[value.body.rosterposition] !== null) {
       u.Error('There is a player in that spot', 406);

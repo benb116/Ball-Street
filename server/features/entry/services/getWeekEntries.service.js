@@ -1,14 +1,14 @@
 const { Op } = require('sequelize');
 
 const u = require('../../util/util');
-const config = require('../../../config');
 
 const { Entry, Contest, User } = require('../../../models');
+const { get } = require('../../../db/redis');
 
 async function getWeekEntries() {
   const weekcontests = await Contest.findAll({
     where: {
-      nflweek: config.currentNFLWeek,
+      nflweek: await get.CurrentWeek(),
     },
   })
     .then(u.dv)

@@ -24,8 +24,6 @@ const config = {
   },
   DefaultProtected: false,
   RefreshTime: 5,
-
-  currentNFLWeek: 1,
 };
 
 config.Roster.FLEX1 = config.FlexNFLPositionId;

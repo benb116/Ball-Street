@@ -184,7 +184,7 @@ async function InitDB(sequelize) {
     obj.jersey = p.jersey;
     obj.NFLTeamId = teams[teamfullnameMap[p.team]].id;
     obj.preprice = 1100;
-    obj.statprice = 700;
+    obj.postprice = 700;
     return obj;
   }).filter((e) => e !== null);
   const teamdefrecords = teamfullnamearr.map((t) => {
@@ -195,7 +195,7 @@ async function InitDB(sequelize) {
     obj.NFLPositionId = nflpos.DEF.id;
     obj.NFLTeamId = teams[abr].id;
     obj.preprice = 1100;
-    obj.statprice = 700;
+    obj.postprice = 700;
 
     return obj;
   });

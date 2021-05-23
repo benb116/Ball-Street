@@ -89,7 +89,7 @@ function ListHeader() {
       <th style={{ width: '2.2rem', cursor: 'pointer' }} onClick={handleClick} value="posName">Pos</th>
       <th style={{ width: '2.2rem', cursor: 'pointer' }} onClick={handleClick} value="teamAbr">Team</th>
       <th style={{ width: '2rem', cursor: 'pointer', textAlign: 'right' }} onClick={handleClick} value="preprice">Proj</th>
-      <th style={{ width: '2rem', cursor: 'pointer', textAlign: 'right' }} onClick={handleClick} value="statprice">Pts</th>
+      <th style={{ width: '2rem', cursor: 'pointer', textAlign: 'right' }} onClick={handleClick} value="postprice">Pts</th>
       <th style={{ width: '2rem', cursor: 'pointer', textAlign: 'right' }} onClick={handleClick} value="lastprice">Last</th>
       <th style={{ width: '2rem', cursor: 'pointer', textAlign: 'right' }} onClick={handleClick} value="bestbid">Bid</th>
       <th style={{ width: '2rem', cursor: 'pointer', textAlign: 'right' }} onClick={handleClick} value="bestask">Ask</th>
