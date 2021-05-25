@@ -59,8 +59,6 @@ const Entry = () => {
 };
 
 function RosterHeader() {
-  const thephase = 'pre';
-
   return (
     <thead>
       <tr style={{ fontSize: '.8rem' }}>
@@ -90,9 +88,15 @@ function PointTotals() {
     const out = acc;
     const thisplayerID = thisentry.roster[pos];
     const theplayer = players.find((p) => p.id === thisplayerID);
+    if (!theplayer) { return out; }
+    const thephase = 'pre';
+
+    const dispProj = thephase === 'pre' ? theplayer.preprice : (priceMaps[thisplayerID].projPrice || 0);
+    const dispStat = thephase === 'pre' ? theplayer.postprice : (priceMaps[thisplayerID].statPrice || 0);
+
     if (theplayer) {
-      out[0] += Number(priceMaps[thisplayerID].statPrice) || 0;
-      out[1] += Number(priceMaps[thisplayerID].projPrice) || 0;
+      out[0] += Number(dispStat) || 0;
+      out[1] += Number(dispProj) || 0;
     }
     return out;
   }, [thisentry.balance, thisentry.balance]);

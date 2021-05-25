@@ -18,8 +18,8 @@ function PlayerItem({ playerdata }) {
 
   const thephase = playerdata.NFLTeam.gamePhase;
 
-  const dispProj = thephase === 'pre' ? playerdata.preprice : playerdata.projPrice;
-  const dispStat = thephase === 'pre' ? playerdata.postprice : playerdata.statPrice;
+  const dispProj = thephase === 'pre' ? playerdata.preprice : (playerdata.projPrice || 0);
+  const dispStat = thephase === 'pre' ? playerdata.postprice : (playerdata.statPrice || 0);
 
   const onpredrop = () => {
     dispatch(preDrop({ leagueID, contestID, nflplayerID: playerdata.id }));
@@ -101,6 +101,12 @@ function ActionButton({ thephase, oclick, text }) {
     </td>
   );
 }
+
+ActionButton.propTypes = {
+  thephase: PropTypes.string.isRequired,
+  oclick: PropTypes.func.isRequired,
+  text: PropTypes.string.isRequired,
+};
 
 PlayerItem.propTypes = {
   playerdata: PropTypes.shape({

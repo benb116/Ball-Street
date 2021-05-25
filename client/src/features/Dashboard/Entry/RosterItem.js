@@ -23,8 +23,8 @@ function RosterItem({ playerid, position }) {
 
   const thephase = thisplayer.NFLTeam.gamePhase;
 
-  const dispProj = thephase === 'pre' ? thisplayer.preprice : thisplayer.projPrice;
-  const dispStat = thephase === 'pre' ? thisplayer.postprice : thisplayer.statPrice;
+  const dispProj = thephase === 'pre' ? thisplayer.preprice : (thisplayer.projPrice || 0);
+  const dispStat = thephase === 'pre' ? thisplayer.postprice : (thisplayer.statPrice || 0);
 
   const onpredrop = () => {
     dispatch(preDrop({ leagueID, contestID, nflplayerID: playerid }));
@@ -92,6 +92,12 @@ function ActionButton({ thephase, oclick, text }) {
     </td>
   );
 }
+
+ActionButton.propTypes = {
+  thephase: PropTypes.string.isRequired,
+  oclick: PropTypes.func.isRequired,
+  text: PropTypes.string.isRequired,
+};
 
 RosterItem.propTypes = {
   playerid: PropTypes.number,

@@ -81,7 +81,7 @@ async function calculateLeaderboard() {
   const projTotals = normalizedEntries.map((e) => {
     e.total = e.roster.reduce((acc, cur) => {
       // If player has price info, add that, otherwise 0
-      const out = acc + (priceMap[cur] ? Number(priceMap[cur].projPrice) : 0);
+      const out = acc + (priceMap[cur].projPrice ? Number(priceMap[cur].projPrice) : 0);
       return out;
     }, e.balance);
     return e;
