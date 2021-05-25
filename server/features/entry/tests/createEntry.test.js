@@ -1,10 +1,5 @@
 const service = require('../services/createEntry.service');
 const { ErrorTest, ObjectTest } = require('../../util/util');
-const { set } = require('../../../db/redis');
-
-beforeEach(() => {
-  set.GamePhase('pre');
-});
 
 describe('createEntry service', () => {
   test('Valid request in private league returns data', ObjectTest(
@@ -65,13 +60,4 @@ describe('createEntry service', () => {
     service, { user: 1, params: { leagueID: 1, contestID: 80 }, body: {} },
     404, 'No contest found',
   ));
-
-  test('Not pre games returns error 406', async () => {
-    await set.GamePhase('mid');
-    await ErrorTest(
-      service, { user: 1, params: { leagueID: 1, contestID: 1 }, body: {} },
-      406, "Can't make an entry during or after games",
-    )();
-    await set.GamePhase('pre');
-  });
 });

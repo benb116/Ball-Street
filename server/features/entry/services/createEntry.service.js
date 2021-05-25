@@ -6,7 +6,6 @@ const sequelize = require('../../../db');
 const { Entry } = require('../../../models');
 const { canUserSeeContest } = require('../../util/util.service');
 const { validators } = require('../../util/util.schema');
-const { get } = require('../../../db/redis');
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
@@ -24,11 +23,6 @@ const schema = Joi.object({
 // Get info for a specific contest
 async function createEntry(req) {
   const value = u.validate(req, schema);
-
-  const phase = await get.GamePhase();
-  if (phase !== 'pre') {
-    u.Error("Can't make an entry during or after games", 406);
-  }
 
   const obj = {};
   obj.UserId = value.user;

@@ -16,7 +16,6 @@ const defaultState = {
   },
   sortProp: 'name',
   sortDesc: true,
-  gamePhase: 'post',
 };
 
 export const playersSlice = createSlice({
@@ -47,7 +46,12 @@ export const playersSlice = createSlice({
       state = ns;
     },
     setPhase: (state, { payload }) => {
-      state.gamePhase = payload;
+      state.playerlist = state.playerlist.map((p) => {
+        if (p.NFLTeam.id === payload.nflTeamID) {
+          p.NFLTeam.gamePhase = payload.gamePhase;
+        }
+        return p;
+      });
     },
   },
   extraReducers: {
@@ -94,5 +98,3 @@ export const sortSelector = (state) => {
   const { sortDesc } = state.players;
   return { sortProp, sortDesc };
 };
-
-export const phaseSelector = (state) => state.players.gamePhase;

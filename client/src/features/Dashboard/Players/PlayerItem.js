@@ -6,16 +6,17 @@ import { useParams } from 'react-router-dom';
 import { isOnRosterSelector, preAdd, preDrop } from '../Entry/EntrySlice';
 import { setModal } from '../Modal/ModalSlice';
 import { cancelOffer, offersSelector } from '../Offers/OffersSlice';
-import { phaseSelector, priceMapSelector } from './PlayersSlice';
+import { priceMapSelector } from './PlayersSlice';
 
 function PlayerItem({ playerdata }) {
   const dispatch = useDispatch();
   const { leagueID, contestID } = useParams();
   const offers = useSelector(offersSelector);
-  const thephase = useSelector(phaseSelector);
 
   const showDrop = useSelector(isOnRosterSelector(playerdata.id));
   const priceMap = useSelector(priceMapSelector(playerdata.id));
+
+  const thephase = playerdata.NFLTeam.gamePhase;
 
   const dispProj = thephase === 'pre' ? playerdata.preprice : playerdata.projPrice;
   const dispStat = thephase === 'pre' ? playerdata.postprice : playerdata.statPrice;
@@ -55,6 +56,18 @@ function PlayerItem({ playerdata }) {
     dispatch(cancelOffer({ leagueID, contestID, offerID: oid }));
   };
 
+  let oclick = (showDrop ? onpredrop : onpreadd);
+  let text = (showDrop ? '–' : '+');
+  if (thephase === 'mid') {
+    if (playeroffer) {
+      oclick = () => oncancelOffer(playeroffer.id);
+      text = '✕';
+    } else {
+      oclick = (showDrop ? onask : onbid);
+      text = (showDrop ? 'ASK' : 'BID');
+    }
+  }
+
   return (
     <tr playerid={playerdata.id}>
       <td style={{ width: '10rem', overflow: 'hidden' }}>{playerdata.name}</td>
@@ -65,46 +78,27 @@ function PlayerItem({ playerdata }) {
       <td style={{ width: '2rem', textAlign: 'right' }}>{(priceMap && Number(priceMap.lastprice)) ? priceMap.lastprice : ''}</td>
       <td style={{ width: '2rem', textAlign: 'right' }}>{(priceMap && Number(priceMap.bestbid)) ? priceMap.bestbid : ''}</td>
       <td style={{ width: '2rem', textAlign: 'right' }}>{(priceMap && Number(priceMap.bestask)) ? priceMap.bestask : ''}</td>
-      {thephase === 'pre' ? (
-        <td>
-          <button
-            style={{
-              cursor: 'pointer', width: '2rem', fontWeight: 'bold', textAlign: 'center',
-            }}
-            onClick={(showDrop ? onpredrop : onpreadd)}
-            type="button"
-          >
-            {showDrop ? '–' : '+'}
-          </button>
-        </td>
-      )
-        : <td />}
-
-      {thephase === 'mid' ? (
-        playeroffer ? (
-          <td>
-            <button
-              style={{ cursor: 'pointer', width: '2rem', textAlign: 'center' }}
-              onClick={() => oncancelOffer(playeroffer.id)}
-              type="button"
-            >
-              ✕
-            </button>
-          </td>
-        ) : (
-          <td>
-            <button
-              style={{ cursor: 'pointer', width: '2rem', textAlign: 'center' }}
-              onClick={(showDrop ? onask : onbid)}
-              type="button"
-            >
-              {showDrop ? 'ASK' : 'BID'}
-            </button>
-          </td>
-        )
-      )
-        : <td />}
+      <ActionButton thephase={thephase} oclick={oclick} text={text} />
     </tr>
+  );
+}
+
+function ActionButton({ thephase, oclick, text }) {
+  if (thephase !== 'pre' && thephase !== 'mid') {
+    return (<td />);
+  }
+  return (
+    <td style={{ textAlign: 'center' }}>
+      <button
+        style={{
+          cursor: 'pointer', width: '2rem', fontWeight: 'bold', textAlign: 'center', padding: 0,
+        }}
+        onClick={oclick}
+        type="button"
+      >
+        {text}
+      </button>
+    </td>
   );
 }
 
@@ -118,6 +112,9 @@ PlayerItem.propTypes = {
     postprice: 0,
     projPrice: 0,
     statPrice: 0,
+    NFLTeam: PropTypes.shape({
+      gamePhase: PropTypes.string.isRequired,
+    }),
   }).isRequired,
 };
 

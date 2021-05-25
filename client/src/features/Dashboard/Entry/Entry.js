@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { phaseSelector, playersSelector, pricesMapSelector } from '../Players/PlayersSlice';
+import { playersSelector, pricesMapSelector } from '../Players/PlayersSlice';
 
 import { getEntry, entrySelector, rosterUpdateSelector } from './EntrySlice';
 
@@ -59,7 +59,7 @@ const Entry = () => {
 };
 
 function RosterHeader() {
-  const thephase = useSelector(phaseSelector);
+  const thephase = 'pre';
 
   return (
     <thead>
@@ -72,8 +72,7 @@ function RosterHeader() {
         <th style={{ width: '2rem', textAlign: 'right' }}>Last</th>
         <th style={{ width: '2rem', textAlign: 'right' }}>Bid</th>
         <th style={{ width: '2rem', textAlign: 'right' }}>Ask</th>
-        {thephase === 'pre' ? <th style={{ width: '2rem' }}>Drop</th> : <th aria-label="header" />}
-        {thephase === 'mid' ? <th style={{ width: '2rem' }}>Offer</th> : <th aria-label="header" />}
+        <th style={{ width: '2rem', textAlign: 'center' }}>Action</th>
       </tr>
     </thead>
   );

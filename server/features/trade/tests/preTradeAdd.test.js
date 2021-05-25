@@ -1,10 +1,5 @@
 const service = require('../services/preTradeAdd.service');
 const { ErrorTest, ObjectTest } = require('../../util/util');
-const { set } = require('../../../db/redis');
-
-beforeEach(() => {
-  set.GamePhase('pre');
-});
 
 describe('preTradeAdd service', () => {
   test('Valid request returns data', ObjectTest(
@@ -12,7 +7,7 @@ describe('preTradeAdd service', () => {
       user: 1,
       params: { leagueID: 2, contestID: 2 },
       body: {
-        nflplayerID: 19415,
+        nflplayerID: 19067,
         rosterposition: 'TE1',
       },
     },
@@ -25,7 +20,7 @@ describe('preTradeAdd service', () => {
       QB1: null,
       RB1: 20933,
       RB2: null,
-      TE1: 19415,
+      TE1: 19067,
       UserId: 1,
       WR1: null,
       WR2: null,
@@ -85,7 +80,7 @@ describe('preTradeAdd service', () => {
       user: 4,
       params: { leagueID: 2, contestID: 2 },
       body: {
-        nflplayerID: 20933,
+        nflplayerID: 19067,
         rosterposition: 'TE1',
       },
     },
@@ -97,7 +92,7 @@ describe('preTradeAdd service', () => {
       user: 1,
       params: { leagueID: 2 },
       body: {
-        nflplayerID: 20933,
+        nflplayerID: 19067,
         rosterposition: 'TE1',
       },
     },
@@ -108,26 +103,22 @@ describe('preTradeAdd service', () => {
     service, {
       params: { leagueID: 2, contestID: 2 },
       body: {
-        nflplayerID: 20933,
+        nflplayerID: 19067,
         rosterposition: 'TE1',
       },
     },
     400, 'You must be logged in',
   ));
 
-  test('Not pre games returns error 406', async () => {
-    await set.GamePhase('mid');
-    await ErrorTest(
-      service, {
-        user: 1,
-        params: { leagueID: 1, contestID: 1 },
-        body: {
-          nflplayerID: 20933,
-          rosterposition: 'TE1',
-        },
+  test('Not pre games returns error 406', ErrorTest(
+    service, {
+      user: 1,
+      params: { leagueID: 1, contestID: 1 },
+      body: {
+        nflplayerID: 19415,
+        rosterposition: 'TE1',
       },
-      406, "Can't add during or after games",
-    )();
-    await set.GamePhase('pre');
-  });
+    },
+    406, "Can't add during or after games",
+  ));
 });

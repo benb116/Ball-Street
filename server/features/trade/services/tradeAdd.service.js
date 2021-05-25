@@ -3,7 +3,7 @@ const Joi = require('joi');
 const u = require('../../util/util');
 const { validators } = require('../../util/util.schema');
 
-const { Entry, NFLPlayer } = require('../../../models');
+const { Entry, NFLPlayer, NFLTeam } = require('../../../models');
 
 const schema = Joi.object({
   user: validators.user,
@@ -50,10 +50,16 @@ async function tradeAdd(req, t) {
 
   // Get player price and position
   const playerdata = await NFLPlayer.findByPk(theplayer, {
-    attributes: ['preprice', 'NFLPositionId'],
+    include: [{ model: NFLTeam }],
     transaction: t,
   }).then((d) => d.dataValues);
     // console.log("PDATA", playerdata);
+
+  if (!value.body.price) {
+    if (playerdata.NFLTeam.gamePhase !== 'pre') {
+      u.Error("Can't add during or after games", 406);
+    }
+  }
 
   const tradeprice = value.body.price || playerdata.preprice;
   // Checks

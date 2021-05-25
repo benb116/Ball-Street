@@ -95,7 +95,7 @@ async function PopulateDB(sequelize) {
   const entrs2 = [{
     UserId: 1, ContestId: 2, pointtotal: 10000, RB1: 20933, K1: 19041,
   }, {
-    UserId: 2, ContestId: 2, pointtotal: 1500, RB1: 20933, K1: 19041,
+    UserId: 2, ContestId: 2, pointtotal: 1500, RB1: 20933, WR1: 18686, K1: 19041,
   }, {
     UserId: 3, ContestId: 2, pointtotal: 500, RB1: 20933, K1: 19041,
   }];
@@ -157,7 +157,6 @@ async function PopulateDB(sequelize) {
   ];
   await Trade.bulkCreate(trds);
 
-  await set.GamePhase('pre');
   await set.CurrentWeek(1);
 }
 

@@ -23,6 +23,14 @@ module.exports = function model(sequelize, DataTypes) {
       allowNull: false,
       unique: true,
     },
+    gamePhase: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+      default: 'post',
+      validate: {
+        isIn: [['pre', 'mid', 'post']],
+      },
+    },
     NFLDivisionId: {
       type: DataTypes.INTEGER,
       references: { model: 'NFLDivisions' },

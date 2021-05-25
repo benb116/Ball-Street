@@ -87,7 +87,7 @@ function phaseChange(message) {
   liveState.contestmap.forEach(async (thecontestID, thews) => {
     if (!thews) { liveState.contestmap.delete(thews); return; }
     if (thews.readyState === 1) {
-      thews.send(JSON.stringify({ event: 'phaseChange', phase: message }));
+      thews.send(JSON.stringify({ event: 'phaseChange', phase: JSON.parse(message) }));
     }
   });
 }

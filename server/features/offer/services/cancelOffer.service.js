@@ -8,7 +8,6 @@ const { validators } = require('../../util/util.schema');
 
 const sequelize = require('../../../db');
 const { Offer } = require('../../../models');
-const { get } = require('../../../db/redis');
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
@@ -30,11 +29,6 @@ const schema = Joi.object({
 
 async function cancelOffer(req) {
   const value = u.validate(req, schema);
-
-  const phase = await get.GamePhase();
-  if (phase !== 'mid') {
-    u.Error("Can't cancel an offer before or after games", 406);
-  }
 
   // Cancel offer, but if it's filled, let user know
   return sequelize.transaction(isoOption, async (t) => {

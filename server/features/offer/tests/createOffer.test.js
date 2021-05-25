@@ -1,10 +1,5 @@
 const service = require('../services/createOffer.service');
 const { ErrorTest, ObjectTest } = require('../../util/util');
-const { set } = require('../../../db/redis');
-
-beforeEach(() => {
-  set.GamePhase('mid');
-});
 
 describe('createOffer service', () => {
   test('Valid request returns data', ObjectTest(
@@ -165,22 +160,18 @@ describe('createOffer service', () => {
     400, 'You must be logged in',
   ));
 
-  test('Not mid games returns error 406', async () => {
-    await set.GamePhase('pre');
-    await ErrorTest(
-      service, {
-        user: 2,
-        params: { leagueID: 2, contestID: 2 },
-        body: {
-          offerobj: {
-            nflplayerID: 20933,
-            isbid: false,
-            price: 2000,
-          },
+  test('Not mid games returns error 406', ErrorTest(
+    service, {
+      user: 2,
+      params: { leagueID: 2, contestID: 2 },
+      body: {
+        offerobj: {
+          nflplayerID: 20876,
+          isbid: false,
+          price: 2000,
         },
       },
-      406, "Can't make an offer before or after games",
-    )();
-    await set.GamePhase('mid');
-  });
+    },
+    406, "Can't make an offer before or after games",
+  ));
 });

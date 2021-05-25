@@ -5,7 +5,7 @@ const http = require('http');
 const express = require('express');
 const { promisify } = require('util');
 
-const { client, rediskeys, get } = require('../../db/redis');
+const { client, rediskeys } = require('../../db/redis');
 
 const hgetallAsync = promisify(client.hgetall).bind(client);
 
@@ -48,9 +48,6 @@ wss.on('connection', async (ws, request) => {
   // Send starting data
   const out = await sendLatest(contestID);
   ws.send(JSON.stringify({ event: 'priceUpdate', pricedata: out.filter((e) => e !== null) }));
-
-  const phase = await get.GamePhase();
-  ws.send(JSON.stringify({ event: 'phaseChange', phase }));
 
   ws.on('close', () => {
     liveState.connmap.delete(userId);

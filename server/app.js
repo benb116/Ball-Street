@@ -15,7 +15,9 @@ app.use(express.static('../client/build'));
 app.use(session);
 app.use(helmet());
 app.enable('trust proxy'); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
-app.use(limiter);
+if (isProduction) {
+  app.use(limiter);
+}
 
 const routePrefix = (isProduction ? '' : '/app');
 app.use(`${routePrefix}/auth/`, require('./features/user/user.route'));

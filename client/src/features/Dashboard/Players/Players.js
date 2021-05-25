@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import {
-  getPlayers, allPlayersSelector, filterSelector, sortSelector, setSort, phaseSelector,
+  getPlayers, allPlayersSelector, filterSelector, sortSelector, setSort,
 } from './PlayersSlice';
 
 import PlayerFilter from './PlayerFilter';
@@ -77,7 +77,6 @@ const Players = () => {
 
 function ListHeader() {
   const dispatch = useDispatch();
-  const thephase = useSelector(phaseSelector);
 
   function handleClick(evt) {
     dispatch(setSort(evt.target.getAttribute('value')));
@@ -93,8 +92,7 @@ function ListHeader() {
       <th style={{ width: '2rem', cursor: 'pointer', textAlign: 'right' }} onClick={handleClick} value="lastprice">Last</th>
       <th style={{ width: '2rem', cursor: 'pointer', textAlign: 'right' }} onClick={handleClick} value="bestbid">Bid</th>
       <th style={{ width: '2rem', cursor: 'pointer', textAlign: 'right' }} onClick={handleClick} value="bestask">Ask</th>
-      {thephase === 'pre' ? <th style={{ width: '2rem', textAlign: 'center' }}>+/–</th> : <th aria-label="header" />}
-      {thephase === 'mid' ? <th style={{ width: '2rem', textAlign: 'center' }}>Offer</th> : <th aria-label="header" />}
+      <th style={{ width: '2rem', textAlign: 'center' }}>Action</th>
     </tr>
   );
 }
