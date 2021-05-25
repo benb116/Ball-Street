@@ -74,8 +74,9 @@ async function createOffer(req) {
         attributes: ['NFLPositionId'],
         transaction: t,
       }).then(u.dv);
-        // Only allow offer if there's currently room on the roster
-        // TODO make linked offers? I.e. sell player at market price to make room for other player
+      if (!playerdata) { u.Error('Player not found', 404); }
+      // Only allow offer if there's currently room on the roster
+      // TODO make linked offers? I.e. sell player at market price to make room for other player
       if (!u.isOpenRoster(theentry, playerdata.NFLPositionId)) { u.Error('There are no spots this player could fit into', 409); }
     }
 

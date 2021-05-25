@@ -42,9 +42,6 @@ export const contestsSlice = createSlice({
     [getMyEntry.fulfilled]: (state, { payload }) => {
       state.thiscontestmyentry = payload;
     },
-    [getMyEntry.rejected]: (state, { payload }) => {
-      if (payload) { toast.error(payload); }
-    },
     [createEntry.fulfilled]: (state, { payload }) => {
       state.thiscontestentries.push(payload);
       state.thiscontestmyentry = payload;

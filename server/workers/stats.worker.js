@@ -5,7 +5,7 @@ const axios = require('axios');
 const { sportsdataio } = require('../secret');
 
 // Two clients - one to subscribe, one to read and write
-const { client, rediskeys, set } = require('../db/redis');
+const { client, rediskeys } = require('../db/redis');
 
 const hsetAsync = promisify(client.hset).bind(client);
 

@@ -61,6 +61,21 @@ describe('createOffer service', () => {
     402, "User doesn't have enough points to offer",
   ));
 
+  test('Non-existent player returns 404', ErrorTest(
+    service, {
+      user: 1,
+      params: { leagueID: 2, contestID: 2 },
+      body: {
+        offerobj: {
+          nflplayerID: 99999,
+          isbid: true,
+          price: 1000,
+        },
+      },
+    },
+    404, 'Player not found',
+  ));
+
   test('Bid existing returns error 409', ErrorTest(
     service, {
       user: 1,
