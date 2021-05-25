@@ -20,6 +20,7 @@ subscriber.subscribe('lastTrade');
 subscriber.subscribe('leaderUpdate');
 subscriber.subscribe('protectedMatch');
 subscriber.subscribe('offerFilled');
+subscriber.subscribe('offerCancelled');
 subscriber.subscribe('phaseChange');
 
 subscriber.on('message', (channel, message) => {
@@ -30,6 +31,7 @@ subscriber.on('message', (channel, message) => {
     case 'leaderUpdate': leaderUpdate(); break;
     case 'protectedMatch': protectedMatch(message); break;
     case 'offerFilled': offerFilled(message); break;
+    case 'offerCancelled': offerCancelled(message); break;
     case 'phaseChange': phaseChange(message); break;
     default: break;
   }
@@ -104,6 +106,14 @@ function offerFilled(message) {
   const thews = liveState.connmap.get(userID);
   if (!thews) { liveState.connmap.delete(userID); return; }
   thews.send(JSON.stringify({ event: 'offerFilled', offerID }));
+}
+
+// When a offer is cancelled, alert the user via ws
+function offerCancelled(message) {
+  const { userID, offerID } = JSON.parse(message);
+  const thews = liveState.connmap.get(userID);
+  if (!thews) { liveState.connmap.delete(userID); return; }
+  thews.send(JSON.stringify({ event: 'offerCancelled', offerID }));
 }
 
 // Send out new price data when it's available

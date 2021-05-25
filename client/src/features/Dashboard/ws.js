@@ -30,6 +30,9 @@ const initWS = (contestID) => {
           fillOffer(msg.offerID);
           upRost();
           break;
+        case 'offerCancelled':
+          fillOffer(msg.offerID);
+          break;
         case 'protectedMatch':
           protMatch(msg);
           break;
