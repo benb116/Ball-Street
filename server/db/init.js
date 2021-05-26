@@ -72,7 +72,7 @@ async function InitDB(sequelize) {
       location: 'Baltimore', name: 'Ravens', id: 3, division: 'AFC North', gamePhase: 'pre', fullname: 'Baltimore Ravens',
     },
     BUF: {
-      location: 'Buffalo', name: 'Bills', id: 4, division: 'AFC East', gamePhase: 'pre', fullname: 'Buffalo Bills',
+      location: 'Buffalo', name: 'Bills', id: 4, division: 'AFC East', gamePhase: 'mid', fullname: 'Buffalo Bills',
     },
     CAR: {
       location: 'Carolina', name: 'Panthers', id: 5, division: 'NFC South', gamePhase: 'pre', fullname: 'Carolina Panthers',
@@ -108,7 +108,7 @@ async function InitDB(sequelize) {
       location: 'Jacksonville', name: 'Jaguars', id: 15, division: 'AFC South', gamePhase: 'pre', fullname: 'Jacksonville Jaguars',
     },
     KC: {
-      location: 'Kansas City', name: 'Chiefs', id: 16, division: 'AFC West', gamePhase: 'pre', fullname: 'Kansas City Chiefs',
+      location: 'Kansas City', name: 'Chiefs', id: 16, division: 'AFC West', gamePhase: 'mid', fullname: 'Kansas City Chiefs',
     },
     MIA: {
       location: 'Miami', name: 'Dolphins', id: 17, division: 'AFC East', gamePhase: 'pre', fullname: 'Miami Dolphins',

@@ -27,10 +27,8 @@ export const userSlice = createSlice({
     set: (state, payload) => {
       state = { ...state, ...payload };
     },
-    clear: (state) => {
-      state = defaultState;
-    },
     clearState: (state) => {
+      // eslint-disable-next-line no-unused-vars
       state = defaultState;
     },
     clearStatus: (state) => {

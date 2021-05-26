@@ -27,8 +27,35 @@ const Players = () => {
     })
     .filter((p) => (p.teamAbr === filters.teamAbr || filters.teamAbr === ''))
     .sort((a, b) => {
-      const out = (a[sorts.sortProp] || 0) > (b[sorts.sortProp] || 0);
-      return (out ? 1 : -1) * (sorts.sortDesc ? 1 : -1);
+      const aPhase = a.NFLTeam.gamePhase;
+      const bPhase = b.NFLTeam.gamePhase;
+
+      const sortBy = sorts.sortProp;
+      let [item1, item2] = [a[sorts.sortProp], b[sorts.sortProp]];
+      if (sortBy === 'preprice') {
+        if (aPhase !== 'pre') {
+          item1 = a.projPrice;
+        }
+        if (bPhase !== 'pre') {
+          item2 = b.projPrice;
+        }
+      }
+      if (sortBy === 'postprice') {
+        if (aPhase !== 'pre') {
+          item1 = a.statPrice;
+        }
+        if (bPhase !== 'pre') {
+          item2 = b.statPrice;
+        }
+      }
+      let flip = 1;
+      if (['name', 'posName', 'teamAbr'].indexOf(sorts.sortProp) === -1) {
+        item1 = Number(item1);
+        item2 = Number(item2);
+        flip = -1;
+      }
+      const out = (item1 || 0) > (item2 || 0);
+      return (out ? 1 : -1) * (sorts.sortDesc ? 1 : -1) * flip;
     });
 
   useEffect(() => {

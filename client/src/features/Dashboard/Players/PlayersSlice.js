@@ -23,6 +23,7 @@ export const playersSlice = createSlice({
   initialState: defaultState,
   reducers: {
     clear: (state) => {
+      // eslint-disable-next-line no-unused-vars
       state = defaultState;
     },
     setFilter: (state, action) => {
