@@ -69,7 +69,7 @@ const Players = () => {
         display: 'flex',
         float: 'left',
         width: '40%',
-        height: '100%',
+        height: '95%',
         padding: '0.5rem',
         boxSizing: 'border-box',
         flexFlow: 'column',
@@ -89,7 +89,7 @@ const Players = () => {
           <ListHeader />
         </thead>
         <tbody style={{
-          height: '100%',
+          height: '85%',
           display: 'flex',
           overflowY: 'scroll',
           flexDirection: 'column',

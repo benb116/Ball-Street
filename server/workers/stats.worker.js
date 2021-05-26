@@ -4,6 +4,8 @@ const axios = require('axios');
 // const config = require('../config');
 const { sportsdataio } = require('../secret');
 
+const simdata = require('../db/sim1.json');
+
 // Two clients - one to subscribe, one to read and write
 const { client, rediskeys } = require('../db/redis');
 
@@ -60,12 +62,12 @@ function simURL(n) {
 }
 
 function statSim() {
-  let count = 0;
-
+  let count = 1;
   setInterval(() => {
     // eslint-disable-next-line no-console
-    console.log(count);
-    axios.get(simURL(count)).then(setStatPrices);
+    console.log(count.toString());
+    // axios.get(simURL(count)).then(setStatPrices);
+    setStatPrices(simdata[count.toString()]);
     count += 1;
   }, 5000);
 }
@@ -86,8 +88,9 @@ function setProjPrices({ data }) {
   }));
 }
 
-function setStatPrices({ data }) {
-  const out = data[1].PlayerGames;
+function setStatPrices(out) {
+  // const out = data[1].PlayerGames;
+  // console.log(JSON.stringify(out));
   return Promise.all(out.map((p) => {
     const { PlayerID, FantasyPoints } = p;
     if (!livemap[PlayerID]) { livemap[PlayerID] = {}; }

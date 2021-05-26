@@ -38,21 +38,8 @@ function currentWeek() {
 }
 
 // Functions for setting or getting config values
-async function getGamePhase() {
-  return getAsync(gamePhase());
-}
-
 async function getCurrentWeek() {
   return getAsync(currentWeek()).then(Number);
-}
-
-async function setGamePhase(str) {
-  if (['pre', 'mid', 'post'].includes(str)) {
-    return setAsync(gamePhase(), str);
-  }
-  // eslint-disable-next-line no-console
-  console.log(`Can't set game phase to ${str}`);
-  return Promise.reject();
 }
 
 async function setCurrentWeek(weeknum) {
@@ -73,12 +60,10 @@ const rediskeys = {
 };
 
 const get = {
-  GamePhase: getGamePhase,
   CurrentWeek: getCurrentWeek,
 };
 
 const set = {
-  GamePhase: setGamePhase,
   CurrentWeek: setCurrentWeek,
 };
 
