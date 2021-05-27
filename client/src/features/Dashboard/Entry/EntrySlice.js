@@ -22,8 +22,10 @@ export const entrySlice = createSlice({
       // eslint-disable-next-line no-unused-vars
       state = defaultState;
     },
-    updateRoster: (state) => {
+    offerFilled: () => {
       toast.success('Offer filled');
+    },
+    updateRoster: (state) => {
       state.rosterUpdate = true;
     },
   },
@@ -59,7 +61,7 @@ function setEntry(state, payload) {
   return state;
 }
 
-export const { updateRoster } = entrySlice.actions;
+export const { offerFilled, updateRoster } = entrySlice.actions;
 
 export const entrySelector = (state) => state.entry;
 export const rosterUpdateSelector = (state) => state.entry.rosterUpdate;

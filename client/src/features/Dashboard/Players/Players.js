@@ -18,14 +18,23 @@ const Players = () => {
   const sorts = useSelector(sortSelector);
 
   const filtersortplayers = theplayers
-    .filter((p) => p.name.toLowerCase().includes(filters.name))
     .filter((p) => {
+      // Name filter
+      if (!p.name.toLowerCase().includes(filters.name)) return false;
+
+      // Position filter
       if (filters.posName === 'FLEX') {
-        return (['RB', 'WR', 'TE'].indexOf(p.posName) > -1);
-      }
-      return (p.posName === filters.posName || filters.posName === '');
+        if (['RB', 'WR', 'TE'].indexOf(p.posName) === -1) return false;
+      } else if (p.posName !== filters.posName && filters.posName !== '') return false;
+
+      // Team filter
+      if (p.teamAbr !== filters.teamAbr && filters.teamAbr !== '') return false;
+
+      // Phase filter
+      if (p.NFLTeam.gamePhase === 'post') return false;
+
+      return true;
     })
-    .filter((p) => (p.teamAbr === filters.teamAbr || filters.teamAbr === ''))
     .sort((a, b) => {
       const aPhase = a.NFLTeam.gamePhase;
       const bPhase = b.NFLTeam.gamePhase;

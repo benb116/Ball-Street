@@ -1,7 +1,7 @@
 import store from '../../app/store';
 import { setPhase, updatePrices } from './Players/PlayersSlice';
 import { removeOffer, alertProtMatch } from './Offers/OffersSlice';
-import { updateRoster } from './Entry/EntrySlice';
+import { offerFilled, updateRoster } from './Entry/EntrySlice';
 import { updateLeaders } from './Leaderboard/LeaderboardSlice';
 
 const initWS = (contestID) => {
@@ -27,11 +27,12 @@ const initWS = (contestID) => {
     } else {
       switch (msg.event) {
         case 'offerFilled':
+          delOffer(msg.offerID);
           fillOffer(msg.offerID);
           upRost();
           break;
         case 'offerCancelled':
-          fillOffer(msg.offerID);
+          delOffer(msg.offerID);
           break;
         case 'protectedMatch':
           protMatch(msg);
@@ -41,6 +42,9 @@ const initWS = (contestID) => {
           break;
         case 'phaseChange':
           newPhase(msg.phase);
+          if (msg.phase.gamePhase === 'post') {
+            upRost();
+          }
           break;
         case 'priceUpdate':
           markPrice(Object.values(msg.pricedata));
@@ -71,8 +75,12 @@ function markPrice(arr) {
   store.dispatch(updatePrices(arr));
 }
 
-function fillOffer(oid) {
+function delOffer(oid) {
   store.dispatch(removeOffer(oid));
+}
+
+function fillOffer(oid) {
+  store.dispatch(offerFilled(oid));
 }
 
 function upRost() {
