@@ -22,9 +22,8 @@ function RosterItem({ playerid, position }) {
   }
 
   const thephase = thisplayer.NFLTeam.gamePhase;
-
-  const dispProj = thephase === 'pre' ? thisplayer.preprice : (thisplayer.projPrice || 0);
-  const dispStat = thephase === 'pre' ? thisplayer.postprice : (thisplayer.statPrice || 0);
+  const dispProj = thephase === 'pre' ? thisplayer.preprice : (priceMap.projPrice || 0);
+  const dispStat = thephase === 'pre' ? thisplayer.postprice : (priceMap.statPrice || 0);
 
   const onpredrop = () => {
     dispatch(preDrop({ leagueID, contestID, nflplayerID: playerid }));

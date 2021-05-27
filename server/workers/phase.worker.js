@@ -35,6 +35,7 @@ async function setPhase(teamID, newphase) {
     });
 }
 
+// TODO - make sure that postprice is updated with final value before converting
 async function convertTeamPlayers(teamID) {
   const teamPlayers = await NFLPlayer.findAll({
     include: [{ model: NFLTeam }],

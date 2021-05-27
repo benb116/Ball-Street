@@ -89,8 +89,7 @@ function PointTotals() {
     const thisplayerID = thisentry.roster[pos];
     const theplayer = players.find((p) => p.id === thisplayerID);
     if (!theplayer) { return out; }
-    const thephase = 'pre';
-
+    const thephase = theplayer.NFLTeam.gamePhase;
     const dispProj = thephase === 'pre' ? theplayer.preprice : (priceMaps[thisplayerID].projPrice || 0);
     const dispStat = thephase === 'pre' ? theplayer.postprice : (priceMaps[thisplayerID].statPrice || 0);
 
