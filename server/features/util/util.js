@@ -12,10 +12,7 @@ out.dv = function dv(input) {
   return input;
 };
 
-// Return whether a player type cannot be put into a specific roster position
-// isInvalidSpot('WR', 'WR1') === false
-// isInvalidSpot('WR', 'FLEX1') === false
-// isInvalidSpot('WR', 'RB2') === true
+// Return whether a player type (number) cannot be put into a specific roster position
 out.isInvalidSpot = function isInvalidSpot(playerType, rosterPosName) {
   const rosterType = config.Roster[rosterPosName];
   if (playerType === rosterType) {
