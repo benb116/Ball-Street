@@ -1,13 +1,13 @@
 // This outputs the common sequelize object that is used for DB calls and transactions
 // Can set app-wide DB settings
 
-const { Sequelize } = require('sequelize');
+const { Sequelize, Transaction } = require('sequelize');
 
 const { db } = require('../secret');
 
 const dbOptions = {
-  logging: false,
-  // isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE
+  // logging: false,
+  isolationLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED,
 };
 
 // Should we use the test database?
