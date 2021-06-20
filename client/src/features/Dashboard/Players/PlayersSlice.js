@@ -83,12 +83,12 @@ export const playerSelector = (playerID) => (state) => (
 export const playersSelector = (playerIDs) => (state) => (
   state.players.playerlist.filter((p) => playerIDs.indexOf(p.id) > -1)
 );
-export const priceMapSelector = (playerID) => (state) => state.players.priceMap[playerID];
+export const priceMapSelector = (playerID) => (state) => (state.players.priceMap[playerID] || {});
 
 export const pricesMapSelector = (playerIDs) => (state) => (
   playerIDs.reduce((acc, cur) => {
     const out = acc;
-    out[cur] = state.players.priceMap[cur];
+    out[cur] = (state.players.priceMap[cur] || {});
     return out;
   }, {})
 );
