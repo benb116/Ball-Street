@@ -44,9 +44,12 @@ async function fillOffers(bidid, askid, price) {
 
 async function attemptFill(t, bidid, askid, tprice) {
   const resp = [0, 0];
-  const bidoffer = await Offer.findByPk(bidid, u.tobj(t));
+
+  const [bidoffer, askoffer] = Promise.all([
+    Offer.findByPk(bidid, u.tobj(t)),
+    Offer.findByPk(askid, u.tobj(t)),
+  ]);
   const boffer = u.dv(bidoffer);
-  const askoffer = await Offer.findByPk(askid, u.tobj(t));
   const aoffer = u.dv(askoffer);
 
   if (!boffer.isbid) { console.log('bid not bid', boffer); throw new Error('bidoffer is not a bid'); }
@@ -135,12 +138,14 @@ async function attemptFill(t, bidid, askid, tprice) {
   bidoffer.filled = true;
   askoffer.filled = true;
 
-  await bidoffer.save({ transaction: t });
-  await askoffer.save({ transaction: t });
+  await Promise.all([
+    bidoffer.save({ transaction: t }),
+    askoffer.save({ transaction: t }),
+  ]);
 
   // Trade completed, record it and notify
 
-  await Trade.create({
+  const createTrade = Trade.create({
     bidId: boffer.id,
     askId: aoffer.id,
     price,
@@ -148,11 +153,13 @@ async function attemptFill(t, bidid, askid, tprice) {
 
   const contestID = boffer.ContestId;
 
-  await PriceHistory.create({
+  const createHistory = PriceHistory.create({
     ContestId: contestID,
     NFLPlayerId: nflplayerID,
     lastTradePrice: price,
   }, u.tobj(t));
+
+  await Promise.all([createTrade, createHistory]);
 
   client.hmset(hash(contestID, nflplayerID), 'lastprice', price);
   client.publish('lastTrade', JSON.stringify({
