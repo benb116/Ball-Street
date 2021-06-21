@@ -6,7 +6,7 @@
 const u = require('../features/util/util');
 
 const sequelize = require('../db');
-const { Offer, Trade } = require('../models');
+const { Offer, Trade, PriceHistory } = require('../models');
 // const { Transaction } = require('sequelize');
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
@@ -44,9 +44,12 @@ async function fillOffers(bidid, askid, price) {
 
 async function attemptFill(t, bidid, askid, tprice) {
   const resp = [0, 0];
-  const bidoffer = await Offer.findByPk(bidid, u.tobj(t));
+
+  const [bidoffer, askoffer] = Promise.all([
+    Offer.findByPk(bidid, u.tobj(t)),
+    Offer.findByPk(askid, u.tobj(t)),
+  ]);
   const boffer = u.dv(bidoffer);
-  const askoffer = await Offer.findByPk(askid, u.tobj(t));
   const aoffer = u.dv(askoffer);
 
   if (!boffer.isbid) { console.log('bid not bid', boffer); throw new Error('bidoffer is not a bid'); }
@@ -67,7 +70,7 @@ async function attemptFill(t, bidid, askid, tprice) {
   console.log('past initial');
   const biduser = boffer.UserId;
   const askuser = aoffer.UserId;
-  const player = boffer.NFLPlayerId;
+  const nflplayerID = boffer.NFLPlayerId;
 
   let price = tprice;
   if (!tprice) {
@@ -78,7 +81,7 @@ async function attemptFill(t, bidid, askid, tprice) {
     user: biduser,
     params: { contestID: boffer.ContestId },
     body: {
-      nflplayerID: player,
+      nflplayerID,
       price,
     },
   };
@@ -86,7 +89,7 @@ async function attemptFill(t, bidid, askid, tprice) {
     user: askuser,
     params: { contestID: aoffer.ContestId },
     body: {
-      nflplayerID: player,
+      nflplayerID,
       price,
     },
   };
@@ -94,7 +97,7 @@ async function attemptFill(t, bidid, askid, tprice) {
   // Try to fill both
   const bidProm = service.tradeAdd(bidreq, t)
     .catch((err) => {
-      if (err.status === 402) {
+      if (err.status === 402) { // Not enough points
         return Offer.destroy({
           where: {
             id: boffer.id,
@@ -111,7 +114,7 @@ async function attemptFill(t, bidid, askid, tprice) {
     });
   const askProm = service.tradeDrop(askreq, t)
     .catch((err) => {
-      if (err.status === 402) {
+      if (err.status === 402) { // Not enough points
         return Offer.destroy({
           where: {
             id: aoffer.id,
@@ -128,7 +131,6 @@ async function attemptFill(t, bidid, askid, tprice) {
     });
 
   const [biddone, askdone] = await Promise.all([bidProm, askProm]);
-  // if waiting for a lock, maybe return [0, 0]?
   if (Number(biddone) && Number(askdone)) { throw new Error('both'); }
   if (Number(biddone)) { throw new Error('bid'); }
   if (Number(askdone)) { throw new Error('ask'); }
@@ -136,10 +138,14 @@ async function attemptFill(t, bidid, askid, tprice) {
   bidoffer.filled = true;
   askoffer.filled = true;
 
-  await bidoffer.save({ transaction: t });
-  await askoffer.save({ transaction: t });
+  await Promise.all([
+    bidoffer.save({ transaction: t }),
+    askoffer.save({ transaction: t }),
+  ]);
 
-  await Trade.create({
+  // Trade completed, record it and notify
+
+  const createTrade = Trade.create({
     bidId: boffer.id,
     askId: aoffer.id,
     price,
@@ -147,10 +153,18 @@ async function attemptFill(t, bidid, askid, tprice) {
 
   const contestID = boffer.ContestId;
 
-  client.hmset(hash(contestID, player), 'lastprice', price);
+  const createHistory = PriceHistory.create({
+    ContestId: contestID,
+    NFLPlayerId: nflplayerID,
+    lastTradePrice: price,
+  }, u.tobj(t));
+
+  await Promise.all([createTrade, createHistory]);
+
+  client.hmset(hash(contestID, nflplayerID), 'lastprice', price);
   client.publish('lastTrade', JSON.stringify({
     contestID,
-    nflplayerID: player,
+    nflplayerID,
     lastprice: price,
   }));
   client.publish('offerFilled', JSON.stringify({

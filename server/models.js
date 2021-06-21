@@ -12,6 +12,7 @@ const mnflposition = require('./features/nflposition/nflposition.model');
 const mnflteam = require('./features/nflteam/nflteam.model');
 const moffer = require('./features/offer/offer.model');
 const mprotectedmatch = require('./features/protectedmatch/protectedmatch.model');
+const mpricehistory = require('./features/pricehistory/pricehistory.model');
 const mrosterposition = require('./features/rosterposition/rosterposition.model');
 const mtrade = require('./features/trade/trade.model');
 const muser = require('./features/user/user.model');
@@ -26,6 +27,7 @@ const NFLPosition = mnflposition(sequelize, DataTypes);
 const NFLTeam = mnflteam(sequelize, DataTypes);
 const Offer = moffer(sequelize, DataTypes);
 const ProtectedMatch = mprotectedmatch(sequelize, DataTypes);
+const PriceHistory = mpricehistory(sequelize, DataTypes);
 const RosterPosition = mrosterposition(sequelize, DataTypes);
 const Trade = mtrade(sequelize, DataTypes);
 const User = muser(sequelize, DataTypes);
@@ -66,6 +68,7 @@ module.exports = {
   NFLTeam,
   Offer,
   ProtectedMatch,
+  PriceHistory,
   RosterPosition,
   Trade,
   User,
