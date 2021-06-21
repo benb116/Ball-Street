@@ -13,10 +13,12 @@ const schema = Joi.object({
   body: validators.noObj,
 });
 
-function getNFLPlayer(req) {
+async function getNFLPlayer(req) {
   const value = u.validate(req, schema);
 
-  return NFLPlayer.findOne({ where: { NFLPlayerId: value.params.nflplayerID } }).then(u.dv);
+  const theplayer = await NFLPlayer.findOne({ where: { id: value.params.nflplayerID } }).then(u.dv);
+  if (!theplayer) { u.Error('No player found', 404); }
+  return theplayer;
 }
 
 module.exports = getNFLPlayer;
