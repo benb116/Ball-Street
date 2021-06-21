@@ -12,4 +12,7 @@ router.get('/players/:nflplayerID/tradestats', routeHandler(nflplayer.getNFLPlay
 // Get a player's add statistics in a contest
 router.get('/players/:nflplayerID/addstats', routeHandler(nflplayer.getNFLPlayerNumAdds));
 
+// Get a player's trade price history in a contest
+router.get('/players/:nflplayerID/pricehistory', routeHandler(nflplayer.getNFLPlayerPriceHistory));
+
 module.exports = router;

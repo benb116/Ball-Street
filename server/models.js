@@ -57,8 +57,6 @@ NFLTeam.hasMany(NFLPlayer);
 NFLPlayer.belongsTo(NFLPosition);
 NFLPosition.hasMany(NFLPlayer);
 
-sequelize.sync();
-
 module.exports = {
   League,
   Membership,
