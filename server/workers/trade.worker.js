@@ -148,7 +148,7 @@ async function attemptFill(t, bidid, askid, tprice) {
 
   const contestID = boffer.ContestId;
 
-  PriceHistory.create({
+  await PriceHistory.create({
     ContestId: contestID,
     NFLPlayerId: nflplayerID,
     lastTradePrice: price,
