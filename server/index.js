@@ -16,6 +16,8 @@ if (cluster.isMaster) {
     console.log("Let's fork another worker!");
     cluster.fork();
   });
+
+  // If we run with the dev command, launch workers as well
   if (process.argv[2] === 'dev') {
   // eslint-disable-next-line global-require
     require('./rundev');

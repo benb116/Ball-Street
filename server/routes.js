@@ -1,3 +1,6 @@
+// Route controller for the API
+// Does not include user auth routes
+
 const router = require('express').Router();
 const leaguesRouter = require('express').Router({ mergeParams: true });
 const leagueRouter = require('express').Router({ mergeParams: true });
@@ -6,10 +9,13 @@ const contestRouter = require('express').Router({ mergeParams: true });
 
 const authenticate = require('./middleware/authenticate');
 
+// NFLdata is public
 router.use('/nfldata/', require('./features/nflplayer/nfldata.route'));
 
+// For all else, require authentication
 router.use(authenticate);
 
+// Stacked routers
 // /leagues/:leagueID/contests/:contestID/...
 
 contestRouter.use('/:contestID/', require('./features/entry/entry.route'));

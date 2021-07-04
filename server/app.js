@@ -11,6 +11,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+// If requests pass the proxy, serve from here
 app.use(express.static('../client/build'));
 app.use(session);
 app.use(helmet());
@@ -19,15 +20,15 @@ if (isProduction) {
   app.use(limiter);
 }
 
+// React proxy appends /app to the domain
 const routePrefix = (isProduction ? '' : '/app');
 app.use(`${routePrefix}/auth/`, require('./features/user/user.route'));
 app.use(`${routePrefix}/api/`, require('./routes'));
 
 app.get('/*', (req, res) => {
-  res.sendFile(`${__dirname}/client/build/index.html`);
+  res.sendFile('../client/build/index.html');
 });
 
-// finally, let's start our server...
 const server = app.listen(process.env.PORT || 5000, () => {
   // eslint-disable-next-line no-console
   console.log(`Listening on port ${server.address().port}`);

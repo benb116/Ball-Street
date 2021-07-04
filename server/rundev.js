@@ -1,3 +1,5 @@
+// Run this script to launch worker processes at once
+
 // require('./index');
 require('./workers/offer.worker');
 require('./workers/live.worker');

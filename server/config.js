@@ -1,6 +1,8 @@
 const config = {
   FlexNFLPositionId: 99,
+  // How long to wait before filling a protected offer
   ProtectionDelay: 30, // seconds
+  // Define the roster positions
   Roster: {
     QB1: 1,
     RB1: 2,
@@ -22,8 +24,10 @@ const config = {
     5: { name: 'K', canflex: false },
     6: { name: 'DEF', canflex: false },
   },
+  // Are offers protected by default?
   DefaultProtected: false,
-  RefreshTime: 5,
+  // How often to refresh websocket info
+  RefreshTime: 5, // seconds
 };
 
 config.Roster.FLEX1 = config.FlexNFLPositionId;
