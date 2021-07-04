@@ -44,8 +44,7 @@ async function fillOffers(bidid, askid, price) {
 
 async function attemptFill(t, bidid, askid, tprice) {
   const resp = [0, 0];
-
-  const [bidoffer, askoffer] = Promise.all([
+  const [bidoffer, askoffer] = await Promise.all([
     Offer.findByPk(bidid, u.tobj(t)),
     Offer.findByPk(askid, u.tobj(t)),
   ]);
