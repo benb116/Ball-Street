@@ -1,7 +1,8 @@
 const Queue = require('bull');
 
-const offerQueue = new Queue('offer-queue');
-const protectedQueue = new Queue('protected-queue');
+const { queueOptions } = require('../../../db/redis');
+const offerQueue = new Queue('offer-queue', queueOptions);
+const protectedQueue = new Queue('protected-queue', queueOptions);
 
 async function getOfferBacklog() {
   return Promise.all([

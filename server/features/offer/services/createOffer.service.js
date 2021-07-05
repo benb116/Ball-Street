@@ -1,8 +1,6 @@
 const Queue = require('bull');
 const Joi = require('joi');
 
-const offerQueue = new Queue('offer-queue');
-
 const config = require('../../../config');
 const u = require('../../util/util');
 const { validators } = require('../../util/util.schema');
@@ -11,6 +9,9 @@ const sequelize = require('../../../db');
 const {
   Offer, Entry, NFLPlayer, NFLTeam,
 } = require('../../../models');
+
+const { queueOptions } = require('../../../db/redis');
+const offerQueue = new Queue('offer-queue', queueOptions);
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ

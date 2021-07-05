@@ -1,5 +1,6 @@
 const rateLimit = require('express-rate-limit');
 const RedisStore = require('rate-limit-redis');
+const { client } = require('../db/redis');
 
 // Rate limiter middleware
 module.exports = rateLimit({
@@ -10,6 +11,6 @@ module.exports = rateLimit({
     return res.send('Too many requests. Please wait a bit');
   },
   store: new RedisStore({
-    // see Configuration
+    client,
   }),
 });

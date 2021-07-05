@@ -1,8 +1,6 @@
 const Queue = require('bull');
 const Joi = require('joi');
 
-const offerQueue = new Queue('offer-queue');
-
 const u = require('../../util/util');
 const { validators } = require('../../util/util.schema');
 
@@ -12,6 +10,9 @@ const { Offer } = require('../../../models');
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
 };
+
+const { queueOptions } = require('../../../db/redis');
+const offerQueue = new Queue('offer-queue', queueOptions);
 
 const schema = Joi.object({
   user: validators.user,

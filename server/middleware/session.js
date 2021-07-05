@@ -1,8 +1,8 @@
 const session = require('express-session');
-const redis = require('redis');
+const connect = require('connect-redis');
+const { client } = require('../db/redis');
 
-const redisClient = redis.createClient();
-const RedisStore = require('connect-redis')(session);
+const RedisStore = connect(session);
 const secret = require('../secret');
 
 module.exports = session({
@@ -12,9 +12,7 @@ module.exports = session({
   saveUninitialized: true,
   cookie: { httpOnly: true, sameSite: true },
   store: new RedisStore({
-    host: 'localhost',
-    port: 6379,
-    client: redisClient,
+    client,
     ttl: 86400, // 1 day
   }),
 });

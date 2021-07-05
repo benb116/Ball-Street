@@ -3,7 +3,13 @@
 
 const { Sequelize, Transaction } = require('sequelize');
 
-const { db } = require('../secret');
+const {
+  DB_USER,
+  DB_PASS,
+  DB_HOST,
+  DB_PORT,
+  DB_NAME,
+} = process.env;
 
 const dbOptions = {
   // logging: false,
@@ -13,7 +19,22 @@ const dbOptions = {
 // Should we use the test database?
 const testSuffix = process.env.NODE_ENV === 'test' ? '-test' : '';
 
-// const sequelize = new Sequelize('sqlite::memory:', dbOptions); // Example for sqlite
-const sequelize = new Sequelize(`postgres://${db.user}:${db.pass}@${db.host}${db.name}${testSuffix}`, dbOptions); // Example for postgres
+const sequelize = new Sequelize(
+  `postgres://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT}/${DB_NAME}${testSuffix}`,
+  dbOptions,
+); // Example for postgres
+
+async function testDB() {
+  try {
+    await sequelize.authenticate();
+    // eslint-disable-next-line no-console
+    console.log('Connection has been established successfully.');
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Unable to connect to the database:', error);
+  }
+}
+
+testDB();
 
 module.exports = sequelize;

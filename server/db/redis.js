@@ -3,15 +3,28 @@
 const { promisify } = require('util');
 const redis = require('redis');
 
+const {
+  REDIS_PORT,
+  REDIS_HOST,
+} = process.env;
+
 // Used for all commands and publishing
 const client = (function createClient() {
-  return redis.createClient();
+  return redis.createClient(
+    REDIS_PORT,
+    REDIS_HOST,
+  );
 }());
 
 // Used for subscribing (must be separate client)
 const subscriber = (function createClient() {
-  return redis.createClient();
+  return redis.createClient(
+    REDIS_PORT,
+    REDIS_HOST,
+  );
 }());
+
+const queueOptions = { redis: { port: REDIS_PORT, host: REDIS_HOST } };
 
 const getAsync = promisify(client.get).bind(client);
 const setAsync = promisify(client.set).bind(client);
@@ -70,6 +83,7 @@ const set = {
 module.exports = {
   client,
   subscriber,
+  queueOptions,
   rediskeys,
   get,
   set,
