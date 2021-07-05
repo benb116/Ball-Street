@@ -25,10 +25,6 @@ const routePrefix = (isProduction ? '' : '/app');
 app.use(`${routePrefix}/auth/`, require('./features/user/user.route'));
 app.use(`${routePrefix}/api/`, require('./routes'));
 
-app.get('/*', (req, res) => {
-  res.sendFile('../client/build/index.html');
-});
-
 const server = app.listen(process.env.PORT || 5000, () => {
   // eslint-disable-next-line no-console
   console.log(`Listening on port ${server.address().port}`);

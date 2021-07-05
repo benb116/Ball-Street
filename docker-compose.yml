@@ -1,0 +1,75 @@
+version: '3'
+
+services:
+    webserver:
+        build:
+            context: .
+            dockerfile: ./client/Dockerfile
+        container_name: webserver
+        restart: unless-stopped
+        ports:
+            - 81:80
+        networks:
+            - app-network
+
+    api:
+        build:
+            context: .
+            dockerfile: ./server/Dockerfile
+        container_name: api
+        # restart: unless-stopped
+        env_file: .env
+        environment:
+            - NODE_ENV=production
+            - DB_USER=$DB_USER
+            - DB_PASS=$DB_PASS
+            - DB_HOST=db
+            - DB_PORT=$DB_PORT
+            - DB_NAME=$DB_NAME
+            - REDIS_HOST=redis
+            - REDIS_PORT=$REDIS_PORT
+        networks:
+            - app-network
+        ports:
+            - 5000:5000
+        depends_on:
+            - db
+            - webserver
+            - redis
+        links: 
+            - redis
+        # volumes:
+            # - ./server:/home/node/app
+            # - node_modules:/home/node/app/node_modules
+
+    db:
+        image: timescale/timescaledb:latest-pg12
+        container_name: db
+        restart: unless-stopped
+        env_file: .env
+        environment:
+            POSTGRES_USER: $DB_USER
+            POSTGRES_PASSWORD: $DB_PASS
+            POSTGRES_DB: $DB_NAME
+        ports:
+            - 5432:5432
+        volumes:
+          - dbdata:/data/db
+        networks:
+          - app-network
+
+    redis:
+        image: redis
+        container_name: redis
+        env_file: .env
+        ports:
+            - 6379:6379
+        networks:
+            - app-network
+
+networks:
+    app-network:
+        driver: bridge
+
+volumes:
+    dbdata:

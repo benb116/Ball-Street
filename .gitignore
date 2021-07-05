@@ -4,3 +4,5 @@ server/node_modules/
 server/secret.js
 server/stats.js
 server/db/sim1.json
+server/.env
+.env
