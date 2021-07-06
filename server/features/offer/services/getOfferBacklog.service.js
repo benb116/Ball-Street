@@ -1,6 +1,7 @@
 const Queue = require('bull');
 
 const { queueOptions } = require('../../../db/redis');
+
 const offerQueue = new Queue('offer-queue', queueOptions);
 const protectedQueue = new Queue('protected-queue', queueOptions);
 

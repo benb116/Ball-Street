@@ -2,8 +2,9 @@
 // Can set app-wide DB settings
 
 const { Sequelize, Transaction } = require('sequelize');
+const sec = require('../secret');
 
-const {
+let {
   DB_USER,
   DB_PASS,
   DB_HOST,
@@ -15,6 +16,14 @@ const dbOptions = {
   // logging: false,
   isolationLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED,
 };
+
+if (process.env.NODE_ENV === 'test') {
+  DB_USER = sec.DB_USER;
+  DB_PASS = sec.DB_PASS;
+  DB_HOST = sec.DB_HOST;
+  DB_PORT = sec.DB_PORT;
+  DB_NAME = sec.DB_NAME;
+}
 
 // Should we use the test database?
 const testSuffix = process.env.NODE_ENV === 'test' ? '-test' : '';
