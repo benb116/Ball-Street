@@ -8,11 +8,15 @@ services:
         container_name: webserver
         restart: unless-stopped
         ports:
-            - 81:80
+            - 80:80
+            - 443:443
         networks:
             - app-network
         depends_on:
             - api
+            - live
+        volumes:
+            - /etc/letsencrypt:/etc/letsencrypt
 
     api:
         build:

@@ -6,3 +6,4 @@ server/stats.js
 server/db/sim1.json
 server/.env
 .env
+nginx.conf
