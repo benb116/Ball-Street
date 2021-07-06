@@ -55,7 +55,7 @@ wss.on('connection', async (ws, request) => {
   });
 });
 
-server.listen(8080, () => {
+server.listen(process.env.PORT, () => {
   // eslint-disable-next-line no-console
   console.log('Listening on port 8080');
 });
