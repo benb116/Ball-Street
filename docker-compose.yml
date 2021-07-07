@@ -8,7 +8,7 @@ services:
         container_name: webserver
         restart: unless-stopped
         ports:
-            - 80:80
+            - ${NGINX_PORT}:80
             - 443:443
         networks:
             - app-network
@@ -21,7 +21,7 @@ services:
     api:
         build:
             context: .
-            dockerfile: ./server/API.Dockerfile
+            dockerfile: ./server/Dockerfile
         container_name: api
         # restart: unless-stopped
         env_file: .env
@@ -43,6 +43,8 @@ services:
             - redis
         links: 
             - redis
+        command: 
+            node app.js
         # volumes:
             # - ./server:/home/node/app
             # - node_modules:/home/node/app/node_modules
@@ -50,7 +52,7 @@ services:
     leader:
         build:
             context: .
-            dockerfile: ./server/Leader.Dockerfile
+            dockerfile: ./server/Dockerfile
         container_name: leader
         # restart: unless-stopped
         env_file: .env
@@ -70,6 +72,8 @@ services:
             - redis
         links: 
             - redis
+        command: 
+            node workers/leader.worker.js
         # volumes:
             # - ./server:/home/node/app
             # - node_modules:/home/node/app/node_module
@@ -77,7 +81,7 @@ services:
     offer:
         build:
             context: .
-            dockerfile: ./server/Offer.Dockerfile
+            dockerfile: ./server/Dockerfile
         container_name: offer
         # restart: unless-stopped
         env_file: .env
@@ -97,6 +101,8 @@ services:
             - redis
         links: 
             - redis
+        command: 
+            node workers/offer.worker.js
         # volumes:
             # - ./server:/home/node/app
             # - node_modules:/home/node/app/node_module
@@ -104,7 +110,7 @@ services:
     live:
         build:
             context: .
-            dockerfile: ./server/Live.Dockerfile
+            dockerfile: ./server/Dockerfile
         container_name: live
         # restart: unless-stopped
         env_file: .env
@@ -127,6 +133,8 @@ services:
             - redis
         links: 
             - redis
+        command: 
+            node workers/live.worker.js
         # volumes:
             # - ./server:/home/node/app
             # - node_modules:/home/node/app/node_module
