@@ -17,6 +17,8 @@ services:
             - live
         volumes:
             - /etc/letsencrypt:/etc/letsencrypt
+            - ./client:/home/node/app
+            - /home/node/app/node_modules
 
     api:
         build:
@@ -45,9 +47,9 @@ services:
             - redis
         command: 
             node app.js
-        # volumes:
-            # - ./server:/home/node/app
-            # - node_modules:/home/node/app/node_modules
+        volumes:
+            - ./server:/home/node/app
+            - /home/node/app/node_modules
     
     leader:
         build:
@@ -74,9 +76,9 @@ services:
             - redis
         command: 
             node workers/leader.worker.js
-        # volumes:
-            # - ./server:/home/node/app
-            # - node_modules:/home/node/app/node_module
+        volumes:
+            - ./server:/home/node/app
+            - /home/node/app/node_modules
 
     offer:
         build:
@@ -103,9 +105,9 @@ services:
             - redis
         command: 
             node workers/offer.worker.js
-        # volumes:
-            # - ./server:/home/node/app
-            # - node_modules:/home/node/app/node_module
+        volumes:
+            - ./server:/home/node/app
+            - /home/node/app/node_modules
 
     live:
         build:
@@ -135,9 +137,9 @@ services:
             - redis
         command: 
             node workers/live.worker.js
-        # volumes:
-            # - ./server:/home/node/app
-            # - node_modules:/home/node/app/node_module
+        volumes:
+            - ./server:/home/node/app
+            - /home/node/app/node_modules
 
     db:
         image: timescale/timescaledb:latest-pg12
