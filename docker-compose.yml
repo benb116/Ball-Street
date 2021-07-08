@@ -154,6 +154,7 @@ services:
             - 5432:5432
         volumes:
           - dbdata:/data/db
+          - ./server/db/dbinit.sql:/docker-entrypoint-initdb.d/dbinit.sql
         networks:
           - app-network
 
