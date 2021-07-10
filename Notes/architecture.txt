@@ -1,0 +1,23 @@
+NGINX web server
+API
+    General API
+    Auth and User
+    NFLPlayerData
+    PriceHistories
+DB
+    General DB
+    NFLPlayerData (including teams)
+    PriceHistory data (TimescaleDB)
+Redis
+    Session storage
+    Price Info
+    Stat info
+    Leaderboards
+    PubSub
+    Cache
+WS Server
+Workers
+    Leader
+    Offer
+    Stats
+    Phase

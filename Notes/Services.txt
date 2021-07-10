@@ -1,0 +1,50 @@
+digraph G {
+GeneralAPI -> NGINX
+AuthAPI -> NGINX
+NFLAPI -> NGINX
+PriceHistoryAPI -> NGINX
+WSServer -> NGINX
+
+SessionRedis -> WSServer
+PriceRedis -> WSServer
+StatRedis -> WSServer
+LeaderRedis -> WSServer
+PubSub -> WSServer
+
+StatsWorker -> PubSub
+OfferWorker -> PubSub
+LeaderWorker -> PubSub
+PhaseWorker -> PubSub
+
+GeneralDB -> GeneralAPI
+GeneralAPI -> GeneralDB
+PhaseWorker -> GeneralDB
+
+AuthAPI -> GeneralAPI
+SessionRedis -> AuthAPI
+AuthAPI -> SessionRedis
+AuthDB -> AuthAPI
+AuthAPI -> AuthDB
+
+NFLCache -> NFLAPI
+NFLAPI -> NFLCache
+
+NFLDB -> NFLAPI
+PhaseWorker -> NFLDB
+StatsWorker -> NFLDB
+
+PriceHistoryAPI -> PHCache
+PHCache -> PriceHistoryAPI
+PriceHistoryDB -> PriceHistoryAPI
+
+OfferWorker -> PriceRedis
+OfferWorker -> GeneralDB
+OfferQueue -> OfferWorker
+ProtectedOfferQueue -> OfferWorker
+OfferWorker -> ProtectedOfferQueue
+GeneralAPI -> OfferQueue
+
+StatsWorker -> StatRedis
+
+LeaderWorker -> LeaderRedis
+}
