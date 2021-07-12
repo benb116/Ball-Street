@@ -41,7 +41,8 @@ wss.on('connection', async (ws, request) => {
   liveState.connmap.set(userId, ws);
 
   // Add to contest map (ws <-> contest)
-  const contestID = request.url.split('/')[2];
+  const requestTerms = request.url.split('/');
+  const contestID = requestTerms[requestTerms.length - 1];
   liveState.contestmap.delete(ws);
   liveState.contestmap.set(ws, contestID);
 
