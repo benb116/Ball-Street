@@ -44,7 +44,7 @@ services:
         links: 
             - redis
         command: 
-            node app.js
+            ./node_modules/.bin/nodemon app.js
         volumes:
             - ./server:/home/node/app
             - /home/node/app/node_modules
@@ -72,7 +72,7 @@ services:
         links: 
             - redis
         command: 
-            node workers/leader.worker.js
+            ./node_modules/.bin/nodemon workers/leader.worker.js
         volumes:
             - ./server:/home/node/app
             - /home/node/app/node_modules
@@ -100,7 +100,7 @@ services:
         links: 
             - redis
         command: 
-            node workers/offer.worker.js
+            ./node_modules/.bin/nodemon workers/offer.worker.js
         volumes:
             - ./server:/home/node/app
             - /home/node/app/node_modules
@@ -129,7 +129,7 @@ services:
         links: 
             - redis
         command: 
-            node workers/live.worker.js
+            ./node_modules/.bin/nodemon workers/live.worker.js
         volumes:
             - ./server:/home/node/app
             - /home/node/app/node_modules
