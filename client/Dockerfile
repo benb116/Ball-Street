@@ -6,7 +6,7 @@ RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 WORKDIR /home/node/app
 
 COPY --chown=node:node ./client/package.json ./
-RUN npm install
+RUN npm install --include=dev
 
 COPY --chown=node:node ./client ./
 ENV DISABLE_ESLINT_PLUGIN=true
@@ -19,8 +19,7 @@ RUN npm run build
 
 # production environment
 FROM nginx:stable-alpine as production
-COPY --from=development /home/node/app/build /usr/share/nginx/html
+COPY --from=builder /home/node/app/build /usr/share/nginx/html
 COPY ./nginx-conf/nginx.conf /etc/nginx/conf.d/default.conf
 
-EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

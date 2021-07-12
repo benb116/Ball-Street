@@ -41,8 +41,6 @@ services:
         depends_on:
             - db
             - redis
-        links: 
-            - redis
         command: 
             ./node_modules/.bin/nodemon app.js
         volumes:
@@ -68,8 +66,6 @@ services:
             - app-network
         depends_on:
             - db
-            - redis
-        links: 
             - redis
         command: 
             ./node_modules/.bin/nodemon workers/leader.worker.js
@@ -97,8 +93,6 @@ services:
         depends_on:
             - db
             - redis
-        links: 
-            - redis
         command: 
             ./node_modules/.bin/nodemon workers/offer.worker.js
         volumes:
@@ -120,13 +114,11 @@ services:
             - DB_NAME=$DB_NAME
             - REDIS_HOST=redis
             - REDIS_PORT=$REDIS_PORT
-            - PORT=8080
+            - PORT=$LIVE_PORT
         networks:
             - app-network
         depends_on:
             - db
-            - redis
-        links: 
             - redis
         command: 
             ./node_modules/.bin/nodemon workers/live.worker.js
@@ -153,8 +145,6 @@ services:
         image: redis
         container_name: redis
         env_file: .env
-        ports:
-            - 6379:6379
         networks:
             - app-network
 
