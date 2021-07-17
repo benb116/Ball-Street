@@ -44,6 +44,11 @@ const OfferModal = () => {
     close();
   }
 
+  function onFormSubmit(e) {
+    e.preventDefault();
+    handleSubmit(handleClick);
+  }
+
   return (
     <div>
       <Modal
@@ -60,14 +65,14 @@ const OfferModal = () => {
           {' '}
           {modalInfo.nflplayerName}
         </span>
-        <form>
+        <form onSubmit={onFormSubmit}>
           <span>Price</span>
           <input {...register('price')} defaultValue={modalInfo.price} />
           <br />
           <span>🔒 Protected</span>
           <input {...register('protected')} type="checkbox" />
           <br />
-          <button onClick={handleSubmit(handleClick)} type="button">Submit offer</button>
+          <button onClick={handleSubmit(handleClick)} type="submit">Submit offer</button>
         </form>
         <button onClick={close} type="button">close</button>
 
