@@ -23,6 +23,7 @@
     ],
     "rules": {
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-        "no-use-before-define": ["error", { "functions": false, "classes": true }]
+        "no-use-before-define": ["error", { "functions": false, "classes": true }],
+        "react/jsx-props-no-spreading": "off"
     }
 }

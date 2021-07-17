@@ -30,11 +30,11 @@ const Entry = () => {
     <div
       className="container mx-auto"
       style={{
-        display: 'inline-block',
-        float: 'left',
-        width: '40%',
-        padding: '0.5em',
+        height: '50%',
         boxSizing: 'border-box',
+        flex: 1,
+        display: 'flex',
+        flexFlow: 'column',
       }}
     >
       <h3>Entry</h3>

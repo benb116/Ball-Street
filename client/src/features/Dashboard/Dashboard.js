@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import Entry from './Entry/Entry';
+import Trades from './Trades/Trades';
 import Players from './Players/Players';
 import Offers from './Offers/Offers';
 import Leaderboard from './Leaderboard/Leaderboard';
@@ -25,7 +26,19 @@ const Dashboard = () => {
         width: '100%',
       }}
     >
-      <Entry />
+      <div style={{
+        display: 'inline-block',
+        float: 'left',
+        padding: '0.5em',
+        width: '40%',
+        height: '100%',
+        boxSizing: 'border-box',
+        flexFlow: 'column',
+      }}
+      >
+        <Entry />
+        <Trades />
+      </div>
       <Players />
       <div style={{
         display: 'inline-block',
