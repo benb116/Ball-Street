@@ -12,11 +12,6 @@ const initWS = (contestID) => {
   }
   const socket = new WebSocket(url);
 
-  // Connection opened
-  socket.addEventListener('open', () => {
-    socket.send(JSON.stringify({ contestID }));
-  });
-
   // Listen for messages
   socket.addEventListener('message', (event) => {
     // console.log('Message from server ', event.data);

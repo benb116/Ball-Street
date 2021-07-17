@@ -1,5 +1,4 @@
 // Set up example DB records for use in testing
-// Must run db/init first
 
 const models = require('../models');
 const InitDB = require('./init');
