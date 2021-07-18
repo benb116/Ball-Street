@@ -11,6 +11,7 @@ const {
 } = require('../../../models');
 
 const { queueOptions } = require('../../../db/redis');
+
 const offerQueue = new Queue('offer-queue', queueOptions);
 
 const isoOption = {
@@ -30,11 +31,13 @@ const schema = Joi.object({
         'boolean.base': 'Offer type is invalid',
         'any.required': 'Please specify bid or ask',
       }),
-      price: Joi.number().integer().greater(0).required()
+      price: Joi.number().integer().greater(0).multiple(100)
+        .required()
         .messages({
           'number.base': 'Price is invalid',
           'number.integer': 'Price is invalid',
           'number.greater': 'Price must be greater than 0',
+          'number.multiple': 'Price must be a whole number',
           'any.required': 'Please specify a price',
         }),
       protected: Joi.boolean().optional(),

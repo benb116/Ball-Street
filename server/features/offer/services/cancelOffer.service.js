@@ -12,6 +12,7 @@ const isoOption = {
 };
 
 const { queueOptions } = require('../../../db/redis');
+
 const offerQueue = new Queue('offer-queue', queueOptions);
 
 const schema = Joi.object({
