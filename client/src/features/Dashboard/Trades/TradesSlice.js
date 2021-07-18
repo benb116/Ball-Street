@@ -26,7 +26,7 @@ export const tradesSlice = createSlice({
         out.createdAt = data.createdAt;
         out.id = data.id;
         return out;
-      });
+      }).sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
     },
     [getTrades.rejected]: (state, { payload }) => {
       if (payload) { toast.error(payload); }
