@@ -19,7 +19,7 @@ const protectedQueue = new Queue('protected-queue', queueOptions);
 const { Offer } = require('../models');
 const { fillOffers } = require('./offer/trader');
 
-const playerBook = new Book();
+const playerBook = new Book(1, 20933);
 
 startUp();
 
@@ -38,7 +38,7 @@ async function startUp() {
 }
 
 async function initializeBook(contestID, nflplayerID) {
-  const offers = await Offer.findAll({
+  const sortedOffers = await Offer.findAll({
     where: {
       ContestId: contestID,
       NFLPlayerId: nflplayerID,
@@ -49,7 +49,6 @@ async function initializeBook(contestID, nflplayerID) {
       ['updatedAt', 'ASC'],
     ],
   }).then(u.dv);
-  const sortedOffers = offers.sort((a, b) => a.createdAt - b.createdAt);
   sortedOffers.forEach((o) => playerBook.add(o));
   evaluateBook(contestID, nflplayerID);
   return true;
@@ -110,14 +109,14 @@ async function evalProtected(proffer, neoffer) {
 
     const result = await fillOffers(bidoffer, askoffer);
 
-    if (result.bid.filled || result.bid.cancelled) {
+    if (result.bid.filled || result.bid.cancelled || result.bid.error) {
       playerBook.cancel(result.bid);
+      if (ispbid) { matchingOfferIDs = []; } else { matchingOfferIDs.splice(randomInd, 1); }
     }
-    if (result.ask.filled || result.ask.cancelled) {
+    if (result.ask.filled || result.ask.cancelled || result.bid.error) {
       playerBook.cancel(result.ask);
+      if (!ispbid) { matchingOfferIDs = []; } else { matchingOfferIDs.splice(randomInd, 1); }
     }
-
-    matchingOfferIDs = playerBook.findProtectedMatches(poffer);
   }
   updateBest(ContestId, NFLPlayerId);
   return false;

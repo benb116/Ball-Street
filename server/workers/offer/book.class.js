@@ -1,8 +1,8 @@
 /* eslint-disable class-methods-use-this */
 class Book {
-  constructor() {
-    this.contestID = null;
-    this.nflPlayerID = null;
+  constructor(contestID, nflPlayerID) {
+    this.contestID = contestID;
+    this.nflPlayerID = nflPlayerID;
 
     this.bid = {};
     this.pbid = {};
