@@ -37,6 +37,7 @@ async function startUp() {
   });
 }
 
+// Generate the book based on existing offers in DB
 async function initializeBook(contestID, nflplayerID) {
   const sortedOffers = await Offer.findAll({
     where: {
@@ -54,9 +55,11 @@ async function initializeBook(contestID, nflplayerID) {
   return true;
 }
 
+// Check the book and iteratively try to execute matches
 async function evaluateBook(contestID, nflplayerID) {
   let match = playerBook.evaluate();
   while (match) {
+    // If the old offer is protected, create a protMatch
     const isBidOld = (match.bid.data.createdAt < match.ask.data.createdAt);
     const oldOffer = (isBidOld ? match.bid : match.ask);
     const newOffer = (!isBidOld ? match.bid : match.ask);
@@ -64,20 +67,24 @@ async function evaluateBook(contestID, nflplayerID) {
       await addToProtectedMatchQueue(oldOffer, newOffer);
       match = false;
     } else {
+      // Otherwise try to fill the offer now
       const result = await fillOffers(match.bid.id, match.ask.id);
+      // Remove filled or errored orders from the book
       if (result.bid.filled || result.bid.cancelled || result.bid.error) {
         playerBook.cancel(result.bid);
       }
       if (result.ask.filled || result.ask.cancelled || result.bid.error) {
         playerBook.cancel(result.ask);
       }
+      // Check if there's another match
       match = playerBook.evaluate();
     }
   }
+  // Set latest best prices
   updateBest(contestID, nflplayerID);
 }
 
-// Comes back after N seconds
+// Add a protMatch to the queue and send a ping
 async function addToProtectedMatchQueue(eOffer, nOffer) {
   protectedQueue.add({
     existingOffer: eOffer.id,
@@ -91,7 +98,10 @@ async function addToProtectedMatchQueue(eOffer, nOffer) {
   }));
 }
 
+// Try to fill a protected match
 async function evalProtected(proffer, neoffer) {
+  // Both protected and triggering offers must still exist
+  // Otherwise users could trigger and cancel to make every protOffer always ready to execute
   const poffer = await Offer.findByPk(proffer).then(u.dv);
   const noffer = await Offer.findByPk(neoffer).then(u.dv);
 
@@ -100,6 +110,7 @@ async function evalProtected(proffer, neoffer) {
 
   const ispbid = poffer.isbid;
 
+  // Find all offers that could be matched
   let matchingOfferIDs = playerBook.findProtectedMatches(poffer);
   while (matchingOfferIDs.length) {
     const randomInd = Math.floor(Math.random() * matchingOfferIDs.length);
@@ -123,7 +134,6 @@ async function evalProtected(proffer, neoffer) {
 }
 
 function updateBest(contestID, nflplayerID) {
-  console.log(playerBook.bestask, playerBook.bestpask);
   const bestbids = [playerBook.bestbid, playerBook.bestpbid].filter((e) => e);
   const bestasks = [playerBook.bestask, playerBook.bestpask].filter((e) => e);
   let bestbid = 0;
@@ -132,13 +142,11 @@ function updateBest(contestID, nflplayerID) {
   if (bestbids.length === 1) [bestbid] = bestbids;
   if (bestasks.length === 2) bestask = Math.min(...bestasks);
   if (bestasks.length === 1) [bestask] = bestasks;
-  console.log('best', bestbid, bestask);
   client.hset(
     hash(contestID, nflplayerID),
     'bestbid', bestbid,
     'bestask', bestask,
   );
-  console.log(contestID, nflplayerID);
   client.publish('priceUpdate', JSON.stringify({
     contestID,
     nflplayerID,

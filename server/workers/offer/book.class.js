@@ -15,9 +15,12 @@ class Book {
     this.bestpask = null;
   }
 
+  // Add an offer to the book
   add(offer) {
     const { isbid, price } = offer;
+    // which tree to add to
     const thetree = this.whichTree(isbid, offer.protected);
+    // If this is the first offer at a price, make a new limit
     if (!thetree[price]) {
       thetree[price] = new Map();
     }
@@ -25,20 +28,23 @@ class Book {
     return false;
   }
 
+  // Remove and offer from the book
   cancel(offer) {
     const { isbid, price } = offer;
     const thetree = this.whichTree(isbid, offer.protected);
 
     if (!thetree[price]) return null;
     thetree[price].delete(offer.id);
+    // If the limit is now empty, delete it
     if (!thetree[price].size) {
       delete thetree[price];
-      return this.evaluate();
     }
     return false;
   }
 
+  // Get best prices and determine if there's a match
   evaluate() {
+    // Get best prices
     this.bestbid = Math.max(...Object.keys(this.bid).map(Number));
     this.bestpbid = Math.max(...Object.keys(this.pbid).map(Number));
     this.bestask = Math.min(...Object.keys(this.ask).map(Number));
@@ -49,6 +55,8 @@ class Book {
     if (this.bestask === Infinity) { this.bestask = null; }
     if (this.bestpask === Infinity) { this.bestpask = null; }
 
+    // Four possible match combos bid/ask, protected/unprotected
+    // is the bid >= the ask?
     if (this.bestbid && this.bestask && this.bestbid >= this.bestask) {
       const bidOffer = this.bid[this.bestbid].entries().next().value;
       const askOffer = this.ask[this.bestask].entries().next().value;
@@ -85,17 +93,16 @@ class Book {
     return false;
   }
 
+  // Find offers in the book that could match a specific protected offer
   findProtectedMatches(offer) {
     const { isbid, price } = offer;
+    // Search all unprotected offers
     const thetree = this.whichTree(!isbid, false);
-    const theptree = this.whichTree(!isbid, true);
+    // Get limits
     const allMatchingPrices = Object.keys(thetree)
       .map(Number)
       .filter((p) => (isbid && p <= price) || (!isbid && p >= price));
-    const allMatchingPPrices = Object.keys(theptree)
-      .map(Number)
-      .filter((p) => (isbid && p <= price) || (!isbid && p >= price));
-
+    // Get offers
     const allMatchingOffers = allMatchingPrices
       .map((p) => thetree[p])
       .map((l) => [...l.keys()])
@@ -104,6 +111,11 @@ class Book {
         return added;
       }, []);
 
+    // Search protected offers that are newer than this offer
+    const theptree = this.whichTree(!isbid, true);
+    const allMatchingPPrices = Object.keys(theptree)
+      .map(Number)
+      .filter((p) => (isbid && p <= price) || (!isbid && p >= price));
     const allMatchingPOffers = allMatchingPPrices
       .map((p) => theptree[p])
       .map((l) => [...l.entries()])
@@ -116,6 +128,7 @@ class Book {
     return [...allMatchingOffers, ...allMatchingPOffers];
   }
 
+  // Which tree should an offer be added to
   whichTree(isbid, isprotected) {
     const combo = isbid + 2 * isprotected;
     let thetree = {};
