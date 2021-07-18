@@ -58,10 +58,10 @@ async function initializeBook(contestID, nflplayerID) {
 async function evaluateBook(contestID, nflplayerID) {
   let match = playerBook.evaluate();
   while (match) {
-    if (match.bid.protected || match.ask.protected) {
-      const isBidOld = (match.bid.data.createdAt < match.ask.data.createdAt);
-      const oldOffer = (isBidOld ? match.bid : match.ask);
-      const newOffer = (!isBidOld ? match.bid : match.ask);
+    const isBidOld = (match.bid.data.createdAt < match.ask.data.createdAt);
+    const oldOffer = (isBidOld ? match.bid : match.ask);
+    const newOffer = (!isBidOld ? match.bid : match.ask);
+    if (oldOffer.protected) {
       await addToProtectedMatchQueue(oldOffer, newOffer);
       match = false;
     } else {
@@ -75,26 +75,7 @@ async function evaluateBook(contestID, nflplayerID) {
       match = playerBook.evaluate();
     }
   }
-
-  const bestbids = [playerBook.bestbid, playerBook.bestpbid].filter((e) => e);
-  const bestasks = [playerBook.bestask, playerBook.bestpask].filter((e) => e);
-  let bestbid = 0;
-  let bestask = 0;
-  if (bestbids.length === 2) bestbid = Math.max(...bestbids);
-  if (bestbids.length === 1) [bestbid] = bestbids;
-  if (bestasks.length === 2) bestask = Math.min(...bestasks);
-  if (bestasks.length === 1) [bestask] = bestasks;
-  client.hset(
-    hash(contestID, nflplayerID),
-    'bestbid', bestbid,
-    'bestask', bestask,
-  );
-  client.publish('priceUpdate', JSON.stringify({
-    contestID,
-    nflplayerID,
-    bestbid,
-    bestask,
-  }));
+  updateBest(contestID, nflplayerID);
 }
 
 // Comes back after N seconds
@@ -116,6 +97,8 @@ async function evalProtected(proffer, neoffer) {
   const noffer = await Offer.findByPk(neoffer).then(u.dv);
 
   if (!poffer || !noffer) return false;
+  const { ContestId, NFLPlayerId } = poffer;
+
   const ispbid = poffer.isbid;
 
   let matchingOfferIDs = playerBook.findProtectedMatches(poffer);
@@ -136,5 +119,31 @@ async function evalProtected(proffer, neoffer) {
 
     matchingOfferIDs = playerBook.findProtectedMatches(poffer);
   }
+  updateBest(ContestId, NFLPlayerId);
   return false;
+}
+
+function updateBest(contestID, nflplayerID) {
+  console.log(playerBook.bestask, playerBook.bestpask);
+  const bestbids = [playerBook.bestbid, playerBook.bestpbid].filter((e) => e);
+  const bestasks = [playerBook.bestask, playerBook.bestpask].filter((e) => e);
+  let bestbid = 0;
+  let bestask = 0;
+  if (bestbids.length === 2) bestbid = Math.max(...bestbids);
+  if (bestbids.length === 1) [bestbid] = bestbids;
+  if (bestasks.length === 2) bestask = Math.min(...bestasks);
+  if (bestasks.length === 1) [bestask] = bestasks;
+  console.log('best', bestbid, bestask);
+  client.hset(
+    hash(contestID, nflplayerID),
+    'bestbid', bestbid,
+    'bestask', bestask,
+  );
+  console.log(contestID, nflplayerID);
+  client.publish('priceUpdate', JSON.stringify({
+    contestID,
+    nflplayerID,
+    bestbid,
+    bestask,
+  }));
 }

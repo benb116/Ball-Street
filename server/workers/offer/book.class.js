@@ -21,7 +21,7 @@ class Book {
     if (!thetree[price]) {
       thetree[price] = new Map();
     }
-    thetree[price].set(offer.id, { createdAt: offer.createdAt, UserId: offer.UserId });
+    thetree[price].set(offer.id, { createdAt: Date.parse(offer.createdAt), UserId: offer.UserId });
     return false;
   }
 
@@ -88,9 +88,14 @@ class Book {
   findProtectedMatches(offer) {
     const { isbid, price } = offer;
     const thetree = this.whichTree(!isbid, false);
+    const theptree = this.whichTree(!isbid, true);
     const allMatchingPrices = Object.keys(thetree)
       .map(Number)
       .filter((p) => (isbid && p <= price) || (!isbid && p >= price));
+    const allMatchingPPrices = Object.keys(theptree)
+      .map(Number)
+      .filter((p) => (isbid && p <= price) || (!isbid && p >= price));
+
     const allMatchingOffers = allMatchingPrices
       .map((p) => thetree[p])
       .map((l) => [...l.keys()])
@@ -99,7 +104,16 @@ class Book {
         return added;
       }, []);
 
-    return allMatchingOffers;
+    const allMatchingPOffers = allMatchingPPrices
+      .map((p) => theptree[p])
+      .map((l) => [...l.entries()])
+      .reduce((acc, cur) => {
+        const added = [...acc, ...cur];
+        return added;
+      }, [])
+      .filter((e) => e[1].createdAt > Date.parse(offer.createdAt))
+      .map((e) => e[0]);
+    return [...allMatchingOffers, ...allMatchingPOffers];
   }
 
   whichTree(isbid, isprotected) {
