@@ -2,7 +2,7 @@
 class Book {
   constructor(contestID, nflPlayerID) {
     this.contestID = contestID;
-    this.nflPlayerID = nflPlayerID;
+    this.nflplayerID = nflPlayerID;
 
     this.bid = {};
     this.pbid = {};
