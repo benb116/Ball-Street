@@ -8,12 +8,16 @@ export const getTrades = createAsyncThunk('trades/getTrades', gettradesfunc);
 
 const defaultState = {
   trades: [],
+  tradeUpdate: false,
 };
 
 export const tradesSlice = createSlice({
   name: 'trades',
   initialState: defaultState,
   reducers: {
+    updateTrades: (state) => {
+      state.tradeUpdate = true;
+    },
   },
   extraReducers: {
     [getTrades.fulfilled]: (state, { payload }) => {
@@ -27,6 +31,7 @@ export const tradesSlice = createSlice({
         out.id = data.id;
         return out;
       }).sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
+      state.tradeUpdate = false;
     },
     [getTrades.rejected]: (state, { payload }) => {
       if (payload) { toast.error(payload); }
@@ -34,4 +39,7 @@ export const tradesSlice = createSlice({
   },
 });
 
+export const { updateTrades } = tradesSlice.actions;
+
 export const tradesSelector = (state) => state.trades.trades;
+export const tradeUpdateSelector = (state) => state.trades.tradeUpdate;

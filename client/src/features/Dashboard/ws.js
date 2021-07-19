@@ -3,6 +3,7 @@ import { setPhase, updatePrices } from './Players/PlayersSlice';
 import { removeOffer, alertProtMatch } from './Offers/OffersSlice';
 import { offerFilled, updateRoster } from './Entry/EntrySlice';
 import { updateLeaders } from './Leaderboard/LeaderboardSlice';
+import { updateTrades } from './Trades/TradesSlice';
 
 const initWS = (contestID) => {
   const { host } = window.location;
@@ -80,6 +81,7 @@ function fillOffer(oid) {
 
 function upRost() {
   store.dispatch(updateRoster());
+  store.dispatch(updateTrades());
 }
 
 function protMatch({ offerID, expire }) {

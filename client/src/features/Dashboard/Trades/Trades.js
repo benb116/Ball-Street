@@ -4,15 +4,22 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { playerSelector } from '../Players/PlayersSlice';
 
-import { getTrades, tradesSelector } from './TradesSlice';
+import { getTrades, tradesSelector, tradeUpdateSelector } from './TradesSlice';
 
 const Trades = () => {
   const dispatch = useDispatch();
   const { leagueID, contestID } = useParams();
+  const tUpdate = useSelector(tradeUpdateSelector);
 
   useEffect(() => {
     dispatch(getTrades({ leagueID, contestID }));
   }, [contestID, dispatch, leagueID]);
+
+  useEffect(() => {
+    if (tUpdate) {
+      dispatch(getTrades({ leagueID, contestID }));
+    }
+  }, [contestID, dispatch, leagueID, tUpdate]);
 
   const trades = useSelector(tradesSelector);
   return (
