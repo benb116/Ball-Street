@@ -4,6 +4,9 @@ class Book {
     this.contestID = contestID;
     this.nflplayerID = nflPlayerID;
 
+    this.queue = Promise.resolve();
+    this.init = false;
+
     this.bid = {};
     this.pbid = {};
     this.ask = {};

@@ -22,29 +22,36 @@ const { fillOffers } = require('./offer/trader');
 // books[contestID][playerID] = Book
 const books = { };
 
-offerQueue.process(async (job) => {
+const parallelProcessors = 10;
+
+offerQueue.process(parallelProcessors, async (job) => {
   const { ContestId, NFLPlayerId } = job.data;
-  const playerBook = await getBook(ContestId, NFLPlayerId);
+
+  const playerBook = getBook(ContestId, NFLPlayerId);
+
   if (job.data.cancelled) {
-    playerBook.cancel(job.data);
+    playerBook.queue = playerBook.queue.then(() => { playerBook.cancel(job.data); });
   } else {
-    playerBook.add(job.data);
+    playerBook.queue = playerBook.queue.then(() => { playerBook.add(job.data); });
   }
-
-  await evaluateBook(playerBook);
+  playerBook.queue = playerBook.queue.then(() => { evaluateBook(playerBook); });
 });
 
-protectedQueue.process(async (job) => {
-  await evalProtected(job.data.existingOffer, job.data.newOffer);
+protectedQueue.process(parallelProcessors, async (job) => {
+  evalProtected(job.data.existingOffer, job.data.newOffer);
 });
 
-async function getBook(ContestId, NFLPlayerId) {
+function getBook(ContestId, NFLPlayerId) {
   if (!books[ContestId]) { books[ContestId] = {}; }
   if (!books[ContestId][NFLPlayerId]) {
     books[ContestId][NFLPlayerId] = new Book(ContestId, NFLPlayerId);
-    await initializeBook(books[ContestId][NFLPlayerId]);
   }
-  return books[ContestId][NFLPlayerId];
+  const playerBook = books[ContestId][NFLPlayerId];
+  if (!playerBook.init) {
+    playerBook.init = true;
+    playerBook.queue = playerBook.queue.then(() => initializeBook(playerBook));
+  }
+  return playerBook;
 }
 
 // Generate the book based on existing offers in DB
@@ -121,8 +128,14 @@ async function evalProtected(proffer, neoffer) {
   if (!poffer || !noffer) return false;
   const { ContestId, NFLPlayerId } = poffer;
 
-  const playerBook = await getBook(ContestId, NFLPlayerId);
+  const playerBook = getBook(ContestId, NFLPlayerId);
 
+  playerBook.queue = playerBook.queue.then(() => { runMatches(poffer, playerBook); });
+
+  return false;
+}
+
+async function runMatches(poffer, playerBook) {
   const ispbid = poffer.isbid;
 
   // Find all offers that could be matched
@@ -145,7 +158,6 @@ async function evalProtected(proffer, neoffer) {
     }
   }
   updateBest(playerBook);
-  return false;
 }
 
 function updateBest(playerBook) {
