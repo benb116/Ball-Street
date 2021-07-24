@@ -21,42 +21,57 @@ const { fillOffers } = require('./offer/trader');
 
 // books[contestID][playerID] = Book
 const books = { };
+/*
+  Each book has a queue of promises that can be chained to.
+  This means that functions can be guaranteed to run sequentially.
+  Any operation on a book should be done by "enqueueing" it like so:
+  playerBook.enqueue(() => { doSomething(input); });
+  That way there will be no race conditions within a single contest+player
+  Other race conditions could still occur at the DB,
+  but those should be handled by transactions.
+*/
 
 const parallelProcessors = 10;
 
-offerQueue.process(parallelProcessors, async (job) => {
+// When a new offer comes in
+offerQueue.process(parallelProcessors, (job) => {
   const { ContestId, NFLPlayerId } = job.data;
 
-  const playerBook = getBook(ContestId, NFLPlayerId);
-
+  const playerBook = getBook(ContestId, NFLPlayerId); // Get the appropriate book (or make one)
+  // Add the action to the queue
   if (job.data.cancelled) {
-    playerBook.queue = playerBook.queue.then(() => { playerBook.cancel(job.data); });
+    playerBook.enqueue(() => { playerBook.cancel(job.data); });
   } else {
-    playerBook.queue = playerBook.queue.then(() => { playerBook.add(job.data); });
+    playerBook.enqueue(() => { playerBook.add(job.data); });
   }
-  playerBook.queue = playerBook.queue.then(() => { evaluateBook(playerBook); });
+  // Add an evaluation to the queue
+  playerBook.enqueue(() => { evaluateBook(playerBook); });
 });
 
-protectedQueue.process(parallelProcessors, async (job) => {
+// When a protected match comes back around
+protectedQueue.process(parallelProcessors, (job) => {
   evalProtected(job.data.existingOffer, job.data.newOffer);
 });
 
+// Access the correct book or make one if necessary
 function getBook(ContestId, NFLPlayerId) {
   if (!books[ContestId]) { books[ContestId] = {}; }
   if (!books[ContestId][NFLPlayerId]) {
     books[ContestId][NFLPlayerId] = new Book(ContestId, NFLPlayerId);
   }
   const playerBook = books[ContestId][NFLPlayerId];
+  // There may be existing offers in the DB, so add them to the book
   if (!playerBook.init) {
     playerBook.init = true;
-    playerBook.queue = playerBook.queue.then(() => initializeBook(playerBook));
+    playerBook.enqueue(() => initializeBook(playerBook));
   }
   return playerBook;
 }
 
-// Generate the book based on existing offers in DB
+// Generate the starting book based on existing offers in DB
 async function initializeBook(playerBook) {
   const { contestID, nflplayerID } = playerBook;
+  // Should be sorted oldest first since Maps maintain order
   const sortedOffers = await Offer.findAll({
     where: {
       ContestId: contestID,
@@ -69,7 +84,6 @@ async function initializeBook(playerBook) {
     ],
   }).then(u.dv);
   sortedOffers.forEach((o) => playerBook.add(o));
-  evaluateBook(playerBook);
   return true;
 }
 
@@ -130,17 +144,19 @@ async function evalProtected(proffer, neoffer) {
 
   const playerBook = getBook(ContestId, NFLPlayerId);
 
-  playerBook.queue = playerBook.queue.then(() => { runMatches(poffer, playerBook); });
+  playerBook.enqueue(() => { runMatches(poffer, playerBook); });
 
   return false;
 }
 
+// Find possible matches for a protected offer
 async function runMatches(poffer, playerBook) {
   const ispbid = poffer.isbid;
 
   // Find all offers that could be matched
   let matchingOfferIDs = playerBook.findProtectedMatches(poffer);
   while (matchingOfferIDs.length) {
+    // Randomly chosen so no incentive to submit first
     const randomInd = Math.floor(Math.random() * matchingOfferIDs.length);
     const randomOffer = matchingOfferIDs[randomInd];
     const bidoffer = (ispbid ? poffer.id : randomOffer);
@@ -160,6 +176,7 @@ async function runMatches(poffer, playerBook) {
   updateBest(playerBook);
 }
 
+// Send out latest price info based on book
 function updateBest(playerBook) {
   playerBook.evaluate();
   const { contestID, nflplayerID } = playerBook;

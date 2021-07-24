@@ -37,10 +37,16 @@ async function reorderRoster(req) {
     const postype1 = config.Roster[value.body.pos1];
     const postype2 = config.Roster[value.body.pos2];
 
+    // Can this swap be done?
+    // If same position type, then always yes
+    // If not then
     if (postype1 !== postype2) {
+      // If neither is a flex position, then definitely can't
       if (postype1 === config.FlexNFLPositionId || postype2 === config.FlexNFLPositionId) {
+        // if pos1 is flex but pos2 is a type that can't flex then no
         if (postype1 === config.FlexNFLPositionId && !config.NFLPosTypes[postype2].canflex) {
           u.Error('Cannot put a non-flex player in a flex position', 406);
+        // same other way around
         } else if (postype2 === config.FlexNFLPositionId && !config.NFLPosTypes[postype1].canflex) {
           u.Error('Cannot put a non-flex player in a flex position', 406);
         }
@@ -67,6 +73,7 @@ async function reorderRoster(req) {
     const playerIDin1 = theentry[value.body.pos1];
     const playerIDin2 = theentry[value.body.pos2];
 
+    // If both are empty, don't do anything
     if (!playerIDin1 && !playerIDin2) {
       u.Error('No players found', 404);
     }

@@ -18,6 +18,11 @@ class Book {
     this.bestpask = null;
   }
 
+  // Add a function to the book's serial queue
+  enqueue(fn) {
+    this.queue = this.queue.then(fn);
+  }
+
   // Add an offer to the book
   add(offer) {
     const { isbid, price } = offer;
@@ -99,7 +104,7 @@ class Book {
   // Find offers in the book that could match a specific protected offer
   findProtectedMatches(offer) {
     const { isbid, price } = offer;
-    // Search all unprotected offers
+    // Search all unprotected opposite offers
     const thetree = this.whichTree(!isbid, false);
     // Get limits
     const allMatchingPrices = Object.keys(thetree)
@@ -107,14 +112,14 @@ class Book {
       .filter((p) => (isbid && p <= price) || (!isbid && p >= price));
     // Get offers
     const allMatchingOffers = allMatchingPrices
-      .map((p) => thetree[p])
-      .map((l) => [...l.keys()])
-      .reduce((acc, cur) => {
+      .map((p) => thetree[p]) // get limit trees
+      .map((l) => [...l.keys()]) // get offers
+      .reduce((acc, cur) => { // concat all
         const added = [...acc, ...cur];
         return added;
       }, []);
 
-    // Search protected offers that are newer than this offer
+    // Search protected opposite offers that are newer than this offer
     const theptree = this.whichTree(!isbid, true);
     const allMatchingPPrices = Object.keys(theptree)
       .map(Number)
@@ -126,6 +131,7 @@ class Book {
         const added = [...acc, ...cur];
         return added;
       }, [])
+    // only offers submitted afterprotected
       .filter((e) => e[1].createdAt > Date.parse(offer.createdAt))
       .map((e) => e[0]);
     return [...allMatchingOffers, ...allMatchingPOffers];
