@@ -8,7 +8,7 @@ const { validators } = require('../../util/util.schema');
 const schema = Joi.object({
   user: validators.user,
   params: Joi.object().keys({
-    leagueID: Joi.number().optional(),
+    leagueID: validators.leagueIDOptional,
     contestID: validators.contestID,
   }).required(),
   body: validators.noObj,
@@ -17,7 +17,6 @@ const schema = Joi.object({
 // Get info for a specific contest
 async function getEntry(req) {
   const value = u.validate(req, schema);
-
   const theentry = await Entry.findOne({
     where: {
       UserId: value.user,
