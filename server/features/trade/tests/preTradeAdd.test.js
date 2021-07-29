@@ -40,6 +40,19 @@ describe('preTradeAdd service', () => {
     406, 'Player is on roster',
   ));
 
+  test('Preadd with price returns error 400', ErrorTest(
+    service, {
+      user: 2,
+      params: { leagueID: 2, contestID: 2 },
+      body: {
+        nflplayerID: 20933,
+        rosterposition: 'RB1',
+        price: 100,
+      },
+    },
+    400, 'Price not allowed in pretrade',
+  ));
+
   test('Insufficient funds returns error 402', ErrorTest(
     service, {
       user: 3,

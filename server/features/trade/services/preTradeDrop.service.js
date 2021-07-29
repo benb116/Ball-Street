@@ -19,6 +19,9 @@ const schema = Joi.object({
   }).required(),
   body: Joi.object().keys({
     nflplayerID: validators.nflplayerID,
+    price: Joi.any().forbidden().messages({
+      'any.unknown': 'Price not allowed in pretrade',
+    }),
   }).required(),
 });
 

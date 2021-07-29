@@ -22,6 +22,9 @@ const schema = Joi.object({
     rosterposition: Joi.string().alphanum().optional().messages({
       'string.base': 'Position is invalid',
     }),
+    price: Joi.any().forbidden().messages({
+      'any.unknown': 'Price not allowed in pretrade',
+    }),
   }).required(),
 });
 

@@ -38,6 +38,18 @@ describe('preTradeDrop service', () => {
     406, 'Player is not on roster',
   ));
 
+  test('Predrop with price returns error 400', ErrorTest(
+    service, {
+      user: 2,
+      params: { leagueID: 2, contestID: 2 },
+      body: {
+        nflplayerID: 19415,
+        price: 100,
+      },
+    },
+    400, 'Price not allowed in pretrade',
+  ));
+
   test('No entry returns error 404', ErrorTest(
     service, {
       user: 4,
