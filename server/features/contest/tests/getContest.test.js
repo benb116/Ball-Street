@@ -26,11 +26,6 @@ describe('getContest service', () => {
     400, 'Please specify a contest',
   ));
 
-  test('Missing leagueID returns error 400', ErrorTest(
-    service, { user: 2, params: { contestID: 1 }, body: {} },
-    400, 'Please specify a league',
-  ));
-
   test('Missing userID returns error 400', ErrorTest(
     service, { params: { leagueID: 1, contestID: 1 }, body: {} },
     400, 'You must be logged in',

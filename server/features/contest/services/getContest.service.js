@@ -14,7 +14,7 @@ const isoOption = {
 const schema = Joi.object({
   user: validators.user,
   params: Joi.object().keys({
-    leagueID: validators.leagueID,
+    leagueID: validators.leagueIDOptional,
     contestID: validators.contestID,
   }).required(),
   body: validators.noObj,
