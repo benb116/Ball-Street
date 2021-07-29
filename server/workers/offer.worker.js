@@ -9,7 +9,9 @@ const Book = require('./offer/book.class');
 
 const u = require('../features/util/util');
 
-const { queueOptions, client, rediskeys } = require('../db/redis');
+const {
+  queueOptions, client, rediskeys, get, set,
+} = require('../db/redis');
 
 const { hash } = rediskeys;
 
@@ -203,3 +205,9 @@ function updateBest(playerBook) {
     bestask,
   }));
 }
+
+async function initRedisWeek() {
+  const theweek = await get.CurrentWeek();
+  if (!theweek) await set.CurrentWeek(1);
+}
+initRedisWeek();

@@ -6,6 +6,7 @@ const sequelize = require('../../../db');
 const { Entry } = require('../../../models');
 const { canUserSeeContest } = require('../../util/util.service');
 const { validators } = require('../../util/util.schema');
+const { get } = require('../../../db/redis');
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
@@ -32,6 +33,8 @@ async function createEntry(req) {
     const [, thecontest] = await canUserSeeContest(
       t, value.user, value.params.leagueID, value.params.contestID,
     );
+    const theweek = await get.CurrentWeek();
+    if (theweek !== thecontest.nflweek) u.Error('Incorrect week', 406);
     obj.pointtotal = thecontest.budget;
     return Entry.create(obj, u.tobj(t)).then(u.dv);
   })
