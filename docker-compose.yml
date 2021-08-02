@@ -1,23 +1,25 @@
 version: '3'
 
 services:
+    # Serve static webpages and proxy to APIs
+    # CRA dev server in dev and nginx in production
     webserver:
         build:
             context: .
             dockerfile: ./client/Dockerfile
-            target: ${NODE_ENV}
+            target: ${NODE_ENV} # Determine dev or prod
         container_name: webserver
         restart: unless-stopped
         ports:
-            - 80:${INNER_PORT}
+            - 80:${INNER_PORT} # Expose ports
             - 443:443
         networks:
             - app-network
-        depends_on:
+        depends_on: # Don't want to proxy requests until the servers are up 
             - api
             - live
         volumes:
-            - /etc/letsencrypt:/etc/letsencrypt
+            - /etc/letsencrypt:/etc/letsencrypt # ssl certs
             - ./client:/home/node/app
             - /home/node/app/node_modules
 
@@ -42,7 +44,7 @@ services:
             - db
             - redis
         command: 
-            ./node_modules/.bin/nodemon app.js
+            ./node_modules/.bin/nodemon app.js # nodemon for restart in debugging
         volumes:
             - ./server:/home/node/app
             - /home/node/app/node_modules
@@ -126,7 +128,7 @@ services:
             - ./server:/home/node/app
             - /home/node/app/node_modules
 
-    db:
+    db: # Postgres with Timescale extension
         image: timescale/timescaledb:latest-pg12
         container_name: db
         restart: unless-stopped
@@ -137,7 +139,7 @@ services:
             - POSTGRES_DB=$DB_NAME
         volumes:
           - dbdata:/data/db
-          - ./server/db/dbinit.sql:/docker-entrypoint-initdb.d/dbinit.sql
+          - ./server/db/dbinit.sql:/docker-entrypoint-initdb.d/dbinit.sql # DB initialization script
         networks:
           - app-network
 

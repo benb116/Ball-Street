@@ -36,8 +36,10 @@ const sequelize = new Sequelize(
 async function testDB() {
   try {
     await sequelize.authenticate();
+    if (process.env.NODE_ENV !== 'test') {
     // eslint-disable-next-line no-console
-    console.log('Database connection has been established successfully.');
+      console.log('Database connection has been established successfully.');
+    }
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Unable to connect to the database:', error);

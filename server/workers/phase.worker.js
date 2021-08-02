@@ -66,7 +66,7 @@ async function convertEntry(e, players) {
       const pos = u.isPlayerOnRoster(theentry, p.id);
       if (pos) {
         theentry[pos] = null;
-        theentry.pointtotal += p.postprice;
+        theentry.pointtotal += (p.postprice || 0);
       }
     });
 
