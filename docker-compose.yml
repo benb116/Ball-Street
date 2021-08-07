@@ -7,9 +7,9 @@ services:
         build:
             context: .
             dockerfile: ./client/Dockerfile
-            target: ${NODE_ENV} # Determine dev or prod
+            target: production # Determine dev or prod
         container_name: webserver
-        restart: unless-stopped
+        restart: always
         ports:
             - 80:${INNER_PORT} # Expose ports
             - 443:443
@@ -20,7 +20,6 @@ services:
             - live
         volumes:
             - /etc/letsencrypt:/etc/letsencrypt # ssl certs
-            - ./client:/home/node/app
             - /home/node/app/node_modules
 
     api:
@@ -34,19 +33,18 @@ services:
             - DB_USER=$DB_USER
             - DB_PASS=$DB_PASS
             - DB_HOST=db
-            - DB_PORT=$DB_PORT
+            - DB_PORT=5432
             - DB_NAME=$DB_NAME
             - REDIS_HOST=redis
-            - REDIS_PORT=$REDIS_PORT
+            - REDIS_PORT=6379
         networks:
             - app-network
         depends_on:
             - db
             - redis
         command: 
-            ./node_modules/.bin/nodemon app.js # nodemon for restart in debugging
+            node app.js # nodemon for restart in debugging
         volumes:
-            - ./server:/home/node/app
             - /home/node/app/node_modules
     
     leader:
@@ -60,19 +58,19 @@ services:
             - DB_USER=$DB_USER
             - DB_PASS=$DB_PASS
             - DB_HOST=db
-            - DB_PORT=$DB_PORT
+            - DB_PORT=5432
             - DB_NAME=$DB_NAME
             - REDIS_HOST=redis
-            - REDIS_PORT=$REDIS_PORT
+            - REDIS_PORT=6379
         networks:
             - app-network
         depends_on:
             - db
             - redis
+        restart: always
         command: 
-            ./node_modules/.bin/nodemon workers/leader.worker.js
+            node workers/leader.worker.js
         volumes:
-            - ./server:/home/node/app
             - /home/node/app/node_modules
 
     offer:
@@ -86,19 +84,19 @@ services:
             - DB_USER=$DB_USER
             - DB_PASS=$DB_PASS
             - DB_HOST=db
-            - DB_PORT=$DB_PORT
+            - DB_PORT=5432
             - DB_NAME=$DB_NAME
             - REDIS_HOST=redis
-            - REDIS_PORT=$REDIS_PORT
+            - REDIS_PORT=6379
         networks:
             - app-network
         depends_on:
             - db
             - redis
+        restart: always
         command: 
-            ./node_modules/.bin/nodemon workers/offer.worker.js
+            node workers/offer.worker.js
         volumes:
-            - ./server:/home/node/app
             - /home/node/app/node_modules
 
     live:
@@ -112,33 +110,32 @@ services:
             - DB_USER=$DB_USER
             - DB_PASS=$DB_PASS
             - DB_HOST=db
-            - DB_PORT=$DB_PORT
+            - DB_PORT=5432
             - DB_NAME=$DB_NAME
             - REDIS_HOST=redis
-            - REDIS_PORT=$REDIS_PORT
-            - PORT=$LIVE_PORT
+            - REDIS_PORT=6379
+            - PORT=8080
         networks:
             - app-network
         depends_on:
             - db
             - redis
+        restart: always
         command: 
-            ./node_modules/.bin/nodemon workers/live.worker.js
+            node workers/live.worker.js
         volumes:
-            - ./server:/home/node/app
             - /home/node/app/node_modules
 
     db: # Postgres with Timescale extension
         image: timescale/timescaledb:latest-pg12
         container_name: db
-        restart: unless-stopped
+        restart: always
         env_file: .env
         environment:
             - POSTGRES_USER=$DB_USER
             - POSTGRES_PASSWORD=$DB_PASS
             - POSTGRES_DB=$DB_NAME
         volumes:
-          - dbdata:/data/db
           - ./server/db/dbinit.sql:/docker-entrypoint-initdb.d/dbinit.sql # DB initialization script
         networks:
           - app-network
@@ -147,12 +144,10 @@ services:
         image: redis
         container_name: redis
         env_file: .env
+        restart: always
         networks:
             - app-network
 
 networks:
     app-network:
         driver: bridge
-
-volumes:
-    dbdata:

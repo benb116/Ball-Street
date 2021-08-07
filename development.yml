@@ -1,0 +1,57 @@
+version: '3'
+
+services:
+    # Serve static webpages and proxy to APIs
+    # CRA dev server in dev and nginx in production
+    webserver:
+        build:
+            target: development # Determine dev or prod
+        restart: unless-stopped
+        volumes:
+            - ./client:/home/node/app
+
+    api:
+        command: 
+            ./node_modules/.bin/nodemon app.js # nodemon for restart in debugging
+        restart: unless-stopped
+        volumes:
+            - ./server:/home/node/app
+    
+    leader:
+        command: 
+            ./node_modules/.bin/nodemon workers/leader.worker.js
+        restart: unless-stopped
+        volumes:
+            - ./server:/home/node/app
+
+    offer:
+        command: 
+            ./node_modules/.bin/nodemon workers/offer.worker.js
+        restart: unless-stopped
+        volumes:
+            - ./server:/home/node/app
+
+    live:
+        command: 
+            ./node_modules/.bin/nodemon workers/live.worker.js
+        restart: unless-stopped
+        volumes:
+            - ./server:/home/node/app
+
+    db: # Postgres with Timescale extension
+        ports:
+            - 5432:5432 # Expose ports
+        restart: unless-stopped
+        volumes:
+          - dbdata:/data/db
+
+    redis:
+      ports:
+        - 6379:6379 # Expose ports
+
+networks:
+    app-network:
+        driver: bridge
+
+volumes:
+    dbdata:
