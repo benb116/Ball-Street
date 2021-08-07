@@ -94,7 +94,7 @@ async function PopulateDB(sequelize) {
   const entrs2 = [{
     UserId: 1, ContestId: 2, pointtotal: 10000, RB1: 20933, K1: 19041,
   }, {
-    UserId: 2, ContestId: 2, pointtotal: 1500, RB1: 20933, WR1: 18686, K1: 19041,
+    UserId: 2, ContestId: 2, pointtotal: 1500, RB1: 20933, WR1: 18686, WR2: 18047, K1: 19041,
   }, {
     UserId: 3, ContestId: 2, pointtotal: 500, RB1: 20933, K1: 19041,
   }];

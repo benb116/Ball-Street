@@ -22,7 +22,7 @@ describe('preTradeDrop service', () => {
       TE1: null,
       UserId: 2,
       WR1: null,
-      WR2: null,
+      WR2: 18047,
       pointtotal: 2600,
     },
   ));

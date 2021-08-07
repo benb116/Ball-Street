@@ -10,7 +10,7 @@ module.exports = session({
   name: '_ballstreet',
   resave: false,
   saveUninitialized: true,
-  cookie: { httpOnly: true, sameSite: true },
+  cookie: { httpOnly: true, sameSite: true, secure: process.env.NODE_ENV === 'production' },
   store: new RedisStore({
     client,
     ttl: 86400, // 1 day

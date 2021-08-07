@@ -25,11 +25,8 @@ if (process.env.NODE_ENV === 'test') {
   DB_NAME = sec.DB_NAME;
 }
 
-// Should we use the test database?
-const testSuffix = process.env.NODE_ENV === 'test' ? '-test' : '';
-
 const sequelize = new Sequelize(
-  `postgres://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT}/${DB_NAME}${testSuffix}`,
+  `postgres://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT}/${DB_NAME}`,
   dbOptions,
 ); // Example for postgres
 

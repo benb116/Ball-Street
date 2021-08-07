@@ -27,8 +27,10 @@
     "test": "jest"
   },
   "jest": {
-    "globalSetup": "./jestGlobalSetup.js",
-    "globalTeardown": "./jestGlobalTeardown.js"
+    "globalSetup": "./jest/jestGlobalSetup.js",
+    "globalTeardown": "./jest/jestGlobalTeardown.js",
+    "setupFilesAfterEnv": ["./jest/afterAll.js"],
+    "testEnvironment": "node"
   },
   "repository": {
     "type": "git",
