@@ -20,7 +20,7 @@ const service = require('../../features/trade/trade.service');
 
 // Try to fill the offers or return which one is done
 async function fillOffers(bidid, askid, price) {
-  console.log('begin:', bidid, askid);
+  console.log('begin trade:', bidid, askid);
   const out = sequelize.transaction(isoOption,
     async (t) => attemptFill(t, bidid, askid, price));
   return out;
@@ -49,7 +49,6 @@ async function attemptFill(t, bidid, askid, tprice) {
   }
   if (resp.bid.closed || resp.ask.closed) return resp;
 
-  console.log('past initial');
   const biduser = boffer.UserId;
   const askuser = aoffer.UserId;
   const nflplayerID = boffer.NFLPlayerId;
