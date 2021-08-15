@@ -64,6 +64,7 @@ async function runMatches(poffer, playerBook) {
   if (shouldUnMatch) {
     playerBook.unmatch(poffer, ispbid);
   }
+  playerBook.evaluate();
   updateBest(playerBook);
 }
 

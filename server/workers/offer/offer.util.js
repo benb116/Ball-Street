@@ -40,9 +40,9 @@ async function initializeBook(playerBook) {
   sortedOffers.forEach((o) => playerBook.add(o));
   return true;
 }
+
 // Send out latest price info based on book
 function updateBest(playerBook) {
-  playerBook.evaluate();
   const { contestID, nflplayerID } = playerBook;
 
   const bestbids = [playerBook.bestbid, playerBook.bestpbid].filter((e) => e);
