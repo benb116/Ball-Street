@@ -53,6 +53,8 @@ protectedQueue.process(parallelProcessors, (job) => {
 });
 
 // Check the book and iteratively try to execute matches
+// Operations in this function are not added to the book queue
+// because this function is being run in the queue already.
 async function evaluateBook(playerBook) {
   let match = playerBook.evaluate();
   while (match) {
@@ -63,8 +65,8 @@ async function evaluateBook(playerBook) {
     const oldOffer = (isBidOld ? match.bid : match.ask);
     const newOffer = (!isBidOld ? match.bid : match.ask);
     if (oldOffer.protected) {
-      await addToProtectedMatchQueue(oldOffer, newOffer);
-      match = false;
+      playerBook.match(oldOffer, isBidOld);
+      addToProtectedMatchQueue(oldOffer, newOffer);
     } else {
       // Otherwise try to fill the offer now
       const result = await fillOffers(match.bid.id, match.ask.id);
@@ -75,16 +77,17 @@ async function evaluateBook(playerBook) {
       if (result.ask.filled || result.ask.cancelled || result.bid.error) {
         playerBook.cancel(result.ask);
       }
-      // Check if there's another match
-      match = playerBook.evaluate();
     }
+
+    // Check if there's another match
+    match = playerBook.evaluate();
   }
   // Set latest best prices
   updateBest(playerBook);
 }
 
 // Add a protMatch to the queue and send a ping
-async function addToProtectedMatchQueue(eOffer, nOffer) {
+function addToProtectedMatchQueue(eOffer, nOffer) {
   protectedQueue.add({
     existingOffer: eOffer.id,
     newOffer: nOffer.id,

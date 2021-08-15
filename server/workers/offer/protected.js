@@ -24,7 +24,7 @@ async function evalProtected(books, proffer, neoffer) {
 // Find possible matches for a protected offer
 async function runMatches(poffer, playerBook) {
   const ispbid = poffer.isbid;
-
+  let shouldUnMatch = true;
   // Find all offers that could be matched
   let matchingOfferIDs = playerBook.findProtectedMatches(poffer);
   while (matchingOfferIDs.length) {
@@ -39,12 +39,26 @@ async function runMatches(poffer, playerBook) {
 
     if (result.bid.filled || result.bid.cancelled || result.bid.error) {
       playerBook.cancel(result.bid);
-      if (ispbid) { matchingOfferIDs = []; } else { matchingOfferIDs.splice(randomInd, 1); }
+      if (ispbid) {
+        matchingOfferIDs = [];
+        shouldUnMatch = false;
+      } else {
+        matchingOfferIDs.splice(randomInd, 1);
+      }
     }
     if (result.ask.filled || result.ask.cancelled || result.bid.error) {
       playerBook.cancel(result.ask);
-      if (!ispbid) { matchingOfferIDs = []; } else { matchingOfferIDs.splice(randomInd, 1); }
+      if (!ispbid) {
+        matchingOfferIDs = [];
+        shouldUnMatch = false;
+      } else {
+        matchingOfferIDs.splice(randomInd, 1);
+      }
     }
+  }
+
+  if (shouldUnMatch) {
+    playerBook.unmatch(poffer, ispbid);
   }
   updateBest(playerBook);
 }

@@ -32,7 +32,11 @@ class Book {
     if (!thetree[price]) {
       thetree[price] = new Map();
     }
-    thetree[price].set(offer.id, { createdAt: Date.parse(offer.createdAt), UserId: offer.UserId });
+    thetree[price].set(offer.id, {
+      createdAt: Date.parse(offer.createdAt),
+      UserId: offer.UserId,
+      price,
+    });
     return false;
   }
 
@@ -50,54 +54,154 @@ class Book {
     return false;
   }
 
+  // Mark that a protected offer has been matched
+  // So it doesn't rematch over and over
+  match(offer, isbid) {
+    const { data } = offer;
+    const { price } = data;
+    const thetree = this.whichTree(isbid, true);
+    if (!thetree[price]) {
+      return;
+    }
+    thetree[price].set(offer.id, {
+      createdAt: offer.data.createdAt,
+      UserId: offer.data.UserId,
+      matched: true,
+      price,
+    });
+  }
+
+  // Mark that a protected offer is no longer matched
+  // So it can be matched again
+  unmatch(offer, isbid) {
+    const { price } = offer;
+    const thetree = this.whichTree(isbid, true);
+    if (!thetree[price]) {
+      return;
+    }
+    thetree[price].set(offer.id, {
+      createdAt: offer.createdAt,
+      UserId: offer.UserId,
+      matched: false,
+      price,
+    });
+  }
+
   // Get best prices and determine if there's a match
   evaluate() {
-    // Get best prices
-    this.bestbid = Math.max(...Object.keys(this.bid).map(Number));
-    this.bestpbid = Math.max(...Object.keys(this.pbid).map(Number));
-    this.bestask = Math.min(...Object.keys(this.ask).map(Number));
-    this.bestpask = Math.min(...Object.keys(this.pask).map(Number));
+    const bidPrices = Object.keys(this.bid).map(Number);
+    const pbidPrices = Object.keys(this.pbid).map(Number);
+    const askPrices = Object.keys(this.ask).map(Number);
+    const paskPrices = Object.keys(this.pask).map(Number);
+
+    // Get best prices and mark to the book for caching
+    this.bestbid = Math.max(...bidPrices);
+    this.bestpbid = Math.max(...pbidPrices);
+    this.bestask = Math.min(...askPrices);
+    this.bestpask = Math.min(...paskPrices);
 
     if (this.bestbid === -Infinity) { this.bestbid = null; }
     if (this.bestpbid === -Infinity) { this.bestpbid = null; }
     if (this.bestask === Infinity) { this.bestask = null; }
     if (this.bestpask === Infinity) { this.bestpask = null; }
 
+    // Best prices for use in evaluation
+    // May differ if best price is a matched protected offer
+    // In that case, may need to consider worse prices
+    const evalbid = this.bestbid;
+    let evalpbid = this.bestpbid;
+    const evalask = this.bestask;
+    let evalpask = this.bestpask;
+
     // Four possible match combos bid/ask, protected/unprotected
+    // Give preference to filling unprotected offers
+    // by checking them first in the evaluate algorithm
+
     // is the bid >= the ask?
-    if (this.bestbid && this.bestask && this.bestbid >= this.bestask) {
-      const bidOffer = this.bid[this.bestbid].entries().next().value;
-      const askOffer = this.ask[this.bestask].entries().next().value;
+    if (evalbid && evalask && evalbid >= evalask) {
+      const bidOffer = this.bid[evalbid].entries().next().value;
+      const askOffer = this.ask[evalask].entries().next().value;
       return {
         bid: { id: bidOffer[0], data: bidOffer[1], protected: false },
         ask: { id: askOffer[0], data: askOffer[1], protected: false },
       };
     }
-    if (this.bestbid && this.bestpask && this.bestbid >= this.bestpask) {
-      const bidOffer = this.bid[this.bestbid].entries().next().value;
-      const askOffer = this.pask[this.bestpask].entries().next().value;
+
+    // It's possible that the "best" protected price has already been matched
+    // Best not to match it again (and send another ping to user)
+    // Instead, match the next best unmatched protected offer
+    let bestPAskOffer;
+    if (evalpask) {
+      let pAskIterator = this.pask[evalpask].entries();
+      if (this.pask[evalpask]) {
+        // Absolute best protected offer
+        bestPAskOffer = pAskIterator.next().value;
+      }
+      // Iterate through the map(s) to find an unmatched offer
+      while (bestPAskOffer[1]?.matched) {
+        bestPAskOffer = pAskIterator.next().value;
+
+        // If none, we've exhausted a specific price level
+        // Move to the next best available
+        if (!bestPAskOffer) {
+        // eslint-disable-next-line no-loop-func
+          evalpask = Math.min(...paskPrices.filter((p) => p > evalpask));
+          // If there are no more left, then can't match this protected
+          if (evalpask === Infinity) { evalpask = null; break; }
+
+          pAskIterator = this.pask[evalpask].entries();
+          bestPAskOffer = pAskIterator.next().value;
+        }
+      }
+    }
+
+    if (evalbid && evalpask && evalbid >= evalpask) {
+      const bidOffer = this.bid[evalbid].entries().next().value;
+      const askOffer = bestPAskOffer;
       return {
         bid: { id: bidOffer[0], data: bidOffer[1], protected: false },
         ask: { id: askOffer[0], data: askOffer[1], protected: true },
       };
     }
-    if (this.bestpbid && this.bestask && this.bestpbid >= this.bestask) {
-      const bidOffer = this.pbid[this.bestpbid].entries().next().value;
-      const askOffer = this.ask[this.bestask].entries().next().value;
+
+    // Same for bids as for asks
+    let bestPBidOffer;
+    if (evalpbid) {
+      let pBidIterator = this.pbid[evalpbid].entries();
+      if (this.pbid[evalpbid]) {
+        bestPBidOffer = pBidIterator.next().value;
+      }
+      while (bestPBidOffer[1]?.matched) {
+        bestPBidOffer = pBidIterator.next().value;
+        if (!bestPBidOffer) {
+        // eslint-disable-next-line no-loop-func
+          evalpbid = Math.max(...pbidPrices.filter((p) => p < evalpbid));
+          if (evalpbid === -Infinity) { evalpbid = null; break; }
+
+          pBidIterator = this.pbid[evalpbid].entries();
+          bestPBidOffer = pBidIterator.next().value;
+        }
+      }
+    }
+
+    if (evalpbid && evalask && evalpbid >= evalask) {
+      const bidOffer = bestPBidOffer;
+      const askOffer = this.ask[evalask].entries().next().value;
       return {
         bid: { id: bidOffer[0], data: bidOffer[1], protected: true },
         ask: { id: askOffer[0], data: askOffer[1], protected: false },
       };
     }
-    if (this.bestpbid && this.bestpask && this.bestpbid >= this.bestpask) {
-      const bidOffer = this.pbid[this.bestpbid].entries().next().value;
-      const askOffer = this.pask[this.bestpask].entries().next().value;
+    if (evalpbid && evalpask && evalpbid >= evalpask) {
+      const bidOffer = bestPBidOffer;
+      const askOffer = bestPAskOffer;
       return {
         bid: { id: bidOffer[0], data: bidOffer[1], protected: true },
         ask: { id: askOffer[0], data: askOffer[1], protected: true },
       };
     }
 
+    // If none, return false
     return false;
   }
 
@@ -131,7 +235,7 @@ class Book {
         const added = [...acc, ...cur];
         return added;
       }, [])
-    // only offers submitted afterprotected
+    // only offers submitted after protected
       .filter((e) => e[1].createdAt > Date.parse(offer.createdAt))
       .map((e) => e[0]);
     return [...allMatchingOffers, ...allMatchingPOffers];
