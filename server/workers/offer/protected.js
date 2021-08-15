@@ -10,11 +10,15 @@ async function evalProtected(books, proffer, neoffer) {
   // Otherwise users could trigger and cancel to make every protOffer always ready to execute
   const poffer = await Offer.findByPk(proffer).then(u.dv);
   const noffer = await Offer.findByPk(neoffer).then(u.dv);
-
-  if (!poffer || !noffer) return false;
+  if (!poffer || poffer.cancelled || poffer.filled) return false;
   const { ContestId, NFLPlayerId } = poffer;
 
   const playerBook = getBook(books, ContestId, NFLPlayerId);
+
+  if (!noffer || noffer.cancelled || noffer.filled) {
+    playerBook.unmatch(poffer, poffer.isbid);
+    return false;
+  }
 
   playerBook.enqueue(() => { runMatches(poffer, playerBook); });
 
