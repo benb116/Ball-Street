@@ -34,7 +34,6 @@ const parallelProcessors = 10;
 // When a new offer comes in
 offerQueue.process(parallelProcessors, (job) => {
   const { ContestId, NFLPlayerId } = job.data;
-
   // Get the appropriate book (or make one)
   const playerBook = getBook(books, ContestId, NFLPlayerId);
   // Add the action to the queue
@@ -49,7 +48,11 @@ offerQueue.process(parallelProcessors, (job) => {
 
 // When a protected match comes back around
 protectedQueue.process(parallelProcessors, (job) => {
-  evalProtected(books, job.data.existingOffer, job.data.newOffer);
+  const { ContestId, NFLPlayerId } = job.data;
+  const playerBook = getBook(books, ContestId, NFLPlayerId);
+  playerBook.enqueue(() => {
+    evalProtected(playerBook, job.data.existingOffer, job.data.newOffer);
+  });
 });
 
 // Check the book and iteratively try to execute matches
@@ -66,7 +69,7 @@ async function evaluateBook(playerBook) {
     const newOffer = (!isBidOld ? match.bid : match.ask);
     if (oldOffer.protected) {
       playerBook.match(oldOffer, isBidOld);
-      addToProtectedMatchQueue(oldOffer, newOffer);
+      addToProtectedMatchQueue(oldOffer, newOffer, playerBook.contestID, playerBook.nflplayerID);
     } else {
       // Otherwise try to fill the offer now
       const result = await fillOffers(match.bid.id, match.ask.id);
@@ -87,10 +90,12 @@ async function evaluateBook(playerBook) {
 }
 
 // Add a protMatch to the queue and send a ping
-function addToProtectedMatchQueue(eOffer, nOffer) {
+function addToProtectedMatchQueue(eOffer, nOffer, ContestId, NFLPlayerId) {
   protectedQueue.add({
     existingOffer: eOffer.id,
     newOffer: nOffer.id,
+    ContestId,
+    NFLPlayerId,
   }, { delay: config.ProtectionDelay * 1000 });
   // Send ping to user
   client.publish('protectedMatch', JSON.stringify({

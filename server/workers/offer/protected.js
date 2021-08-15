@@ -5,22 +5,22 @@ const { getBook, updateBest } = require('./offer.util');
 const { fillOffers } = require('./trader');
 
 // Try to fill a protected match
-async function evalProtected(books, proffer, neoffer) {
+async function evalProtected(playerBook, proffer, neoffer) {
   // Both protected and triggering offers must still exist
   // Otherwise users could trigger and cancel to make every protOffer always ready to execute
   const poffer = await Offer.findByPk(proffer).then(u.dv);
+  if (!poffer || poffer.cancelled || poffer.filled) {
+    playerBook.unmatch(poffer, poffer.isbid);
+    return false;
+  }
+
   const noffer = await Offer.findByPk(neoffer).then(u.dv);
-  if (!poffer || poffer.cancelled || poffer.filled) return false;
-  const { ContestId, NFLPlayerId } = poffer;
-
-  const playerBook = getBook(books, ContestId, NFLPlayerId);
-
   if (!noffer || noffer.cancelled || noffer.filled) {
     playerBook.unmatch(poffer, poffer.isbid);
     return false;
   }
 
-  playerBook.enqueue(() => { runMatches(poffer, playerBook); });
+  runMatches(poffer, playerBook);
 
   return false;
 }
