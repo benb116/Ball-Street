@@ -74,7 +74,7 @@ export const leaguesSlice = createSlice({
       if (payload) { toast.error(payload); }
     },
     [addMember.fulfilled]: (state, { payload }) => {
-      state.thisleaguemembers.push(payload);
+      state.thisleaguemembers.push(payload.name);
     },
     [addMember.rejected]: (state, { payload }) => {
       if (payload) { toast.error(payload); }

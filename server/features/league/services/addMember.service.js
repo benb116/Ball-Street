@@ -40,6 +40,7 @@ async function addMember(req) {
       UserId: theuser.id,
       LeagueId: value.params.leagueID,
     }, u.tobj(t))
+      .then(u.dv)
       .then((mem) => {
         const out = mem;
         out.name = theuser.name;

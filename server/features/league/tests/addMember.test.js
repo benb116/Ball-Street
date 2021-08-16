@@ -4,7 +4,7 @@ const { ErrorTest, ObjectTest } = require('../../util/util');
 describe('addMember service', () => {
   test('Valid request in private league returns data', ObjectTest(
     service, { user: 2, params: { leagueID: 2 }, body: { email: 'email5@gmail.com' } },
-    { LeagueId: 2, UserId: 5 },
+    { LeagueId: 2, UserId: 5, name: 'bot' },
   ));
 
   test('Invalid request in public league returns error 403', ErrorTest(
