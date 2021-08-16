@@ -37,6 +37,7 @@ services:
             - DB_NAME=$DB_NAME
             - REDIS_HOST=redis
             - REDIS_PORT=6379
+            - COOKIE_SECRET=$COOKIE_SECRET
         networks:
             - app-network
         depends_on:

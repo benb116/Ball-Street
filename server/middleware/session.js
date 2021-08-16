@@ -3,10 +3,9 @@ const connect = require('connect-redis');
 const { client } = require('../db/redis');
 
 const RedisStore = connect(session);
-const secret = require('../secret');
 
 module.exports = session({
-  secret: secret.cookieSecret,
+  secret: process.env.COOKIE_SECRET,
   name: '_ballstreet',
   resave: false,
   saveUninitialized: true,
