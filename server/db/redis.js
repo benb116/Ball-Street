@@ -3,10 +3,8 @@
 const { promisify } = require('util');
 const redis = require('redis');
 
-const {
-  REDIS_PORT,
-  REDIS_HOST,
-} = process.env;
+const REDIS_HOST = (process.env.REDIS_HOST || 'localhost');
+const REDIS_PORT = (process.env.REDIS_PORT || 6379);
 
 // Used for all commands and publishing
 const client = (function createClient() {
@@ -63,6 +61,12 @@ async function setCurrentWeek(weeknum) {
   console.log(`Can't set weeknum to ${weeknum}`);
   return Promise.reject();
 }
+
+async function initRedisWeek() {
+  const theweek = await getCurrentWeek();
+  if (!theweek) await setCurrentWeek(1);
+}
+initRedisWeek();
 
 const rediskeys = {
   hash,

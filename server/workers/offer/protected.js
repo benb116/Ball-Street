@@ -1,7 +1,7 @@
 const u = require('../../features/util/util');
 
 const { Offer } = require('../../models');
-const { getBook, updateBest } = require('./offer.util');
+const { updateBest } = require('./offer.util');
 const { fillOffers } = require('./trader');
 
 // Try to fill a protected match

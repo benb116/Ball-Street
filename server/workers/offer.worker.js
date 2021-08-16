@@ -6,9 +6,7 @@
 const Queue = require('bull');
 const config = require('../config');
 
-const {
-  queueOptions, client, get, set,
-} = require('../db/redis');
+const { queueOptions, client } = require('../db/redis');
 
 const offerQueue = new Queue('offer-queue', queueOptions);
 const protectedQueue = new Queue('protected-queue', queueOptions);
@@ -104,9 +102,3 @@ function addToProtectedMatchQueue(eOffer, nOffer, ContestId, NFLPlayerId) {
     expire: Date.now() + config.ProtectionDelay * 1000,
   }));
 }
-
-async function initRedisWeek() {
-  const theweek = await get.CurrentWeek();
-  if (!theweek) await set.CurrentWeek(1);
-}
-initRedisWeek();

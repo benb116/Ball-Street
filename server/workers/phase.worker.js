@@ -1,5 +1,6 @@
 // Phase worker
 // Change the game phase (pre, mid, post)
+const Joi = require('joi');
 
 const u = require('../features/util/util');
 const { client } = require('../db/redis');
@@ -12,26 +13,35 @@ const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
 };
 
+const schema = Joi.object({
+  teamID: Joi.number().integer().greater(0).less(33)
+    .required()
+    .messages({
+      'number.base': 'Team ID is invalid',
+      'number.integer': 'Team ID is invalid',
+      'number.greater': 'Team ID is invalid',
+      'number.less': 'Team ID is invalid',
+      'any.required': 'You must be specify a team',
+    }),
+  newphase: Joi.any().valid('pre', 'mid', 'post').required(),
+});
+
 async function setPhase(teamID, newphase) {
-  return NFLTeam.update({
-    gamePhase: newphase,
-  },
-  {
-    where: {
-      id: teamID,
-    },
-  })
-    .then(() => {
-      if (newphase === 'post') {
-        return convertTeamPlayers(teamID);
-      }
-      return Promise.resolve();
-    })
+  const req = { teamID, newphase };
+  u.validate(req, schema);
+
+  return NFLTeam.update({ gamePhase: newphase }, { where: { id: teamID } })
     .then(() => {
       client.publish('phaseChange', JSON.stringify({
         nflTeamID: teamID,
         gamePhase: newphase,
       }));
+    })
+    .then(() => {
+      if (newphase === 'post') {
+        return convertTeamPlayers(teamID);
+      }
+      return Promise.resolve();
     });
 }
 
@@ -76,5 +86,4 @@ async function convertEntry(e, players) {
 
 module.exports = {
   setPhase,
-  convertTeamPlayers,
 };

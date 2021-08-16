@@ -13,11 +13,11 @@ let {
 } = process.env;
 
 const dbOptions = {
-  logging: false,
+  logging: (process.env.NODE_ENV === 'development' ? console.log : false),
   isolationLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED,
 };
 
-if (process.env.NODE_ENV === 'test') {
+if (process.env.NODE_ENV === 'test' || !process.env.NODE_ENV) {
   DB_USER = sec.DB_USER;
   DB_PASS = sec.DB_PASS;
   DB_HOST = sec.DB_HOST;

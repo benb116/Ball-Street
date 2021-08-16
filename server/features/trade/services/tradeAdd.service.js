@@ -59,6 +59,8 @@ async function tradeAdd(req, t) {
     if (playerdata.NFLTeam.gamePhase !== 'pre') {
       u.Error("Can't add during or after games", 406);
     }
+  } else if (playerdata.NFLTeam.gamePhase !== 'mid') {
+    u.Error("Can't trade before or after games", 406);
   }
 
   const tradeprice = value.body.price || playerdata.preprice;

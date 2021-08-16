@@ -47,6 +47,9 @@ async function tradeDrop(req, t) {
   }).then((d) => d.dataValues);
 
   if (value.body.price) {
+    if (playerdata.NFLTeam.gamePhase !== 'mid') {
+      u.Error("Can't trade before or after games", 406);
+    }
     theentry.pointtotal += value.body.price;
   } else {
     if (playerdata.NFLTeam.gamePhase !== 'pre') {
