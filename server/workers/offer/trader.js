@@ -38,8 +38,8 @@ async function attemptFill(t, bidid, askid, tprice) {
   const boffer = u.dv(bidoffer);
   const aoffer = u.dv(askoffer);
 
-  resp.bid = boffer;
-  resp.ask = aoffer;
+  resp.bid = (boffer || {});
+  resp.ask = (aoffer || {});
 
   if (!boffer || boffer.filled || boffer.cancelled || !boffer.isbid) {
     resp.bid.closed = true;

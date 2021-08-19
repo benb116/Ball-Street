@@ -13,7 +13,7 @@ describe('preTradeAdd service', () => {
     },
     {
       ContestId: 2,
-      DEF1: null,
+      DEF1: 24,
       FLEX1: null,
       FLEX2: null,
       K1: 19041,

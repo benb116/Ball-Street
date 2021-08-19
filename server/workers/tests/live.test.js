@@ -162,32 +162,3 @@ describe('Live server tests', () => {
     expect(data.event).toBe('offerFilled');
   }), 10000 + config.ProtectionDelay * 1000);
 });
-
-/*
-
-Successfully connect to WS
-Pull initial price info
-Pull leaderboard
-
-Create offer -> Price update
-Cancel offer -> offer cancelled
-Stat update
-Phase change
-
-Create offer (unprotected and protected across 2 users)
-    Protmatch
-    offerFilled
-
-*****
-
-Create new unresolved promise for each test
-    Mark res and rej fns
-
-Initusers and return session IDs
-Initws and return event emitters
-on message, switch between message types
-    if message fulfills test, resolve, else reject
-
-Send requests
-
-*/

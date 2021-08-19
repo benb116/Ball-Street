@@ -26,6 +26,7 @@ const queueOptions = { redis: { port: REDIS_PORT, host: REDIS_HOST } };
 
 const getAsync = promisify(client.get).bind(client);
 const setAsync = promisify(client.set).bind(client);
+const hsetAsync = promisify(client.hset).bind(client);
 
 // Define redis keys for various entries
 function hash(contestID, nflplayerID) {
@@ -78,10 +79,13 @@ const rediskeys = {
 
 const get = {
   CurrentWeek: getCurrentWeek,
+  key: getAsync,
 };
 
 const set = {
   CurrentWeek: setCurrentWeek,
+  key: setAsync,
+  hkey: hsetAsync,
 };
 
 module.exports = {
