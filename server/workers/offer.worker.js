@@ -70,7 +70,7 @@ async function evaluateBook(playerBook) {
     const oldOffer = (isBidOld ? match.bid : match.ask);
     const newOffer = (!isBidOld ? match.bid : match.ask);
     if (oldOffer.protected) {
-      playerBook.match(oldOffer, newOffer);
+      await playerBook.match(oldOffer, newOffer);
       addToProtectedMatchQueue(oldOffer, newOffer, playerBook.contestID, playerBook.nflplayerID);
     } else {
       // Otherwise try to fill the offer now

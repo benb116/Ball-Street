@@ -1,3 +1,5 @@
+const { ProtectedMatch } = require('../../models');
+
 /* eslint-disable class-methods-use-this */
 class Book {
   constructor(contestID, nflPlayerID) {
@@ -58,14 +60,23 @@ class Book {
 
   // Mark that a protected offer has been matched
   // So it doesn't rematch over and over
-  match(matchee, matcher) {
+  async match(matchee, matcher) {
+    await ProtectedMatch.create({
+      existingId: matchee.id,
+      newId: matcher.id,
+    });
     this.protMatchMap[matchee.id] = matcher.id;
   }
 
   // Mark that a protected offer is no longer matched
   // So it can be matched again
-  unmatch(matchee) {
-    delete this.protMatchMap[matchee];
+  async unmatch(matchee) {
+    await ProtectedMatch.destroy({
+      where: {
+        existingId: matchee.id,
+      },
+    });
+    delete this.protMatchMap[matchee.id];
   }
 
   evaluate() {

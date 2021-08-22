@@ -47,9 +47,11 @@ Entry.belongsTo(User);
 User.hasMany(Offer);
 Offer.belongsTo(User);
 
-Offer.hasOne(Trade);
 Trade.belongsTo(Offer, { as: 'bid', foreignKey: 'bidId' });
 Trade.belongsTo(Offer, { as: 'ask', foreignKey: 'askId' });
+
+ProtectedMatch.belongsTo(Offer, { as: 'existing', foreignKey: 'existingId' });
+ProtectedMatch.belongsTo(Offer, { as: 'new', foreignKey: 'newId' });
 
 NFLPlayer.belongsTo(NFLTeam);
 NFLTeam.hasMany(NFLPlayer);

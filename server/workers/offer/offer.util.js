@@ -3,7 +3,7 @@ const Book = require('./book.class');
 const { client, rediskeys } = require('../../db/redis');
 
 const { hash } = rediskeys;
-const { Offer } = require('../../models');
+const { Offer, ProtectedMatch } = require('../../models');
 
 // Access the correct book or make one if necessary
 function getBook(books, ContestId, NFLPlayerId) {
@@ -38,6 +38,20 @@ async function initializeBook(playerBook) {
     ],
   }).then(u.dv);
   sortedOffers.forEach((o) => playerBook.add(o));
+  const protMatches = await ProtectedMatch.findAll({
+    include: {
+      model: Offer,
+      as: 'existing',
+      where: {
+        ContestId: contestID,
+        NFLPlayerId: nflplayerID,
+      },
+    },
+  });
+  protMatches.forEach((m) => {
+    // eslint-disable-next-line no-param-reassign
+    playerBook.protMatchMap[m.existingId] = m.newId;
+  });
   return true;
 }
 
