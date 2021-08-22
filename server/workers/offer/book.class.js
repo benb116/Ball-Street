@@ -16,6 +16,8 @@ class Book {
     this.bestpbid = null;
     this.bestask = null;
     this.bestpask = null;
+
+    this.protMatchMap = {};
   }
 
   // Add a function to the book's serial queue
@@ -56,38 +58,16 @@ class Book {
 
   // Mark that a protected offer has been matched
   // So it doesn't rematch over and over
-  match(offer, isbid) {
-    const { data } = offer;
-    const { price } = data;
-    const thetree = this.whichTree(isbid, true);
-    if (!thetree[price]) {
-      return;
-    }
-    thetree[price].set(offer.id, {
-      createdAt: offer.data.createdAt,
-      UserId: offer.data.UserId,
-      matched: true,
-      price,
-    });
+  match(matchee, matcher) {
+    this.protMatchMap[matchee.id] = matcher.id;
   }
 
   // Mark that a protected offer is no longer matched
   // So it can be matched again
-  unmatch(offer, isbid) {
-    const { price } = offer;
-    const thetree = this.whichTree(isbid, true);
-    if (!thetree[price]) {
-      return;
-    }
-    thetree[price].set(offer.id, {
-      createdAt: offer.createdAt,
-      UserId: offer.UserId,
-      matched: false,
-      price,
-    });
+  unmatch(matchee) {
+    delete this.protMatchMap[matchee];
   }
 
-  // Get best prices and determine if there's a match
   evaluate() {
     const bidPrices = Object.keys(this.bid).map(Number);
     const pbidPrices = Object.keys(this.pbid).map(Number);
@@ -105,28 +85,139 @@ class Book {
     if (this.bestask === Infinity) { this.bestask = null; }
     if (this.bestpask === Infinity) { this.bestpask = null; }
 
-    // Best prices for use in evaluation
-    // May differ if best price is a matched protected offer
-    // In that case, may need to consider worse prices
-    const evalbid = this.bestbid;
-    let evalpbid = this.bestpbid;
-    const evalask = this.bestask;
-    let evalpask = this.bestpask;
+    let bestbidOffer;
+    let bestaskOffer;
+    let bestpbidOffer;
+    let bestpaskOffer;
 
-    // Four possible match combos bid/ask, protected/unprotected
-    // Give preference to filling unprotected offers
-    // by checking them first in the evaluate algorithm
-
-    // is the bid >= the ask?
-    if (evalbid && evalask && evalbid >= evalask) {
-      const bidOffer = this.bid[evalbid].entries().next().value;
-      const askOffer = this.ask[evalask].entries().next().value;
-      return {
-        bid: { id: bidOffer[0], data: bidOffer[1], protected: false },
-        ask: { id: askOffer[0], data: askOffer[1], protected: false },
-      };
+    // Try to match the best bid first
+    let evalbid = this.bestbid;
+    let done = false; // done looking at unprot bid, check prot bid next
+    let bidIterator;
+    if (!this.bestbid) { done = true; } else {
+      bidIterator = this.bid[evalbid].entries();
     }
 
+    // Iterate through the map(s) to find the best offer
+    while (!done) {
+      bestbidOffer = bidIterator.next().value;
+      // If none, we've exhausted a specific price level
+      // Move to the next best price and try again
+      if (!bestbidOffer) {
+        // eslint-disable-next-line no-loop-func
+        evalbid = Math.min(...bidPrices.filter((p) => p > evalbid));
+        // If there are no more left, then exit
+        if (evalbid === Infinity) { evalbid = null; done = true; break; }
+
+        bidIterator = this.bid[evalbid].entries();
+      } else {
+        // We've found the best bid
+        // First try to find a matching ask
+        if (this.bestask && evalbid >= this.bestask) {
+          bestaskOffer = this.ask[this.bestask].entries().next().value;
+          return {
+            bid: { id: bestbidOffer[0], data: bestbidOffer[1], protected: false },
+            ask: { id: bestaskOffer[0], data: bestaskOffer[1], protected: false },
+          };
+        }
+
+        // If that falls through, find an unmatched protected ask
+        // but only if this bid has not matched a protask
+        // Search through values (matchers) of the protMatchMap
+        if (!this.findMatcher(bestbidOffer[0])) {
+          // try to find a un/prot match and return
+          bestpaskOffer = this.bestUnmatchedProtAsk();
+          if (bestpaskOffer && evalbid >= bestpaskOffer[1].price) {
+            return {
+              bid: { id: bestbidOffer[0], data: bestbidOffer[1], protected: false },
+              ask: { id: bestpaskOffer[0], data: bestpaskOffer[1], protected: true },
+            };
+          }
+          // If we've gotten to this point with no matches,
+          // we can't match this bid with anything
+          // and all worse bids will also fail
+          done = true;
+        }
+
+        // At this point, it's possible that the next best bid could match a protask
+        // if it hasn't done so already. Cycle through and check again
+      }
+    }
+
+    // Try to match the best pbid next
+    let evalpbid = this.bestpbid;
+    done = false; // done looking at prot bid
+    let pbidIterator;
+    if (!this.bestpbid) { done = true; } else {
+      pbidIterator = this.pbid[evalpbid].entries();
+    }
+    // Iterate through the map(s) to find the best offer
+    while (!done) {
+      bestpbidOffer = pbidIterator.next().value;
+      // If none, we've exhausted a specific price level
+      // Move to the next best price and try again
+      if (!bestpbidOffer) {
+        // eslint-disable-next-line no-loop-func
+        evalpbid = Math.min(...pbidPrices.filter((p) => p > evalpbid));
+        // If there are no more left, then exit
+        if (evalpbid === Infinity) { evalpbid = null; done = true; break; }
+
+        pbidIterator = this.pbid[evalpbid].entries();
+      } else if (!this.protMatchMap[bestpbidOffer[0]]) {
+        // ^^^^^^^^^^^^^^^^^^^^^^^^^
+        // We've found the best pbid
+        // Next steps depends on whether this offer has matched/been matched before
+
+        // If was matched already, must skip
+        // Either matched by ask (which gets priority over other ask or pask)
+        // Or matched by pask, which means that when this pbid was matched, there were
+        // no ask offers that could match it. Any asks that could match it now are newer,
+        // so they should not protmatch an already protmatched offer
+
+        // First try to find a matching ask
+        if (this.bestask && evalpbid >= this.bestask) {
+          bestaskOffer = this.ask[this.bestask].entries().next().value;
+          // It's possible this ask has matched a pbid already
+          if (!this.findMatcher(bestaskOffer[0])) {
+            return {
+              bid: { id: bestpbidOffer[0], data: bestpbidOffer[1], protected: true },
+              ask: { id: bestaskOffer[0], data: bestaskOffer[1], protected: false },
+            };
+          }
+        }
+
+        // If that falls through, find an unmatched protected ask
+        // that has also not matched a different pbid
+        // but only if this bid has not matched a pask before
+        if (!this.findMatcher(bestpbidOffer[0])) {
+          bestpaskOffer = this.bestUnmatchedProtAsk(true);
+          if (bestpaskOffer && evalbid >= bestpaskOffer[1].price) {
+            return {
+              bid: { id: bestpbidOffer[0], data: bestpbidOffer[1], protected: true },
+              ask: { id: bestpaskOffer[0], data: bestpaskOffer[1], protected: true },
+            };
+          }
+          // If we've gotten to this point with no matches,
+          // we can't match this bid with anything
+          // and all worse bids will also fail
+          done = true;
+        }
+      }
+    }
+
+    // if nothing, return false;
+    return false;
+  }
+
+  findMatcher(id) {
+    return Object.keys(this.protMatchMap).find((key) => this.protMatchMap[key] === id);
+  }
+
+  // Find the best unmatched protected ask offer available
+  // If notMatcher is true, also make sure it is not matched to a pbid
+  bestUnmatchedProtAsk(notMatcher) {
+    const paskPrices = Object.keys(this.pask).map(Number);
+    let evalpask = this.bestpask;
     // It's possible that the "best" protected price has already been matched
     // Best not to match it again (and send another ping to user)
     // Instead, match the next best unmatched protected offer
@@ -138,7 +229,9 @@ class Book {
         bestPAskOffer = pAskIterator.next().value;
       }
       // Iterate through the map(s) to find an unmatched offer
-      while (bestPAskOffer[1]?.matched) {
+
+      while (this.protMatchMap[bestPAskOffer[0]]
+        || (notMatcher && this.findMatcher(bestPAskOffer[0]))) {
         bestPAskOffer = pAskIterator.next().value;
 
         // If none, we've exhausted a specific price level
@@ -147,62 +240,15 @@ class Book {
         // eslint-disable-next-line no-loop-func
           evalpask = Math.min(...paskPrices.filter((p) => p > evalpask));
           // If there are no more left, then can't match this protected
-          if (evalpask === Infinity) { evalpask = null; break; }
+          if (evalpask === Infinity) { evalpask = null; return null; }
 
           pAskIterator = this.pask[evalpask].entries();
           bestPAskOffer = pAskIterator.next().value;
         }
       }
+      return bestPAskOffer;
     }
-
-    if (evalbid && evalpask && evalbid >= evalpask) {
-      const bidOffer = this.bid[evalbid].entries().next().value;
-      const askOffer = bestPAskOffer;
-      return {
-        bid: { id: bidOffer[0], data: bidOffer[1], protected: false },
-        ask: { id: askOffer[0], data: askOffer[1], protected: true },
-      };
-    }
-
-    // Same for bids as for asks
-    let bestPBidOffer;
-    if (evalpbid) {
-      let pBidIterator = this.pbid[evalpbid].entries();
-      if (this.pbid[evalpbid]) {
-        bestPBidOffer = pBidIterator.next().value;
-      }
-      while (bestPBidOffer[1]?.matched) {
-        bestPBidOffer = pBidIterator.next().value;
-        if (!bestPBidOffer) {
-        // eslint-disable-next-line no-loop-func
-          evalpbid = Math.max(...pbidPrices.filter((p) => p < evalpbid));
-          if (evalpbid === -Infinity) { evalpbid = null; break; }
-
-          pBidIterator = this.pbid[evalpbid].entries();
-          bestPBidOffer = pBidIterator.next().value;
-        }
-      }
-    }
-
-    if (evalpbid && evalask && evalpbid >= evalask) {
-      const bidOffer = bestPBidOffer;
-      const askOffer = this.ask[evalask].entries().next().value;
-      return {
-        bid: { id: bidOffer[0], data: bidOffer[1], protected: true },
-        ask: { id: askOffer[0], data: askOffer[1], protected: false },
-      };
-    }
-    if (evalpbid && evalpask && evalpbid >= evalpask) {
-      const bidOffer = bestPBidOffer;
-      const askOffer = bestPAskOffer;
-      return {
-        bid: { id: bidOffer[0], data: bidOffer[1], protected: true },
-        ask: { id: askOffer[0], data: askOffer[1], protected: true },
-      };
-    }
-
-    // If none, return false
-    return false;
+    return null;
   }
 
   // Find offers in the book that could match a specific protected offer

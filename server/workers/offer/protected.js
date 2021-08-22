@@ -10,13 +10,13 @@ async function evalProtected(playerBook, proffer, neoffer) {
   // Otherwise users could trigger and cancel to make every protOffer always ready to execute
   const poffer = await Offer.findByPk(proffer).then(u.dv);
   if (!poffer || poffer.cancelled || poffer.filled) {
-    playerBook.unmatch(poffer, poffer.isbid);
+    playerBook.unmatch(proffer);
     return false;
   }
 
   const noffer = await Offer.findByPk(neoffer).then(u.dv);
-    playerBook.unmatch(poffer, poffer.isbid);
   if (!noffer || noffer.cancelled) {
+    playerBook.unmatch(proffer);
     return false;
   }
 
@@ -62,7 +62,7 @@ async function runMatches(poffer, playerBook) {
   }
 
   if (shouldUnMatch) {
-    playerBook.unmatch(poffer, ispbid);
+    playerBook.unmatch(poffer.id);
   }
   playerBook.evaluate();
   updateBest(playerBook);

@@ -142,13 +142,11 @@ async function run2() {
     switch (msg.event) {
       case 'offerFilled':
         if (!pMap.fillProtected.done) {
-          console.log(msg.offerID);
           pMap.fillProtected.done = true;
           pMap.fillProtected.res(msg);
         }
         break;
       case 'protectedMatch':
-        console.log(msg);
         if (!pMap.matchProtected.done) {
           pMap.matchProtected.done = true;
           pMap.matchProtected.res(msg);
@@ -167,19 +165,19 @@ describe('Offer matching tests', () => {
     expect(data.pricedata).toEqual(expect.objectContaining({
       24: { bestask: 500, bestbid: 0, nflplayerID: 24 },
     }));
-  }));
+  }), (config.RefreshTime + 1) * 1000);
 
   test('Price update on non-match', () => pMap.nonMatch.prom.then((data) => {
     expect(data.pricedata).toEqual(expect.objectContaining({
       24: { bestask: 500, bestbid: 400, nflplayerID: 24 },
     }));
-  }), 10000);
+  }), (config.RefreshTime + 1) * 1000);
 
   test('Price update on fill', () => pMap.match.prom.then((data) => {
     expect(data.pricedata).toEqual(expect.objectContaining({
       24: { bestask: 0, bestbid: 400, nflplayerID: 24 },
     }));
-  }));
+  }), (config.RefreshTime + 1) * 1000);
 
   test('Notify on fill', () => pMap.fillNot.prom.then((data) => {
     expect(data).toEqual(expect.objectContaining({ event: 'offerFilled' }));
