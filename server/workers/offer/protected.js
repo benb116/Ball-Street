@@ -15,8 +15,8 @@ async function evalProtected(playerBook, proffer, neoffer) {
   }
 
   const noffer = await Offer.findByPk(neoffer).then(u.dv);
-  if (!noffer || noffer.cancelled || noffer.filled) {
     playerBook.unmatch(poffer, poffer.isbid);
+  if (!noffer || noffer.cancelled) {
     return false;
   }
 
