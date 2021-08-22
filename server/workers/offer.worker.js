@@ -30,7 +30,12 @@ const books = { };
 const parallelProcessors = 10;
 
 // When a new offer comes in
-offerQueue.process(parallelProcessors, (job) => {
+offerQueue.process(parallelProcessors, processor);
+
+// When a protected match comes back around
+protectedQueue.process(parallelProcessors, protectedProcessor);
+
+function processor(job) {
   const { ContestId, NFLPlayerId } = job.data;
   // Get the appropriate book (or make one)
   const playerBook = getBook(books, ContestId, NFLPlayerId);
@@ -42,16 +47,15 @@ offerQueue.process(parallelProcessors, (job) => {
   }
   // Add an evaluation to the queue
   playerBook.enqueue(() => { evaluateBook(playerBook); });
-});
+}
 
-// When a protected match comes back around
-protectedQueue.process(parallelProcessors, (job) => {
+function protectedProcessor(job) {
   const { ContestId, NFLPlayerId } = job.data;
   const playerBook = getBook(books, ContestId, NFLPlayerId);
   playerBook.enqueue(() => {
     evalProtected(playerBook, job.data.existingOffer, job.data.newOffer);
   });
-});
+}
 
 // Check the book and iteratively try to execute matches
 // Operations in this function are not added to the book queue

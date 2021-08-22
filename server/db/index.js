@@ -13,6 +13,7 @@ let {
 } = process.env;
 
 const dbOptions = {
+  // eslint-disable-next-line no-console
   logging: (process.env.NODE_ENV === 'development' ? console.log : false),
   isolationLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED,
 };
