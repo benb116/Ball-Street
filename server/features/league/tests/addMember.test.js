@@ -7,6 +7,11 @@ describe('addMember service', () => {
     { LeagueId: 2, UserId: 5, name: 'bot' },
   ));
 
+  test('Duplicate request in private league returns error 406', ErrorTest(
+    service, { user: 2, params: { leagueID: 2 }, body: { email: 'email2@gmail.com' } },
+    406, 'That member is already in the league',
+  ));
+
   test('Invalid request in public league returns error 403', ErrorTest(
     service, { user: 2, params: { leagueID: 1 }, body: { email: 'test2@email.com' } },
     406, 'Cannot add others in a public league',

@@ -46,7 +46,12 @@ async function addMember(req) {
         out.name = theuser.name;
         return out;
       })
-      .catch((err) => u.Error(err.parent.constraint, 406));
+      .catch((err) => {
+        if (err.status) { u.Error(err.message, err.status); }
+        const errmess = err.parent.constraint || err[0].message;
+        if (errmess === 'Memberships_pkey') { u.Error('That member is already in the league', 406); }
+        u.Error(errmess, 406);
+      });
   });
 }
 
