@@ -6,14 +6,15 @@ const { fillOffers } = require('./trader');
 
 // Try to fill a protected match
 async function evalProtected(playerBook, proffer, neoffer) {
-  // Both protected and triggering offers must still exist
-  // Otherwise users could trigger and cancel to make every protOffer always ready to execute
   const poffer = await Offer.findByPk(proffer).then(u.dv);
   if (!poffer || poffer.cancelled || poffer.filled) {
     await playerBook.unmatch(proffer);
     return false;
   }
 
+  // Matching offer must not have been cancelled
+  // Otherwise users could trigger and immediately cancel
+  // to make every protOffer always ready to execute
   const noffer = await Offer.findByPk(neoffer).then(u.dv);
   if (!noffer || noffer.cancelled) {
     await playerBook.unmatch(proffer);

@@ -31,6 +31,7 @@ async function attemptFill(t, bidid, askid, tprice) {
     bid: { id: bidid },
     ask: { id: askid },
   };
+  // Check that both offers are valid
   const [bidoffer, askoffer] = await Promise.all([
     Offer.findByPk(bidid, u.tobj(t)),
     Offer.findByPk(askid, u.tobj(t)),
@@ -105,12 +106,14 @@ async function attemptFill(t, bidid, askid, tprice) {
       return false;
     });
 
+  // Check the response
   const out = await Promise.all([bidProm, askProm]);
   resp.bid.closed = !out[0];
   resp.ask.closed = !out[1];
 
   if (resp.bid.closed || resp.ask.closed) return resp;
 
+  // If both good, commit transaction
   bidoffer.filled = true;
   askoffer.filled = true;
 

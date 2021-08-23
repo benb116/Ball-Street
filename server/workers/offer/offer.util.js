@@ -14,7 +14,7 @@ function getBook(books, ContestId, NFLPlayerId) {
     books[ContestId][NFLPlayerId] = new Book(ContestId, NFLPlayerId);
   }
   const playerBook = books[ContestId][NFLPlayerId];
-  // There may be existing offers in the DB, so add them to the book
+  // There may be existing offers and matches in the DB, so add them to the book
   if (!playerBook.init) {
     playerBook.init = true;
     playerBook.enqueue(() => initializeBook(playerBook));
@@ -38,6 +38,7 @@ async function initializeBook(playerBook) {
     ],
   }).then(u.dv);
   sortedOffers.forEach((o) => playerBook.add(o));
+  // Also add protected matches that have been previously created
   const protMatches = await ProtectedMatch.findAll({
     include: {
       model: Offer,

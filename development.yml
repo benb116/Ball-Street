@@ -43,7 +43,6 @@ services:
             - 5432:5432 # Expose ports
         restart: unless-stopped
         volumes:
-          - ./server/db/dbpopulate.sql:/docker-entrypoint-initdb.d/dbpopulate.sql # DB initialization script
           - dbdata:/data/db
 
     redis:
