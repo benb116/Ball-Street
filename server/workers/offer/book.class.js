@@ -215,10 +215,10 @@ class Book {
 
         // If this pbid hasn't been matched yet, try ask, then pask
 
+        // First try to find a matching ask that hasn't matched another pbid
         if (this.bestask && evalpbid >= this.bestask) {
-          bestaskOffer = this.ask[this.bestask].entries().next().value;
-          // It's possible this ask has matched a pbid already
-          if (!this.findMatcher(bestaskOffer[0])) {
+          bestaskOffer = this.bestUnmatchedAsk();
+          if (bestaskOffer) {
             return {
               bid: { id: bestpbidOffer[0], data: bestpbidOffer[1], protected: true },
               ask: { id: bestaskOffer[0], data: bestaskOffer[1], protected: false },
@@ -251,6 +251,36 @@ class Book {
 
   findMatcher(id) {
     return Object.keys(this.protMatchMap).find((key) => this.protMatchMap[key] === id);
+  }
+
+  // Find the best unmatched ask offer available
+  bestUnmatchedAsk() {
+    const askPrices = Object.keys(this.ask).map(Number);
+    let evalask = this.bestask;
+    let bestAskOffer;
+    if (!evalask) return null;
+    let AskIterator = this.ask[evalask].entries();
+    if (this.ask[evalask]) {
+      // Absolute best offer
+      bestAskOffer = AskIterator.next().value;
+    }
+    // Iterate through the map(s) to find an unmatched offer
+    while (this.findMatcher(bestAskOffer[0])) {
+      bestAskOffer = AskIterator.next().value;
+
+      // If none, we've exhausted a specific price level
+      // Move to the next best available
+      if (!bestAskOffer) {
+        // eslint-disable-next-line no-loop-func
+        evalask = Math.min(...askPrices.filter((p) => p > evalask));
+        // If there are no more left, then can't match any asks
+        if (evalask === Infinity) { evalask = null; return null; }
+
+        AskIterator = this.ask[evalask].entries();
+        bestAskOffer = AskIterator.next().value;
+      }
+    }
+    return bestAskOffer;
   }
 
   // Find the best unmatched protected ask offer available
