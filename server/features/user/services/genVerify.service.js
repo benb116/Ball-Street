@@ -15,7 +15,7 @@ async function genVerify(req) {
   try {
     const rand = cryptoRandomString(config.verificationTokenLength);
     await set.key(rediskeys.emailVer(rand), email, 'EX', config.verificationTimeout * 60);
-    return await sendVerificationEmail(email, rand);
+    return sendVerificationEmail(email, rand);
   } catch (err) {
     return u.Error('genVerify Error', 406);
   }
@@ -23,7 +23,17 @@ async function genVerify(req) {
 
 async function sendVerificationEmail(email, rand) {
   const link = `${config.CallbackURL}/app/auth/verify?token=${rand}`;
-  return link;
+  const msg = `Please click this link to verify your Ball Street account:\n${link}`;
+  SendEmail(email, 'Verify your Ball Street Account', msg);
+  return Promise.resolve({ needsVerification: true });
+}
+
+function SendEmail(to, subject, msg) {
+  return {
+    to,
+    subject,
+    msg,
+  };
 }
 
 module.exports = genVerify;

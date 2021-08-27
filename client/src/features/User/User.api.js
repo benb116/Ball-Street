@@ -4,8 +4,12 @@ function accountfunc(body, thunkAPI) {
   return thunkReq(thunkAPI, 'GET', '/app/auth/account');
 }
 
-function signupfunc({ name, email, password }, thunkAPI) {
-  return thunkReq(thunkAPI, 'POST', '/app/auth/signup', JSON.stringify({ name, email, password }));
+function signupfunc({
+  name, email, password, skipVerification,
+}, thunkAPI) {
+  return thunkReq(thunkAPI, 'POST', '/app/auth/signup', JSON.stringify({
+    name, email, password, skipVerification,
+  }));
 }
 
 function forgotfunc({ email }, thunkAPI) {

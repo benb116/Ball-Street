@@ -32,10 +32,12 @@ router.post('/signup', async (req, res) => {
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
+    skipVerification: req.body.skipVerification,
   };
   try {
-    const done = await service.signup(inp);
-    return res.json({ needsVerification: done });
+    const user = await service.signup(inp);
+    if (user.id) req.session.user = user; // add to session
+    return res.json(user);
   } catch (err) {
     return errorHandler(res, err);
   }

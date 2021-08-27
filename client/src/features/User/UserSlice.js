@@ -39,8 +39,12 @@ export const userSlice = createSlice({
   },
   extraReducers: {
     [signupUser.fulfilled]: (state, { payload }) => {
-      state.info = { ...state.info, ...payload };
-      localStorage.setItem('isLoggedIn', true);
+      if (payload.needsVerification) {
+        toast.success('Account created. Please check your email to verify your account.');
+      } else {
+        state.info = { ...state.info, ...payload };
+        localStorage.setItem('isLoggedIn', true);
+      }
     },
     [signupUser.rejected]: (state, { payload }) => {
       toast.error(payload);
@@ -61,8 +65,12 @@ export const userSlice = createSlice({
     },
 
     [loginUser.fulfilled]: (state, { payload }) => {
-      state.info = { ...state.info, ...payload };
-      localStorage.setItem('isLoggedIn', true);
+      if (payload.needsVerification) {
+        toast.success('Please check your email to verify your account.');
+      } else {
+        state.info = { ...state.info, ...payload };
+        localStorage.setItem('isLoggedIn', true);
+      }
     },
     [loginUser.rejected]: (state, { payload }) => {
       toast.error(payload);

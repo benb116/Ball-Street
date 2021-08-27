@@ -14,17 +14,22 @@ const schema = Joi.object({
   }),
   email: validators.email,
   password: validators.password,
+  skipVerification: Joi.boolean().default(false),
 });
 
 async function signup(req) {
-  const { name, email, password } = u.validate(req, schema);
+  const {
+    name, email, password, skipVerification,
+  } = u.validate(req, schema);
   try {
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);
-    const theuser = await User.create({ name, email, pwHash: hash }).then(u.dv);
+    const theuser = await User.create({
+      name, email, pwHash: hash, verified: skipVerification,
+    }).then(u.dv);
     if (!theuser) { u.Error('User could not be created', 500); }
-    await genVerify({ email: theuser.email });
-    return true;
+    if (!skipVerification) return genVerify({ email: theuser.email });
+    return { id: theuser.id, email: theuser.email, name: theuser.name };
   } catch (err) {
     let outmess = 'Could not create user';
     if (!err.errors) return u.Error(outmess, 500);
