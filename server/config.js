@@ -1,4 +1,5 @@
 const config = {
+  CallbackURL: '',
   FlexNFLPositionId: 99,
   // How long to wait before filling a protected offer
   ProtectionDelay: 30, // seconds
@@ -28,6 +29,8 @@ const config = {
   DefaultProtected: false,
   // How often to refresh websocket info
   RefreshTime: 5, // seconds
+  verificationTokenLength: 128,
+  verificationTimeout: 5,
 };
 
 config.Roster.FLEX1 = config.FlexNFLPositionId;

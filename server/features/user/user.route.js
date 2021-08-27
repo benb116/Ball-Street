@@ -45,7 +45,7 @@ router.post('/signup', async (req, res) => {
   }
 });
 
-router.post('/resetPasswordRequest', async (req, res) => {
+router.post('/forgot', async (req, res) => {
   const inp = {
     email: req.body.email,
   };
@@ -62,7 +62,7 @@ router.post('/resetPasswordRequest', async (req, res) => {
   }
 });
 
-router.get('/resetPasswordToken', async (req, res) => {
+router.post('/resetPasswordToken', async (req, res) => {
   const inp = {
     token: req.body.token,
     password: req.body.password,

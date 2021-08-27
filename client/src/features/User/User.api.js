@@ -7,6 +7,15 @@ function accountfunc(body, thunkAPI) {
 function signupfunc({ name, email, password }, thunkAPI) {
   return thunkReq(thunkAPI, 'POST', '/app/auth/signup', JSON.stringify({ name, email, password }));
 }
+
+function forgotfunc({ email }, thunkAPI) {
+  return thunkReq(thunkAPI, 'POST', '/app/auth/forgot', JSON.stringify({ email }));
+}
+
+function resetfunc({ token, password, confirmPassword }, thunkAPI) {
+  return thunkReq(thunkAPI, 'POST', '/app/auth/resetPasswordToken', JSON.stringify({ token, password, confirmPassword }));
+}
+
 function loginfunc({ email, password }, thunkAPI) {
   return thunkReq(thunkAPI, 'POST', '/app/auth/login', JSON.stringify({ email, password }));
 }
@@ -17,6 +26,8 @@ function logoutfunc(body, thunkAPI) {
 export {
   accountfunc,
   signupfunc,
+  forgotfunc,
+  resetfunc,
   loginfunc,
   logoutfunc,
 };

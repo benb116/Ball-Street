@@ -49,6 +49,9 @@ function currentWeek() {
   return 'currentWeek';
 }
 
+function passReset(rand) {
+  return `passReset:${rand}`;
+}
 // Functions for setting or getting config values
 async function getCurrentWeek() {
   return getAsync(currentWeek()).then(Number);
@@ -75,6 +78,7 @@ const rediskeys = {
   statHash,
   gamePhase,
   currentWeek,
+  passReset,
 };
 
 const get = {

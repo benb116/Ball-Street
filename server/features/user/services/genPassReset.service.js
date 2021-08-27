@@ -13,7 +13,7 @@ const schema = Joi.object({
 async function genPassReset(req) {
   const { email } = u.validate(req, schema);
   try {
-    const rand = cryptoRandomString({ length: config.verificationTokenLength, type: 'url-safe' });
+    const rand = cryptoRandomString(config.verificationTokenLength);
     await set.key(rediskeys.passReset(rand), email, 'EX', config.verificationTimeout * 60);
     return await sendPassResetEmail(email, rand);
   } catch (err) {
@@ -22,7 +22,7 @@ async function genPassReset(req) {
 }
 
 async function sendPassResetEmail(email, rand) {
-  const link = `${config.CallbackURL}/auth/resetPasswordToken?token=${rand}`;
+  const link = `${config.CallbackURL}/resetPassword/${rand}`;
   return link;
 }
 

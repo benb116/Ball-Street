@@ -3,7 +3,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
 
 import {
-  signupfunc, loginfunc, logoutfunc, accountfunc,
+  signupfunc, loginfunc, logoutfunc, accountfunc, forgotfunc, resetfunc,
 } from './User.api';
 
 const defaultState = {
@@ -16,6 +16,8 @@ const defaultState = {
 };
 
 export const signupUser = createAsyncThunk('users/signupUser', signupfunc);
+export const forgotUser = createAsyncThunk('users/forgotUser', forgotfunc);
+export const resetUser = createAsyncThunk('users/resetUser', resetfunc);
 export const loginUser = createAsyncThunk('users/loginUser', loginfunc);
 export const logoutUser = createAsyncThunk('users/logoutUser', logoutfunc);
 export const getAccount = createAsyncThunk('users/getAccount', accountfunc);
@@ -41,6 +43,20 @@ export const userSlice = createSlice({
       localStorage.setItem('isLoggedIn', true);
     },
     [signupUser.rejected]: (state, { payload }) => {
+      toast.error(payload);
+    },
+
+    [forgotUser.fulfilled]: () => {
+      toast.success('An email was sent to this address');
+    },
+    [forgotUser.rejected]: (state, { payload }) => {
+      toast.error(payload);
+    },
+
+    [resetUser.fulfilled]: () => {
+      toast.success('Password reset successfully');
+    },
+    [resetUser.rejected]: (state, { payload }) => {
       toast.error(payload);
     },
 

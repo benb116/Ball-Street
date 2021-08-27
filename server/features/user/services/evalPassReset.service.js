@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const Joi = require('joi');
 
 const u = require('../../util/util');
-const { rediskeys, get } = require('../../../db/redis');
+const { rediskeys, get, del } = require('../../../db/redis');
 const config = require('../../../config');
 const { User } = require('../../../models');
 const { validators } = require('../../util/util.schema');
@@ -22,6 +22,8 @@ async function evalPassReset(req) {
   if (password !== confirmPassword) u.Error('Passwords do not match', 403);
   const email = await get.key(rediskeys.passReset(token));
   if (!email) u.Error('Reset key could not be found, please try again', 404);
+
+  del.key(rediskeys.passReset(token));
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash(password, salt);
   const theuser = await User.update({ pwHash: hash }, { where: { email } });
