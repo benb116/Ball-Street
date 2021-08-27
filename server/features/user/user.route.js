@@ -4,6 +4,15 @@ const service = require('./user.service');
 const authenticate = require('../../middleware/authenticate');
 const { routeHandler } = require('../util/util.route');
 
+function errorHandler(res, err) {
+  if (!err) {
+    // eslint-disable-next-line no-console
+    console.log(err);
+    return res.status(500).json({ error: 'Unexpected error' });
+  }
+  return res.status((err.status || 500)).json({ error: err.message || 'Unexpected error' });
+}
+
 router.post('/login', async (req, res) => {
   const inp = {
     email: req.body.email,
@@ -14,16 +23,9 @@ router.post('/login', async (req, res) => {
     req.session.user = user; // add to session
     return res.json(user);
   } catch (err) {
-    if (!err) {
-      // eslint-disable-next-line no-console
-      console.log(err);
-      return res.status(500).json({ error: 'Unexpected error' });
-    }
-    return res.status((err.status || 500)).json({ error: err.message || 'Unexpected error' });
+    return errorHandler(res, err);
   }
 });
-
-router.get('/account', authenticate, routeHandler(service.getAccount));
 
 router.post('/signup', async (req, res) => {
   const inp = {
@@ -32,16 +34,21 @@ router.post('/signup', async (req, res) => {
     password: req.body.password,
   };
   try {
-    const user = await service.signup(inp);
+    const done = await service.signup(inp);
+    return res.json({ needsVerification: done });
+  } catch (err) {
+    return errorHandler(res, err);
+  }
+});
+
+router.get('/verify', async (req, res) => {
+  const inp = { token: req.query.token };
+  try {
+    const user = await service.evalVerify(inp);
     req.session.user = user; // add to session
     return res.json(user);
   } catch (err) {
-    if (!err) {
-      // eslint-disable-next-line no-console
-      console.log(err);
-      return res.status(500).json({ error: 'Unexpected error' });
-    }
-    return res.status((err.status || 500)).json({ error: err.message || 'Unexpected error' });
+    return errorHandler(res, err);
   }
 });
 
@@ -53,12 +60,7 @@ router.post('/forgot', async (req, res) => {
     const done = await service.genPassReset(inp);
     return res.json({ resetLinkSent: done });
   } catch (err) {
-    if (!err) {
-      // eslint-disable-next-line no-console
-      console.log(err);
-      return res.status(500).json({ error: 'Unexpected error' });
-    }
-    return res.status((err.status || 500)).json({ error: err.message || 'Unexpected error' });
+    return errorHandler(res, err);
   }
 });
 
@@ -75,12 +77,7 @@ router.post('/resetPasswordToken', async (req, res) => {
     });
     return true;
   } catch (err) {
-    if (!err) {
-      // eslint-disable-next-line no-console
-      console.log(err);
-      return res.status(500).json({ error: 'Unexpected error' });
-    }
-    return res.status((err.status || 500)).json({ error: err.message || 'Unexpected error' });
+    return errorHandler(res, err);
   }
 });
 

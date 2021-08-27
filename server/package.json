@@ -9,6 +9,7 @@
     "bull": "^3.21.1",
     "connect-redis": "^5.1.0",
     "cors": "^2.8.5",
+    "crypto-random-string": "^4.0.0",
     "express": "^4.17.1",
     "express-rate-limit": "^5.2.6",
     "express-session": "^1.17.1",
@@ -29,7 +30,9 @@
   "jest": {
     "globalSetup": "./jest/jestGlobalSetup.js",
     "globalTeardown": "./jest/jestGlobalTeardown.js",
-    "setupFilesAfterEnv": ["./jest/afterAll.js"],
+    "setupFilesAfterEnv": [
+      "./jest/afterAll.js"
+    ],
     "testEnvironment": "node"
   },
   "repository": {

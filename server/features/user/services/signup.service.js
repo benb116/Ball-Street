@@ -5,6 +5,7 @@ const u = require('../../util/util');
 const { validators } = require('../../util/util.schema');
 
 const { User } = require('../../../models');
+const genVerify = require('./genVerify.service');
 
 const schema = Joi.object({
   name: Joi.string().required().messages({
@@ -22,10 +23,12 @@ async function signup(req) {
     const hash = await bcrypt.hash(password, salt);
     const theuser = await User.create({ name, email, pwHash: hash }).then(u.dv);
     if (!theuser) { u.Error('User could not be created', 500); }
-    return { id: theuser.id, email: theuser.email, name: theuser.name };
+    await genVerify({ email: theuser.email });
+    return true;
   } catch (err) {
-    const errmess = err.errors[0].message;
     let outmess = 'Could not create user';
+    if (!err.errors) return u.Error(outmess, 500);
+    const errmess = err.errors[0].message;
     switch (errmess) {
       case 'email must be unique': outmess = 'An account with that email already exists'; break;
       case 'User.name cannot be null': outmess = 'Please enter a name'; break;
