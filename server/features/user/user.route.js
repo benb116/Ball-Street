@@ -48,7 +48,7 @@ router.get('/verify', async (req, res) => {
   try {
     const user = await service.evalVerify(inp);
     req.session.user = user; // add to session
-    return res.json(user);
+    return res.redirect('/verified');
   } catch (err) {
     return errorHandler(res, err);
   }

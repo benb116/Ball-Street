@@ -18,9 +18,11 @@ async function evalVerify(req) {
   const email = await get.key(rediskeys.emailVer(token));
   if (!email) u.Error('Email could not be verified', 404);
   del.key(rediskeys.emailVer(token));
-  const updated = await User.update({ verified: true }, { where: { email } });
-  if (updated !== 1) u.Error('Email could not be verified', 404);
-  return { verified: true };
+  const user = await User.findOne({ where: { email } });
+  user.verified = true;
+  await user.save();
+  const theuser = u.dv(user);
+  return { id: theuser.id, email: theuser.email, name: theuser.name };
 }
 
 module.exports = evalVerify;
