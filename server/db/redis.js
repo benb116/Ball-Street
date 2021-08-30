@@ -26,6 +26,7 @@ const queueOptions = { redis: { port: REDIS_PORT, host: REDIS_HOST } };
 
 const getAsync = promisify(client.get).bind(client);
 const setAsync = promisify(client.set).bind(client);
+const delAsync = promisify(client.del).bind(client);
 const hsetAsync = promisify(client.hset).bind(client);
 
 // Define redis keys for various entries
@@ -47,6 +48,14 @@ function gamePhase() {
 
 function currentWeek() {
   return 'currentWeek';
+}
+
+function emailVer(rand) {
+  return `emailVer:${rand}`;
+}
+
+function passReset(rand) {
+  return `passReset:${rand}`;
 }
 
 // Functions for setting or getting config values
@@ -75,6 +84,8 @@ const rediskeys = {
   statHash,
   gamePhase,
   currentWeek,
+  emailVer,
+  passReset,
 };
 
 const get = {
@@ -88,6 +99,10 @@ const set = {
   hkey: hsetAsync,
 };
 
+const del = {
+  key: delAsync,
+};
+
 module.exports = {
   client,
   subscriber,
@@ -95,4 +110,5 @@ module.exports = {
   rediskeys,
   get,
   set,
+  del,
 };

@@ -81,6 +81,8 @@ const Login = () => {
                     Or
                     {' '}
                     <Link to="signup"> Signup</Link>
+                    {' '}
+                    <Link to="forgot"> Forgot password</Link>
                   </span>
                 </div>
               </div>

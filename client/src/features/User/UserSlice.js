@@ -3,7 +3,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
 
 import {
-  signupfunc, loginfunc, logoutfunc, accountfunc,
+  signupfunc, loginfunc, logoutfunc, accountfunc, forgotfunc, resetfunc,
 } from './User.api';
 
 const defaultState = {
@@ -16,6 +16,8 @@ const defaultState = {
 };
 
 export const signupUser = createAsyncThunk('users/signupUser', signupfunc);
+export const forgotUser = createAsyncThunk('users/forgotUser', forgotfunc);
+export const resetUser = createAsyncThunk('users/resetUser', resetfunc);
 export const loginUser = createAsyncThunk('users/loginUser', loginfunc);
 export const logoutUser = createAsyncThunk('users/logoutUser', logoutfunc);
 export const getAccount = createAsyncThunk('users/getAccount', accountfunc);
@@ -37,16 +39,38 @@ export const userSlice = createSlice({
   },
   extraReducers: {
     [signupUser.fulfilled]: (state, { payload }) => {
-      state.info = { ...state.info, ...payload };
-      localStorage.setItem('isLoggedIn', true);
+      if (payload.needsVerification) {
+        toast.success('Account created. Please check your email to verify your account.');
+      } else {
+        state.info = { ...state.info, ...payload };
+        localStorage.setItem('isLoggedIn', true);
+      }
     },
     [signupUser.rejected]: (state, { payload }) => {
       toast.error(payload);
     },
 
+    [forgotUser.fulfilled]: () => {
+      toast.success('An email was sent to this address');
+    },
+    [forgotUser.rejected]: (state, { payload }) => {
+      toast.error(payload);
+    },
+
+    [resetUser.fulfilled]: () => {
+      toast.success('Password reset successfully');
+    },
+    [resetUser.rejected]: (state, { payload }) => {
+      toast.error(payload);
+    },
+
     [loginUser.fulfilled]: (state, { payload }) => {
-      state.info = { ...state.info, ...payload };
-      localStorage.setItem('isLoggedIn', true);
+      if (payload.needsVerification) {
+        toast.success('Please check your email to verify your account.');
+      } else {
+        state.info = { ...state.info, ...payload };
+        localStorage.setItem('isLoggedIn', true);
+      }
     },
     [loginUser.rejected]: (state, { payload }) => {
       toast.error(payload);

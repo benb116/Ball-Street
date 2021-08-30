@@ -5,6 +5,7 @@ const u = require('../../util/util');
 const { validators } = require('../../util/util.schema');
 
 const { User } = require('../../../models');
+const genVerify = require('./genVerify.service');
 
 const schema = Joi.object({
   email: validators.email,
@@ -17,10 +18,11 @@ async function login(req) {
   const theuser = await User.scope('withPassword').findOne({ where: { email } });
   if (!theuser) { u.Error('Wrong username or password', 401); }
   const match = await bcrypt.compare(password, theuser.pwHash);
-  if (match) {
-    return { id: theuser.id, email: theuser.email, name: theuser.name };
+  if (!match) { u.Error('Wrong username or password', 401); }
+  if (!theuser.verified) {
+    return genVerify({ email });
   }
-  return u.Error('Wrong username or password', 401);
+  return { id: theuser.id, email: theuser.email, name: theuser.name };
 }
 
 module.exports = login;

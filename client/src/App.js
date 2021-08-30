@@ -5,6 +5,9 @@ import Home from './features/Home/Home';
 import About from './features/About/About';
 import Login from './features/User/Login';
 import Signup from './features/User/Signup';
+import Forgot from './features/User/Forgot';
+import Verified from './features/Home/Verified';
+import Reset from './features/User/Reset';
 import Account from './features/User/Account';
 import Leagues from './features/Leagues/Leagues';
 import League from './features/Leagues/League';
@@ -31,6 +34,9 @@ function App() {
           <Route exact component={About} path="/about" />
           <Route exact component={Login} path="/login" />
           <Route exact component={Signup} path="/signup" />
+          <Route exact component={Forgot} path="/forgot" />
+          <Route exact component={Verified} path="/verified" />
+          <Route exact component={Reset} path="/resetPassword/:token" />
           <PrivateRoute exact component={Account} path="/account" />
           <PrivateRoute exact component={Leagues} path="/leagues" />
           <PrivateRoute exact component={League} path="/leagues/:leagueID" />

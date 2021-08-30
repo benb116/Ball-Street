@@ -15,6 +15,10 @@ module.exports = function out(sequelize, DataTypes) {
         isEmail: true,
       },
     },
+    verified: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
     pwHash: {
       type: DataTypes.STRING,
       allowNull: false,
