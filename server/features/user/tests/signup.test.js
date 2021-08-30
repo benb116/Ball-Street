@@ -3,8 +3,17 @@ const { ErrorTest, ObjectTest } = require('../../util/util');
 
 describe('signup service', () => {
   test('Valid request returns data', ObjectTest(
-    service, { name: 'Ben', email: '123@gmail.com', password: 'password1' },
+    service, {
+      name: 'Ben', email: '123@gmail.com', password: 'password1', skipVerification: true,
+    },
     { email: '123@gmail.com', id: 6, name: 'Ben' },
+  ));
+
+  test('Valid request returns data', ObjectTest(
+    service, {
+      name: 'Ben', email: '1234@gmail.com', password: 'password1', skipVerification: false,
+    },
+    { needsVerification: true },
   ));
 
   test('Existing email returns 406', ErrorTest(

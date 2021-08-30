@@ -75,7 +75,7 @@ router.post('/resetPasswordToken', async (req, res) => {
   try {
     await service.evalPassReset(inp);
     req.session.destroy(() => {
-      res.send({ result: 'OK', message: 'Session destroyed' });
+      res.redirect('/login');
     });
     return true;
   } catch (err) {

@@ -7,6 +7,11 @@ describe('login service', () => {
     { email: 'email1@gmail.com', id: 1, name: 'bot' },
   ));
 
+  test('Needs verification', ObjectTest(
+    service, { email: 'email5@gmail.com', password: 'password1' },
+    { needsVerification: true },
+  ));
+
   test('Incorrect email returns 401', ErrorTest(
     service, { email: '1235@gmail.com', password: 'password1' },
     401, 'Wrong username or password',
