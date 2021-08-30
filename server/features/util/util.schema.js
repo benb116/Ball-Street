@@ -10,9 +10,10 @@ validators.email = Joi.string().email().required().messages({
   'any.required': 'Email is required',
 });
 
-validators.password = Joi.string().min(8).required().messages({
+const passwordMinLength = 8;
+validators.password = Joi.string().min(passwordMinLength).required().messages({
   'string.base': 'Password is invalid',
-  'string.min': 'Password must be at least 8 characters long',
+  'string.min': `Password must be at least ${passwordMinLength} characters long`,
   'any.required': 'Password is required',
 });
 

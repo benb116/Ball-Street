@@ -13,7 +13,7 @@ const schema = Joi.object({
 async function genVerify(req) {
   const { email } = u.validate(req, schema);
   try {
-    const rand = cryptoRandomString(config.verificationTokenLength);
+    const rand = cryptoRandomString({ length: config.verificationTokenLength, type: 'url-safe' });
     await set.key(rediskeys.emailVer(rand), email, 'EX', config.verificationTimeout * 60);
     return sendVerificationEmail(email, rand);
   } catch (err) {

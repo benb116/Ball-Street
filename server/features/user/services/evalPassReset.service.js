@@ -28,6 +28,7 @@ async function evalPassReset(req) {
   const hash = await bcrypt.hash(password, salt);
   const theuser = await User.update({ pwHash: hash }, { where: { email } });
   if (!theuser) u.Error('Password could not be changed', 404);
+  // Send email telling user their password has been reset
   return true;
 }
 
