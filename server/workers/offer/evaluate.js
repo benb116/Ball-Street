@@ -146,7 +146,7 @@ function evaluateFn(book) {
       // but only if this bid has not matched a pask before
       if (!findMatcher(book, bestpbidOffer[0])) {
         bestpaskOffer = bestUnmatchedProtAsk(book, true);
-        if (bestpaskOffer && evalbid >= bestpaskOffer[1].price) {
+        if (bestpaskOffer && evalpbid >= bestpaskOffer[1].price) {
           return {
             bid: { id: bestpbidOffer[0], data: bestpbidOffer[1], protected: true },
             ask: { id: bestpaskOffer[0], data: bestpaskOffer[1], protected: true },
@@ -215,7 +215,7 @@ function bestUnmatchedProtAsk(book, notMatcher) {
   // Iterate through the map(s) to find an unmatched offer
 
   while (book.protMatchMap[bestPAskOffer[0]]
-      || (notMatcher && findMatcher(bestPAskOffer[0]))) {
+      || (notMatcher && findMatcher(book, bestPAskOffer[0]))) {
     bestPAskOffer = pAskIterator.next().value;
 
     // If none, we've exhausted a specific price level
