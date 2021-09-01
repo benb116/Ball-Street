@@ -30,7 +30,10 @@ class Book {
 
   // Add a function to the book's serial queue
   enqueue(fn) {
-    this.queue = this.queue.then(fn);
+    this.queue = this.queue.then(fn).catch((err) => {
+      // eslint-disable-next-line no-console
+      console.log(`Book error: Contest:${this.contestID} Player:${this.nflplayerID}`, err);
+    });
   }
 
   // Add an offer to the book
