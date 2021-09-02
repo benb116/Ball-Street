@@ -39,6 +39,8 @@ async function attemptFill(t, bidid, askid, tprice) {
   const boffer = u.dv(bidoffer);
   const aoffer = u.dv(askoffer);
 
+  if (aoffer.price > boffer.price) throw new Error('Price mismatch');
+
   resp.bid = (boffer || {});
   resp.ask = (aoffer || {});
 
