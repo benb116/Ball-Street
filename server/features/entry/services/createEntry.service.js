@@ -4,7 +4,7 @@ const u = require('../../util/util');
 
 const sequelize = require('../../../db');
 const { Entry } = require('../../../models');
-const { canUserSeeContest } = require('../../util/util.service');
+const { canUserSeeContest, errorHandler } = require('../../util/util.service');
 const { validators } = require('../../util/util.schema');
 const { get } = require('../../../db/redis');
 
@@ -38,12 +38,10 @@ async function createEntry(req) {
     obj.pointtotal = thecontest.budget;
     return Entry.create(obj, u.tobj(t)).then(u.dv);
   })
-    .catch((err) => {
-      if (err.status) { u.Error(err.message, err.status); }
-      const errmess = err.parent.constraint || err[0].message;
-      if (errmess === 'Entries_pkey') { u.Error('An entry already exists', 406); }
-      u.Error(errmess, 406);
-    });
+    .catch(errorHandler({
+      default: ['Entry could not be created', 500],
+      Entries_pkey: ['An entry already exists', 406],
+    }));
 }
 
 module.exports = createEntry;

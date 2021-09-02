@@ -4,7 +4,7 @@ const u = require('../../util/util');
 
 const sequelize = require('../../../db');
 const { Entry, User } = require('../../../models');
-const { canUserSeeContest } = require('../../util/util.service');
+const { canUserSeeContest, errorHandler } = require('../../util/util.service');
 const { validators } = require('../../util/util.schema');
 
 const isoOption = {
@@ -35,12 +35,9 @@ function getContestEntries(req) {
 
     const includeObj = (theleague.ispublic ? {} : { model: User });
     return Entry.findAll({ where: { ContestId: value.params.contestID }, includeObj });
-  })
-    .catch((err) => {
-      if (err.status) { u.Error(err.message, err.status); }
-      const errmess = err.parent.constraint || err[0].message;
-      u.Error(errmess, 406);
-    });
+  }).catch(errorHandler({
+    default: ['Entries could not be retrieved', 500],
+  }));
 }
 
 module.exports = getContestEntries;

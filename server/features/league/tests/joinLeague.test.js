@@ -12,6 +12,11 @@ describe('joinLeague service', () => {
     406, 'Cannot join private league',
   ));
 
+  test('Duplicate request in league returns error 403', ErrorTest(
+    service, { user: 1, params: { leagueID: 1 }, body: { } },
+    406, 'User already is a member',
+  ));
+
   test('Missing leagueID returns error 400', ErrorTest(
     service, { user: 2, params: { }, body: { } },
     400, 'Please specify a league',

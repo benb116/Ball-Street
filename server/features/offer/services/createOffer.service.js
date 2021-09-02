@@ -11,6 +11,7 @@ const {
 } = require('../../../models');
 
 const { queueOptions } = require('../../../db/redis');
+const { errorHandler } = require('../../util/util.service');
 
 const offerQueue = new Queue('offer-queue', queueOptions);
 
@@ -104,12 +105,10 @@ async function createOffer(req) {
       offerQueue.add(offer);
       return offer;
     })
-    .catch((err) => {
-      if (err.status) { u.Error(err.message, err.status); }
-      const errmess = err.parent.constraint || err[0].message;
-      if (errmess === 'IX_Offer-OneActive') { u.Error('An offer already exists for this player', 406); }
-      u.Error(errmess, 406);
-    });
+    .catch(errorHandler({
+      default: ['Member could not be added', 500],
+      'IX_Offer-OneActive': ['An offer already exists for this player', 406],
+    }));
 }
 
 module.exports = createOffer;

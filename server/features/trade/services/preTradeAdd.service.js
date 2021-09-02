@@ -4,6 +4,7 @@ const sequelize = require('../../../db');
 
 const u = require('../../util/util');
 const { validators } = require('../../util/util.schema');
+const { errorHandler } = require('../../util/util.service');
 
 const tradeAdd = require('./tradeAdd.service');
 
@@ -32,11 +33,9 @@ const schema = Joi.object({
 async function preTradeAdd(req) {
   const value = u.validate(req, schema);
 
-  return sequelize.transaction(isoOption, async (t) => tradeAdd(value, t)
-    .catch((err) => {
-      if (err.status) { u.Error(err.message, err.status); }
-      const errmess = err.parent.constraint || err[0].message;
-      u.Error(errmess, 406);
+  return sequelize.transaction(isoOption, async (t) => tradeAdd(value, t))
+    .catch(errorHandler({
+      default: ['Could not add player', 500],
     }));
 }
 

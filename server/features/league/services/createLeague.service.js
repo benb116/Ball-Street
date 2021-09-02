@@ -5,6 +5,7 @@ const u = require('../../util/util');
 const sequelize = require('../../../db');
 const { Membership, League } = require('../../../models');
 const { validators } = require('../../util/util.schema');
+const { errorHandler } = require('../../util/util.service');
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
@@ -36,13 +37,10 @@ async function createLeague(req) {
     }, u.tobj(t))
       .catch((err) => u.Error(err.parent.constraint, 406));
     return newleague;
-  })
-    .catch((err) => {
-      if (err.status) { u.Error(err.message, err.status); }
-      const errmess = err.parent.constraint || err[0].message;
-      if (errmess === 'Leagues_name_key') { u.Error('A league already exists with that name', 406); }
-      u.Error(errmess, 406);
-    });
+  }).catch(errorHandler({
+    default: ['Member could not be added', 500],
+    Leagues_name_key: ['A league already exists with that name', 406],
+  }));
 }
 
 module.exports = createLeague;

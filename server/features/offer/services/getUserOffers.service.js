@@ -4,6 +4,7 @@ const u = require('../../util/util');
 const { validators } = require('../../util/util.schema');
 
 const { Offer } = require('../../../models');
+const { errorHandler } = require('../../util/util.service');
 
 const schema = Joi.object({
   user: validators.user,
@@ -24,11 +25,9 @@ function getUserOffers(req) {
       cancelled: false,
     },
   }).then(u.dv)
-    .catch((err) => {
-      if (err.status) { u.Error(err.message, err.status); }
-      const errmess = err.parent.constraint || err[0].message;
-      u.Error(errmess, 406);
-    });
+    .catch(errorHandler({
+      default: ['Cannot retrieve offers', 500],
+    }));
 }
 
 module.exports = getUserOffers;

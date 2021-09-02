@@ -5,7 +5,7 @@ const u = require('../../util/util');
 const sequelize = require('../../../db');
 const { Membership, User } = require('../../../models');
 const { validators } = require('../../util/util.schema');
-const { canUserSeeLeague } = require('../../util/util.service');
+const { canUserSeeLeague, errorHandler } = require('../../util/util.service');
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
@@ -45,13 +45,10 @@ async function addMember(req) {
         const out = mem;
         out.name = theuser.name;
         return out;
-      })
-      .catch((err) => {
-        if (err.status) { u.Error(err.message, err.status); }
-        const errmess = err.parent.constraint || err[0].message;
-        if (errmess === 'Memberships_pkey') { u.Error('That member is already in the league', 406); }
-        u.Error(errmess, 406);
-      });
+      }).catch(errorHandler({
+        default: ['Member could not be added', 500],
+        Memberships_pkey: ['That member is already in the league', 406],
+      }));
   });
 }
 

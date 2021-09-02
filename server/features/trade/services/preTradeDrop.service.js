@@ -6,6 +6,7 @@ const { validators } = require('../../util/util.schema');
 const sequelize = require('../../../db');
 
 const tradeDrop = require('./tradeDrop.service');
+const { errorHandler } = require('../../util/util.service');
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
@@ -29,11 +30,9 @@ const schema = Joi.object({
 async function preTradeDrop(req) {
   const value = u.validate(req, schema);
 
-  return sequelize.transaction(isoOption, async (t) => tradeDrop(value, t)
-    .catch((err) => {
-      if (err.status) { u.Error(err.message, err.status); }
-      const errmess = err.parent.constraint || err[0].message;
-      u.Error(errmess, 406);
+  return sequelize.transaction(isoOption, async (t) => tradeDrop(value, t))
+    .catch(errorHandler({
+      default: ['Could not drop player', 500],
     }));
 }
 

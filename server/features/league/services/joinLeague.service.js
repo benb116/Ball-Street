@@ -5,6 +5,7 @@ const { validators } = require('../../util/util.schema');
 
 const sequelize = require('../../../db');
 const { Membership, League } = require('../../../models');
+const { errorHandler } = require('../../util/util.service');
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
@@ -29,12 +30,10 @@ async function joinLeague(req) {
       UserId: value.user,
       LeagueId: value.params.leagueID,
     }, u.tobj(t));
-  })
-    .catch((err) => {
-      if (err.status) { u.Error(err.message, err.status); }
-      const errmess = err.parent.constraint || err[0].message;
-      u.Error(errmess, 406);
-    });
+  }).catch(errorHandler({
+    default: ['League could not be joined', 500],
+    Memberships_pkey: ['User already is a member', 406],
+  }));
 }
 
 module.exports = joinLeague;

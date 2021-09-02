@@ -32,7 +32,20 @@ async function canUserSeeContest(t, userID, leagueID, contestID) {
   return [theleague, thecontest];
 }
 
+function errorHandler(responseMap) {
+  return function errorHandlerInner(err) {
+    const outmess = (responseMap.default || 'Unexpected error');
+    if (!err) return u.Error(outmess, 500);
+    if (err.status) throw err;
+    const errmess = err.parent?.constraint;
+    const out = responseMap[errmess];
+    if (out) return u.Error(out[0], out[1]);
+    return u.Error(outmess, 406);
+  };
+}
+
 module.exports = {
   canUserSeeLeague,
   canUserSeeContest,
+  errorHandler,
 };

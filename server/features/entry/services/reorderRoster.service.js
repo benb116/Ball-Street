@@ -5,7 +5,7 @@ const config = require('../../../config');
 
 const sequelize = require('../../../db');
 const { Entry } = require('../../../models');
-const { canUserSeeContest } = require('../../util/util.service');
+const { canUserSeeContest, errorHandler } = require('../../util/util.service');
 const { validators } = require('../../util/util.schema');
 
 const isoOption = {
@@ -83,12 +83,9 @@ async function reorderRoster(req) {
 
     await theentry.save({ transaction: t });
     return u.dv(theentry);
-  })
-    .catch((err) => {
-      if (err.status) { u.Error(err.message, err.status); }
-      const errmess = err.parent.constraint || err[0].message;
-      u.Error(errmess, 406);
-    });
+  }).catch(errorHandler({
+    default: ['Roster could not be reordered', 500],
+  }));
 }
 
 module.exports = reorderRoster;

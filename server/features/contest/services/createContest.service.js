@@ -4,7 +4,7 @@ const u = require('../../util/util');
 
 const sequelize = require('../../../db');
 const { Contest } = require('../../../models');
-const { canUserSeeLeague } = require('../../util/util.service');
+const { canUserSeeLeague, errorHandler } = require('../../util/util.service');
 const { validators } = require('../../util/util.schema');
 const { get } = require('../../../db/redis');
 
@@ -45,10 +45,9 @@ function createContest(req) {
       nflweek: await get.CurrentWeek(),
       LeagueId: theleague.id,
       budget: value.body.budget,
-    }, u.tobj(t)).catch((err) => {
-      const errmess = err.parent.constraint || err[0].message;
-      u.Error(errmess, 406);
-    });
+    }, u.tobj(t)).catch(errorHandler({
+      default: ['Contest could not be created', 500],
+    }));
   });
 }
 
