@@ -32,11 +32,12 @@ async function signup(req) {
     if (!skipVerification) return genVerify({ email: theuser.email });
     return { id: theuser.id, email: theuser.email, name: theuser.name };
   } catch (err) {
-    return errorHandler({
+    const f = errorHandler({
       default: ['Could not create user', 500],
-      'email must be unique': ['An account with that email already exists', 406],
+      Users_email_key: ['An account with that email already exists', 406],
       'User.name cannot be null': ['Please enter a name', 406],
     });
+    return f(err);
   }
 }
 module.exports = signup;
