@@ -131,9 +131,9 @@ function evaluateFn(book) {
       // If this pbid hasn't been matched yet, try ask, then pask
 
       // First try to find a matching ask that hasn't matched another pbid
-      if (book.bestask && evalpbid >= book.bestask) {
-        bestaskOffer = bestUnmatchedAsk(book);
-        if (bestaskOffer) {
+      bestaskOffer = bestUnmatchedAsk(book);
+      if (bestaskOffer) {
+        if (bestaskOffer[1] && evalpbid >= bestaskOffer[1].price) {
           return {
             bid: { id: bestpbidOffer[0], data: bestpbidOffer[1], protected: true },
             ask: { id: bestaskOffer[0], data: bestaskOffer[1], protected: false },
