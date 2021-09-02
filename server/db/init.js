@@ -3,8 +3,10 @@
 const config = require('../config');
 const players = require('./nflplayers.json');
 const models = require('../models');
+const logger = require('../utilities/logger');
 
 async function InitDB(sequelize) {
+  logger.info('Initializing the database');
   await sequelize.sync({ force: true });
   const {
     NFLPosition,

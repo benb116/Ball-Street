@@ -3,6 +3,7 @@
 
 const { Sequelize, Transaction } = require('sequelize');
 const sec = require('../secret');
+const logger = require('../utilities/logger');
 
 let {
   DB_USER,
@@ -14,7 +15,7 @@ let {
 
 const dbOptions = {
   // eslint-disable-next-line no-console
-  logging: (process.env.NODE_ENV === 'development' ? console.log : false),
+  logging: (process.env.NODE_ENV === 'development' ? logger.verbose : false),
   isolationLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED,
 };
 
@@ -26,6 +27,8 @@ if (process.env.NODE_ENV === 'test' || !process.env.NODE_ENV) {
   DB_NAME = sec.DB_NAME;
 }
 
+logger.info(`DB connection settings - ${DB_HOST}:${DB_PORT}/${DB_NAME}`);
+
 const sequelize = new Sequelize(
   `postgres://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT}/${DB_NAME}`,
   dbOptions,
@@ -35,12 +38,10 @@ async function testDB() {
   try {
     await sequelize.authenticate();
     if (process.env.NODE_ENV !== 'test') {
-    // eslint-disable-next-line no-console
-      console.log('Database connection has been established successfully.');
+      logger.info('Database connection has been established successfully.');
     }
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Unable to connect to the database:', error);
+    logger.error('Unable to connect to the database:', error);
   }
 }
 

@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 // Trade functions
 // Used by offer worker
 // Try to fill a pair of offers
@@ -17,10 +16,11 @@ const { client, rediskeys } = require('../../db/redis');
 const { hash } = rediskeys;
 
 const service = require('../../features/trade/trade.service');
+const logger = require('../../utilities/logger');
 
 // Try to fill the offers or return which one is done
 async function fillOffers(bidid, askid, price) {
-  console.log('begin trade:', bidid, askid);
+  logger.info(`begin trade: ${bidid} ${askid}`);
   const out = sequelize.transaction(isoOption,
     async (t) => attemptFill(t, bidid, askid, price));
   return out;
@@ -50,7 +50,10 @@ async function attemptFill(t, bidid, askid, tprice) {
   if (!aoffer || aoffer.filled || aoffer.cancelled || aoffer.isbid) {
     resp.ask.closed = true;
   }
-  if (resp.bid.closed || resp.ask.closed) return resp;
+  if (resp.bid.closed || resp.ask.closed) {
+    logger.info(`Offer began closed: ${JSON.stringify(resp)}`);
+    return resp;
+  }
 
   const biduser = boffer.UserId;
   const askuser = aoffer.UserId;
@@ -81,6 +84,7 @@ async function attemptFill(t, bidid, askid, tprice) {
   // Try to fill both
   const bidProm = service.tradeAdd(bidreq, t)
     .catch((err) => {
+      logger.warn(`Offer could not be filled: ${boffer.id} - ${err.message}`);
       Offer.destroy({ where: { id: boffer.id } })
         .then(() => {
           client.publish('offerCancelled', JSON.stringify({
@@ -91,6 +95,7 @@ async function attemptFill(t, bidid, askid, tprice) {
     });
   const askProm = service.tradeDrop(askreq, t)
     .catch((err) => {
+      logger.warn(`Offer could not be filled: ${aoffer.id} - ${err.message}`);
       Offer.destroy({ where: { id: aoffer.id } })
         .then(() => {
           client.publish('offerCancelled', JSON.stringify({
@@ -105,8 +110,10 @@ async function attemptFill(t, bidid, askid, tprice) {
   resp.bid.closed = !out[0];
   resp.ask.closed = !out[1];
 
-  if (resp.bid.closed || resp.ask.closed) return resp;
-
+  if (resp.bid.closed || resp.ask.closed) {
+    logger.info(`Offer ended closed: ${JSON.stringify(resp)}`);
+    return resp;
+  }
   // If both good, commit transaction
   bidoffer.filled = true;
   askoffer.filled = true;
@@ -148,7 +155,7 @@ async function attemptFill(t, bidid, askid, tprice) {
     userID: aoffer.UserId,
     offerID: aoffer.id,
   }));
-  console.log('finish trade', price);
+  logger.info(`finish trade - ${price}: ${bidid} ${askid}`);
   return {
     bid: bidoffer,
     ask: askoffer,

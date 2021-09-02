@@ -10,6 +10,7 @@ require('./live/liveserver'); // WS server
 
 // Two clients - one to subscribe, one to read and write
 const { client, subscriber, rediskeys } = require('../db/redis');
+const logger = require('../utilities/logger');
 
 const { leaderHash } = rediskeys;
 const getAsync = promisify(client.get).bind(client);
@@ -24,6 +25,7 @@ subscriber.subscribe('offerCancelled');
 subscriber.subscribe('phaseChange');
 
 subscriber.on('message', (channel, message) => {
+  if (message) logger.info(`${channel}: ${message}`);
   switch (channel) {
     case 'priceUpdate': priceUpdate(message); break;
     case 'statUpdate': statUpdate(message); break;

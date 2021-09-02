@@ -7,3 +7,4 @@ server/db/sim1.json
 server/.env
 .env
 nginx.conf
+server/logs/

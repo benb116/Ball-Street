@@ -14,6 +14,7 @@ const session = require('../../middleware/session');
 const liveState = require('./livestate'); // Data stored in memory
 
 const playerService = require('../../features/nflplayer/nflplayer.service');
+const logger = require('../../utilities/logger');
 
 // WS server on top of express
 const app = express();
@@ -57,8 +58,7 @@ wss.on('connection', async (ws, request) => {
 });
 
 server.listen(process.env.PORT, () => {
-  // eslint-disable-next-line no-console
-  console.log(`Listening on port ${process.env.PORT}`);
+  logger.info(`Live server listening on port ${process.env.PORT}`);
 });
 
 // Get latest price data

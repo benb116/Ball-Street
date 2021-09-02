@@ -1,6 +1,9 @@
 /* eslint-disable no-param-reassign */
 // Find the match with the highest priority that can be made
 // Returns false for no matches
+
+const logger = require('../../utilities/logger');
+
 // Returns with a bid and ask object detailing the offers
 function evaluateFn(book) {
   // Get all prices that are being offered
@@ -19,6 +22,9 @@ function evaluateFn(book) {
   if (book.bestpbid === -Infinity) { book.bestpbid = null; }
   if (book.bestask === Infinity) { book.bestask = null; }
   if (book.bestpask === Infinity) { book.bestpask = null; }
+
+  logger.verbose(`Evaluated prices: ${[book.bestbid, book.bestask, book.bestpbid, book.bestpask]
+    .map((p) => p || 0).join(' ')}`);
 
   // Best offer of each type that is ready to match
   let bestbidOffer;
@@ -39,9 +45,9 @@ function evaluateFn(book) {
   // Keep track of the iterator of the current best price for bids
   let bidIterator;
   if (!book.bestbid) { done = true; } else {
+    logger.verbose('Try to match the best bid');
     bidIterator = book.bid[evalbid].entries();
   }
-
   // Iterate through the map(s) to find the best offer
   while (!done) {
     bestbidOffer = bidIterator.next().value;
@@ -52,12 +58,14 @@ function evaluateFn(book) {
       evalbid = Math.min(...bidPrices.filter((p) => p > evalbid));
       // If there are no more left, then exit this loop and go to pbids
       if (evalbid === Infinity) { evalbid = null; done = true; break; }
+      logger.verbose(`next best bid price: ${evalbid}`);
 
       bidIterator = book.bid[evalbid].entries();
     } else {
       // We've found the best bid
       // First try to find a matching ask
       if (book.bestask && evalbid >= book.bestask) {
+        logger.verbose('found bid + ask');
         bestaskOffer = book.ask[book.bestask].entries().next().value;
         return {
           bid: { id: bestbidOffer[0], data: bestbidOffer[1], protected: false },
@@ -73,6 +81,7 @@ function evaluateFn(book) {
         // try to find a un/prot match and return
         bestpaskOffer = bestUnmatchedProtAsk(book);
         if (bestpaskOffer && evalbid >= bestpaskOffer[1].price) {
+          logger.verbose('found bid + pask');
           return {
             bid: { id: bestbidOffer[0], data: bestbidOffer[1], protected: false },
             ask: { id: bestpaskOffer[0], data: bestpaskOffer[1], protected: true },
@@ -82,6 +91,7 @@ function evaluateFn(book) {
         // we can't match this bid with anything
         // and all worse bids will also fail
         done = true;
+        logger.verbose('exhausted bids');
       }
 
       // At this point, it's possible that the next best bid could match a protask
@@ -94,6 +104,7 @@ function evaluateFn(book) {
   done = false; // done looking at prot bid
   let pbidIterator;
   if (!book.bestpbid) { done = true; } else {
+    logger.verbose('Try to match the best pbid');
     pbidIterator = book.pbid[evalpbid].entries();
   }
   // Iterate through the map(s) to find the best offer
@@ -106,6 +117,7 @@ function evaluateFn(book) {
       evalpbid = Math.min(...pbidPrices.filter((p) => p > evalpbid));
       // If there are no more left, then exit
       if (evalpbid === Infinity) { evalpbid = null; done = true; break; }
+      logger.verbose(`next best pbid price: ${evalpbid}`);
 
       pbidIterator = book.pbid[evalpbid].entries();
     } else if (!book.protMatchMap[bestpbidOffer[0]]) {
@@ -134,6 +146,7 @@ function evaluateFn(book) {
       bestaskOffer = bestUnmatchedAsk(book);
       if (bestaskOffer) {
         if (bestaskOffer[1] && evalpbid >= bestaskOffer[1].price) {
+          logger.verbose('found pbid + ask');
           return {
             bid: { id: bestpbidOffer[0], data: bestpbidOffer[1], protected: true },
             ask: { id: bestaskOffer[0], data: bestaskOffer[1], protected: false },
@@ -147,6 +160,7 @@ function evaluateFn(book) {
       if (!findMatcher(book, bestpbidOffer[0])) {
         bestpaskOffer = bestUnmatchedProtAsk(book, true);
         if (bestpaskOffer && evalpbid >= bestpaskOffer[1].price) {
+          logger.verbose('found pbid + pask');
           return {
             bid: { id: bestpbidOffer[0], data: bestpbidOffer[1], protected: true },
             ask: { id: bestpaskOffer[0], data: bestpaskOffer[1], protected: true },

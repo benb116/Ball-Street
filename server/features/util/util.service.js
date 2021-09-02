@@ -1,4 +1,5 @@
 const { Membership, League, Contest } = require('../../models');
+const logger = require('../../utilities/logger');
 const u = require('./util');
 
 // Is a user allowed to see a league
@@ -40,6 +41,7 @@ function errorHandler(responseMap) {
     const errmess = err.parent?.constraint;
     const out = responseMap[errmess];
     if (out) return u.Error(out[0], out[1]);
+    logger.error(`Unknown error: ${err}`);
     return u.Error(outmess, 406);
   };
 }

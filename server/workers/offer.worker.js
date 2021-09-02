@@ -14,6 +14,7 @@ const protectedQueue = new Queue('protected-queue', queueOptions);
 const { fillOffers } = require('./offer/trader');
 const { getBook, updateBest } = require('./offer/offer.util');
 const evalProtected = require('./offer/protected');
+const logger = require('../utilities/logger');
 
 // books[contestID][playerID] = Book
 const books = { };
@@ -37,6 +38,7 @@ protectedQueue.process(parallelProcessors, protectedProcessor);
 
 function processor(job) {
   const { ContestId, NFLPlayerId } = job.data;
+  logger.info(JSON.stringify(job.data));
   // Get the appropriate book (or make one)
   const playerBook = getBook(books, ContestId, NFLPlayerId);
   // Add the action to the queue
@@ -50,6 +52,7 @@ function processor(job) {
 }
 
 function protectedProcessor(job) {
+  logger.info(JSON.stringify(job.data));
   const { ContestId, NFLPlayerId } = job.data;
   const playerBook = getBook(books, ContestId, NFLPlayerId);
   playerBook.enqueue(() => {
@@ -63,8 +66,7 @@ function protectedProcessor(job) {
 async function evaluateBook(playerBook) {
   let match = playerBook.evaluate();
   while (match) {
-    // eslint-disable-next-line no-console
-    console.log('match', match.bid.id, match.ask.id);
+    logger.info(`match ${match.bid.id} ${match.ask.id}`);
     // If the old offer is protected, create a protMatch
     const isBidOld = (match.bid.data.createdAt < match.ask.data.createdAt);
     const oldOffer = (isBidOld ? match.bid : match.ask);

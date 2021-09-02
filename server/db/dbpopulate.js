@@ -1,11 +1,13 @@
 // Set up example DB records for use in testing
 
 const models = require('../models');
+const logger = require('../utilities/logger');
 const InitDB = require('./init');
 const { set } = require('./redis');
 
 async function PopulateDB(sequelize) {
   await InitDB(sequelize);
+  logger.info('Populating DB with initial data');
   const {
     Contest,
     User,

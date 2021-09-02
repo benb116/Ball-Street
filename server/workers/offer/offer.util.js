@@ -4,6 +4,7 @@ const { client, rediskeys } = require('../../db/redis');
 
 const { hash } = rediskeys;
 const { Offer, ProtectedMatch } = require('../../models');
+const logger = require('../../utilities/logger');
 
 // Access the correct book or make one if necessary
 function getBook(books, ContestId, NFLPlayerId) {
@@ -53,6 +54,7 @@ async function initializeBook(playerBook) {
     // eslint-disable-next-line no-param-reassign
     playerBook.protMatchMap[m.existingId] = m.newId;
   });
+  logger.info(`Book initialized: Contest ${contestID} Player ${nflplayerID}`);
   return true;
 }
 

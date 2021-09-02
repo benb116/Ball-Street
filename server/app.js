@@ -4,9 +4,10 @@ const helmet = require('helmet');
 
 const session = require('./middleware/session');
 const limiter = require('./middleware/limiter');
+const logger = require('./utilities/logger');
 
 const isProduction = process.env.NODE_ENV === 'production';
-
+logger.info(`NODE_ENV = ${process.env.NODE_ENV}, isProduction = ${isProduction}`);
 const app = express();
 
 app.use(cors());
@@ -24,6 +25,5 @@ app.use(`${routePrefix}/auth/`, require('./features/user/user.route'));
 app.use(`${routePrefix}/api/`, require('./routes'));
 
 const server = app.listen(process.env.PORT || 5000, () => {
-  // eslint-disable-next-line no-console
-  console.log(`Listening on port ${server.address().port}`);
+  logger.info(`Listening on port ${server.address().port}`);
 });

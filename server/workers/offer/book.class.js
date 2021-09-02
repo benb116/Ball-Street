@@ -1,4 +1,5 @@
 const { ProtectedMatch } = require('../../models');
+const logger = require('../../utilities/logger');
 const evaluateFn = require('./evaluate');
 
 /* eslint-disable class-methods-use-this */
@@ -74,6 +75,7 @@ class Book {
       existingId: matchee.id,
       newId: matcher.id,
     });
+    logger.info(`Protected match: ${matchee.id} ${matcher.id}`);
     this.protMatchMap[matchee.id] = matcher.id;
   }
 
