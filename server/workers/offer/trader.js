@@ -79,31 +79,23 @@ async function attemptFill(t, bidid, askid, tprice) {
   // Try to fill both
   const bidProm = service.tradeAdd(bidreq, t)
     .catch((err) => {
-      if (err.status === 402) { // Not enough points
-        return Offer.destroy({ where: { id: boffer.id } })
-          .then(() => {
-            client.publish('offerCancelled', JSON.stringify({
-              userID: boffer.UserId,
-              offerID: boffer.id,
-            }));
-            return false;
-          }).catch(() => false);
-      }
-      return false;
+      Offer.destroy({ where: { id: boffer.id } })
+        .then(() => {
+          client.publish('offerCancelled', JSON.stringify({
+            userID: boffer.UserId,
+            offerID: boffer.id,
+          }));
+        }).finally(() => false);
     });
   const askProm = service.tradeDrop(askreq, t)
     .catch((err) => {
-      if (err.status === 402) { // Not enough points
-        return Offer.destroy({ where: { id: aoffer.id } })
-          .then(() => {
-            client.publish('offerCancelled', JSON.stringify({
-              userID: aoffer.UserId,
-              offerID: aoffer.id,
-            }));
-            return false;
-          }).catch(() => false);
-      }
-      return false;
+      Offer.destroy({ where: { id: aoffer.id } })
+        .then(() => {
+          client.publish('offerCancelled', JSON.stringify({
+            userID: aoffer.UserId,
+            offerID: aoffer.id,
+          }));
+        }).finally(() => false);
     });
 
   // Check the response
