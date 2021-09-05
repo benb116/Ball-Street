@@ -21,6 +21,7 @@ services:
         volumes:
             - /etc/letsencrypt:/etc/letsencrypt # ssl certs
             - /home/node/app/node_modules
+            - ./server/logs/live:/home/node/app/logs
 
     api:
         build:
@@ -47,6 +48,7 @@ services:
             node app.js # nodemon for restart in debugging
         volumes:
             - /home/node/app/node_modules
+            - ./server/logs/api:/home/node/app/logs
     
     leader:
         build:
@@ -73,6 +75,7 @@ services:
             node workers/leader.worker.js
         volumes:
             - /home/node/app/node_modules
+            - ./server/logs/leader:/home/node/app/logs
 
     offer:
         build:
@@ -99,6 +102,7 @@ services:
             node workers/offer.worker.js
         volumes:
             - /home/node/app/node_modules
+            - ./server/logs/offer:/home/node/app/logs
 
     live:
         build:
@@ -126,6 +130,7 @@ services:
             node workers/live.worker.js
         volumes:
             - /home/node/app/node_modules
+            - ./server/logs/live:/home/node/app/logs
 
     db: # Postgres with Timescale extension
         image: timescale/timescaledb:latest-pg12
