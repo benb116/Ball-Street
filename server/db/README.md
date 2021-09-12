@@ -8,4 +8,4 @@ Postgres is used to store all long term data, including user info; NFL data; and
 
 ## Redis
 
-Redis is used to cache certain API responses, store user session information, run message queues, allow for inter-service pub/sub communication, and also to store the latest price and stat information
+Redis is used to cache certain API responses, store user session information, run message queues, allow for inter-service pub/sub communication, and also to store the latest price and stat information for players
