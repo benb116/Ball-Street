@@ -3,11 +3,8 @@
 const WebSocket = require('ws');
 const http = require('http');
 const express = require('express');
-const { promisify } = require('util');
 
-const { client, rediskeys } = require('../../db/redis');
-
-const hgetallAsync = promisify(client.hgetall).bind(client);
+const { get, rediskeys } = require('../../db/redis');
 
 const session = require('../../middleware/session');
 
@@ -72,8 +69,8 @@ let playerIDs = [];
 async function sendLatest(contestID) {
   const outPromises = playerIDs
     .map((p) => {
-      const contestPromise = hgetallAsync(rediskeys.hash(contestID, p));
-      const statPromise = hgetallAsync(rediskeys.statHash(p));
+      const contestPromise = get.hkeyall(rediskeys.hash(contestID, p));
+      const statPromise = get.hkeyall(rediskeys.statHash(p));
       return Promise.all([contestPromise, statPromise]).then((objarr) => {
         if (!objarr) { return null; }
         const out = { ...objarr[0], ...objarr[1] };
