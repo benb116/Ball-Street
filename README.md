@@ -8,7 +8,9 @@ Join a contest with other users and create your entry. Before the week's games b
 
 ## How it works
 
-Ball Street is built using React+Redux, Node.js, Redis, PostreSQL. Docker is used to containerize the various processes (see [docker-compose](https://github.com/benb116/Ball-Street/blob/master/docker-compose.yml)). Client-server communication takes place using REST api calls and websockets
+Ball Street is built using React+Redux, Node.js, Redis, PostreSQL. Docker is used to containerize the various processes (see [docker-compose](https://github.com/benb116/Ball-Street/blob/master/docker-compose.yml)). Client-server communication takes place using REST api calls and websockets.
+
+See [client](https://github.com/benb116/Ball-Street/blob/master/client) and [server](https://github.com/benb116/Ball-Street/blob/master/server) code
 
 ## Tech stack
 
@@ -16,6 +18,7 @@ Ball Street is built using React+Redux, Node.js, Redis, PostreSQL. Docker is use
 * React
 * React Router
 * Redux Toolkit
+* NGINX (in production)
 
 ### Backend
 * Node.js
