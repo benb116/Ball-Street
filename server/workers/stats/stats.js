@@ -1,31 +1,3 @@
-/*
-
-Output - stat price updates, projprice updates
-
-state:
-  statobj
-  gametimeobj
-  pointobj
-  projpointobj
-
-Input - stat file, player file, game file, initprojections
-
-Statloop:
-compare to statobj
-find all new lines
-calculate new point values for players
-pull latest gametime info
-calculate new projvalues
-set new redisvals and publish
-
-Gameloop:
-compare to gametimeobj
-find all new lines
-calculate new projvalues
-set new redisvals and publish
-
-*/
-
 const axios = require('axios');
 const getNFLPlayers = require('../../features/nflplayer/services/getNFLPlayers.service');
 const { rediskeys, set, client } = require('../../db/redis');
@@ -56,7 +28,40 @@ const multiplierTable = {
 
 const playerIDMap = {};
 const IDPlayerMap = {};
-// const teamIDMap = {};
+const teamIDMap = {
+  27: 30,
+  6: 9,
+  1: 2,
+  21: 24,
+  23: 25,
+  2: 4,
+  4: 7,
+  16: 18,
+  8: 11,
+  25: 27,
+  10: 1,
+  22: 31,
+  11: 14,
+  26: 28,
+  24: 26,
+  28: 32,
+  20: 22,
+  29: 5,
+  34: 13,
+  30: 15,
+  5: 8,
+  12: 16,
+  17: 19,
+  15: 17,
+  9: 12,
+  18: 20,
+  7: 10,
+  19: 21,
+  3: 6,
+  14: 29,
+  33: 3,
+  13: 23,
+};
 
 let playerTeamMap = {};
 
@@ -67,12 +72,16 @@ let preProjObj = {};
 async function init() {
   playerTeamMap = await createPTMap();
   preProjObj = await pullPreProj();
-  // eslint-disable-next-line no-console
-  PullAllGames().then(PullAllStats).then(GetNewStats).then(CalcValues)
-    .then(SetValues).then(() => console.log('Done'));
 }
 
-init();
+function repeat() {
+  return PullAllGames().then(PullAllStats).then(GetNewStats).then(CalcValues)
+    .then(SetValues)
+    // eslint-disable-next-line no-console
+    .then(() => console.log('Done'));
+}
+
+init().then(repeat).then(() => setInterval(repeat, 10000));
 
 // Populate the playerTeamMap
 function createPTMap() {
@@ -96,6 +105,29 @@ function pullPreProj() {
     acc[p.id] = p.preprice;
     return acc;
   }, {}));
+}
+
+function PullAllGames() {
+  return axios.get('https://relay-stream.sports.yahoo.com/nfl/games.txt')
+    .then((raw) => raw.data.split('\n'))
+    .then((rawlines) => rawlines.filter((l) => l[0] === 'g'))
+    .then((gamelines) => {
+      gamelines.forEach((gameline) => {
+        const terms = gameline.split('|');
+        const team1 = terms[2];
+        const team2 = terms[3];
+        // const gameState = terms[4]; // F finished, P playing, S not started yet
+        const quarter = Number(terms[6]);
+        const time = terms[7].split(':');
+        const timeElapsed = (
+          (quarter - 1) * 15 * 60)
+          + ((15 - 5 * (quarter === 5)) * 60 - Number(time[0]) * 60 + Number(time[1])
+          );
+        const timefrac = timeElapsed / ((60 * 60) + (10 * 60 * (quarter === 5)));
+        timeObj[team1] = timefrac;
+        timeObj[team2] = timefrac;
+      });
+    });
 }
 
 // Get all latest statlines
@@ -132,14 +164,15 @@ function CalcValues(newlines) {
   // eslint-disable-next-line no-param-reassign
   let playersToCalc = newlines.map((l) => l.split('|')[1]);
   if (!playersToCalc) { playersToCalc = Object.keys(statObj); }
-  return playersToCalc.map(CalcPlayer);
+  return playersToCalc.map(CalcPlayer).filter((e) => e !== false);
 }
 
 function CalcPlayer(playerid) {
   const stats = statObj[playerid];
   const statpoints = Math.round(100 * (SumPoints(stats)));
   const projpoints = EstimateProjection(playerid, statpoints);
-  const dbid = (IDPlayerMap[playerIDMap[playerid]] || 0);
+  const dbid = (IDPlayerMap[playerIDMap[playerid]] || teamIDMap[playerid] || 0);
+  if (!dbid) return false;
   return [dbid, statpoints, projpoints];
 }
 
@@ -179,37 +212,14 @@ function SumPoints(pstats) {
 
 function EstimateProjection(playerid, statpoints) {
   // Find player's team
-  const teamID = playerTeamMap[playerid];
+  const teamID = (playerTeamMap[playerid] || playerid);
   // Find time remaining
   const timefrac = timeObj[teamID];
   // is Defense
   const isDefense = (playerid < 40);
-  const dbid = (IDPlayerMap[playerIDMap[playerid]] || 0);
+  const dbid = (IDPlayerMap[playerIDMap[playerid]] || teamIDMap[playerid] || 0);
   return statpoints + (1 - timefrac) * (preProjObj[dbid] || 0) * (1 - 2 * isDefense);
   // Calculate and return
-}
-
-function PullAllGames() {
-  return axios.get('https://relay-stream.sports.yahoo.com/nfl/games.txt')
-    .then((raw) => raw.data.split('\n'))
-    .then((rawlines) => rawlines.filter((l) => l[0] === 'g'))
-    .then((gamelines) => {
-      gamelines.forEach((gameline) => {
-        const terms = gameline.split('|');
-        const team1 = terms[2];
-        const team2 = terms[3];
-        // const gameState = terms[4]; // F finished, P playing, S not started yet
-        const quarter = Number(terms[6]);
-        const time = terms[7].split(':');
-        const timeElapsed = (
-          (quarter - 1) * 15 * 60)
-          + ((15 - 5 * (quarter === 5)) * 60 - Number(time[0]) * 60 + Number(time[1])
-          );
-        const timefrac = timeElapsed / ((60 * 60) + (10 * 60 * (quarter === 5)));
-        timeObj[team1] = timefrac;
-        timeObj[team2] = timefrac;
-      });
-    });
 }
 
 function SetValues(playerVals) {
