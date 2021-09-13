@@ -27,6 +27,8 @@ set new redisvals and publish
 */
 
 const axios = require('axios');
+const getNFLPlayers = require('../../features/nflplayer/services/getNFLPlayers.service');
+const { rediskeys, set, client } = require('../../db/redis');
 
 const yahooStatMap = {
   r: 'rushing',
@@ -37,7 +39,7 @@ const yahooStatMap = {
   x: 'returning',
   k: 'kicking',
   o: 'fumbles',
-  f: 'defense I think',
+  f: 'defense',
   // t: 'offense total',
 };
 const validStatLetters = Object.keys(yahooStatMap);
@@ -52,20 +54,22 @@ const multiplierTable = {
   f: [0, 1, 2, 2, 6, 2, 2, 0, 6],
 };
 
-// const playerIDMap = {};
+const playerIDMap = {};
+const IDPlayerMap = {};
 // const teamIDMap = {};
 
 let playerTeamMap = {};
 
 const statObj = {};
 const timeObj = {};
-const preProjObj = {};
+let preProjObj = {};
 
 async function init() {
   playerTeamMap = await createPTMap();
+  preProjObj = await pullPreProj();
   // eslint-disable-next-line no-console
   PullAllGames().then(PullAllStats).then(GetNewStats).then(CalcValues)
-    .then(console.log);
+    .then(SetValues).then(() => console.log('Done'));
 }
 
 init();
@@ -79,9 +83,19 @@ function createPTMap() {
       const terms = line.split('|');
       const playerID = terms[1];
       const teamID = terms[2];
+      const name = `${terms[4]} ${terms[5]}`;
+      playerIDMap[playerID] = name;
       acc[playerID] = teamID;
       return acc;
     }, {}));
+}
+
+function pullPreProj() {
+  return getNFLPlayers().then((data) => data.reduce((acc, p) => {
+    IDPlayerMap[p.name] = p.id;
+    acc[p.id] = p.preprice;
+    return acc;
+  }, {}));
 }
 
 // Get all latest statlines
@@ -118,14 +132,15 @@ function CalcValues(newlines) {
   // eslint-disable-next-line no-param-reassign
   let playersToCalc = newlines.map((l) => l.split('|')[1]);
   if (!playersToCalc) { playersToCalc = Object.keys(statObj); }
-  playersToCalc.forEach(CalcPlayer);
+  return playersToCalc.map(CalcPlayer);
 }
 
 function CalcPlayer(playerid) {
   const stats = statObj[playerid];
-  const statpoints = Math.round(100 * (SumPoints(stats))) / 100;
+  const statpoints = Math.round(100 * (SumPoints(stats)));
   const projpoints = EstimateProjection(playerid, statpoints);
-  console.log([playerid, statpoints, projpoints]);
+  const dbid = (IDPlayerMap[playerIDMap[playerid]] || 0);
+  return [dbid, statpoints, projpoints];
 }
 
 function SumPoints(pstats) {
@@ -169,8 +184,8 @@ function EstimateProjection(playerid, statpoints) {
   const timefrac = timeObj[teamID];
   // is Defense
   const isDefense = (playerid < 40);
-
-  return statpoints + (1 - timefrac) * (preProjObj[playerid] || 0) * (1 - 2 * isDefense);
+  const dbid = (IDPlayerMap[playerIDMap[playerid]] || 0);
+  return statpoints + (1 - timefrac) * (preProjObj[dbid] || 0) * (1 - 2 * isDefense);
   // Calculate and return
 }
 
@@ -195,4 +210,20 @@ function PullAllGames() {
         timeObj[team2] = timefrac;
       });
     });
+}
+
+function SetValues(playerVals) {
+  const allPromises = playerVals.map((pv) => {
+    client.publish('statUpdate', JSON.stringify({
+      nflplayerID: pv[0],
+      statPrice: Number(pv[1]),
+      projPrice: Number(pv[2]),
+    }));
+    return set.hkey(
+      rediskeys.statHash(pv[0]),
+      'statPrice', pv[1],
+      'projPrice', pv[2],
+    );
+  });
+  return Promise.all(allPromises);
 }

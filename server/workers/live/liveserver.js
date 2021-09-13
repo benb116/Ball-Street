@@ -76,7 +76,12 @@ async function sendLatest(contestID) {
       const statPromise = hgetallAsync(rediskeys.statHash(p));
       return Promise.all([contestPromise, statPromise]).then((objarr) => {
         if (!objarr) { return null; }
-        const out = { ...objarr[0], ...objarr[1] };
+        const obj = { ...objarr[0], ...objarr[1] };
+        const keys = Object.keys(obj);
+        const out = keys.reduce((acc, cur) => {
+          acc[cur] = Number(obj[cur]);
+          return acc;
+        }, {});
         out.nflplayerID = p;
         return out;
       });
