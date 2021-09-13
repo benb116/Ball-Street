@@ -7,6 +7,7 @@ import { isOnRosterSelector, preAdd, preDrop } from '../Entry/EntrySlice';
 import { setModal } from '../Modal/ModalSlice';
 import { cancelOffer, offersSelector } from '../Offers/OffersSlice';
 import { priceMapSelector } from './PlayersSlice';
+import RenderPrice from '../../../helpers/util';
 
 function PlayerItem({ playerdata }) {
   const dispatch = useDispatch();
@@ -73,11 +74,11 @@ function PlayerItem({ playerdata }) {
       <td style={{ width: '10rem', overflow: 'hidden' }}>{playerdata.name}</td>
       <td style={{ width: '2.2rem' }}>{playerdata.posName}</td>
       <td style={{ width: '2.2rem' }}>{playerdata.teamAbr}</td>
-      <td style={{ width: '2rem', textAlign: 'right' }}>{dispProj}</td>
-      <td style={{ width: '2rem', textAlign: 'right' }}>{dispStat}</td>
-      <td style={{ width: '2rem', textAlign: 'right' }}>{(priceMap && Number(priceMap.lastprice)) ? priceMap.lastprice : ''}</td>
-      <td style={{ width: '2rem', textAlign: 'right' }}>{(priceMap && Number(priceMap.bestbid)) ? priceMap.bestbid : ''}</td>
-      <td style={{ width: '2rem', textAlign: 'right' }}>{(priceMap && Number(priceMap.bestask)) ? priceMap.bestask : ''}</td>
+      <td style={{ width: '2rem', textAlign: 'right' }}>{RenderPrice(dispProj)}</td>
+      <td style={{ width: '2rem', textAlign: 'right' }}>{RenderPrice(dispStat)}</td>
+      <td style={{ width: '2rem', textAlign: 'right' }}>{(priceMap && Number(priceMap.lastprice)) ? RenderPrice(priceMap.lastprice) : ''}</td>
+      <td style={{ width: '2rem', textAlign: 'right' }}>{(priceMap && Number(priceMap.bestbid)) ? RenderPrice(priceMap.bestbid) : ''}</td>
+      <td style={{ width: '2rem', textAlign: 'right' }}>{(priceMap && Number(priceMap.bestask)) ? RenderPrice(priceMap.bestask) : ''}</td>
       <ActionButton thephase={thephase} oclick={oclick} text={text} />
     </tr>
   );

@@ -38,6 +38,8 @@ const OfferModal = () => {
   }
   // {leagueID, contestID, offerobj:
   function handleClick(data) {
+    // eslint-disable-next-line no-param-reassign
+    data.price *= 100;
     const offerobj = { ...modalInfo, ...data };
     delete offerobj.nflplayerName;
     dispatch(createOffer({ leagueID, contestID, offerobj }));
@@ -67,7 +69,7 @@ const OfferModal = () => {
         </span>
         <form onSubmit={onFormSubmit}>
           <span>Price</span>
-          <input {...register('price')} defaultValue={modalInfo.price} />
+          <input {...register('price')} defaultValue={Math.floor(modalInfo.price / 100)} />
           <br />
           <span>🔒 Protected</span>
           <input {...register('protected')} type="checkbox" />

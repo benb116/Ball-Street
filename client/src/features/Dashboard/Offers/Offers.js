@@ -88,7 +88,7 @@ function OfferItem({ offerdata }) {
       {' '}
       -
       {' '}
-      {offerdata.price}
+      {(offerdata.price / 100)}
       {offerdata.protected ? '🔒' : ''}
       {offerdata.expire ? (` Fills in ${
         Math.max(0, Math.floor((offerdata.expire - Date.now()) / 1000))
