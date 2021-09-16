@@ -131,6 +131,34 @@ services:
         volumes:
             - /home/node/app/node_modules
             - ./server/logs/live:/home/node/app/logs
+    
+    nfl:
+        build:
+            context: .
+            dockerfile: ./server/Dockerfile
+        container_name: nfl
+        env_file: .env
+        environment:
+            - NODE_ENV=$NODE_ENV
+            - DB_USER=$DB_USER
+            - DB_PASS=$DB_PASS
+            - DB_HOST=db
+            - DB_PORT=5432
+            - DB_NAME=$DB_NAME
+            - REDIS_HOST=redis
+            - REDIS_PORT=6379
+            - PORT=8080
+        networks:
+            - app-network
+        depends_on:
+            - db
+            - redis
+        restart: always
+        command: 
+            node workers/nfl.worker.js
+        volumes:
+            - /home/node/app/node_modules
+            - ./server/logs/nfl:/home/node/app/logs
 
     db: # Postgres with Timescale extension
         image: timescale/timescaledb:latest-pg12

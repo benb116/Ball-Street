@@ -38,6 +38,13 @@ services:
         volumes:
             - ./server:/home/node/app
 
+    nfl:
+        command: 
+            ./node_modules/.bin/nodemon workers/nfl.worker.js
+        restart: unless-stopped
+        volumes:
+            - ./server:/home/node/app
+
     db: # Postgres with Timescale extension
         ports:
             - 5432:5432 # Expose ports
