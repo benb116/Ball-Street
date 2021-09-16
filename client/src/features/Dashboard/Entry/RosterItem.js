@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { playerSelector, priceMapSelector } from '../Players/PlayersSlice';
+import { allTeamsSelector, playerSelector, priceMapSelector } from '../Players/PlayersSlice';
 
 import { preDrop } from './EntrySlice';
 import { cancelOffer, offersSelector } from '../Offers/OffersSlice';
@@ -13,6 +13,7 @@ function RosterItem({ playerid, position }) {
   const dispatch = useDispatch();
   const { leagueID, contestID } = useParams();
   const thisplayer = useSelector(playerSelector(playerid));
+  const theteams = useSelector(allTeamsSelector);
 
   const offers = useSelector(offersSelector);
   const priceMap = useSelector(priceMapSelector(playerid));
@@ -21,7 +22,7 @@ function RosterItem({ playerid, position }) {
     return (<tr><td>{position}</td></tr>);
   }
 
-  const thephase = thisplayer.NFLTeam.gamePhase;
+  const thephase = theteams[thisplayer.NFLTeamId].phase;
   const dispProj = thephase === 'pre' ? thisplayer.preprice : (priceMap.projPrice || 0);
   const dispStat = thephase === 'pre' ? thisplayer.postprice : (priceMap.statPrice || 0);
 

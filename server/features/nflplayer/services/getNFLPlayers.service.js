@@ -1,9 +1,9 @@
 const u = require('../../util/util');
 
-const { NFLPlayer, NFLTeam, NFLPosition } = require('../../../models');
+const { NFLPlayer, NFLPosition } = require('../../../models');
 
 function getNFLPlayers() {
-  return NFLPlayer.findAll({ include: [{ model: NFLTeam }, { model: NFLPosition }] }).then(u.dv);
+  return NFLPlayer.findAll({ include: [{ model: NFLPosition }] }).then(u.dv);
 }
 
 module.exports = getNFLPlayers;

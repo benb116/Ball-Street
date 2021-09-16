@@ -3,6 +3,8 @@ const logger = require('../../utilities/logger');
 const dict = require('./dict.nfl');
 const setPhase = require('./phase.nfl');
 const state = require('./state.nfl');
+const { get } = require('../../db/redis');
+const { NFLGame } = require('../../models');
 
 // Initialize all game states and schedule changes
 function GameState() {
@@ -10,35 +12,48 @@ function GameState() {
     .then((raw) => raw.data.split('\n'))
     .then((rawlines) => rawlines.filter((l) => l[0] === 'g'))
     .then((gamelines) => {
-      gamelines.forEach((gameline) => {
+      gamelines.forEach(async (gameline) => {
         const terms = gameline.split('|');
-        const team1 = dict.teamIDMap[Number(terms[2])];
-        const team2 = dict.teamIDMap[Number(terms[3])];
+        const awayTeamID = dict.teamIDMap[Number(terms[2])];
+        const homeTeamID = dict.teamIDMap[Number(terms[3])];
+
+        const currentweek = await get.CurrentWeek();
+        await NFLGame.create({
+          week: currentweek,
+          HomeId: homeTeamID,
+          AwayId: awayTeamID,
+        }).catch((err) => {
+          if (err?.parent?.constraint !== 'NFLGames_pkey') {
+            logger.error(err);
+            throw err;
+          }
+        });
+
         const gameState = terms[4]; // F finished, P playing, S not started yet
         const starttime = Number(terms[10]);
         switch (gameState) {
           case 'F':
-            setPhase(team1, 'post');
-            setPhase(team2, 'post');
+            setPhase(awayTeamID, 'post');
+            setPhase(homeTeamID, 'post');
             logger.info(`Game set as post: ${gameline}`);
             break;
           case 'P':
-            setPhase(team1, 'mid');
-            setPhase(team2, 'mid');
+            setPhase(awayTeamID, 'mid');
+            setPhase(homeTeamID, 'mid');
             logger.info(`Game set as mid: ${gameline}`);
             break;
           case 'S':
             if (Date.now() > starttime * 1000) {
               // For some reason, gamestate hasn't updated but it should have
-              setPhase(team1, 'mid');
-              setPhase(team2, 'mid');
+              setPhase(awayTeamID, 'mid');
+              setPhase(homeTeamID, 'mid');
               logger.info(`Game set as mid: ${gameline}`);
             } else {
-              setPhase(team1, 'pre');
-              setPhase(team2, 'pre');
+              setPhase(awayTeamID, 'pre');
+              setPhase(homeTeamID, 'pre');
               setTimeout(() => {
-                setPhase(team1, 'mid');
-                setPhase(team2, 'mid');
+                setPhase(awayTeamID, 'mid');
+                setPhase(homeTeamID, 'mid');
               }, (starttime * 1000 - Date.now()));
               logger.info(`Game scheduled for ${starttime}: ${gameline}`);
             }

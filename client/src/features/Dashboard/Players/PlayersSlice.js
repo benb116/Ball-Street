@@ -2,12 +2,15 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
 
-import { getplayersfunc } from './Players.api';
+import { getgamesfunc, getplayersfunc } from './Players.api';
 
 export const getPlayers = createAsyncThunk('players/getPlayers', getplayersfunc);
+export const getGames = createAsyncThunk('players/getGames', getgamesfunc);
 
 const defaultState = {
   playerlist: [],
+  gamelist: [],
+  teamMap: {},
   priceMap: {},
   filter: {
     name: '',
@@ -47,24 +50,37 @@ export const playersSlice = createSlice({
       state = ns;
     },
     setPhase: (state, { payload }) => {
-      state.playerlist = state.playerlist.map((p) => {
-        if (p.NFLTeam.id === payload.nflTeamID) {
-          p.NFLTeam.gamePhase = payload.gamePhase;
+      state.gamelist = state.gamelist.map((g) => {
+        if (g.HomeId === payload.nflTeamID || g.AwayId === payload.nflTeamID) {
+          g.phase = payload.gamePhase;
+          state.teamMap[payload.nflTeamID].phase = payload.gamePhase;
         }
-        return p;
+        return g;
       });
     },
   },
   extraReducers: {
     [getPlayers.fulfilled]: (state, { payload }) => {
       const np = payload.map((p) => {
-        p.teamAbr = p.NFLTeam.abr;
         p.posName = p.NFLPosition.name;
         return p;
       });
       state.playerlist = np;
     },
     [getPlayers.rejected]: (state, { payload }) => {
+      if (payload) { toast.error(payload); }
+    },
+    [getGames.fulfilled]: (state, { payload }) => {
+      state.gamelist = payload;
+      state.teamMap = payload.reduce((acc, cur) => {
+        acc[cur.away.id] = cur.away;
+        acc[cur.away.id].phase = cur.phase;
+        acc[cur.home.id] = cur.home;
+        acc[cur.home.id].phase = cur.phase;
+        return acc;
+      }, {});
+    },
+    [getGames.rejected]: (state, { payload }) => {
       if (payload) { toast.error(payload); }
     },
   },
@@ -77,6 +93,8 @@ export const {
 export const allPlayersSelector = (state) => (
   state.players.playerlist.map((p) => ({ ...p, ...state.players.priceMap[p.id] }))
 );
+export const allGamesSelector = (state) => (state.players.gamelist || []);
+export const allTeamsSelector = (state) => (state.players.teamMap || {});
 export const playerSelector = (playerID) => (state) => (
   state.players.playerlist.find((p) => p.id === playerID)
 );

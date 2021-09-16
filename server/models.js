@@ -10,6 +10,7 @@ const mnfldivision = require('./features/nfldivision/nfldivision.model');
 const mnflplayer = require('./features/nflplayer/nflplayer.model');
 const mnflposition = require('./features/nflposition/nflposition.model');
 const mnflteam = require('./features/nflteam/nflteam.model');
+const mnflgame = require('./features/nflgame/nflgame.model');
 const moffer = require('./features/offer/offer.model');
 const mprotectedmatch = require('./features/protectedmatch/protectedmatch.model');
 const mpricehistory = require('./features/pricehistory/pricehistory.model');
@@ -25,6 +26,7 @@ const NFLDivision = mnfldivision(sequelize, DataTypes);
 const NFLPlayer = mnflplayer(sequelize, DataTypes);
 const NFLPosition = mnflposition(sequelize, DataTypes);
 const NFLTeam = mnflteam(sequelize, DataTypes);
+const NFLGame = mnflgame(sequelize, DataTypes);
 const Offer = moffer(sequelize, DataTypes);
 const ProtectedMatch = mprotectedmatch(sequelize, DataTypes);
 const PriceHistory = mpricehistory(sequelize, DataTypes);
@@ -59,6 +61,9 @@ NFLTeam.hasMany(NFLPlayer);
 NFLPlayer.belongsTo(NFLPosition);
 NFLPosition.hasMany(NFLPlayer);
 
+NFLGame.belongsTo(NFLTeam, { as: 'home', foreignKey: 'HomeId' });
+NFLGame.belongsTo(NFLTeam, { as: 'away', foreignKey: 'AwayId' });
+
 module.exports = {
   League,
   Membership,
@@ -68,6 +73,7 @@ module.exports = {
   NFLPlayer,
   NFLPosition,
   NFLTeam,
+  NFLGame,
   Offer,
   ProtectedMatch,
   PriceHistory,

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { playersSelector, pricesMapSelector } from '../Players/PlayersSlice';
+import { allTeamsSelector, playersSelector, pricesMapSelector } from '../Players/PlayersSlice';
 
 import { getEntry, entrySelector, rosterUpdateSelector } from './EntrySlice';
 
@@ -83,13 +83,14 @@ function PointTotals() {
   const rosterPlayerIDs = Object.values(thisentry.roster).filter((p) => p !== null);
   const players = useSelector(playersSelector(rosterPlayerIDs));
   const priceMaps = useSelector(pricesMapSelector(rosterPlayerIDs));
+  const theteams = useSelector(allTeamsSelector);
 
   const sum = rpos.reduce((acc, pos) => {
     const out = acc;
     const thisplayerID = thisentry.roster[pos];
     const theplayer = players.find((p) => p.id === thisplayerID);
     if (!theplayer) { return out; }
-    const thephase = theplayer.NFLTeam.gamePhase;
+    const thephase = theteams[theplayer.NFLTeamId].phase;
     const dispProj = thephase === 'pre' ? theplayer.preprice : (priceMaps[thisplayerID].projPrice || 0);
     const dispStat = thephase === 'pre' ? theplayer.postprice : (priceMaps[thisplayerID].statPrice || 0);
 

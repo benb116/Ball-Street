@@ -1,9 +1,12 @@
 // Change the game phase (pre, mid, post)
 const Joi = require('joi');
 
+const { Op } = require('sequelize');
 const u = require('../../features/util/util');
-const { client } = require('../../db/redis');
-const { NFLPlayer, NFLTeam, Entry } = require('../../models');
+const { client, del } = require('../../db/redis');
+const {
+  NFLPlayer, NFLTeam, Entry, NFLGame,
+} = require('../../models');
 const getWeekEntries = require('../../features/entry/services/getWeekEntries.service');
 
 const sequelize = require('../../db');
@@ -29,7 +32,17 @@ async function setPhase(teamID, newphase) {
   const req = { teamID, newphase };
   u.validate(req, schema);
 
-  return NFLTeam.update({ gamePhase: newphase }, { where: { id: teamID } })
+  return NFLGame.update({
+    phase: newphase,
+  }, {
+    where: {
+      [Op.or]: [{
+        HomeId: teamID,
+      }, {
+        AwayId: teamID,
+      }],
+    },
+  })
     .then(() => {
       client.publish('phaseChange', JSON.stringify({
         nflTeamID: teamID,
@@ -41,7 +54,8 @@ async function setPhase(teamID, newphase) {
         return convertTeamPlayers(teamID);
       }
       return Promise.resolve();
-    });
+    })
+    .then(() => del.key('/app/auth/nfldata/games'));
 }
 
 // TODO - make sure that postprice is updated with final value before converting
