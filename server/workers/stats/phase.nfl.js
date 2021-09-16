@@ -1,13 +1,12 @@
-// Phase worker
 // Change the game phase (pre, mid, post)
 const Joi = require('joi');
 
-const u = require('../features/util/util');
-const { client } = require('../db/redis');
-const { NFLPlayer, NFLTeam, Entry } = require('../models');
-const getWeekEntries = require('../features/entry/services/getWeekEntries.service');
+const u = require('../../features/util/util');
+const { client } = require('../../db/redis');
+const { NFLPlayer, NFLTeam, Entry } = require('../../models');
+const getWeekEntries = require('../../features/entry/services/getWeekEntries.service');
 
-const sequelize = require('../db');
+const sequelize = require('../../db');
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
@@ -84,6 +83,4 @@ async function convertEntry(e, players) {
   });
 }
 
-module.exports = {
-  setPhase,
-};
+module.exports = setPhase;
