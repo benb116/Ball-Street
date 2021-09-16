@@ -173,7 +173,7 @@ function CalcPlayer(playerid) {
   const projpoints = EstimateProjection(playerid, statpoints);
   const dbid = (IDPlayerMap[playerIDMap[playerid]] || teamIDMap[playerid] || 0);
   if (!dbid) return false;
-  return [dbid, statpoints, projpoints];
+  return [dbid, Math.round(statpoints), Math.round(projpoints)];
 }
 
 function SumPoints(pstats) {
