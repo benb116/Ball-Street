@@ -2,10 +2,11 @@ const axios = require('axios');
 const getNFLPlayers = require('../features/nflplayer/services/getNFLPlayers.service');
 const { rediskeys, set, client } = require('../db/redis');
 
-const dict = require('./stats/dict.nfl');
-const state = require('./stats/state.nfl');
+const dict = require('./nfl/dict.nfl');
+const state = require('./nfl/state.nfl');
 const logger = require('../utilities/logger');
-const setPhase = require('./stats/phase.nfl');
+const { GameState, PullAllGames } = require('./nfl/games.nfl');
+const { PullAllStats, UpdateStats } = require('./nfl/stats.nfl');
 
 init().then(repeat).then(() => setInterval(repeat, 10000));
 
@@ -13,57 +14,12 @@ async function init() {
   state.playerTeamMap = await createPTMap();
   state.preProjObj = await pullPreProj();
   await GameState();
+  logger.info('NFL worker initialized');
 }
 
 function repeat() {
   return PullAllGames().then(PullAllStats).then(GetNewStats).then(CalcValues)
     .then(SetValues);
-}
-
-// Initialize all game states and schedule changes
-function GameState() {
-  return axios.get('https://relay-stream.sports.yahoo.com/nfl/games.txt')
-    .then((raw) => raw.data.split('\n'))
-    .then((rawlines) => rawlines.filter((l) => l[0] === 'g'))
-    .then((gamelines) => {
-      gamelines.forEach((gameline) => {
-        const terms = gameline.split('|');
-        const team1 = dict.teamIDMap[Number(terms[2])];
-        const team2 = dict.teamIDMap[Number(terms[3])];
-        const gameState = terms[4]; // F finished, P playing, S not started yet
-        const starttime = Number(terms[10]);
-        switch (gameState) {
-          case 'F':
-            setPhase(team1, 'post');
-            setPhase(team2, 'post');
-            logger.info(`Game set as post: ${gameline}`);
-            break;
-          case 'P':
-            setPhase(team1, 'mid');
-            setPhase(team2, 'mid');
-            logger.info(`Game set as mid: ${gameline}`);
-            break;
-          case 'S':
-            if (Date.now() > starttime * 1000) {
-              // For some reason, gamestate hasn't updated but it should have
-              setPhase(team1, 'mid');
-              setPhase(team2, 'mid');
-              logger.info(`Game set as mid: ${gameline}`);
-            } else {
-              setPhase(team1, 'pre');
-              setPhase(team2, 'pre');
-              setTimeout(() => {
-                setPhase(team1, 'mid');
-                setPhase(team2, 'mid');
-              }, (starttime * 1000 - Date.now()));
-              logger.info(`Game scheduled for ${starttime}: ${gameline}`);
-            }
-            break;
-          default:
-            logger.error('Unexpected game state', gameline);
-        }
-      });
-    });
 }
 
 // Populate the playerTeamMap and the playerIDMap
@@ -91,70 +47,10 @@ function pullPreProj() {
   }, {}));
 }
 
-// Pull game info and update timefractions
-// timefrac is time elapsed / total game time for use in live projections
-function PullAllGames() {
-  return axios.get('https://relay-stream.sports.yahoo.com/nfl/games.txt')
-    .then((raw) => raw.data.split('\n'))
-    .then((rawlines) => rawlines.filter((l) => l[0] === 'g'))
-    .then((gamelines) => {
-      gamelines.forEach((gameline) => {
-        const terms = gameline.split('|');
-        const team1 = Number(terms[2]);
-        const team2 = Number(terms[3]);
-        const quarter = Number(terms[6]);
-        const time = terms[7].split(':');
-        const timeElapsed = (
-          (quarter - 1) * 15 * 60)
-          + ((15 - 5 * (quarter === 5)) * 60 - Number(time[0]) * 60 + Number(time[1])
-          );
-        const timefrac = timeElapsed / ((60 * 60) + (10 * 60 * (quarter === 5)));
-        state.timeObj[team1] = timefrac;
-        state.timeObj[team2] = timefrac;
-
-        // If a game has finished, change the phase
-        const gameState = terms[4]; // F finished, P playing, S not started yet
-        if (gameState === 'F') {
-          setPhase(dict.teamIDMap[team1], 'post');
-          setPhase(dict.teamIDMap[team2], 'post');
-        }
-      });
-    });
-}
-
-// Get all latest statlines and filter out ones we don't care about
-function PullAllStats() {
-  return axios.get('https://relay-stream.sports.yahoo.com/nfl/stats.txt')
-    .then((raw) => raw.data.split('\n'))
-    .then((lines) => lines.filter(StatType));
-}
-
-// Allow a statline if it's one of the valid stat categories
-function StatType(line) {
-  return (dict.validStatLetters.indexOf(line[0]) > -1) ? line[0] : false;
-}
-
 // Find stat changes since last time
 function GetNewStats(lines) {
   const newlines = lines.filter(UpdateStats);
   return newlines;
-}
-
-// Determine if a statline has changed
-function UpdateStats(line) {
-  const terms = line.split('|');
-  const stattype = terms[0];
-  const playerid = terms[1];
-  terms.shift();
-  terms.shift();
-  const statline = terms.join('|');
-  if (!state.statObj[playerid]) state.statObj[playerid] = {};
-  const diff = (
-    !state.statObj[playerid][stattype]
-    || state.statObj[playerid][stattype] !== statline
-  );
-  state.statObj[playerid][stattype] = statline;
-  return diff;
 }
 
 // Calculate new point values (actual and live projection)
