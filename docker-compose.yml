@@ -45,7 +45,7 @@ services:
             - db
             - redis
         command: 
-            node app.js # nodemon for restart in debugging
+            node workers/api/worker.js # nodemon for restart in debugging
         volumes:
             - /home/node/app/node_modules
             - ./server/logs/api:/home/node/app/logs

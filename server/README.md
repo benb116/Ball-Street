@@ -3,7 +3,7 @@
 The following separate processes make up the Ball Street backend:
 
 ## Main API (qty: scaled)
-#### Entrypoint: [app.js](https://github.com/benb116/Ball-Street/blob/master/server/app.js)
+#### Entrypoint: [workers/api.js](https://github.com/benb116/Ball-Street/blob/master/server/workers/api.worker.js)
 Handles client HTTP requests and CRUDs data in the database, redis, or an offer queue. Stateless and can be scaled and load balanced as necessary.
 
 ## Live server (qty: scaled)
