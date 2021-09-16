@@ -2,7 +2,14 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import {
-  getPlayers, allPlayersSelector, filterSelector, sortSelector, setSort, getGames, allTeamsSelector,
+  getPlayers,
+  allPlayersSelector,
+  filterSelector,
+  sortSelector,
+  setSort,
+  getGames,
+  allTeamsSelector,
+  allGamesSelector,
 } from './PlayersSlice';
 
 import PlayerFilter from './PlayerFilter';
@@ -13,8 +20,15 @@ const Players = () => {
 
   const theplayers = useSelector(allPlayersSelector);
   const theteams = useSelector(allTeamsSelector);
+  const thegames = useSelector(allGamesSelector);
   const filters = useSelector(filterSelector);
   const sorts = useSelector(sortSelector);
+
+  const thegamefilter = filters.game;
+  let thegame = null;
+  if (thegamefilter !== '') {
+    thegame = thegames[Number(thegamefilter)];
+  }
 
   const filtersortplayers = theplayers
     .filter((p) => {
@@ -27,7 +41,14 @@ const Players = () => {
       } else if (p.posName !== filters.posName && filters.posName !== '') return false;
 
       // Team filter
-      if (p.teamAbr !== filters.teamAbr && filters.teamAbr !== '') return false;
+      if (theteams[p.NFLTeamId].abr !== filters.teamAbr && filters.teamAbr !== '') return false;
+
+      // Game filter
+      if (
+        thegame !== null
+        && theteams[p.NFLTeamId].id !== thegame.HomeId
+        && theteams[p.NFLTeamId].id !== thegame.AwayId
+      ) return false;
 
       // Phase filter
       if (theteams[p.NFLTeamId].phase === 'post') return false;
