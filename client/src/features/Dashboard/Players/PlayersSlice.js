@@ -16,6 +16,7 @@ const defaultState = {
     name: '',
     posName: '',
     teamAbr: '',
+    game: '',
   },
   sortProp: 'preprice',
   sortDesc: true,

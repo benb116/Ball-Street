@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { filterSelector, setFilter } from './PlayersSlice';
+import { allGamesSelector, filterSelector, setFilter } from './PlayersSlice';
 
 function debounce(func, wait) {
   let timeout;
@@ -18,6 +18,7 @@ function debounce(func, wait) {
 const PlayerFilter = () => {
   const dispatch = useDispatch();
   const filters = useSelector(filterSelector);
+  const thegames = useSelector(allGamesSelector);
 
   function handleChange(evt) {
     const { name } = evt.target;
@@ -74,6 +75,18 @@ const PlayerFilter = () => {
         <option value="TB">TB</option>
         <option value="TEN">TEN</option>
         <option value="WAS">WAS</option>
+      </select>
+      <select style={{ cursor: 'pointer' }} onChange={handleChange} name="game" value={filters.game}>
+        <option value="">Game</option>
+        {thegames.map((g, i) => (
+          <option key={g.HomeId} value={i}>
+            {g.away.abr}
+            {' '}
+            vs.
+            {' '}
+            {g.home.abr}
+          </option>
+        ))}
       </select>
     </form>
   );
