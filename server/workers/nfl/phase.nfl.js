@@ -10,6 +10,7 @@ const {
 const getWeekEntries = require('../../features/entry/services/getWeekEntries.service');
 
 const sequelize = require('../../db');
+const logger = require('../../utilities/logger');
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
@@ -31,6 +32,8 @@ const schema = Joi.object({
 async function setPhase(teamID, newphase) {
   const req = { teamID, newphase };
   u.validate(req, schema);
+
+  logger.info(`Team ${teamID}phase set to ${newphase}`);
 
   return NFLGame.update({
     phase: newphase,

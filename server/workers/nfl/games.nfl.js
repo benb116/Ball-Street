@@ -35,19 +35,16 @@ function GameState() {
           case 'F':
             setPhase(awayTeamID, 'post');
             setPhase(homeTeamID, 'post');
-            logger.info(`Game set as post: ${gameline}`);
             break;
           case 'P':
             setPhase(awayTeamID, 'mid');
             setPhase(homeTeamID, 'mid');
-            logger.info(`Game set as mid: ${gameline}`);
             break;
           case 'S':
             if (Date.now() > starttime * 1000) {
               // For some reason, gamestate hasn't updated but it should have
               setPhase(awayTeamID, 'mid');
               setPhase(homeTeamID, 'mid');
-              logger.info(`Game set as mid: ${gameline}`);
             } else {
               setPhase(awayTeamID, 'pre');
               setPhase(homeTeamID, 'pre');
