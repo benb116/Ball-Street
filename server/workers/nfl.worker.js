@@ -62,11 +62,13 @@ function CalcValues(statlines) {
 
 // Calculate statpoints and projpoints for players with changed stats
 function CalcPlayer(playerid) {
-  const stats = state.statObj[playerid];
+  const dbid = dict.YahootoBSID(playerid, state);
+  if (!dbid) return false;
+  // Get a player's stat object
+  const stats = state.statObj[dbid];
+  // Calculate points
   const statpoints = Math.round(100 * (dict.SumPoints(stats)));
   const projpoints = EstimateProjection(playerid, statpoints);
-  const dbid = (state.IDPlayerMap[state.playerIDMap[playerid]] || state.teamIDMap[playerid] || 0);
-  if (!dbid) return false;
   return [dbid, Math.round(statpoints), Math.round(projpoints)];
 }
 
@@ -75,10 +77,10 @@ function EstimateProjection(playerid, statpoints) {
   // Find player's team
   const teamID = (state.playerTeamMap[playerid] || playerid);
   // Find time remaining
-  const timefrac = state.timeObj[teamID];
+  const timefrac = state.timeObj[dict.teamIDMap[teamID]];
   // is Defense
   const isDefense = (playerid < 40);
-  const dbid = (state.IDPlayerMap[state.playerIDMap[playerid]] || state.teamIDMap[playerid] || 0);
+  const dbid = (state.IDPlayerMap[state.playerIDMap[playerid]] || dict.teamIDMap[playerid] || 0);
   // Calculate and return
   return statpoints + (1 - timefrac) * (state.preProjObj[dbid] || 0) * (1 - 2 * isDefense);
 }

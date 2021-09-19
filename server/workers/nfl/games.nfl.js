@@ -71,8 +71,8 @@ function PullAllGames() {
     .then((gamelines) => {
       gamelines.forEach((gameline) => {
         const terms = gameline.split('|');
-        const team1 = Number(terms[2]);
-        const team2 = Number(terms[3]);
+        const team1 = dict.teamIDMap[Number(terms[2])];
+        const team2 = dict.teamIDMap[Number(terms[3])];
         const quarter = Number(terms[6]);
         const time = terms[7].split(':');
         const timeElapsed = (

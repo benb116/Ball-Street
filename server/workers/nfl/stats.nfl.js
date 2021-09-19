@@ -22,12 +22,13 @@ function UpdateStats(line) {
   terms.shift();
   terms.shift();
   const statline = terms.join('|');
-  if (!state.statObj[playerid]) state.statObj[playerid] = {};
+  const dbid = dict.YahootoBSID(playerid, state);
+  if (!state.statObj[dbid]) state.statObj[dbid] = {};
   const diff = (
-    !state.statObj[playerid][stattype]
-    || state.statObj[playerid][stattype] !== statline
+    !state.statObj[dbid][stattype]
+    || state.statObj[dbid][stattype] !== statline
   );
-  state.statObj[playerid][stattype] = statline;
+  state.statObj[dbid][stattype] = statline;
   return diff;
 }
 

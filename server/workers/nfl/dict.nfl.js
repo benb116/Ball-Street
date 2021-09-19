@@ -1,24 +1,3 @@
-/*
-
-https://relay-stream.sports.yahoo.com/nfl/games.txt
-
-# nfl/games.txt
-# 2021-09-12T22:42:00-0700
-# source_sequence_number=2915
-d|2021-09-08 // week start date (Wednesday)
-D|2021 // season
-y|43|Raymond James Stadium|0|1 // ?|Stadium|?|?
-g|20210909027|6|27|F|26|4|0:00|29|31|1631233200|1|10|75|0|2|2|0|0|43|0|0|0|1|3|1
-//gamedateID|awayteam|hometeam|Final,Play,Start|?|quarter|timeleft|awayscore|homescore|starttime|
-h|27|6|7|9|10|3
-//away scoreline
-h|27|27|7|14|7|3
-// home scoreline
-a|27|29369|5228
-// top performers
-
-*/
-
 const dict = {};
 
 // Stat categories in the Yahoo file and their letters
@@ -83,6 +62,7 @@ dict.teamIDMap = {
   13: 23,
 };
 
+// Calculate the point total from a player's stats
 dict.SumPoints = function sumpoints(pstats) {
   const categories = Object.keys(pstats);
   return categories.reduce((accPoints, curCat) => {
@@ -95,6 +75,7 @@ dict.SumPoints = function sumpoints(pstats) {
       accStatPoints += Number(val) * (multipliers[lineIndex] || 0);
       return accStatPoints;
     }, 0);
+    // Defense points
     if (curCat === 'f') {
       const pointsAllowed = Number(line[0]);
       if (pointsAllowed === 0) {
@@ -115,6 +96,11 @@ dict.SumPoints = function sumpoints(pstats) {
     }
     return newPoints;
   }, 0);
+};
+
+// Convert a player's yahoo ID to his Ball Street database ID
+dict.YahootoBSID = function yahootobsid(playerid, state) {
+  return (state.IDPlayerMap[state.playerIDMap[playerid]] || dict.teamIDMap[playerid] || 0);
 };
 
 module.exports = dict;
