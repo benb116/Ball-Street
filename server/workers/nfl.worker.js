@@ -5,21 +5,44 @@ const { rediskeys, set, client } = require('../db/redis');
 const dict = require('./nfl/dict.nfl');
 const state = require('./nfl/state.nfl');
 const logger = require('../utilities/logger');
-const { GameState, PullAllGames } = require('./nfl/games.nfl');
+const { GameState, PullAllGames, setGamePhases } = require('./nfl/games.nfl');
 const { PullAllStats, UpdateStats } = require('./nfl/stats.nfl');
 
-init().then(repeat).then(() => setInterval(repeat, 10000));
+const checkInterval = 10000;
+
+init().then(() => setInterval(repeat, checkInterval));
 
 async function init() {
+  // Which team is a player on, and YahooID -> name
+  logger.info('Creating playerTeamMap and playerIDMap');
   state.playerTeamMap = await createPTMap();
+  // What was a player's pre-game projection, and name -> BSID
+  logger.info('Creating preProjMap');
   state.preProjObj = await pullPreProj();
-  await GameState();
+  // What is the state of each game?
+  logger.info('Getting gamestates');
+  const phasemap = await GameState();
+  // What are the latest stats?
+  logger.info('Pulling initial stats');
+  const newlines = await PullAllStats().then(GetNewStats);
+  // Set all game phases and schedule changes
+  logger.info('Setting game phases');
+  await setGamePhases(phasemap);
+  // Pull game time information
+  logger.info('Pulling game time info');
+  await PullAllGames();
+  // Calculate latest point values and push
+  logger.info('Calculating point values');
+  SetValues(CalcValues(newlines));
+
   logger.info('NFL worker initialized');
 }
 
-function repeat() {
-  return PullAllGames().then(PullAllStats).then(GetNewStats).then(CalcValues)
-    .then(SetValues);
+async function repeat() {
+  // Pull game time information
+  await PullAllGames();
+  // Pull stats, find differences, calc and set values
+  await PullAllStats().then(GetNewStats).then(CalcValues).then(SetValues);
 }
 
 // Populate the playerTeamMap and the playerIDMap
@@ -55,8 +78,7 @@ function GetNewStats(lines) {
 
 // Calculate new point values (actual and live projection)
 function CalcValues(statlines) {
-  let playersToCalc = statlines.map((l) => l.split('|')[1]);
-  if (!playersToCalc) { playersToCalc = Object.keys(state.statObj); }
+  const playersToCalc = statlines.map((l) => l.split('|')[1]);
   return playersToCalc.map(CalcPlayer).filter((e) => e !== false);
 }
 
@@ -68,6 +90,7 @@ function CalcPlayer(playerid) {
   const stats = state.statObj[dbid];
   // Calculate points
   const statpoints = Math.round(100 * (dict.SumPoints(stats)));
+  // Estimate projection (requires YahooID)
   const projpoints = EstimateProjection(playerid, statpoints);
   return [dbid, Math.round(statpoints), Math.round(projpoints)];
 }
@@ -78,11 +101,12 @@ function EstimateProjection(playerid, statpoints) {
   const teamID = (state.playerTeamMap[playerid] || playerid);
   // Find time remaining
   const timefrac = state.timeObj[dict.teamIDMap[teamID]];
+  const timeleft = (timefrac === 'done' ? 0 : (1 - timefrac));
   // is Defense
   const isDefense = (playerid < 40);
   const dbid = (state.IDPlayerMap[state.playerIDMap[playerid]] || dict.teamIDMap[playerid] || 0);
   // Calculate and return
-  return statpoints + (1 - timefrac) * (state.preProjObj[dbid] || 0) * (1 - 2 * isDefense);
+  return statpoints + timeleft * (state.preProjObj[dbid] || 0) * (1 - 2 * isDefense);
 }
 
 // Set values in redis and publish an update
