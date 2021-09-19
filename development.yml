@@ -12,7 +12,7 @@ services:
 
     api:
         command: 
-            ./node_modules/.bin/nodemon app.js # nodemon for restart in debugging
+            ./node_modules/.bin/nodemon workers/api.worker.js # nodemon for restart in debugging
         restart: unless-stopped
         volumes:
             - ./server:/home/node/app

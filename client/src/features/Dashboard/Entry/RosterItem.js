@@ -8,6 +8,7 @@ import { allTeamsSelector, playerSelector, priceMapSelector } from '../Players/P
 import { preDrop } from './EntrySlice';
 import { cancelOffer, offersSelector } from '../Offers/OffersSlice';
 import { setModal } from '../Modal/ModalSlice';
+import RenderPrice from '../../../helpers/util';
 
 function RosterItem({ playerid, position }) {
   const dispatch = useDispatch();
@@ -64,11 +65,11 @@ function RosterItem({ playerid, position }) {
       <td>{position}</td>
       <td>{thisplayer.name}</td>
       <td>{thisplayer.teamAbr}</td>
-      <td style={{ textAlign: 'right' }}>{dispStat}</td>
-      <td style={{ textAlign: 'right' }}>{dispProj}</td>
-      <td style={{ textAlign: 'right' }}>{(priceMap && Number(priceMap.lastprice)) ? priceMap.lastprice : ''}</td>
-      <td style={{ textAlign: 'right' }}>{(priceMap && Number(priceMap.bestbid)) ? priceMap.bestbid : ''}</td>
-      <td style={{ textAlign: 'right' }}>{(priceMap && Number(priceMap.bestask)) ? priceMap.bestask : ''}</td>
+      <td style={{ textAlign: 'right' }}>{RenderPrice(dispStat)}</td>
+      <td style={{ textAlign: 'right' }}>{RenderPrice(dispProj)}</td>
+      <td style={{ textAlign: 'right' }}>{(priceMap && Number(priceMap.lastprice)) ? RenderPrice(priceMap.lastprice) : ''}</td>
+      <td style={{ textAlign: 'right' }}>{(priceMap && Number(priceMap.bestbid)) ? RenderPrice(priceMap.bestbid) : ''}</td>
+      <td style={{ textAlign: 'right' }}>{(priceMap && Number(priceMap.bestask)) ? RenderPrice(priceMap.bestask) : ''}</td>
       <ActionButton thephase={thephase} oclick={oclick} text={text} />
     </tr>
   );

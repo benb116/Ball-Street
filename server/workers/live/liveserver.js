@@ -3,17 +3,13 @@
 const WebSocket = require('ws');
 const http = require('http');
 const express = require('express');
-const { promisify } = require('util');
 
-const { client, rediskeys } = require('../../db/redis');
-
-const hgetallAsync = promisify(client.hgetall).bind(client);
+const { get, rediskeys } = require('../../db/redis');
 
 const session = require('../../middleware/session');
 
 const liveState = require('./livestate'); // Data stored in memory
 
-const playerService = require('../../features/nflplayer/nflplayer.service');
 const logger = require('../../utilities/logger');
 
 // WS server on top of express
@@ -48,8 +44,7 @@ wss.on('connection', async (ws, request) => {
   liveState.contestmap.set(ws, contestID);
 
   // Send starting data
-  const out = await sendLatest(contestID);
-  ws.send(JSON.stringify({ event: 'priceUpdate', pricedata: out.filter((e) => e !== null) }));
+  ws.send(JSON.stringify({ event: 'priceUpdate', pricedata: await sendLatest(contestID) }));
 
   ws.on('close', () => {
     liveState.connmap.delete(userId);
@@ -61,30 +56,45 @@ server.listen(process.env.PORT, () => {
   logger.info(`Live server listening on port ${process.env.PORT}`);
 });
 
-// Get latest price data
-let playerIDs = [];
-
-(async () => {
-  const out = await playerService.getNFLPlayers();
-  playerIDs = out.map((p) => p.id);
-})();
+// async function sendLatest(contestID) {
+//   const outPromises = playerIDs
+//     .map((p) => {
+//       const contestPromise = get.hkeyall(rediskeys.hash(contestID, p));
+//       const statPromise = get.hkeyall(rediskeys.statHash(p));
+//       return Promise.all([contestPromise, statPromise]).then((objarr) => {
+//         if (!objarr) { return null; }
+//         const out = { ...objarr[0], ...objarr[1] };
+//         out.nflplayerID = p;
+//         return out;
+//       });
+//     });
+//   return Promise.all(outPromises);
+// }
 
 async function sendLatest(contestID) {
-  const outPromises = playerIDs
-    .map((p) => {
-      const contestPromise = hgetallAsync(rediskeys.hash(contestID, p));
-      const statPromise = hgetallAsync(rediskeys.statHash(p));
-      return Promise.all([contestPromise, statPromise]).then((objarr) => {
-        if (!objarr) { return null; }
-        const obj = { ...objarr[0], ...objarr[1] };
-        const keys = Object.keys(obj);
-        const out = keys.reduce((acc, cur) => {
-          acc[cur] = Number(obj[cur]);
-          return acc;
-        }, {});
-        out.nflplayerID = p;
-        return out;
-      });
-    });
-  return Promise.all(outPromises);
+  const stats = get.hkeyall(rediskeys.statpriceHash());
+  const projs = get.hkeyall(rediskeys.projpriceHash());
+  const bbids = get.hkeyall(rediskeys.bestbidHash(contestID));
+  const basks = get.hkeyall(rediskeys.bestaskHash(contestID));
+  const lasts = get.hkeyall(rediskeys.lasttradeHash(contestID));
+  return Promise.all([stats, projs, bbids, basks, lasts]).then((out) => {
+    const [statsOut, projsOut, bbidsOut, basksOut, lastsOut] = out;
+    const retobj = {};
+
+    function buildObj(arr, label) {
+      if (arr) {
+        Object.keys(arr).forEach((p) => {
+          if (!retobj[p]) retobj[p] = {};
+          retobj[p].nflplayerID = Number(p);
+          retobj[p][label] = Number(arr[p]);
+        });
+      }
+    }
+    buildObj(statsOut, 'statprice');
+    buildObj(projsOut, 'projprice');
+    buildObj(bbidsOut, 'bestbid');
+    buildObj(basksOut, 'bestask');
+    buildObj(lastsOut, 'lastprice');
+    return retobj;
+  });
 }

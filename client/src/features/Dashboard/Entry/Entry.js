@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { allTeamsSelector, playersSelector, pricesMapSelector } from '../Players/PlayersSlice';
+import RenderPrice from '../../../helpers/util';
 
 import { getEntry, entrySelector, rosterUpdateSelector } from './EntrySlice';
 
@@ -40,7 +41,7 @@ const Entry = () => {
       <h3>Entry</h3>
       Balance:
       {' '}
-      {thisentry.balance}
+      {RenderPrice(thisentry.balance)}
       <table>
         <RosterHeader />
         <tbody>
@@ -106,8 +107,8 @@ function PointTotals() {
       <td>Total</td>
       <td />
       <td />
-      <td style={{ textAlign: 'right' }}>{sum[0]}</td>
-      <td style={{ textAlign: 'right' }}>{sum[1]}</td>
+      <td style={{ textAlign: 'right' }}>{RenderPrice(sum[0])}</td>
+      <td style={{ textAlign: 'right' }}>{RenderPrice(sum[1])}</td>
     </tr>
   );
 }

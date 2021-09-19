@@ -50,7 +50,7 @@ function TradeItem({ tradedata }) {
       -
       {(playerData.name || '')}
       -
-      {tradedata.price}
+      {(tradedata.price / 100)}
     </div>
   );
 }

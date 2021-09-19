@@ -53,10 +53,16 @@ function priceUpdate(message) {
 }
 
 function statUpdate(message) {
-  const { nflplayerID, statPrice, projPrice } = JSON.parse(message);
-  liveState.statUpdateMap[nflplayerID] = { nflplayerID };
-  if (statPrice !== null) { liveState.statUpdateMap[nflplayerID].statPrice = statPrice; }
-  if (projPrice !== null) { liveState.statUpdateMap[nflplayerID].projPrice = projPrice; }
+  // const { nflplayerID, statPrice, projPrice } = JSON.parse(message);
+  // liveState.statUpdateMap[nflplayerID] = { nflplayerID };
+  // if (statPrice !== null) { liveState.statUpdateMap[nflplayerID].statPrice = statPrice; }
+  // if (projPrice !== null) { liveState.statUpdateMap[nflplayerID].projPrice = projPrice; }
+  liveState.contestmap.forEach(async (thecontestID, thews) => {
+    if (!thews) { liveState.contestmap.delete(thews); return; }
+    if (thews.readyState === 1) {
+      thews.send(JSON.stringify({ event: 'statUpdate', pricedata: JSON.parse(message) }));
+    }
+  });
 }
 
 // Add a last trade update to the map

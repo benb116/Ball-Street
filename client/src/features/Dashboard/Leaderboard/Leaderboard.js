@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 
 import { leadersSelector } from './LeaderboardSlice';
+import RenderPrice from '../../../helpers/util';
 
 const Leaderboards = () => {
   const leaders = useSelector(leadersSelector);
@@ -33,7 +34,7 @@ function LeaderboardItem({ leaderdata }) {
       {' '}
       -
       {' '}
-      {leaderdata.total}
+      {RenderPrice(leaderdata.total)}
     </div>
   );
 }
