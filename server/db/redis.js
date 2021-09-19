@@ -28,19 +28,32 @@ const getAsync = promisify(client.get).bind(client);
 const setAsync = promisify(client.set).bind(client);
 const delAsync = promisify(client.del).bind(client);
 const hsetAsync = promisify(client.hset).bind(client);
+const hgetAsync = promisify(client.hget).bind(client);
 const hgetallAsync = promisify(client.hgetall).bind(client);
 
 // Define redis keys for various entries
-function hash(contestID, nflplayerID) {
-  return `contest${contestID}:` + `player${nflplayerID}`;
-}
-
 function leaderHash(contestID) {
   return `contest${contestID}:leaderboard`;
 }
 
-function statHash(nflplayerID) {
-  return `${nflplayerID}:stat`;
+function bestbidHash(contestID) {
+  return `contest${contestID}:bestbid`;
+}
+
+function bestaskHash(contestID) {
+  return `contest${contestID}:bestask`;
+}
+
+function lasttradeHash(contestID) {
+  return `contest${contestID}:lasttrade`;
+}
+
+function statpriceHash() {
+  return 'stat';
+}
+
+function projpriceHash() {
+  return 'proj';
 }
 
 function gamePhase() {
@@ -80,9 +93,12 @@ async function initRedisWeek() {
 initRedisWeek();
 
 const rediskeys = {
-  hash,
+  bestbidHash,
+  bestaskHash,
+  lasttradeHash,
+  statpriceHash,
+  projpriceHash,
   leaderHash,
-  statHash,
   gamePhase,
   currentWeek,
   emailVer,
@@ -92,6 +108,7 @@ const rediskeys = {
 const get = {
   CurrentWeek: getCurrentWeek,
   key: getAsync,
+  hkey: hgetAsync,
   hkeyall: hgetallAsync,
 };
 

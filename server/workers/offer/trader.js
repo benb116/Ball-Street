@@ -11,9 +11,7 @@ const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
 };
 
-const { client, rediskeys } = require('../../db/redis');
-
-const { hash } = rediskeys;
+const { client, rediskeys, set } = require('../../db/redis');
 
 const service = require('../../features/trade/trade.service');
 const logger = require('../../utilities/logger');
@@ -141,7 +139,7 @@ async function attemptFill(t, bidid, askid, tprice) {
 
   await Promise.all([createTrade, createHistory]);
 
-  client.hmset(hash(contestID, nflplayerID), 'lastprice', price);
+  set.hkey(rediskeys.lasttradeHash(contestID), nflplayerID, price);
   client.publish('lastTrade', JSON.stringify({
     contestID,
     nflplayerID,

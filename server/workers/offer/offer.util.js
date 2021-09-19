@@ -1,8 +1,7 @@
 const u = require('../../features/util/util');
 const Book = require('./book.class');
-const { client, rediskeys } = require('../../db/redis');
+const { client, rediskeys, set } = require('../../db/redis');
 
-const { hash } = rediskeys;
 const { Offer, ProtectedMatch } = require('../../models');
 const logger = require('../../utilities/logger');
 
@@ -72,11 +71,9 @@ function updateBest(playerBook) {
   if (bestasks.length === 2) bestask = Math.min(...bestasks);
   if (bestasks.length === 1) [bestask] = bestasks;
 
-  client.hset(
-    hash(contestID, nflplayerID),
-    'bestbid', bestbid,
-    'bestask', bestask,
-  );
+  set.hkey(rediskeys.bestbidHash(contestID), nflplayerID, bestbid);
+  set.hkey(rediskeys.bestaskHash(contestID), nflplayerID, bestask);
+
   client.publish('priceUpdate', JSON.stringify({
     contestID,
     nflplayerID,

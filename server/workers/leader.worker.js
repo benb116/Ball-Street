@@ -1,37 +1,19 @@
 // Leader worker
 // Calculates live leaderboards
 
-const { promisify } = require('util');
-
 const config = require('../config');
 
 const entryService = require('../features/entry/entry.service');
-const playerService = require('../features/nflplayer/nflplayer.service');
 
-const { client, rediskeys } = require('../db/redis');
+const {
+  client, rediskeys, get, set,
+} = require('../db/redis');
 
-const { statHash, leaderHash } = rediskeys;
-const hgetallAsync = promisify(client.hgetall).bind(client);
-
-// Get a list of all player IDs
-let playerIDs = [];
-(async () => {
-  const out = await playerService.getNFLPlayers();
-  playerIDs = out.map((p) => p.id);
-})();
+const { projpriceHash, leaderHash } = rediskeys;
 
 // Pull all latest price info from redis for all players
 async function sendLatest() {
-  const outPromises = playerIDs.map((p) => {
-    const rkey = statHash(p); // Get the hash key for a player
-
-    return hgetallAsync(rkey).then((obj) => { // Get all price info into price obj
-      const out = (obj || {});
-      out.nflplayerID = p;
-      return out;
-    });
-  });
-  return Promise.all(outPromises);
+  return get.hkeyall(projpriceHash());
 }
 // Filter out duplicates
 function onlyUnique(value, index, self) {
@@ -63,18 +45,8 @@ async function calculateLeaderboard() {
 
   // Pull latest price info for all contests
   // Build one big price map
-  const priceMap = await sendLatest()
-    .then((arr) => {
-    // Make a subobject for each contest
-      const pMap = arr // For each priceobj in a contest
-        // .filter((e) => e !== null) // Get rid of nulls
-        .reduce((accpMap, priceObj) => { // Populate the subobject by nflplayerID
-          const out2 = accpMap;
-          out2[priceObj.nflplayerID] = priceObj;
-          return out2;
-        }, {});
-      return pMap;
-    }, {});
+  const priceMap = await sendLatest();
+  if (!priceMap) return;
   // console.log(priceMap);
 
   // Sum each entry based on the price map
@@ -84,7 +56,7 @@ async function calculateLeaderboard() {
         return acc;
       }
       // If player has price info, add that, otherwise 0
-      const out = acc + (priceMap[cur].projPrice ? Number(priceMap[cur].projPrice) : 0);
+      const out = acc + (priceMap[cur] ? Number(priceMap[cur]) : 0);
       return out;
     }, e.balance);
     return e;
@@ -103,7 +75,7 @@ async function calculateLeaderboard() {
   contests.forEach((c) => {
     const cleader = contestSplit[c];
     cleader.sort((a, b) => ((a.total < b.total) ? 1 : -1));
-    client.set(leaderHash(c), JSON.stringify(cleader));
+    set.key(leaderHash(c), JSON.stringify(cleader));
   });
 
   // Announce new results
