@@ -22,6 +22,7 @@ const PlayerFilter = () => {
   const filters = useSelector(filterSelector);
   const thegames = useSelector(allGamesSelector);
   const theteams = useSelector(allTeamsSelector);
+
   function handleChange(evt) {
     const { name } = evt.target;
     const { value } = evt.target;
@@ -60,6 +61,18 @@ const PlayerFilter = () => {
             {g.away.abr}
           </option>
         ) : null))}
+      </select>
+      <select style={{ cursor: 'pointer' }} onChange={handleChange} name="game" value={filters.game}>
+        <option value="">Game</option>
+        {thegames.map((g, i) => (
+          <option key={g.HomeId} value={i}>
+            {g.away.abr}
+            {' '}
+            vs.
+            {' '}
+            {g.home.abr}
+          </option>
+        ))}
       </select>
     </form>
   );
