@@ -53,6 +53,26 @@ function GameState() {
         };
       });
 
+      if (gameobjs.length < 16) {
+        // Some teams are on bye. Mark them in pairs with post
+        const gameteams = Object.keys(phasemap);
+        let remainteams = Array(32).fill().map((x, i) => i + 1);
+        gameteams.forEach((t) => { remainteams[t] = 0; });
+        remainteams = remainteams.filter((t) => t !== 0);
+        if (remainteams.length % 2 !== 0) { logger.error(`Odd number of bye week teams? ${gamelines}`); }
+        while (remainteams.length > 1) {
+          const team1 = remainteams.shift();
+          const team2 = remainteams.shift();
+          phasemap[team1] = 'post';
+          phasemap[team2] = 'post';
+          gameobjs.push({
+            week: currentweek,
+            HomeId: team1,
+            AwayId: team2,
+          });
+        }
+      }
+
       // Add games to DB (phases changed later)
       await NFLGame.bulkCreate(gameobjs)
         .catch((err) => {
