@@ -3,6 +3,7 @@ module.exports = function out(sequelize, DataTypes) {
     week: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      primaryKey: true,
     },
     HomeId: {
       type: DataTypes.INTEGER,
