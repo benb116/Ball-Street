@@ -21,8 +21,8 @@ function PlayerItem({ playerdata }) {
   const thephase = theteams[playerdata.NFLTeamId].phase;
   const teamAbr = theteams[playerdata.NFLTeamId].abr;
 
-  const dispProj = thephase === 'pre' ? playerdata.preprice : (playerdata.projPrice || 0);
-  const dispStat = thephase === 'pre' ? playerdata.postprice : (playerdata.statPrice || 0);
+  const dispProj = thephase === 'pre' ? playerdata.preprice : (priceMap.projPrice || 0);
+  const dispStat = thephase === 'pre' ? playerdata.postprice : (priceMap.statPrice || 0);
 
   const onpredrop = () => {
     dispatch(preDrop({ leagueID, contestID, nflplayerID: playerdata.id }));

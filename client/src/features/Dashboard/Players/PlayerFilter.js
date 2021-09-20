@@ -52,18 +52,6 @@ const PlayerFilter = () => {
       </select>
       <select style={{ cursor: 'pointer' }} onChange={handleChange} name="game" value={filters.game}>
         <option value="">Game</option>
-        {thegames.map((g, i) => (g.phase !== 'post' ? (
-          <option key={g.HomeId} value={i}>
-            {g.home.abr}
-            {' '}
-            vs.
-            {' '}
-            {g.away.abr}
-          </option>
-        ) : null))}
-      </select>
-      <select style={{ cursor: 'pointer' }} onChange={handleChange} name="game" value={filters.game}>
-        <option value="">Game</option>
         {thegames.map((g, i) => (
           <option key={g.HomeId} value={i}>
             {g.away.abr}

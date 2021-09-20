@@ -111,18 +111,25 @@ function EstimateProjection(playerid, statpoints) {
 
 // Set values in redis and publish an update
 function SetValues(playerVals) {
-  const allPromises = playerVals.map((pv) => {
-    logger.info(pv);
-    client.publish('statUpdate', JSON.stringify({
-      nflplayerID: pv[0],
-      statPrice: Number(pv[1]),
-      projPrice: Number(pv[2]),
-    }));
-    return set.hkey(
-      rediskeys.statHash(pv[0]),
-      'statPrice', pv[1],
-      'projPrice', pv[2],
-    );
-  });
-  return Promise.all(allPromises);
+  const statvals = playerVals.reduce((acc, cur) => {
+    acc.push(cur[0], cur[1]);
+    return acc;
+  }, []);
+  const projvals = playerVals.reduce((acc, cur) => {
+    acc.push(cur[0], cur[2]);
+    return acc;
+  }, []);
+
+  const outobj = playerVals.reduce((acc, cur) => {
+    acc[cur[0]] = {
+      nflplayerID: cur[0],
+      statPrice: Number(cur[1]),
+      projPrice: Number(cur[2]),
+    };
+    return acc;
+  }, {});
+  if (playerVals.length) client.publish('statUpdate', JSON.stringify(outobj));
+
+  if (statvals.length) set.hkey([rediskeys.statpriceHash(), ...statvals]);
+  if (projvals.length) set.hkey([rediskeys.projpriceHash(), ...projvals]);
 }

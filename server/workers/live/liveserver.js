@@ -56,21 +56,6 @@ server.listen(process.env.PORT, () => {
   logger.info(`Live server listening on port ${process.env.PORT}`);
 });
 
-// async function sendLatest(contestID) {
-//   const outPromises = playerIDs
-//     .map((p) => {
-//       const contestPromise = get.hkeyall(rediskeys.hash(contestID, p));
-//       const statPromise = get.hkeyall(rediskeys.statHash(p));
-//       return Promise.all([contestPromise, statPromise]).then((objarr) => {
-//         if (!objarr) { return null; }
-//         const out = { ...objarr[0], ...objarr[1] };
-//         out.nflplayerID = p;
-//         return out;
-//       });
-//     });
-//   return Promise.all(outPromises);
-// }
-
 async function sendLatest(contestID) {
   const stats = get.hkeyall(rediskeys.statpriceHash());
   const projs = get.hkeyall(rediskeys.projpriceHash());
@@ -90,8 +75,8 @@ async function sendLatest(contestID) {
         });
       }
     }
-    buildObj(statsOut, 'statprice');
-    buildObj(projsOut, 'projprice');
+    buildObj(statsOut, 'statPrice');
+    buildObj(projsOut, 'projPrice');
     buildObj(bbidsOut, 'bestbid');
     buildObj(basksOut, 'bestask');
     buildObj(lastsOut, 'lastprice');

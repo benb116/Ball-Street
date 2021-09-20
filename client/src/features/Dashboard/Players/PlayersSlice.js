@@ -42,7 +42,6 @@ export const playersSlice = createSlice({
       state.sortProp = action.payload;
     },
     updatePrices: (state, { payload }) => {
-      if (!payload.length) { payload = [payload]; }
       const ns = state;
       payload.forEach((p) => {
         const pm = ns.priceMap[p.nflplayerID] || {};
