@@ -16,15 +16,6 @@ const NFLPosTypes = {
   6: { name: 'DEF', canflex: false },
 };
 
-const NFLPosTypes = {
-  1: { name: 'QB', canflex: false },
-  2: { name: 'RB', canflex: true },
-  3: { name: 'WR', canflex: true },
-  4: { name: 'TE', canflex: true },
-  5: { name: 'K', canflex: false },
-  6: { name: 'DEF', canflex: false },
-};
-
 const defaultState = {
   playerlist: [],
   gamelist: [],
