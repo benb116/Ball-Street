@@ -52,15 +52,20 @@ const PlayerFilter = () => {
       </select>
       <select style={{ cursor: 'pointer' }} onChange={handleChange} name="game" value={filters.game}>
         <option value="">Game</option>
-        {thegames.map((g, i) => (
-          <option key={g.HomeId} value={i}>
-            {g.away.abr}
-            {' '}
-            vs.
-            {' '}
-            {g.home.abr}
-          </option>
-        ))}
+        {thegames.map((g, i) => {
+          if (g.phase !== 'post') {
+            return (
+              <option key={g.HomeId} value={i}>
+                {g.away.abr}
+                {' '}
+                vs.
+                {' '}
+                {g.home.abr}
+              </option>
+            );
+          }
+          return null;
+        })}
       </select>
     </form>
   );
