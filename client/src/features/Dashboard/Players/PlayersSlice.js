@@ -7,6 +7,15 @@ import { getgamesfunc, getplayersfunc } from './Players.api';
 export const getPlayers = createAsyncThunk('players/getPlayers', getplayersfunc);
 export const getGames = createAsyncThunk('players/getGames', getgamesfunc);
 
+const NFLPosTypes = {
+  1: { name: 'QB', canflex: false },
+  2: { name: 'RB', canflex: true },
+  3: { name: 'WR', canflex: true },
+  4: { name: 'TE', canflex: true },
+  5: { name: 'K', canflex: false },
+  6: { name: 'DEF', canflex: false },
+};
+
 const defaultState = {
   playerlist: [],
   gamelist: [],
@@ -62,7 +71,7 @@ export const playersSlice = createSlice({
   extraReducers: {
     [getPlayers.fulfilled]: (state, { payload }) => {
       const np = payload.map((p) => {
-        p.posName = p.NFLPosition.name;
+        p.posName = NFLPosTypes[p.NFLPositionId].name;
         return p;
       });
       state.playerlist = np;
