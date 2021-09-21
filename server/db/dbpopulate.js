@@ -16,6 +16,7 @@ async function PopulateDB(sequelize) {
     Membership,
     Offer,
     Trade,
+    NFLGame,
   } = models;
 
   // Define Users
@@ -164,6 +165,39 @@ async function PopulateDB(sequelize) {
   await Trade.bulkCreate(trds);
 
   await set.CurrentWeek(1);
+
+  await NFLGame.bulkCreate([
+    { week: 1, HomeId: 1, AwayId: 2 },
+    {
+      week: 1, HomeId: 3, AwayId: 4, phase: 'pre',
+    },
+    { week: 1, HomeId: 5, AwayId: 6 },
+    { week: 1, HomeId: 7, AwayId: 8 },
+    { week: 1, HomeId: 9, AwayId: 10 },
+    { week: 1, HomeId: 11, AwayId: 12 },
+    { week: 1, HomeId: 13, AwayId: 14 },
+    {
+      week: 1, HomeId: 15, AwayId: 16, phase: 'pre',
+    },
+    { week: 1, HomeId: 17, AwayId: 18 },
+    {
+      week: 1, HomeId: 19, AwayId: 20, phase: 'pre',
+    },
+    { week: 1, HomeId: 21, AwayId: 22 },
+    {
+      week: 1, HomeId: 23, AwayId: 24, phase: 'mid',
+    },
+    {
+      week: 1, HomeId: 25, AwayId: 26, phase: 'mid',
+    },
+    {
+      week: 1, HomeId: 27, AwayId: 28, phase: 'mid',
+    },
+    { week: 1, HomeId: 29, AwayId: 30 },
+    {
+      week: 1, HomeId: 31, AwayId: 32, phase: 'pre',
+    },
+  ]);
 }
 
 module.exports = PopulateDB;

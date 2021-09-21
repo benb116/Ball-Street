@@ -1,13 +1,14 @@
 const Queue = require('bull');
 const Joi = require('joi');
 
+const { Op } = require('sequelize');
 const config = require('../../../config');
 const u = require('../../util/util');
 const { validators } = require('../../util/util.schema');
 
 const sequelize = require('../../../db');
 const {
-  Offer, Entry, NFLPlayer, NFLTeam,
+  Offer, Entry, NFLPlayer, NFLGame,
 } = require('../../../models');
 
 const { queueOptions } = require('../../../db/redis');
@@ -62,14 +63,10 @@ async function createOffer(req) {
     if (!theentry) { u.Error('No entry found', 404); }
 
     const playerdata = await NFLPlayer.findByPk(obj.nflplayerID, {
-      attributes: ['NFLPositionId'],
-      include: [{ model: NFLTeam }],
+      attributes: ['NFLPositionId', 'NFLTeamId'],
       transaction: t,
     }).then(u.dv);
     if (!playerdata) { u.Error('Player not found', 404); }
-    if (playerdata.NFLTeam.gamePhase !== 'mid') {
-      u.Error("Can't make an offer before or after games", 406);
-    }
 
     // Player should be in entry for ask, not for bid
     const isOnTeam = u.isPlayerOnRoster(theentry, obj.nflplayerID);
@@ -87,6 +84,16 @@ async function createOffer(req) {
       if (!u.isOpenRoster(theentry, playerdata.NFLPositionId)) {
         u.Error('There are no spots this player could fit into', 409);
       }
+    }
+
+    // Get player price and position
+    const gamedata = await NFLGame.findOne({
+      where: {
+        [Op.or]: [{ HomeId: playerdata.NFLTeamId }, { AwayId: playerdata.NFLTeamId }],
+      },
+    }, { transaction: t }).then(u.dv);
+    if (gamedata.phase !== 'mid') {
+      u.Error("Can't make an offer before or after games", 406);
     }
 
     return Offer.create({

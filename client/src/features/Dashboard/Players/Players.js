@@ -1,9 +1,15 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
 
 import {
-  getPlayers, allPlayersSelector, filterSelector, sortSelector, setSort,
+  getPlayers,
+  allPlayersSelector,
+  filterSelector,
+  sortSelector,
+  setSort,
+  getGames,
+  allTeamsSelector,
+  allGamesSelector,
 } from './PlayersSlice';
 
 import PlayerFilter from './PlayerFilter';
@@ -11,11 +17,18 @@ import PlayerItem from './PlayerItem';
 
 const Players = () => {
   const dispatch = useDispatch();
-  const { leagueID, contestID } = useParams();
 
   const theplayers = useSelector(allPlayersSelector);
+  const theteams = useSelector(allTeamsSelector);
+  const thegames = useSelector(allGamesSelector);
   const filters = useSelector(filterSelector);
   const sorts = useSelector(sortSelector);
+
+  const thegamefilter = filters.game;
+  let thegame = null;
+  if (thegamefilter !== '') {
+    thegame = thegames[Number(thegamefilter)];
+  }
 
   const filtersortplayers = theplayers
     .filter((p) => {
@@ -28,16 +41,23 @@ const Players = () => {
       } else if (p.posName !== filters.posName && filters.posName !== '') return false;
 
       // Team filter
-      if (p.teamAbr !== filters.teamAbr && filters.teamAbr !== '') return false;
+      if (theteams[p.NFLTeamId].abr !== filters.teamAbr && filters.teamAbr !== '') return false;
+
+      // Game filter
+      if (
+        thegame !== null
+        && theteams[p.NFLTeamId].id !== thegame.HomeId
+        && theteams[p.NFLTeamId].id !== thegame.AwayId
+      ) return false;
 
       // Phase filter
-      if (p.NFLTeam.gamePhase === 'post') return false;
+      if (theteams[p.NFLTeamId].phase === 'post') return false;
 
       return true;
     })
     .sort((a, b) => {
-      const aPhase = a.NFLTeam.gamePhase;
-      const bPhase = b.NFLTeam.gamePhase;
+      const aPhase = theteams[a.NFLTeamId].phase;
+      const bPhase = theteams[b.NFLTeamId].phase;
 
       const sortBy = sorts.sortProp;
       let [item1, item2] = [a[sorts.sortProp], b[sorts.sortProp]];
@@ -68,8 +88,12 @@ const Players = () => {
     });
 
   useEffect(() => {
-    dispatch(getPlayers({ leagueID, contestID }));
-  }, [contestID, dispatch, leagueID]);
+    dispatch(getPlayers());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(getGames());
+  }, [dispatch]);
 
   return (
     <div

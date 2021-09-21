@@ -6,21 +6,23 @@ import { useParams } from 'react-router-dom';
 import { isOnRosterSelector, preAdd, preDrop } from '../Entry/EntrySlice';
 import { setModal } from '../Modal/ModalSlice';
 import { cancelOffer, offersSelector } from '../Offers/OffersSlice';
-import { priceMapSelector } from './PlayersSlice';
+import { allTeamsSelector, priceMapSelector } from './PlayersSlice';
 import RenderPrice from '../../../helpers/util';
 
 function PlayerItem({ playerdata }) {
   const dispatch = useDispatch();
   const { leagueID, contestID } = useParams();
   const offers = useSelector(offersSelector);
+  const theteams = useSelector(allTeamsSelector);
 
   const showDrop = useSelector(isOnRosterSelector(playerdata.id));
   const priceMap = useSelector(priceMapSelector(playerdata.id));
 
-  const thephase = playerdata.NFLTeam.gamePhase;
+  const thephase = theteams[playerdata.NFLTeamId].phase;
+  const teamAbr = theteams[playerdata.NFLTeamId].abr;
 
-  const dispProj = thephase === 'pre' ? playerdata.preprice : (playerdata.projPrice || 0);
-  const dispStat = thephase === 'pre' ? playerdata.postprice : (playerdata.statPrice || 0);
+  const dispProj = thephase === 'pre' ? playerdata.preprice : (priceMap.projPrice || 0);
+  const dispStat = thephase === 'pre' ? playerdata.postprice : (priceMap.statPrice || 0);
 
   const onpredrop = () => {
     dispatch(preDrop({ leagueID, contestID, nflplayerID: playerdata.id }));
@@ -73,12 +75,13 @@ function PlayerItem({ playerdata }) {
     <tr playerid={playerdata.id}>
       <td style={{ width: '10rem', overflow: 'hidden' }}>{playerdata.name}</td>
       <td style={{ width: '2.2rem' }}>{playerdata.posName}</td>
-      <td style={{ width: '2.2rem' }}>{playerdata.teamAbr}</td>
+      <td style={{ width: '2.2rem' }}>{teamAbr}</td>
       <td style={{ width: '2rem', textAlign: 'right' }}>{RenderPrice(dispProj)}</td>
       <td style={{ width: '2rem', textAlign: 'right' }}>{RenderPrice(dispStat)}</td>
       <td style={{ width: '2rem', textAlign: 'right' }}>{(priceMap && Number(priceMap.lastprice)) ? RenderPrice(priceMap.lastprice) : ''}</td>
       <td style={{ width: '2rem', textAlign: 'right' }}>{(priceMap && Number(priceMap.bestbid)) ? RenderPrice(priceMap.bestbid) : ''}</td>
       <td style={{ width: '2rem', textAlign: 'right' }}>{(priceMap && Number(priceMap.bestask)) ? RenderPrice(priceMap.bestask) : ''}</td>
+
       <ActionButton thephase={thephase} oclick={oclick} text={text} />
     </tr>
   );
@@ -114,7 +117,7 @@ PlayerItem.propTypes = {
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
     posName: PropTypes.string.isRequired,
-    teamAbr: PropTypes.string.isRequired,
+    NFLTeamId: PropTypes.number.isRequired,
     preprice: 0,
     postprice: 0,
     projPrice: 0,
