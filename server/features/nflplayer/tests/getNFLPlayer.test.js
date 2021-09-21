@@ -1,7 +1,7 @@
 const service = require('../services/getNFLPlayer.service');
 const { ErrorTest, ObjectTest } = require('../../util/util');
 
-describe('getUserOffers service', () => {
+describe('getNFLPlayer service', () => {
   test('Valid request for position player returns data', ObjectTest(
     service, { user: 2, params: { nflplayerID: 20933 }, body: {} },
     {
