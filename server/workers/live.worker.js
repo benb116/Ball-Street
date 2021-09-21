@@ -1,19 +1,15 @@
 // Websocket server worker
 // Subscribe to redis updates and push out to clients
-
-const { promisify } = require('util');
-
 const config = require('../config');
 
 const liveState = require('./live/livestate'); // Data stored in memory
 require('./live/liveserver'); // WS server
 
 // Two clients - one to subscribe, one to read and write
-const { client, subscriber, rediskeys } = require('../db/redis');
+const { get, subscriber, rediskeys } = require('../db/redis');
 const logger = require('../utilities/logger');
 
 const { leaderHash } = rediskeys;
-const getAsync = promisify(client.get).bind(client);
 
 subscriber.subscribe('priceUpdate');
 subscriber.subscribe('statUpdate');
@@ -53,10 +49,6 @@ function priceUpdate(message) {
 }
 
 function statUpdate(message) {
-  // const { nflplayerID, statPrice, projPrice } = JSON.parse(message);
-  // liveState.statUpdateMap[nflplayerID] = { nflplayerID };
-  // if (statPrice !== null) { liveState.statUpdateMap[nflplayerID].statPrice = statPrice; }
-  // if (projPrice !== null) { liveState.statUpdateMap[nflplayerID].projPrice = projPrice; }
   liveState.contestmap.forEach(async (thecontestID, thews) => {
     if (!thews) { liveState.contestmap.delete(thews); return; }
     if (thews.readyState === 1) {
@@ -81,7 +73,7 @@ function leaderUpdate() {
   liveState.contestmap.forEach(async (thecontestID, thews) => {
     if (!thews) { liveState.contestmap.delete(thews); return; }
     if (!leaderMemo[thecontestID]) {
-      const out = await getAsync(leaderHash(thecontestID));
+      const out = await get.key(leaderHash(thecontestID));
       leaderMemo[thecontestID] = JSON.parse(out);
     }
     if (thews.readyState === 1) {
