@@ -6,6 +6,15 @@ import { getplayersfunc } from './Players.api';
 
 export const getPlayers = createAsyncThunk('players/getPlayers', getplayersfunc);
 
+const NFLPosTypes = {
+  1: { name: 'QB', canflex: false },
+  2: { name: 'RB', canflex: true },
+  3: { name: 'WR', canflex: true },
+  4: { name: 'TE', canflex: true },
+  5: { name: 'K', canflex: false },
+  6: { name: 'DEF', canflex: false },
+};
+
 const defaultState = {
   playerlist: [],
   priceMap: {},
@@ -59,7 +68,7 @@ export const playersSlice = createSlice({
     [getPlayers.fulfilled]: (state, { payload }) => {
       const np = payload.map((p) => {
         p.teamAbr = p.NFLTeam.abr;
-        p.posName = p.NFLPosition.name;
+        p.posName = NFLPosTypes[p.NFLPositionId].name;
         return p;
       });
       state.playerlist = np;
