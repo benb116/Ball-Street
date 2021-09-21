@@ -1,9 +1,10 @@
 const Joi = require('joi');
 
+const { Op } = require('sequelize');
 const u = require('../../util/util');
 const { validators } = require('../../util/util.schema');
 
-const { Entry, NFLPlayer, NFLTeam } = require('../../../models');
+const { Entry, NFLPlayer, NFLGame } = require('../../../models');
 
 const schema = Joi.object({
   user: validators.user,
@@ -42,17 +43,22 @@ async function tradeDrop(req, t) {
 
   // How much to add to point total
   const playerdata = await NFLPlayer.findByPk(value.body.nflplayerID, {
-    include: [{ model: NFLTeam }],
     transaction: t,
-  }).then((d) => d.dataValues);
+  }).then(u.dv);
+  // Get player price and position
+  const gamedata = await NFLGame.findOne({
+    where: {
+      [Op.or]: [{ HomeId: playerdata.NFLTeamId }, { AwayId: playerdata.NFLTeamId }],
+    },
+  }, { transaction: t }).then(u.dv);
 
   if (value.body.price) {
-    if (playerdata.NFLTeam.gamePhase !== 'mid') {
+    if (gamedata.phase !== 'mid') {
       u.Error("Can't trade before or after games", 406);
     }
     theentry.pointtotal += value.body.price;
   } else {
-    if (playerdata.NFLTeam.gamePhase !== 'pre') {
+    if (gamedata.phase !== 'pre') {
       u.Error("Can't drop during or after games", 406);
     }
     theentry.pointtotal += playerdata.preprice;

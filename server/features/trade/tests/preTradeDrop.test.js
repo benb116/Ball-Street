@@ -43,7 +43,7 @@ describe('preTradeDrop service', () => {
       user: 2,
       params: { leagueID: 2, contestID: 2 },
       body: {
-        nflplayerID: 19415,
+        nflplayerID: 18047,
         price: 100,
       },
     },

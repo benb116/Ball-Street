@@ -1,9 +1,10 @@
 const Joi = require('joi');
 
+const { Op } = require('sequelize');
 const u = require('../../util/util');
 const { validators } = require('../../util/util.schema');
 
-const { Entry, NFLPlayer, NFLTeam } = require('../../../models');
+const { Entry, NFLPlayer, NFLGame } = require('../../../models');
 
 const schema = Joi.object({
   user: validators.user,
@@ -50,26 +51,8 @@ async function tradeAdd(req, t) {
 
   // Get player price and position
   const playerdata = await NFLPlayer.findByPk(theplayer, {
-    include: [{ model: NFLTeam }],
     transaction: t,
-  }).then((d) => d.dataValues);
-    // console.log("PDATA", playerdata);
-
-  if (!value.body.price) {
-    if (playerdata.NFLTeam.gamePhase !== 'pre') {
-      u.Error("Can't add during or after games", 406);
-    }
-  } else if (playerdata.NFLTeam.gamePhase !== 'mid') {
-    u.Error("Can't trade before or after games", 406);
-  }
-
-  const tradeprice = value.body.price || playerdata.preprice;
-  // Checks
-  if (!tradeprice) { u.Error('Player has no preprice', 500); }
-  if (tradeprice > pts) { u.Error("User doesn't have enough points", 402); }
-
-  // Deduct cost from points
-  theentry.pointtotal -= tradeprice;
+  }).then(u.dv);
 
   const playerType = playerdata.NFLPositionId;
   if (value.body.rosterposition) { // If a roster position was specified
@@ -87,6 +70,31 @@ async function tradeAdd(req, t) {
     if (!isOpen) { u.Error('There are no open spots', 406); }
     theentry[isOpen] = theplayer;
   }
+
+  // Get player price and position
+  const gamedata = await NFLGame.findOne({
+    where: {
+      [Op.or]: [{ HomeId: playerdata.NFLTeamId }, { AwayId: playerdata.NFLTeamId }],
+    },
+  }, { transaction: t }).then(u.dv);
+    // console.log("PDATA", playerdata);
+
+  if (!value.body.price) {
+    if (gamedata.phase !== 'pre') {
+      u.Error("Can't add during or after games", 406);
+    }
+  } else if (gamedata.phase !== 'mid') {
+    u.Error("Can't trade before or after games", 406);
+  }
+
+  const tradeprice = value.body.price || playerdata.preprice;
+  // Checks
+  if (!tradeprice) { u.Error('Player has no preprice', 500); }
+  if (tradeprice > pts) { u.Error("User doesn't have enough points", 402); }
+
+  // Deduct cost from points
+  theentry.pointtotal -= tradeprice;
+
   await theentry.save({ transaction: t });
 
   return theentry;

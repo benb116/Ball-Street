@@ -167,8 +167,8 @@ describe('createOffer service', () => {
       body: {
         offerobj: {
           nflplayerID: 20876,
-          isbid: false,
-          price: 2000,
+          isbid: true,
+          price: 200,
         },
       },
     },
