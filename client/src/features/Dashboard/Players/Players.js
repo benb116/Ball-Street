@@ -42,9 +42,8 @@ const Players = () => {
       } else if (p.posName !== filters.posName && filters.posName !== '') return false;
 
       // Team filter
-      if (!theteams[p.NFLTeamId]?.abr !== filters.teamAbr && filters.teamAbr !== '') return false;
-
       if (!theteams[p.NFLTeamId]) return false;
+      if (theteams[p.NFLTeamId].abr !== filters.teamAbr && filters.teamAbr !== '') return false;
 
       // Game filter
       if (
