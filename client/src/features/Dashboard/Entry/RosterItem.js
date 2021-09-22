@@ -19,7 +19,7 @@ function RosterItem({ playerid, position }) {
   const offers = useSelector(offersSelector);
   const priceMap = useSelector(priceMapSelector(playerid));
 
-  if (!thisplayer) {
+  if (!thisplayer || !theteams[thisplayer.NFLTeamId]) {
     return (<tr><td>{position}</td></tr>);
   }
 

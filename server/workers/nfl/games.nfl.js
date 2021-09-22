@@ -84,7 +84,8 @@ function GameState() {
           }
         });
       return phasemap;
-    });
+    })
+    .catch(logger.error);
 }
 
 // Given a phasemap, set phases in DB or schedule change
@@ -151,7 +152,8 @@ function PullAllGames() {
         state.timeObj[team1] = timefrac;
         state.timeObj[team2] = timefrac;
       });
-    });
+    })
+    .catch(logger.error);
 }
 
 module.exports = {
