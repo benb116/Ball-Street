@@ -8,3 +8,4 @@ server/.env
 .env
 nginx.conf
 server/logs/
+**/*.log
