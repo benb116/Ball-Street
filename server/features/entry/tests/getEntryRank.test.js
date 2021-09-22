@@ -11,7 +11,7 @@ describe('getEntryRank service', () => {
       FLEX2: null,
       K1: null,
       QB1: null,
-      RB1: 20933,
+      RB1: 31885,
       RB2: null,
       TE1: null,
       UserId: 3,

@@ -7,7 +7,7 @@ describe('preTradeAdd service', () => {
       user: 1,
       params: { leagueID: 2, contestID: 2 },
       body: {
-        nflplayerID: 19067,
+        nflplayerID: 27648,
         rosterposition: 'TE1',
       },
     },
@@ -16,11 +16,11 @@ describe('preTradeAdd service', () => {
       DEF1: 24,
       FLEX1: null,
       FLEX2: null,
-      K1: 19041,
+      K1: 30266,
       QB1: null,
-      RB1: 20933,
+      RB1: 31885,
       RB2: null,
-      TE1: 19067,
+      TE1: 27648,
       UserId: 1,
       WR1: null,
       WR2: null,
@@ -33,7 +33,7 @@ describe('preTradeAdd service', () => {
       user: 2,
       params: { leagueID: 2, contestID: 2 },
       body: {
-        nflplayerID: 20933,
+        nflplayerID: 31885,
         rosterposition: 'RB1',
       },
     },
@@ -45,7 +45,7 @@ describe('preTradeAdd service', () => {
       user: 2,
       params: { leagueID: 2, contestID: 2 },
       body: {
-        nflplayerID: 40119,
+        nflplayerID: 27631,
         rosterposition: 'RB1',
         price: 100,
       },
@@ -58,7 +58,7 @@ describe('preTradeAdd service', () => {
       user: 3,
       params: { leagueID: 2, contestID: 2 },
       body: {
-        nflplayerID: 19067,
+        nflplayerID: 27648,
         rosterposition: 'FLEX1',
       },
     },
@@ -70,7 +70,7 @@ describe('preTradeAdd service', () => {
       user: 1,
       params: { leagueID: 2, contestID: 2 },
       body: {
-        nflplayerID: 20033,
+        nflplayerID: 31199,
         rosterposition: 'K1',
       },
     },
@@ -82,7 +82,7 @@ describe('preTradeAdd service', () => {
       user: 1,
       params: { leagueID: 2, contestID: 2 },
       body: {
-        nflplayerID: 20033,
+        nflplayerID: 31199,
       },
     },
     406, 'There are no open spots',
@@ -93,7 +93,7 @@ describe('preTradeAdd service', () => {
       user: 4,
       params: { leagueID: 2, contestID: 2 },
       body: {
-        nflplayerID: 19067,
+        nflplayerID: 27648,
         rosterposition: 'TE1',
       },
     },
@@ -105,7 +105,7 @@ describe('preTradeAdd service', () => {
       user: 1,
       params: { leagueID: 2 },
       body: {
-        nflplayerID: 19067,
+        nflplayerID: 27648,
         rosterposition: 'TE1',
       },
     },
@@ -116,7 +116,7 @@ describe('preTradeAdd service', () => {
     service, {
       params: { leagueID: 2, contestID: 2 },
       body: {
-        nflplayerID: 19067,
+        nflplayerID: 27648,
         rosterposition: 'TE1',
       },
     },
@@ -128,7 +128,7 @@ describe('preTradeAdd service', () => {
       user: 1,
       params: { leagueID: 1, contestID: 1 },
       body: {
-        nflplayerID: 19415,
+        nflplayerID: 31019,
         rosterposition: 'TE1',
       },
     },

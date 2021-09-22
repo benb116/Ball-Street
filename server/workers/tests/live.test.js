@@ -33,7 +33,7 @@ function createOffer(cookie, isbid, price, isprotected) {
     url: `http://localhost/app/api/leagues/${leagueID}/contests/${contestID}/offer/`,
     data: {
       offerobj: {
-        nflplayerID: 18047,
+        nflplayerID: 29360,
         isbid,
         price,
         protected: isprotected,
@@ -51,7 +51,7 @@ async function cancelOffer(cookie) {
     method: 'get',
     url: `http://localhost/app/api/leagues/${leagueID}/contests/${contestID}/offers/`,
     headers: { cookie },
-  }).then((offers) => offers.data.filter((o) => o.NFLPlayerId === 18047));
+  }).then((offers) => offers.data.filter((o) => o.NFLPlayerId === 29360));
   if (!a.length) { return Promise.resolve(); }
 
   return axios({
@@ -146,11 +146,11 @@ describe('Live server tests', () => {
   }));
 
   test('Get offer price', () => pMap.offerPrice.prom.then((data) => {
-    expect(data.pricedata['18047']).toStrictEqual({ nflplayerID: 18047, bestbid: 100, bestask: 0 });
+    expect(data.pricedata['29360']).toStrictEqual({ nflplayerID: 29360, bestbid: 100, bestask: 0 });
   }));
 
   test('Get cancelled offer price', () => pMap.cancelPrice.prom.then((data) => {
-    expect(data.pricedata['18047']).toStrictEqual({ nflplayerID: 18047, bestbid: 0, bestask: 0 });
+    expect(data.pricedata['29360']).toStrictEqual({ nflplayerID: 29360, bestbid: 0, bestask: 0 });
   }));
 
   test('Protected match', () => pMap.protMatch.prom.then((data) => {

@@ -6,7 +6,7 @@ describe('getUserOffers service', () => {
     service, { user: 2, params: { leagueID: 2, contestID: 2 }, body: {} },
     [{
       ContestId: 2,
-      NFLPlayerId: 20933,
+      NFLPlayerId: 31885,
       UserId: 2,
       cancelled: false,
       filled: false,

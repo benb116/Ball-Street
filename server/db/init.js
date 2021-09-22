@@ -1,9 +1,9 @@
 // Set up the database with proper tables and NFL data
 
 const config = require('../config');
-const players = require('./nflplayers.json');
 const models = require('../models');
 const logger = require('../utilities/logger');
+const scrape = require('./playerscraper');
 
 async function InitDB(sequelize) {
   logger.info('Initializing the database');
@@ -175,20 +175,6 @@ async function InitDB(sequelize) {
   });
   await NFLTeam.bulkCreate(teamrecords);
 
-  // Define NFL players
-  const playerrecords = players.map((p) => {
-    const obj = {};
-    obj.id = p.player_id;
-    obj.name = p.name;
-    const posind = Object.keys(nflpos).indexOf(p.position);
-    if (posind === -1) { return null; }
-    obj.NFLPositionId = posind;
-    obj.jersey = p.jersey;
-    obj.NFLTeamId = teams[teamfullnameMap[p.team]].id;
-    obj.preprice = 1100;
-    obj.postprice = 700;
-    return obj;
-  }).filter((e) => e !== null);
   const teamdefrecords = teamfullnamearr.map((t) => {
     const obj = {};
     const abr = teamfullnameMap[t];
@@ -201,8 +187,8 @@ async function InitDB(sequelize) {
 
     return obj;
   });
-  await NFLPlayer.bulkCreate(playerrecords);
   await NFLPlayer.bulkCreate(teamdefrecords);
+  await scrape(true);
 }
 
 module.exports = InitDB;

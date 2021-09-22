@@ -8,7 +8,7 @@ describe('createOffer service', () => {
       params: { leagueID: 2, contestID: 2 },
       body: {
         offerobj: {
-          nflplayerID: 20933,
+          nflplayerID: 31885,
           isbid: false,
           price: 2000,
         },
@@ -16,7 +16,7 @@ describe('createOffer service', () => {
     },
     {
       ContestId: 2,
-      NFLPlayerId: 20933,
+      NFLPlayerId: 31885,
       UserId: 1,
       cancelled: false,
       filled: false,
@@ -32,7 +32,7 @@ describe('createOffer service', () => {
       params: { leagueID: 2, contestID: 2 },
       body: {
         offerobj: {
-          nflplayerID: 20933,
+          nflplayerID: 31885,
           isbid: false,
           price: 2000,
         },
@@ -47,7 +47,7 @@ describe('createOffer service', () => {
       params: { leagueID: 2, contestID: 2 },
       body: {
         offerobj: {
-          nflplayerID: 21178,
+          nflplayerID: 31221,
           isbid: true,
           price: 20000,
         },
@@ -77,7 +77,7 @@ describe('createOffer service', () => {
       params: { leagueID: 2, contestID: 2 },
       body: {
         offerobj: {
-          nflplayerID: 19041,
+          nflplayerID: 30266,
           isbid: true,
           price: 2000,
         },
@@ -92,7 +92,7 @@ describe('createOffer service', () => {
       params: { leagueID: 2, contestID: 2 },
       body: {
         offerobj: {
-          nflplayerID: 21178,
+          nflplayerID: 31221,
           isbid: false,
           price: 2000,
         },
@@ -107,7 +107,7 @@ describe('createOffer service', () => {
       params: { leagueID: 2, contestID: 2 },
       body: {
         offerobj: {
-          nflplayerID: 17215,
+          nflplayerID: 28378,
           isbid: true,
           price: 2000,
         },
@@ -122,7 +122,7 @@ describe('createOffer service', () => {
       params: { leagueID: 2, contestID: 2 },
       body: {
         offerobj: {
-          nflplayerID: 20933,
+          nflplayerID: 31885,
           isbid: false,
           price: 2000,
         },
@@ -137,7 +137,7 @@ describe('createOffer service', () => {
       params: { leagueID: 2 },
       body: {
         offerobj: {
-          nflplayerID: 20933,
+          nflplayerID: 31885,
           isbid: false,
           price: 2000,
         },
@@ -151,7 +151,7 @@ describe('createOffer service', () => {
       params: { leagueID: 2, contestID: 2 },
       body: {
         offerobj: {
-          nflplayerID: 20933,
+          nflplayerID: 31885,
           isbid: false,
           price: 2000,
         },
@@ -166,7 +166,7 @@ describe('createOffer service', () => {
       params: { leagueID: 2, contestID: 2 },
       body: {
         offerobj: {
-          nflplayerID: 20876,
+          nflplayerID: 32231,
           isbid: true,
           price: 200,
         },

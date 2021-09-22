@@ -8,7 +8,7 @@ describe('login service', () => {
   ));
 
   test('Needs verification', ObjectTest(
-    service, { email: 'email5@gmail.com', password: 'password1' },
+    service, { email: 'email6@gmail.com', password: 'password1' },
     { needsVerification: true },
   ));
 

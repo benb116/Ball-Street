@@ -10,15 +10,15 @@ describe('util testing', () => {
 
   test('isPlayerOnRoster', () => {
     const theentry = {
-      UserId: 3, ContestId: 2, pointtotal: 500, RB1: 20933, K1: 19041,
+      UserId: 3, ContestId: 2, pointtotal: 500, RB1: 31885, K1: 30266,
     };
-    expect(u.isPlayerOnRoster(theentry, 19041)).toBe('K1');
+    expect(u.isPlayerOnRoster(theentry, 30266)).toBe('K1');
     expect(u.isPlayerOnRoster(theentry, 12345)).toBe(false);
   });
 
   test('isOpenRoster', () => {
     const theentry = {
-      UserId: 3, ContestId: 2, pointtotal: 500, QB1: null, RB1: 20933, RB2: null, K1: 19041,
+      UserId: 3, ContestId: 2, pointtotal: 500, QB1: null, RB1: 31885, RB2: null, K1: 30266,
     };
     expect(u.isOpenRoster(theentry, 5)).toBe(false);
     expect(u.isOpenRoster(theentry, 1)).toBe('QB1');

@@ -3,12 +3,11 @@ const { ErrorTest, ObjectTest } = require('../../util/util');
 
 describe('getNFLPlayer service', () => {
   test('Valid request for position player returns data', ObjectTest(
-    service, { user: 2, params: { nflplayerID: 20933 }, body: {} },
+    service, { user: 2, params: { nflplayerID: 31885 }, body: {} },
     {
       NFLPositionId: 2,
       NFLTeamId: 24,
-      id: 20933,
-      jersey: 26,
+      id: 31885,
       name: 'Miles Sanders',
       postprice: 700,
       preprice: 1100,

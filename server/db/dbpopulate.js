@@ -20,13 +20,13 @@ async function PopulateDB(sequelize) {
   } = models;
 
   // Define Users
-  const usrs = ['email1@gmail.com', 'email2@gmail.com', 'email3@gmail.com', 'email4@gmail.com', 'email5@gmail.com'];
+  const usrs = ['email1@gmail.com', 'email2@gmail.com', 'email3@gmail.com', 'email4@gmail.com', 'email5@gmail.com', 'email6@gmail.com'];
   // hash is password1
   await User.bulkCreate(usrs.map((u) => ({
     email: u,
     pwHash: '$2b$10$v3qgumBibz8Uouevm5xeTOFWheNtLVRyLeGqp2tZbfdMJ.iHQtgVq',
     name: 'bot',
-    verified: (u !== 'email5@gmail.com'),
+    verified: (u !== 'email5@gmail.com' && u !== 'email6@gmail.com'),
   })));
 
   const lea = {
@@ -97,14 +97,14 @@ async function PopulateDB(sequelize) {
   await Contest.bulkCreate([con, con2, con3]);
 
   const entrs = pubusrs.map((e, i) => ({
-    UserId: i + 1, ContestId: 1, pointtotal: 10000, RB1: 20933,
+    UserId: i + 1, ContestId: 1, pointtotal: 10000, RB1: 31885,
   }));
   const entrs2 = [{
-    UserId: 1, ContestId: 2, pointtotal: 10000, RB1: 20933, K1: 19041, DEF1: 24,
+    UserId: 1, ContestId: 2, pointtotal: 10000, RB1: 31885, K1: 30266, DEF1: 24,
   }, {
-    UserId: 2, ContestId: 2, pointtotal: 1500, RB1: 20933, WR1: 18686, WR2: 18047, K1: 19041,
+    UserId: 2, ContestId: 2, pointtotal: 1500, RB1: 31885, WR1: 32398, WR2: 29360, K1: 30266,
   }, {
-    UserId: 3, ContestId: 2, pointtotal: 500, RB1: 20933, K1: 19041,
+    UserId: 3, ContestId: 2, pointtotal: 500, RB1: 31885, K1: 30266,
   }];
   await Entry.bulkCreate(entrs);
   await Entry.bulkCreate(entrs2);
@@ -113,7 +113,7 @@ async function PopulateDB(sequelize) {
     id: '16c94b61-3c76-4078-8fbc-67fac7ed26c2',
     UserId: 1,
     ContestId: 1,
-    NFLPlayerId: 20933,
+    NFLPlayerId: 31885,
     isbid: false,
     price: 8000,
   },
@@ -121,7 +121,7 @@ async function PopulateDB(sequelize) {
     id: '16c94b61-3c76-4078-8fbc-67fac7ed26c3',
     UserId: 2,
     ContestId: 1,
-    NFLPlayerId: 20933,
+    NFLPlayerId: 31885,
     isbid: false,
     price: 8000,
     cancelled: true,
@@ -130,7 +130,7 @@ async function PopulateDB(sequelize) {
     id: '16c94b61-3c76-4078-8fbc-67fac7ed26c4',
     UserId: 3,
     ContestId: 1,
-    NFLPlayerId: 20933,
+    NFLPlayerId: 31885,
     isbid: false,
     price: 8000,
     filled: true,
@@ -140,7 +140,7 @@ async function PopulateDB(sequelize) {
     id: '16c94b61-3c76-4078-8fbc-67fac7ed26c6',
     UserId: 1,
     ContestId: 1,
-    NFLPlayerId: 20933,
+    NFLPlayerId: 31885,
     isbid: true,
     price: 8000,
     filled: true,
@@ -149,7 +149,7 @@ async function PopulateDB(sequelize) {
     id: '16c94b61-3c76-4078-8fbc-67fac7ed26c5',
     UserId: 2,
     ContestId: 2,
-    NFLPlayerId: 20933,
+    NFLPlayerId: 31885,
     isbid: false,
     price: 8000,
   }];

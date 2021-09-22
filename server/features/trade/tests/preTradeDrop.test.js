@@ -7,7 +7,7 @@ describe('preTradeDrop service', () => {
       user: 2,
       params: { leagueID: 2, contestID: 2 },
       body: {
-        nflplayerID: 18686,
+        nflplayerID: 32398,
       },
     },
     {
@@ -15,14 +15,14 @@ describe('preTradeDrop service', () => {
       DEF1: null,
       FLEX1: null,
       FLEX2: null,
-      K1: 19041,
+      K1: 30266,
       QB1: null,
-      RB1: 20933,
+      RB1: 31885,
       RB2: null,
       TE1: null,
       UserId: 2,
       WR1: null,
-      WR2: 18047,
+      WR2: 29360,
       pointtotal: 2600,
     },
   ));
@@ -32,7 +32,7 @@ describe('preTradeDrop service', () => {
       user: 2,
       params: { leagueID: 2, contestID: 2 },
       body: {
-        nflplayerID: 19415,
+        nflplayerID: 31019,
       },
     },
     406, 'Player is not on roster',
@@ -43,7 +43,7 @@ describe('preTradeDrop service', () => {
       user: 2,
       params: { leagueID: 2, contestID: 2 },
       body: {
-        nflplayerID: 18047,
+        nflplayerID: 29360,
         price: 100,
       },
     },
@@ -55,7 +55,7 @@ describe('preTradeDrop service', () => {
       user: 4,
       params: { leagueID: 2, contestID: 2 },
       body: {
-        nflplayerID: 19415,
+        nflplayerID: 31019,
       },
     },
     404, 'No entry found',
@@ -66,7 +66,7 @@ describe('preTradeDrop service', () => {
       user: 1,
       params: { leagueID: 2 },
       body: {
-        nflplayerID: 19415,
+        nflplayerID: 31019,
       },
     },
     400, 'Please specify a contest',
@@ -76,7 +76,7 @@ describe('preTradeDrop service', () => {
     service, {
       params: { leagueID: 2, contestID: 2 },
       body: {
-        nflplayerID: 19415,
+        nflplayerID: 31019,
       },
     },
     400, 'You must be logged in',
@@ -87,7 +87,7 @@ describe('preTradeDrop service', () => {
       user: 2,
       params: { leagueID: 2, contestID: 2 },
       body: {
-        nflplayerID: 19041,
+        nflplayerID: 30266,
       },
     },
     406, "Can't drop during or after games",
