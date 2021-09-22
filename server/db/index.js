@@ -2,7 +2,6 @@
 // Can set app-wide DB settings
 
 const { Sequelize, Transaction } = require('sequelize');
-const sec = require('../secret');
 const logger = require('../utilities/logger');
 
 let {
@@ -20,6 +19,8 @@ const dbOptions = {
 };
 
 if (process.env.NODE_ENV === 'test' || !process.env.NODE_ENV) {
+  // eslint-disable-next-line global-require
+  const sec = require('../secret');
   DB_USER = sec.DB_USER;
   DB_PASS = sec.DB_PASS;
   DB_HOST = sec.DB_HOST;
