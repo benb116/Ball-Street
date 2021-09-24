@@ -67,6 +67,11 @@ const PlayerFilter = () => {
           return null;
         })}
       </select>
+      <select style={{ cursor: 'pointer' }} onChange={handleChange} name="phase" value={filters.phase}>
+        <option value="">Phase</option>
+        <option value="pre">Pregame</option>
+        <option value="mid">Midgame</option>
+      </select>
     </form>
   );
 };

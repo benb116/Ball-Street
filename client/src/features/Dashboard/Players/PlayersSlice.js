@@ -26,6 +26,7 @@ const defaultState = {
     posName: '',
     teamAbr: '',
     game: '',
+    phase: '',
   },
   sortProp: 'preprice',
   sortDesc: true,

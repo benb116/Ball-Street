@@ -54,6 +54,7 @@ const Players = () => {
 
       // Phase filter
       if (theteams[p.NFLTeamId].phase === 'post') return false;
+      if (theteams[p.NFLTeamId].phase !== filters.phase && filters.phase !== '') return false;
 
       return true;
     })
