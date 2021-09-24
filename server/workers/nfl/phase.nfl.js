@@ -17,7 +17,7 @@ const isoOption = {
 };
 
 const schema = Joi.object({
-  teamID: Joi.number().integer().greater(0).less(33)
+  teamID: Joi.number().integer().greater(0).less(35)
     .required()
     .messages({
       'number.base': 'Team ID is invalid',

@@ -14,7 +14,7 @@ init().then(() => setInterval(repeat, checkInterval));
 
 async function init() {
   // Which team is a player on, and YahooID -> name
-  logger.info('Creating playerTeamMap and playerIDMap');
+  logger.info('Creating playerTeamMap');
   state.playerTeamMap = await createPTMap();
   // What was a player's pre-game projection, and name -> BSID
   logger.info('Creating preProjMap');
@@ -45,7 +45,7 @@ async function repeat() {
   await PullAllStats().then(GetNewStats).then(CalcValues).then(SetValues);
 }
 
-// Populate the playerTeamMap and the playerIDMap
+// Populate the playerTeamMap
 function createPTMap() {
   return axios.get('https://relay-stream.sports.yahoo.com/nfl/players.txt')
     .then((raw) => raw.data.split('\n'))
@@ -54,17 +54,14 @@ function createPTMap() {
       const terms = line.split('|');
       const playerID = terms[1];
       const teamID = Number(terms[2]);
-      const name = `${terms[4]} ${terms[5]}`;
-      state.playerIDMap[playerID] = name;
       acc[playerID] = teamID;
       return acc;
     }, {}));
 }
 
-// Populate the preProjMap and the IDPlayerMap
+// Populate the preProjMap
 function pullPreProj() {
   return getNFLPlayers().then((data) => data.reduce((acc, p) => {
-    state.IDPlayerMap[p.name] = p.id;
     acc[p.id] = p.preprice;
     return acc;
   }, {}));
@@ -84,15 +81,14 @@ function CalcValues(statlines) {
 
 // Calculate statpoints and projpoints for players with changed stats
 function CalcPlayer(playerid) {
-  const dbid = dict.YahootoBSID(playerid, state);
-  if (!dbid) return false;
+  if (!playerid) return false;
   // Get a player's stat object
-  const stats = state.statObj[dbid];
+  const stats = state.statObj[playerid];
   // Calculate points
   const statpoints = Math.round(100 * (dict.SumPoints(stats)));
   // Estimate projection (requires YahooID)
   const projpoints = EstimateProjection(playerid, statpoints);
-  return [dbid, Math.round(statpoints), Math.round(projpoints)];
+  return [playerid, Math.round(statpoints), Math.round(projpoints)];
 }
 
 // Calculate new live projection for a player
@@ -100,11 +96,11 @@ function EstimateProjection(playerid, statpoints) {
   // Find player's team
   const teamID = (state.playerTeamMap[playerid] || playerid);
   // Find time remaining
-  const timefrac = state.timeObj[dict.teamIDMap[teamID]];
+  const timefrac = state.timeObj[teamID];
   const timeleft = (timefrac === 'done' ? 0 : (1 - timefrac));
   // is Defense
   const isDefense = (playerid < 40);
-  const dbid = (state.IDPlayerMap[state.playerIDMap[playerid]] || dict.teamIDMap[playerid] || 0);
+  const dbid = (playerid || 0);
   // Calculate and return
   return statpoints + timeleft * (state.preProjObj[dbid] || 0) * (1 - 2 * isDefense);
 }

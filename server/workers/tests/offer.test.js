@@ -33,7 +33,7 @@ const pMap = tests.reduce((acc, cur) => {
   return acc;
 }, {});
 
-function reqBody(user = 1, nflplayerID = 24, isbid = false, price = 500, isProtected = false) {
+function reqBody(user = 1, nflplayerID = 21, isbid = false, price = 500, isProtected = false) {
   return {
     user,
     params: {
@@ -75,7 +75,7 @@ function initWS(cookie) {
 
 async function run() {
   await set.hkey(
-    rediskeys.hash(contestID, 24),
+    rediskeys.hash(contestID, 21),
     'bestbid', '0',
     'bestask', '0',
   );
@@ -97,7 +97,7 @@ async function run() {
             pMap.matchUnprotected.rej(msg);
           } else {
             pMap.matchUnprotected.res(msg);
-            await createOffer(reqBody(1, 24, false, 300)).catch(console.log);
+            await createOffer(reqBody(1, 21, false, 300)).catch(console.log);
           }
         }
         break;
@@ -112,17 +112,17 @@ async function run() {
         if (!pMap.offer1.done) {
           pMap.offer1.done = true;
           pMap.offer1.res(msg);
-          const out = await createOffer(reqBody(2, 24, true, 400, true)).catch(console.log);
+          const out = await createOffer(reqBody(2, 21, true, 400, true)).catch(console.log);
           cancelOffer = out.id;
         } else if (!pMap.nonMatch.done) {
           pMap.nonMatch.done = true;
           pMap.nonMatch.res(msg);
-          await createOffer(reqBody(3, 24, true, 500)).catch(console.log);
+          await createOffer(reqBody(3, 21, true, 500)).catch(console.log);
         } else if (!pMap.match.done) {
           pMap.match.done = true;
           pMap.match.res(msg);
-          await createOffer(reqBody(1, 24, true, 300)).catch(console.log);
-          await createOffer(reqBody(3, 24, false, 300)).catch(console.log);
+          await createOffer(reqBody(1, 21, true, 300)).catch(console.log);
+          await createOffer(reqBody(3, 21, false, 300)).catch(console.log);
         }
         break;
       default:
@@ -163,19 +163,19 @@ beforeAll(() => { run(); run2(); });
 describe('Offer matching tests', () => {
   test('Price update on offer', () => pMap.offer1.prom.then((data) => {
     expect(data.pricedata).toEqual(expect.objectContaining({
-      24: { bestask: 500, bestbid: 0, nflplayerID: 24 },
+      21: { bestask: 500, bestbid: 0, nflplayerID: 21 },
     }));
   }), (config.RefreshTime + 1) * 1000);
 
   test('Price update on non-match', () => pMap.nonMatch.prom.then((data) => {
     expect(data.pricedata).toEqual(expect.objectContaining({
-      24: { bestask: 500, bestbid: 400, nflplayerID: 24 },
+      21: { bestask: 500, bestbid: 400, nflplayerID: 21 },
     }));
   }), (config.RefreshTime + 1) * 1000);
 
   test('Price update on fill', () => pMap.match.prom.then((data) => {
     expect(data.pricedata).toEqual(expect.objectContaining({
-      24: { bestask: 0, bestbid: 400, nflplayerID: 24 },
+      21: { bestask: 0, bestbid: 400, nflplayerID: 21 },
     }));
   }), (config.RefreshTime + 1) * 1000);
 
@@ -192,7 +192,7 @@ describe('Offer matching tests', () => {
   test('Match notification', () => pMap.matchProtected.prom.then((data) => {
     expect(data).toEqual(expect.objectContaining({ event: 'protectedMatch' }));
     expect(data.offerID).toHaveLength(36);
-    expect(data.expire).toBeGreaterThan(1629167862485);
+    expect(data.expire).toBeGreaterThan(1629167862185);
   }), config.ProtectionDelay * 1000 + 5000);
 
   test('Fill protected', () => pMap.fillProtected.prom.then((data) => {

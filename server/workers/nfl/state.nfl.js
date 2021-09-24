@@ -1,10 +1,9 @@
 function nflState() {
-  this.playerIDMap = {}; // YahooID: PlayerName
-  this.IDPlayerMap = {}; // PlayerName: BallStreetID
-  this.playerTeamMap = {}; // YahooID: YahooTeamID
-  this.statObj = {}; // BallStreetID: StatCat: Statline
-  this.timeObj = {}; // BallStreetID: Timefrac
-  this.preProjObj = {}; // BallStreetID: Pregame projection
+  this.playerTeamMap = {}; // PlayerID: TeamID
+  this.teamPlayerMap = {}; // TeamID: [PlayerID]
+  this.statObj = {}; // PlayerID: StatCat: Statline
+  this.timeObj = {}; // TeamID: Timefrac
+  this.preProjObj = {}; // PlayerID: Pregame projection
   return this;
 }
 

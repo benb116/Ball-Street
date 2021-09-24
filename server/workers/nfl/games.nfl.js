@@ -1,6 +1,5 @@
 const axios = require('axios');
 const logger = require('../../utilities/logger');
-const dict = require('./dict.nfl');
 const setPhase = require('./phase.nfl');
 const state = require('./state.nfl');
 const { get } = require('../../db/redis');
@@ -17,8 +16,8 @@ function GameState() {
       // Build up the list of games for the DB and the phasemap.
       const gameobjs = gamelines.map((gameline) => {
         const terms = gameline.split('|');
-        const awayTeamID = dict.teamIDMap[Number(terms[2])];
-        const homeTeamID = dict.teamIDMap[Number(terms[3])];
+        const awayTeamID = Number(terms[2]);
+        const homeTeamID = Number(terms[3]);
 
         const gameState = terms[4]; // F finished, P playing, S not started yet
         const starttime = Number(terms[10]);
@@ -123,8 +122,8 @@ function PullAllGames() {
     .then((gamelines) => {
       gamelines.forEach(async (gameline) => {
         const terms = gameline.split('|');
-        const team1 = dict.teamIDMap[Number(terms[2])];
-        const team2 = dict.teamIDMap[Number(terms[3])];
+        const team1 = Number(terms[2]);
+        const team2 = Number(terms[3]);
 
         // We've already marked this game as done, so end
         if (state.timeObj[team1] === 'done') {

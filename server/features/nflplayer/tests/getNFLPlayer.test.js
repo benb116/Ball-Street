@@ -6,7 +6,7 @@ describe('getNFLPlayer service', () => {
     service, { user: 2, params: { nflplayerID: 31885 }, body: {} },
     {
       NFLPositionId: 2,
-      NFLTeamId: 24,
+      NFLTeamId: 21,
       id: 31885,
       name: 'Miles Sanders',
       postprice: 700,
@@ -15,11 +15,11 @@ describe('getNFLPlayer service', () => {
   ));
 
   test('Valid request for defense player returns data', ObjectTest(
-    service, { user: 2, params: { nflplayerID: 2 }, body: {} },
+    service, { user: 2, params: { nflplayerID: 1 }, body: {} },
     {
       NFLPositionId: 6,
-      NFLTeamId: 2,
-      id: 2,
+      NFLTeamId: 1,
+      id: 1,
       jersey: null,
       name: 'Atlanta Falcons',
       postprice: 700,

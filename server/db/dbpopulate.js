@@ -100,7 +100,7 @@ async function PopulateDB(sequelize) {
     UserId: i + 1, ContestId: 1, pointtotal: 10000, RB1: 31885,
   }));
   const entrs2 = [{
-    UserId: 1, ContestId: 2, pointtotal: 10000, RB1: 31885, K1: 30266, DEF1: 24,
+    UserId: 1, ContestId: 2, pointtotal: 10000, RB1: 31885, K1: 30266, DEF1: 21,
   }, {
     UserId: 2, ContestId: 2, pointtotal: 1500, RB1: 31885, WR1: 32398, WR2: 29360, K1: 30266,
   }, {
@@ -167,35 +167,35 @@ async function PopulateDB(sequelize) {
   await set.CurrentWeek(1);
 
   await NFLGame.bulkCreate([
-    { week: 1, HomeId: 1, AwayId: 2 },
+    { week: 1, HomeId: 10, AwayId: 1 },
     {
-      week: 1, HomeId: 3, AwayId: 4, phase: 'pre',
+      week: 1, HomeId: 33, AwayId: 2, phase: 'pre',
     },
-    { week: 1, HomeId: 5, AwayId: 6 },
-    { week: 1, HomeId: 7, AwayId: 8 },
-    { week: 1, HomeId: 9, AwayId: 10 },
-    { week: 1, HomeId: 11, AwayId: 12 },
-    { week: 1, HomeId: 13, AwayId: 14 },
+    { week: 1, HomeId: 29, AwayId: 3 },
+    { week: 1, HomeId: 4, AwayId: 5 },
+    { week: 1, HomeId: 6, AwayId: 7 },
+    { week: 1, HomeId: 8, AwayId: 9 },
+    { week: 1, HomeId: 34, AwayId: 11 },
     {
-      week: 1, HomeId: 15, AwayId: 16, phase: 'pre',
+      week: 1, HomeId: 30, AwayId: 12, phase: 'pre',
     },
-    { week: 1, HomeId: 17, AwayId: 18 },
+    { week: 1, HomeId: 15, AwayId: 16 },
     {
-      week: 1, HomeId: 19, AwayId: 20, phase: 'pre',
+      week: 1, HomeId: 17, AwayId: 18, phase: 'pre',
     },
-    { week: 1, HomeId: 21, AwayId: 22 },
+    { week: 1, HomeId: 19, AwayId: 20 },
+    {
+      week: 1, HomeId: 13, AwayId: 21, phase: 'mid',
+    },
     {
       week: 1, HomeId: 23, AwayId: 24, phase: 'mid',
     },
     {
       week: 1, HomeId: 25, AwayId: 26, phase: 'mid',
     },
+    { week: 1, HomeId: 14, AwayId: 27 },
     {
-      week: 1, HomeId: 27, AwayId: 28, phase: 'mid',
-    },
-    { week: 1, HomeId: 29, AwayId: 30 },
-    {
-      week: 1, HomeId: 31, AwayId: 32, phase: 'pre',
+      week: 1, HomeId: 22, AwayId: 28, phase: 'pre',
     },
   ]);
 }

@@ -26,42 +26,6 @@ dict.multiplierTable = {
   f: [0, 1, 2, 2, 6, 2, 2, 0, 6],
 };
 
-// Map between Yahoo teamIDs and BallStreet teamIDs
-dict.teamIDMap = {
-  27: 30,
-  6: 9,
-  1: 2,
-  21: 24,
-  23: 25,
-  2: 4,
-  4: 7,
-  16: 18,
-  8: 11,
-  25: 27,
-  10: 1,
-  22: 31,
-  11: 14,
-  26: 28,
-  24: 26,
-  28: 32,
-  20: 22,
-  29: 5,
-  34: 13,
-  30: 15,
-  5: 8,
-  12: 16,
-  17: 19,
-  15: 17,
-  9: 12,
-  18: 20,
-  7: 10,
-  19: 21,
-  3: 6,
-  14: 29,
-  33: 3,
-  13: 23,
-};
-
 // Calculate the point total from a player's stats
 dict.SumPoints = function sumpoints(pstats) {
   const categories = Object.keys(pstats);
@@ -96,11 +60,6 @@ dict.SumPoints = function sumpoints(pstats) {
     }
     return newPoints;
   }, 0);
-};
-
-// Convert a player's yahoo ID to his Ball Street database ID
-dict.YahootoBSID = function yahootobsid(playerid, state) {
-  return (state.IDPlayerMap[state.playerIDMap[playerid]] || dict.teamIDMap[playerid] || 0);
 };
 
 module.exports = dict;
