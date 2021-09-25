@@ -3,9 +3,10 @@ const Joi = require('joi');
 
 const { Op } = require('sequelize');
 const u = require('../../features/util/util');
-const { client, del } = require('../../db/redis');
-const { NFLPlayer, Entry, NFLGame } = require('../../models');
-const getWeekEntries = require('../../features/entry/services/getWeekEntries.service');
+const { client, del, get } = require('../../db/redis');
+const {
+  NFLPlayer, Entry, NFLGame, Contest,
+} = require('../../models');
 
 const sequelize = require('../../db');
 const logger = require('../../utilities/logger');
@@ -73,7 +74,14 @@ async function convertTeamPlayers(teamID) {
   }, {});
 
   // Find all of this weeks entries across contests
-  const allEntries = await getWeekEntries();
+  const weekcontests = await Contest.findAll({
+    where: { nflweek: await get.CurrentWeek() },
+  }).then(u.dv)
+    .then((contests) => contests.map((c) => c.id));
+  const allEntries = await Entry.findAll({
+    where: { ContestId: { [Op.or]: weekcontests } },
+  }).then(u.dv);
+
   // Filter for all entries with a player on this team
   const teamEntries = allEntries
     .filter((e) => teamPlayers
