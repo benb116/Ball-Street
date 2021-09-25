@@ -74,11 +74,9 @@ function initWS(cookie) {
 }
 
 async function run() {
-  await set.hkey(
-    rediskeys.hash(contestID, 21),
-    'bestbid', '0',
-    'bestask', '0',
-  );
+  await set.hkey(rediskeys.bestbidHash(contestID), 21, 0);
+  await set.hkey(rediskeys.bestaskHash(contestID), 21, 0);
+
   const session1 = await getSessionID('email1@gmail.com');
   const ws1 = initWS(session1);
 
@@ -106,7 +104,7 @@ async function run() {
       case 'protectedMatch':
         break;
       case 'priceUpdate':
-        if (msg.pricedata.length > 5) {
+        if (Object.keys(msg.pricedata).length > 5) {
           return;
         }
         if (!pMap.offer1.done) {
@@ -129,7 +127,7 @@ async function run() {
         break;
     }
   });
-
+  console.log('ready');
   await createOffer(reqBody()).catch(console.log);
 }
 

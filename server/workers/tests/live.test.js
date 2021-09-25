@@ -33,7 +33,7 @@ function createOffer(cookie, isbid, price, isprotected) {
     url: `http://localhost/app/api/leagues/${leagueID}/contests/${contestID}/offer/`,
     data: {
       offerobj: {
-        nflplayerID: 29360,
+        nflplayerID: 28026,
         isbid,
         price,
         protected: isprotected,
@@ -51,7 +51,7 @@ async function cancelOffer(cookie) {
     method: 'get',
     url: `http://localhost/app/api/leagues/${leagueID}/contests/${contestID}/offers/`,
     headers: { cookie },
-  }).then((offers) => offers.data.filter((o) => o.NFLPlayerId === 29360));
+  }).then((offers) => offers.data.filter((o) => o.NFLPlayerId === 28026));
   if (!a.length) { return Promise.resolve(); }
 
   return axios({
@@ -105,12 +105,12 @@ async function initUsers() {
       case 'phaseChange':
         break;
       case 'priceUpdate':
-        if (msg.pricedata.length > 10) {
+        if (Object.keys(msg.pricedata).length > 10) {
           pMap.initPrice.res(msg);
         } else if (!pMap.offerPrice.done) {
           pMap.offerPrice.done = true;
           pMap.offerPrice.res(msg);
-          cancelOffer(session1);
+          await cancelOffer(session1);
         } else if (!pMap.cancelPrice.done) {
           pMap.cancelPrice.done = true;
           pMap.cancelPrice.res(msg);
@@ -130,7 +130,7 @@ async function initUsers() {
   console.log('ready');
 }
 
-beforeAll(() => initUsers());
+beforeAll(() => initUsers().catch(console.error));
 
 describe('Live server tests', () => {
   test('Open WS connection', () => pMap.open1.prom.then((data) => {
@@ -142,15 +142,15 @@ describe('Live server tests', () => {
   }), 12000);
 
   test('Get initial price', () => pMap.initPrice.prom.then((data) => {
-    expect(data.pricedata.length).toBeGreaterThan(10);
+    expect(Object.keys(data.pricedata).length).toBeGreaterThan(10);
   }));
 
   test('Get offer price', () => pMap.offerPrice.prom.then((data) => {
-    expect(data.pricedata['29360']).toStrictEqual({ nflplayerID: 29360, bestbid: 100, bestask: 0 });
+    expect(data.pricedata['28026']).toStrictEqual({ nflplayerID: 28026, bestbid: 100, bestask: 0 });
   }));
 
   test('Get cancelled offer price', () => pMap.cancelPrice.prom.then((data) => {
-    expect(data.pricedata['29360']).toStrictEqual({ nflplayerID: 29360, bestbid: 0, bestask: 0 });
+    expect(data.pricedata['28026']).toStrictEqual({ nflplayerID: 28026, bestbid: 0, bestask: 0 });
   }));
 
   test('Protected match', () => pMap.protMatch.prom.then((data) => {
