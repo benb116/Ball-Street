@@ -2,29 +2,61 @@
 // Calculates live leaderboards
 
 const config = require('../config');
-
-const entryService = require('../features/entry/entry.service');
+const u = require('../features/util/util');
 
 const {
   client, rediskeys, get, set,
 } = require('../db/redis');
+const getNFLPlayers = require('../features/nflplayer/services/getNFLPlayers.service');
+const getWeekEntries = require('../features/entry/services/getWeekEntries.service');
+const { NFLGame } = require('../models');
 
 const { projpriceHash, leaderHash } = rediskeys;
+const rosterPositions = Object.keys(config.Roster);
 
-// Pull all latest price info from redis for all players
-async function sendLatest() {
-  return get.hkeyall(projpriceHash());
-}
 // Filter out duplicates
 function onlyUnique(value, index, self) {
   return self.indexOf(value) === index;
 }
 
+// Get player preprice info (used for players without stat info)
+let playerMap;
+// Get game phase information
+let gamePhase;
+// State determining whether to check for point changes
+// No reason to check when no games are going on
+let phaseHold = false;
+
+// Populate price and team info for all players
+(async () => {
+  const playerlist = await getNFLPlayers();
+  playerMap = playerlist.reduce((acc, cur) => {
+    if (!acc[cur.id]) acc[cur.id] = {};
+    acc[cur.id].pre = cur.preprice;
+    acc[cur.id].post = cur.postprice;
+    acc[cur.id].team = cur.NFLTeamId;
+    return acc;
+  }, {});
+})();
+
 async function calculateLeaderboard() {
-  const rosterPositions = Object.keys(config.Roster);
+  // Get current game phases (used to determine which point value to use)
+  const gamelist = await NFLGame.findAll({ where: { week: await get.CurrentWeek() } }).then(u.dv);
+  // Are all games in pre or post phase
+  const newphaseHold = gamelist.reduce((acc, cur) => (acc && cur.phase !== 'mid'), true);
+  // If yes, do one more calc then hold;
+  if (phaseHold && newphaseHold) return;
+  phaseHold = newphaseHold;
+
+  // Which phase is a given team in
+  gamePhase = gamelist.reduce((acc, cur) => {
+    acc[cur.HomeId] = cur.phase;
+    acc[cur.AwayId] = cur.phase;
+    return acc;
+  }, {});
 
   // Get all entries across all contests
-  const weekentries = await entryService.getWeekEntries();
+  const weekentries = await getWeekEntries();
   // Normalize as objects with balance, roster array, contests and user name
   const normalizedEntries = weekentries.map((e) => {
     const out = {};
@@ -45,19 +77,24 @@ async function calculateLeaderboard() {
 
   // Pull latest price info for all contests
   // Build one big price map
-  const priceMap = await sendLatest();
+  const priceMap = await get.hkeyall(projpriceHash());
   if (!priceMap) return;
   // console.log(priceMap);
 
   // Sum each entry based on the price map
   const projTotals = normalizedEntries.map((e) => {
     e.total = e.roster.reduce((acc, cur) => {
-      if (!priceMap[cur]) {
-        return acc;
+      const playerPhase = gamePhase[playerMap[cur].team];
+      switch (playerPhase) {
+        case 'pre': // preprice
+          return acc + (playerMap[cur].pre || 0);
+        case 'mid': // projprice
+          return acc + (Number(priceMap[cur]) || 0);
+        case 'post': // projprice or postprice
+          return acc + (Number(priceMap[cur]) || playerMap[cur].post || 0);
+        default:
+          return acc;
       }
-      // If player has price info, add that, otherwise 0
-      const out = acc + (priceMap[cur] ? Number(priceMap[cur]) : 0);
-      return out;
     }, e.balance);
     return e;
   });
