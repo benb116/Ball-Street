@@ -5,6 +5,7 @@ const u = require('../../util/util');
 const { validators } = require('../../util/util.schema');
 
 const { Entry, NFLPlayer, NFLGame } = require('../../../models');
+const { get } = require('../../../db/redis');
 
 const schema = Joi.object({
   user: validators.user,
@@ -75,6 +76,7 @@ async function tradeAdd(req, t) {
   const gamedata = await NFLGame.findOne({
     where: {
       [Op.or]: [{ HomeId: playerdata.NFLTeamId }, { AwayId: playerdata.NFLTeamId }],
+      week: await get.CurrentWeek(),
     },
   }, { transaction: t }).then(u.dv);
     // console.log("PDATA", playerdata);

@@ -10,6 +10,7 @@ const sequelize = require('../../../db');
 const {
   Offer, Entry, NFLPlayer, NFLGame,
 } = require('../../../models');
+const { get } = require('../../../db/redis');
 
 const { queueOptions } = require('../../../db/redis');
 const { errorHandler } = require('../../util/util.service');
@@ -90,6 +91,7 @@ async function createOffer(req) {
     const gamedata = await NFLGame.findOne({
       where: {
         [Op.or]: [{ HomeId: playerdata.NFLTeamId }, { AwayId: playerdata.NFLTeamId }],
+        week: await get.CurrentWeek(),
       },
     }, { transaction: t }).then(u.dv);
     if (gamedata.phase !== 'mid') {
