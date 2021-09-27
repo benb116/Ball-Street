@@ -67,9 +67,9 @@ function RosterItem({ playerid, position }) {
       <td>{thisplayer.teamAbr}</td>
       <td style={{ textAlign: 'right' }}>{RenderPrice(dispStat)}</td>
       <td style={{ textAlign: 'right' }}>{RenderPrice(dispProj)}</td>
-      <td style={{ textAlign: 'right' }}>{(priceMap && Number(priceMap.lastprice)) ? RenderPrice(priceMap.lastprice) : ''}</td>
-      <td style={{ textAlign: 'right' }}>{(priceMap && Number(priceMap.bestbid)) ? RenderPrice(priceMap.bestbid) : ''}</td>
-      <td style={{ textAlign: 'right' }}>{(priceMap && Number(priceMap.bestask)) ? RenderPrice(priceMap.bestask) : ''}</td>
+      <td style={{ textAlign: 'right' }}>{(priceMap && Number(priceMap.lastprice)) ? Math.round(priceMap.lastprice / 100) : ''}</td>
+      <td style={{ textAlign: 'right' }}>{(priceMap && Number(priceMap.bestbid)) ? Math.round(priceMap.bestbid / 100) : ''}</td>
+      <td style={{ textAlign: 'right' }}>{(priceMap && Number(priceMap.bestask)) ? Math.round(priceMap.bestask / 100) : ''}</td>
       <ActionButton thephase={thephase} oclick={oclick} text={text} />
     </tr>
   );
