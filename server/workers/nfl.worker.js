@@ -13,10 +13,10 @@ const checkInterval = 10000;
 init().then(() => setInterval(repeat, checkInterval));
 
 async function init() {
-  // Which team is a player on, and YahooID -> name
+  // Which team is a player on
   logger.info('Creating playerTeamMap');
   state.playerTeamMap = await createPTMap();
-  // What was a player's pre-game projection, and name -> BSID
+  // What was a player's pre-game projection
   logger.info('Creating preProjMap');
   state.preProjObj = await pullPreProj();
   // What is the state of each game?
@@ -33,16 +33,18 @@ async function init() {
   await PullAllGames();
   // Calculate latest point values and push
   logger.info('Calculating point values');
-  SetValues(CalcValues(newlines));
+  SetValues(CalcValues(newlines, []));
 
   logger.info('NFL worker initialized');
 }
 
 async function repeat() {
+  state.playerTeamMap = await createPTMap().catch(() => state.playerTeamMap || {});
   // Pull game time information
-  await PullAllGames();
+  const gamesChanged = await PullAllGames();
   // Pull stats, find differences, calc and set values
-  await PullAllStats().then(GetNewStats).then(CalcValues).then(SetValues);
+  const statsChanged = await PullAllStats().then(GetNewStats);
+  await SetValues(CalcValues(statsChanged, gamesChanged));
 }
 
 // Populate the playerTeamMap
@@ -55,6 +57,8 @@ function createPTMap() {
       const playerID = terms[1];
       const teamID = Number(terms[2]);
       acc[playerID] = teamID;
+      if (!state.teamPlayerMap[teamID]) state.teamPlayerMap[teamID] = [];
+      state.teamPlayerMap[teamID].push(playerID);
       return acc;
     }, {}));
 }
@@ -74,8 +78,10 @@ function GetNewStats(lines) {
 }
 
 // Calculate new point values (actual and live projection)
-function CalcValues(statlines) {
-  const playersToCalc = statlines.map((l) => l.split('|')[1]);
+function CalcValues(statlines = [], newteamTimes = []) {
+  const statPlayers = statlines.map((l) => l.split('|')[1]);
+  const teamPlayers = newteamTimes.map((t) => state.teamPlayerMap[t]).flat();
+  const playersToCalc = [statPlayers, teamPlayers].flat();
   return playersToCalc.map(CalcPlayer).filter((e) => e !== false);
 }
 
@@ -83,10 +89,10 @@ function CalcValues(statlines) {
 function CalcPlayer(playerid) {
   if (!playerid) return false;
   // Get a player's stat object
-  const stats = state.statObj[playerid];
+  const stats = (state.statObj[playerid] || {});
   // Calculate points
   const statpoints = Math.round(100 * (dict.SumPoints(stats)));
-  // Estimate projection (requires YahooID)
+  // Estimate projection
   const projpoints = EstimateProjection(playerid, statpoints);
   return [playerid, Math.round(statpoints), Math.round(projpoints)];
 }

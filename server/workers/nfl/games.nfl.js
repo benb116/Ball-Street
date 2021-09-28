@@ -120,6 +120,7 @@ function PullAllGames() {
     .then((raw) => raw.data.split('\n'))
     .then((rawlines) => rawlines.filter((l) => l[0] === 'g'))
     .then((gamelines) => {
+      const changedTimes = [];
       gamelines.forEach(async (gameline) => {
         const terms = gameline.split('|');
         const team1 = Number(terms[2]);
@@ -148,11 +149,21 @@ function PullAllGames() {
           + ((15 - 5 * (quarter === 5)) * 60 - Number(time[0]) * 60 + Number(time[1])
           );
         const timefrac = timeElapsed / ((60 * 60) + (10 * 60 * (quarter === 5)));
-        state.timeObj[team1] = timefrac;
-        state.timeObj[team2] = timefrac;
+        if (state.timeObj[team1] !== timefrac) {
+          state.timeObj[team1] = timefrac;
+          changedTimes.push(team1);
+        }
+        if (state.timeObj[team2] !== timefrac) {
+          state.timeObj[team2] = timefrac;
+          changedTimes.push(team2);
+        }
       });
+      return changedTimes;
     })
-    .catch(logger.error);
+    .catch((err) => {
+      logger.error(err);
+      return [];
+    });
 }
 
 module.exports = {
