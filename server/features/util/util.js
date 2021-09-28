@@ -1,6 +1,7 @@
 const out = {};
 
 const config = require('../../config');
+const logger = require('../../utilities/logger');
 
 const rpos = Object.keys(config.Roster);
 
@@ -69,7 +70,7 @@ out.Error = function uError(msg, status = 500) {
 // Console.log passthrough for promises
 out.cl = function cl(input) {
   // eslint-disable-next-line no-console
-  console.log(input);
+  logger.info(input);
   return input;
 };
 

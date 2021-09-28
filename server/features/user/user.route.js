@@ -3,11 +3,11 @@ const router = require('express').Router();
 const service = require('./user.service');
 const authenticate = require('../../middleware/authenticate');
 const { routeHandler } = require('../util/util.route');
+const logger = require('../../utilities/logger');
 
 function errorHandler(res, err) {
   if (!err) {
-    // eslint-disable-next-line no-console
-    console.log(err);
+    logger.error(err);
     return res.status(500).json({ error: 'Unexpected error' });
   }
   return res.status((err.status || 500)).json({ error: err.message || 'Unexpected error' });

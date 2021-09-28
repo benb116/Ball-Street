@@ -2,6 +2,7 @@
 
 const { promisify } = require('util');
 const redis = require('redis');
+const logger = require('../utilities/logger');
 
 const REDIS_HOST = (process.env.REDIS_HOST || 'localhost');
 const REDIS_PORT = (process.env.REDIS_PORT || 6379);
@@ -81,8 +82,7 @@ async function setCurrentWeek(weeknum) {
   if (Number.isInteger(weeknum)) {
     return setAsync(currentWeek(), weeknum.toString());
   }
-  // eslint-disable-next-line no-console
-  console.log(`Can't set weeknum to ${weeknum}`);
+  logger.error(`Can't set weeknum to ${weeknum}`);
   return Promise.reject();
 }
 

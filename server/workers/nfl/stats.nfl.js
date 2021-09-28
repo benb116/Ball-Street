@@ -1,4 +1,5 @@
 const axios = require('axios');
+const logger = require('../../utilities/logger');
 const dict = require('./dict.nfl');
 const state = require('./state.nfl');
 
@@ -6,7 +7,11 @@ const state = require('./state.nfl');
 function PullAllStats() {
   return axios.get('https://relay-stream.sports.yahoo.com/nfl/stats.txt')
     .then((raw) => raw.data.split('\n'))
-    .then((lines) => lines.filter(StatType));
+    .then((lines) => lines.filter(StatType))
+    .catch((err) => {
+      logger.error(err);
+      return [];
+    });
 }
 
 // Allow a statline if it's one of the valid stat categories
