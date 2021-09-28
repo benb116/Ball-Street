@@ -96,7 +96,7 @@ async function convertTeamPlayers(teamID) {
 // Set a player's postprice based on statlines
 async function setPostPrice(playerid) {
   const stats = state.statObj[playerid];
-  const statpoints = (stats ? Math.round(100 * (dict.SumPoints(stats))) : 0);
+  const statpoints = (stats ? dict.SumPoints(stats) : 0);
   await NFLPlayer.update({ postprice: statpoints }, { where: { id: playerid } });
   return [playerid, statpoints];
 }

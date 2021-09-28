@@ -29,7 +29,7 @@ dict.multiplierTable = {
 // Calculate the point total from a player's stats
 dict.SumPoints = function sumpoints(pstats) {
   const categories = Object.keys(pstats);
-  return categories.reduce((accPoints, curCat) => {
+  const rawpoints = categories.reduce((accPoints, curCat) => {
     let newPoints = accPoints;
     const line = pstats[curCat].split('|');
     const multipliers = (dict.multiplierTable[curCat] || []);
@@ -60,6 +60,7 @@ dict.SumPoints = function sumpoints(pstats) {
     }
     return newPoints;
   }, 0);
+  return Math.round(rawpoints * 100);
 };
 
 module.exports = dict;

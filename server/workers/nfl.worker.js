@@ -91,7 +91,7 @@ function CalcPlayer(playerid) {
   // Get a player's stat object
   const stats = (state.statObj[playerid] || {});
   // Calculate points
-  const statpoints = Math.round(100 * (dict.SumPoints(stats)));
+  const statpoints = dict.SumPoints(stats);
   // Estimate projection
   const projpoints = EstimateProjection(playerid, statpoints);
   return [playerid, Math.round(statpoints), Math.round(projpoints)];
