@@ -26,6 +26,41 @@ dict.multiplierTable = {
   f: [0, 1, 2, 2, 6, 2, 2, 0, 6],
 };
 
+dict.teammap = {
+  ARI: 10,
+  ATL: 1,
+  BAL: 33,
+  BUF: 2,
+  CAR: 29,
+  CHI: 3,
+  CIN: 4,
+  CLE: 5,
+  DAL: 6,
+  DEN: 7,
+  DET: 8,
+  GB: 9,
+  HOU: 34,
+  IND: 11,
+  JAX: 30,
+  KC: 12,
+  MIA: 15,
+  MIN: 16,
+  NE: 17,
+  NO: 18,
+  NYG: 19,
+  NYJ: 20,
+  LV: 13,
+  PHI: 21,
+  PIT: 23,
+  LAC: 24,
+  SF: 25,
+  SEA: 26,
+  LAR: 14,
+  TB: 27,
+  TEN: 22,
+  WAS: 28,
+};
+
 // Calculate the point total from a player's stats
 dict.SumPoints = function sumpoints(pstats) {
   const categories = Object.keys(pstats);

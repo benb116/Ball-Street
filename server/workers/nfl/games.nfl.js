@@ -4,6 +4,9 @@ const setPhase = require('./phase.nfl');
 const state = require('./state.nfl');
 const { get } = require('../../db/redis');
 const { NFLGame } = require('../../models');
+const dict = require('./dict.nfl');
+
+const teamIDs = Object.values(dict.teammap);
 
 // Determine all games and their phases
 function GameState() {
@@ -55,9 +58,8 @@ function GameState() {
       if (gameobjs.length < 16) {
         // Some teams are on bye. Mark them in pairs with post
         const gameteams = Object.keys(phasemap);
-        let remainteams = Array(32).fill().map((x, i) => i + 1);
-        gameteams.forEach((t) => { remainteams[t] = 0; });
-        remainteams = remainteams.filter((t) => t !== 0);
+        let remainteams = teamIDs;
+        gameteams.forEach((gt) => { remainteams = remainteams.filter((t) => t !== gt); });
         if (remainteams.length % 2 !== 0) { logger.error(`Odd number of bye week teams? ${gamelines}`); }
         while (remainteams.length > 1) {
           const team1 = remainteams.shift();
