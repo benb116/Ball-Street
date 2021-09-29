@@ -80,6 +80,10 @@ const Players = () => {
           item2 = b.statPrice;
         }
       }
+      if (sortBy === 'teamAbr') {
+        item1 = theteams[a.NFLTeamId].abr;
+        item2 = theteams[b.NFLTeamId].abr;
+      }
       let flip = 1;
       if (['name', 'posName', 'teamAbr'].indexOf(sorts.sortProp) === -1) {
         item1 = Number(item1);
