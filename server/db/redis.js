@@ -75,7 +75,7 @@ function passReset(rand) {
 
 // Functions for setting or getting config values
 async function getCurrentWeek() {
-  return getAsync(currentWeek()).then(Number);
+  return Number(process.env.WEEK);
 }
 
 async function setCurrentWeek(weeknum) {
@@ -85,12 +85,6 @@ async function setCurrentWeek(weeknum) {
   logger.error(`Can't set weeknum to ${weeknum}`);
   return Promise.reject();
 }
-
-async function initRedisWeek() {
-  const theweek = await getCurrentWeek();
-  if (!theweek) await setCurrentWeek(1);
-}
-initRedisWeek();
 
 const rediskeys = {
   bestbidHash,
