@@ -10,7 +10,7 @@ async function evalProtected(playerBook, proffer, neoffer) {
   const poffer = await Offer.findByPk(proffer).then(u.dv);
   if (!poffer || poffer.cancelled || poffer.filled) {
     logger.info(`Matchee unavailable ${poffer.id}`);
-    await playerBook.unmatch(proffer);
+    await playerBook.unmatch(poffer);
     return false;
   }
 
@@ -20,7 +20,7 @@ async function evalProtected(playerBook, proffer, neoffer) {
   const noffer = await Offer.findByPk(neoffer).then(u.dv);
   if (!noffer || noffer.cancelled) {
     logger.info(`Matcher unavailable ${noffer.id}`);
-    await playerBook.unmatch(proffer);
+    await playerBook.unmatch(poffer);
     return false;
   }
 
