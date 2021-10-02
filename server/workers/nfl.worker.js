@@ -30,10 +30,10 @@ async function init() {
   await setGamePhases(phasemap);
   // Pull game time information
   logger.info('Pulling game time info');
-  await PullAllGames();
+  const gamesChanged = await PullAllGames();
   // Calculate latest point values and push
   logger.info('Calculating point values');
-  SetValues(CalcValues(newlines, []));
+  SetValues(CalcValues(newlines, gamesChanged));
 
   logger.info('NFL worker initialized');
 }
@@ -57,8 +57,6 @@ function createPTMap() {
       const playerID = terms[1];
       const teamID = Number(terms[2]);
       acc[playerID] = teamID;
-      if (!state.teamPlayerMap[teamID]) state.teamPlayerMap[teamID] = [];
-      state.teamPlayerMap[teamID].push(playerID);
       return acc;
     }, {}));
 }
@@ -67,6 +65,9 @@ function createPTMap() {
 function pullPreProj() {
   return getNFLPlayers().then((data) => data.reduce((acc, p) => {
     acc[p.id] = p.preprice;
+    const teamID = p.NFLTeamId;
+    if (!state.teamPlayerMap[teamID]) state.teamPlayerMap[teamID] = [];
+    state.teamPlayerMap[teamID].push(p.id);
     return acc;
   }, {}));
 }
@@ -102,7 +103,7 @@ function EstimateProjection(playerid, statpoints) {
   // Find player's team
   const teamID = (state.playerTeamMap[playerid] || playerid);
   // Find time remaining
-  const timefrac = state.timeObj[teamID];
+  const timefrac = (state.timeObj[teamID] || 0);
   const timeleft = (timefrac === 'done' ? 0 : (1 - timefrac));
   // is Defense
   const isDefense = (playerid < 40);

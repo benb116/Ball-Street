@@ -151,11 +151,11 @@ function PullAllGames() {
           + ((15 - 5 * (quarter === 5)) * 60 - Number(time[0]) * 60 + Number(time[1])
           );
         const timefrac = timeElapsed / ((60 * 60) + (10 * 60 * (quarter === 5)));
-        if (state.timeObj[team1] !== timefrac) {
+        if (state.timeObj[team1] === undefined || state.timeObj[team1] !== timefrac) {
           state.timeObj[team1] = timefrac;
           changedTimes.push(team1);
         }
-        if (state.timeObj[team2] !== timefrac) {
+        if (state.timeObj[team2] === undefined || state.timeObj[team2] !== timefrac) {
           state.timeObj[team2] = timefrac;
           changedTimes.push(team2);
         }
