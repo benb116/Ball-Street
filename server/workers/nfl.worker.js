@@ -7,6 +7,7 @@ const state = require('./nfl/state.nfl');
 const logger = require('../utilities/logger');
 const { GameState, PullAllGames, setGamePhases } = require('./nfl/games.nfl');
 const { PullAllStats, UpdateStats } = require('./nfl/stats.nfl');
+const scrape = require('../db/playerscraper');
 
 const checkInterval = 10000;
 
@@ -19,6 +20,11 @@ async function init() {
   // What was a player's pre-game projection
   logger.info('Creating preProjMap');
   state.preProjObj = await pullPreProj();
+  // If production, pull down players for the week
+  if (process.env.NODE_ENV === 'production') {
+    logger.info('Creating preProjMap');
+    await scrape().catch(logger.error);
+  }
   // What is the state of each game?
   logger.info('Getting gamestates');
   const phasemap = await GameState();
