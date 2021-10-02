@@ -17,7 +17,10 @@ function getBook(books, ContestId, NFLPlayerId) {
   // There may be existing offers and matches in the DB, so add them to the book
   if (!playerBook.init) {
     playerBook.init = true;
-    playerBook.enqueue(() => initializeBook(playerBook));
+    playerBook.enqueue(() => initializeBook(playerBook).catch((err) => {
+      playerBook.init = false;
+      throw Error(err);
+    }));
   }
   return playerBook;
 }
