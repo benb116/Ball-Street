@@ -21,7 +21,6 @@ services:
         volumes:
             - /etc/letsencrypt:/etc/letsencrypt # ssl certs
             - /home/node/app/node_modules
-            - ./server/logs/live:/home/node/app/logs
 
     api:
         build:
@@ -30,15 +29,10 @@ services:
         container_name: api
         env_file: .env
         environment:
-            - NODE_ENV=$NODE_ENV
-            - DB_USER=$DB_USER
-            - DB_PASS=$DB_PASS
             - DB_HOST=db
             - DB_PORT=5432
-            - DB_NAME=$DB_NAME
             - REDIS_HOST=redis
             - REDIS_PORT=6379
-            - COOKIE_SECRET=$COOKIE_SECRET
         networks:
             - app-network
         depends_on:
@@ -57,12 +51,8 @@ services:
         container_name: leader
         env_file: .env
         environment:
-            - NODE_ENV=$NODE_ENV
-            - DB_USER=$DB_USER
-            - DB_PASS=$DB_PASS
             - DB_HOST=db
             - DB_PORT=5432
-            - DB_NAME=$DB_NAME
             - REDIS_HOST=redis
             - REDIS_PORT=6379
         networks:
@@ -84,12 +74,8 @@ services:
         container_name: offer
         env_file: .env
         environment:
-            - NODE_ENV=$NODE_ENV
-            - DB_USER=$DB_USER
-            - DB_PASS=$DB_PASS
             - DB_HOST=db
             - DB_PORT=5432
-            - DB_NAME=$DB_NAME
             - REDIS_HOST=redis
             - REDIS_PORT=6379
         networks:
@@ -111,12 +97,8 @@ services:
         container_name: live
         env_file: .env
         environment:
-            - NODE_ENV=$NODE_ENV
-            - DB_USER=$DB_USER
-            - DB_PASS=$DB_PASS
             - DB_HOST=db
             - DB_PORT=5432
-            - DB_NAME=$DB_NAME
             - REDIS_HOST=redis
             - REDIS_PORT=6379
             - PORT=8080
@@ -139,15 +121,10 @@ services:
         container_name: nfl
         env_file: .env
         environment:
-            - NODE_ENV=$NODE_ENV
-            - DB_USER=$DB_USER
-            - DB_PASS=$DB_PASS
             - DB_HOST=db
             - DB_PORT=5432
-            - DB_NAME=$DB_NAME
             - REDIS_HOST=redis
             - REDIS_PORT=6379
-            - PORT=8080
         networks:
             - app-network
         depends_on:
