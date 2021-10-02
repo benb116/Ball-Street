@@ -3,7 +3,7 @@
 const axios = require('axios');
 const models = require('../models');
 const secret = require('../secret');
-const { rediskeys, get } = require('./redis');
+const { get } = require('./redis');
 
 // Yahoo team ID numbers
 const teammap = {
@@ -85,7 +85,7 @@ async function sendreq(price, pagenum = 0, posget = 'O') {
 }
 
 async function scrape(price) {
-  currentweek = await get.key(rediskeys.currentWeek());
+  currentweek = await get.CurrentWeek();
   for (let i = 0; i < 20; i++) {
     // eslint-disable-next-line no-console
     console.log(i);
