@@ -10,7 +10,7 @@ export const leaderboardSlice = createSlice({
   initialState: defaultState,
   reducers: {
     updateLeaders: (state, { payload }) => {
-      state.leaders = payload;
+      state.leaders = (payload || []);
     },
   },
   extraReducers: {

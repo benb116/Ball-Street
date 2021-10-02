@@ -45,6 +45,7 @@ wss.on('connection', async (ws, request) => {
 
   // Send starting data
   ws.send(JSON.stringify({ event: 'priceUpdate', pricedata: await sendLatest(contestID) }));
+  ws.send(JSON.stringify({ event: 'leaderboard', leaderboard: JSON.parse(await get.key(rediskeys.leaderHash(contestID))) }));
 
   ws.on('close', () => {
     liveState.connmap.delete(userId);
