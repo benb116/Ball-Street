@@ -23,7 +23,7 @@ function evaluateFn(book) {
   if (book.bestask === Infinity) { book.bestask = null; }
   if (book.bestpask === Infinity) { book.bestpask = null; }
 
-  logger.verbose(`Evaluated prices: ${[book.bestbid, book.bestask, book.bestpbid, book.bestpask]
+  logger.verbose(`${book.contestID}-${book.nflplayerID} Evaluated prices: ${[book.bestbid, book.bestask, book.bestpbid, book.bestpask]
     .map((p) => p || 0).join(' ')}`);
 
   // Best offer of each type that is ready to match

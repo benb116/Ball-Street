@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable no-useless-escape */
 // Pull player data from an API
 const axios = require('axios');
@@ -79,15 +80,12 @@ async function sendreq(price, pagenum = 0, posget = 'O') {
       };
     }))
     .then((arr) => arr.filter((e) => e !== null))
-    .then((objs) => models.NFLPlayer.bulkCreate(objs, { updateOnDuplicate: ['preprice', 'postprice', 'NFLTeamId'] }))
-    // eslint-disable-next-line no-console
-    .catch(console.log);
+    .then((objs) => models.NFLPlayer.bulkCreate(objs, { updateOnDuplicate: ['preprice', 'postprice', 'NFLTeamId'] }));
 }
 
 async function scrape(price) {
   currentweek = await get.CurrentWeek();
   for (let i = 0; i < 20; i++) {
-    // eslint-disable-next-line no-console
     console.log(i);
     // eslint-disable-next-line no-await-in-loop
     await sendreq(price, i);
@@ -95,6 +93,7 @@ async function scrape(price) {
   await sendreq(price, 0, 'K');
   await sendreq(price, 0, 'DEF');
   await sendreq(price, 1, 'DEF');
+  console.log('done');
 }
 
 module.exports = scrape;
