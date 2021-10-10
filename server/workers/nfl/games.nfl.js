@@ -94,7 +94,7 @@ async function setGamePhases(phasemap) {
   const teams = Object.keys(phasemap);
   for (let i = 0; i < teams.length; i++) {
     // Do these in series to avoid overloading DB connections
-    const teamID = teams[i];
+    const teamID = Number(teams[i]);
     const phase = phasemap[teamID];
     // If we set a timestamp as the phase, delay until that time to set mid
     if (Number.isInteger(phase)) {
