@@ -38,7 +38,7 @@ async function createLeague(req) {
       .catch((err) => u.Error(err.parent.constraint, 406));
     return newleague;
   }).catch(errorHandler({
-    default: ['Member could not be added', 500],
+    default: ['League could not be created', 500],
     Leagues_name_key: ['A league already exists with that name', 406],
   }));
 }
