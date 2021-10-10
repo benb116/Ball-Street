@@ -44,14 +44,14 @@ async function setPhase(teamID, newphase) {
     },
   })
     .then(() => {
+      if (newphase === 'post') return convertTeamPlayers(teamID);
+      return Promise.resolve();
+    })
+    .then(() => {
       client.publish('phaseChange', JSON.stringify({
         nflTeamID: teamID,
         gamePhase: newphase,
       }));
-    })
-    .then(() => {
-      if (newphase === 'post') return convertTeamPlayers(teamID);
-      return Promise.resolve();
     })
     .then(() => del.key('/app/auth/nfldata/games')); // Force a refresh of game data
 }
