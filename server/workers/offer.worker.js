@@ -18,15 +18,6 @@ const logger = require('../utilities/logger');
 
 // books[contestID][playerID] = Book
 const books = { };
-/*
-  Each book has a queue of promises that can be chained to.
-  This means that functions can be guaranteed to run sequentially.
-  Any operation on a book should be done by "enqueueing" it like so:
-  playerBook.enqueue(() => { doSomething(input); });
-  That way there will be no race conditions within a single contest+player
-  Other race conditions could still occur at the DB,
-  but those should be handled by transactions.
-*/
 
 const parallelProcessors = 10;
 

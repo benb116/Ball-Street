@@ -2,17 +2,41 @@ const { ProtectedMatch } = require('../../models');
 const logger = require('../../utilities/logger');
 const evaluateFn = require('./evaluate');
 
-/* eslint-disable class-methods-use-this */
+// Inspired by https://web.archive.org/web/20110219163448/http://howtohft.wordpress.com/2011/02/15/how-to-build-a-fast-limit-order-book/
 class Book {
   constructor(contestID, nflPlayerID) {
     this.contestID = contestID;
     this.nflplayerID = nflPlayerID;
 
+    /*
+      Each book has a queue of promises that can be chained to.
+      This means that functions can be guaranteed to run sequentially.
+      Any operation on a book should be done by "enqueueing" it as a function like so:
+      playerBook.enqueue(() => { doSomething(input); });
+      That way there will be no race conditions within a single contest+player
+      Other race conditions could still occur at the DB,
+      but those should be handled by transactions.
+    */
     this.queue = Promise.resolve();
     this.init = false; // has the book been initialized with offers and matches from the DB?
 
-    // Tree objects, each key is a price level whose value is a Map
-    // Maps preserve insertion order, so oldest offers at a price can be accessed first
+    /*
+      Tree objects, each key is a price level whose value is a Map
+      {
+        price: Map({
+          offerID: {
+            createdAt: date
+            UserId,
+            price
+          }
+        })
+      }
+      Offers are added and removed from the maps
+      Maps preserve insertion order with new orders inserted at the end
+      Because priority at a price level favors older offers,
+      The oldest offer is easily pulled from the front of the map
+      In that way, the maps act like linked lists
+    */
     this.bid = {};
     this.pbid = {};
     this.ask = {};
