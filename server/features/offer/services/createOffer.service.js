@@ -64,10 +64,10 @@ async function createOffer(req) {
     if (!theentry) { u.Error('No entry found', 404); }
 
     const playerdata = await NFLPlayer.findByPk(obj.nflplayerID, {
-      attributes: ['NFLPositionId', 'NFLTeamId'],
+      attributes: ['NFLPositionId', 'NFLTeamId', 'active'],
       transaction: t,
     }).then(u.dv);
-    if (!playerdata) { u.Error('Player not found', 404); }
+    if (!playerdata || !playerdata.active) { u.Error('Player not found', 404); }
 
     // Player should be in entry for ask, not for bid
     const isOnTeam = u.isPlayerOnRoster(theentry, obj.nflplayerID);

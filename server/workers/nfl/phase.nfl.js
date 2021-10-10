@@ -61,6 +61,7 @@ async function convertTeamPlayers(teamID) {
   const teamPlayers = await NFLPlayer.findAll({
     where: {
       NFLTeamId: teamID,
+      active: true,
     },
   }).then(u.dv);
   // Set postprice in database

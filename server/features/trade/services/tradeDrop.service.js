@@ -46,6 +46,8 @@ async function tradeDrop(req, t) {
   const playerdata = await NFLPlayer.findByPk(value.body.nflplayerID, {
     transaction: t,
   }).then(u.dv);
+  if (!playerdata || !playerdata.active) { u.Error('Player not found', 404); }
+
   // Get player price and position
   const gamedata = await NFLGame.findOne({
     where: {

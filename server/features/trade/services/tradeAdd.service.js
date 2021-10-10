@@ -54,6 +54,7 @@ async function tradeAdd(req, t) {
   const playerdata = await NFLPlayer.findByPk(theplayer, {
     transaction: t,
   }).then(u.dv);
+  if (!playerdata || !playerdata.active) { u.Error('Player not found', 404); }
 
   const playerType = playerdata.NFLPositionId;
   if (value.body.rosterposition) { // If a roster position was specified

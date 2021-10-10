@@ -156,7 +156,7 @@ async function run2() {
   });
 }
 
-beforeAll(() => { run(); run2(); });
+beforeAll(() => { run().then(run2); });
 
 describe('Offer matching tests', () => {
   test('Price update on offer', () => pMap.offer1.prom.then((data) => {

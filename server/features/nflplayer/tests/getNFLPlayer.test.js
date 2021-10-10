@@ -11,6 +11,7 @@ describe('getNFLPlayer service', () => {
       name: 'Miles Sanders',
       postprice: 700,
       preprice: 1100,
+      active: true,
     },
   ));
 
@@ -24,6 +25,7 @@ describe('getNFLPlayer service', () => {
       name: 'Atlanta Falcons',
       postprice: 700,
       preprice: 1100,
+      active: true,
     },
   ));
 
