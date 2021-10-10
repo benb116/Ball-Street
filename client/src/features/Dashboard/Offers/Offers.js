@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { playerSelector } from '../Players/PlayersSlice';
+import { allTeamsSelector, playerSelector } from '../Players/PlayersSlice';
 
 import { cancelOffer, getOffers, offersSelector } from './OffersSlice';
 
@@ -58,7 +58,9 @@ function OfferItem({ offerdata }) {
   const { leagueID, contestID } = useParams();
 
   const playerdata = useSelector(playerSelector(offerdata.NFLPlayerId));
-  if (!playerdata) {
+  const teamdata = useSelector(allTeamsSelector);
+  const thephase = teamdata[playerdata?.NFLTeamId]?.phase;
+  if (!playerdata || thephase !== 'mid') {
     return (<span />);
   }
 
