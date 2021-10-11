@@ -37,5 +37,9 @@ module.exports = function out(sequelize, DataTypes) {
       references: { model: 'NFLTeams' },
       allowNull: false,
     },
+    active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
   }, { sequelize });
 };

@@ -75,6 +75,7 @@ function passReset(rand) {
 
 // Functions for setting or getting config values
 async function getCurrentWeek() {
+  if (process.env.NODE_ENV === 'test') return 5;
   return Number(process.env.WEEK);
 }
 

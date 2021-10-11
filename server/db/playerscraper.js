@@ -2,7 +2,7 @@
 /* eslint-disable no-useless-escape */
 // Pull player data from an API
 const axios = require('axios');
-const models = require('../models');
+const { NFLPlayer } = require('../models');
 const secret = require('../secret');
 const { get } = require('./redis');
 
@@ -77,14 +77,16 @@ async function sendreq(price, pagenum = 0, posget = 'O') {
         NFLPositionId: posid,
         preprice: (price ? 1100 : preprice),
         postprice: (price ? 700 : 0),
+        active: true,
       };
     }))
     .then((arr) => arr.filter((e) => e !== null))
-    .then((objs) => models.NFLPlayer.bulkCreate(objs, { updateOnDuplicate: ['preprice', 'postprice', 'NFLTeamId'] }));
+    .then((objs) => NFLPlayer.bulkCreate(objs, { updateOnDuplicate: ['preprice', 'postprice', 'NFLTeamId', 'active'] }));
 }
 
 async function scrape(price) {
   currentweek = await get.CurrentWeek();
+  await NFLPlayer.update({ active: false }, { where: { active: true } });
   for (let i = 0; i < 20; i++) {
     console.log(i);
     // eslint-disable-next-line no-await-in-loop
