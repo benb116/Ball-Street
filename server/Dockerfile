@@ -17,8 +17,6 @@ COPY --chown=node:node ./server/package.json ./
 RUN npm install
 ENV PATH /home/node/app/node_modules/.bin:$PATH
 
-COPY --chown=node:node ./server ./
-
 # Clear extra cache files
 FROM node:alpine3.13
 
@@ -28,5 +26,7 @@ RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 WORKDIR /home/node/app
 
 COPY --from=BUILD_IMAGE /home/node/app/ ./
+
+COPY --chown=node:node ./server ./
 
 ENTRYPOINT []
