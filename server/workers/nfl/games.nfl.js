@@ -59,7 +59,7 @@ function GameState() {
         // Some teams are on bye. Mark them in pairs with post
         const gameteams = Object.keys(phasemap);
         let remainteams = teamIDs;
-        gameteams.forEach((gt) => { remainteams = remainteams.filter((t) => t !== gt); });
+        gameteams.forEach((gt) => { remainteams = remainteams.filter((t) => t !== Number(gt)); });
         if (remainteams.length % 2 !== 0) { logger.error(`Odd number of bye week teams? ${gamelines}`); }
         while (remainteams.length > 1) {
           const team1 = remainteams.shift();
