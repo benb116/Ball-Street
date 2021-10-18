@@ -188,6 +188,8 @@ async function InitDB(sequelize) {
     return obj;
   });
   await NFLPlayer.bulkCreate(teamdefrecords);
+
+  // Pull NFL players but set constant price values
   await scrape(true);
 }
 

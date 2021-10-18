@@ -9,10 +9,7 @@ module.exports = rateLimit({
   max: 60, // limit each token requests per windowMs
   onLimitReached(req, res) {
     logger.info('Rate limit', req);
-    res.status(429);
-    return res.send('Too many requests. Please wait a bit');
+    res.status(429).send({ error: 'Too many requests. Please wait a bit' });
   },
-  store: new RedisStore({
-    client,
-  }),
+  store: new RedisStore({ client }),
 });

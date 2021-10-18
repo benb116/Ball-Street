@@ -10,8 +10,5 @@ module.exports = session({
   resave: false,
   saveUninitialized: true,
   cookie: { httpOnly: true, sameSite: true },
-  store: new RedisStore({
-    client,
-    ttl: 86400, // 1 day
-  }),
+  store: new RedisStore({ client, ttl: 86400 }), // 1 day
 });

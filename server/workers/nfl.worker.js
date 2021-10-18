@@ -50,7 +50,7 @@ async function repeat() {
   const gamesChanged = await PullAllGames();
   // Pull stats, find differences, calc and set values
   const statsChanged = await PullAllStats().then(GetNewStats);
-  await SetValues(CalcValues(statsChanged, gamesChanged));
+  SetValues(CalcValues(statsChanged, gamesChanged));
 }
 
 // Populate the playerTeamMap

@@ -18,6 +18,8 @@ const dbOptions = {
   isolationLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED,
 };
 
+// Pull DB information from secrets file when testing
+// since test doesn't run within docker, doesn't have env vars
 if (process.env.NODE_ENV === 'test' || !process.env.NODE_ENV) {
   // eslint-disable-next-line global-require
   const sec = require('../secret');

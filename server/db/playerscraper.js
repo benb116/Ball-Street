@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable no-useless-escape */
+
 // Pull player data from an API
 const axios = require('axios');
 const { NFLPlayer } = require('../models');
@@ -55,21 +56,48 @@ const baseurl = (posget, weeknum) => `https://football.fantasysports.yahoo.com/f
 const cookie = secret.yahooCookie;
 let currentweek = 3;
 
+// Pull player info
+// If price, include constant pre- and post-prices
+async function scrape(price) {
+  currentweek = await get.CurrentWeek();
+  // Set all existing player records to inactive, will update if duplicated
+  await NFLPlayer.update({ active: false }, { where: { active: true } });
+
+  for (let i = 0; i < 20; i++) {
+    console.log(i);
+    // Don't overload yahoo
+    // Gets all offensive players
+    // i = page number
+    // eslint-disable-next-line no-await-in-loop
+    await sendreq(price, i);
+  }
+  // Get kickers and defensive players
+  await sendreq(price, 0, 'K');
+  await sendreq(price, 0, 'DEF');
+  await sendreq(price, 1, 'DEF');
+  console.log('done');
+}
+
+// Pull one page of players
 async function sendreq(price, pagenum = 0, posget = 'O') {
+  // Send request
   return axios.get(baseurl(posget, currentweek) + pagenum * 25, { headers: { cookie } })
+  // Clean up HTML response
     .then((res) => res.data.split('<tbody>')[1])
     .then((res) => res.split('</tbody>')[0])
     .then((res) => res.split('</td></tr>'))
     .then((out) => out.map((playerline) => {
       if (!playerline.length) return null;
+      // Pull out info
       const term = (posget === 'DEF' ? 'teams' : 'players');
       const trimfront = playerline.split(`<a class="Nowrap name F-link" href="https://sports.yahoo.com/nfl/${term}/`)[1];
       const [id, idout] = trimfront.split('" target="_blank">');
       const [name, nameout] = idout.split('</a> <span class="Fz-xxs">');
       const [team, teamout] = nameout.split(' - ');
       const [pos, posout] = teamout.split('</span> </div>\n        </div>\n        <div class=\"Grid-bind-end\">');
-      const posid = (nflpos[pos] || nflpos[pos.split(',')[0]] || 0);
+      const posid = (nflpos[pos] || nflpos[pos.split(',')[0]] || 0); // Could be WR,RB
       const preprice = Math.round(Number(posout.split('span class=\"Fw-b\">')[1].split('</span>')[0]) * 100);
+      // Player object that will be added to DB
       return {
         id: (posget === 'DEF' ? teammap[team.toUpperCase()] : Number(id)),
         name,
@@ -81,21 +109,8 @@ async function sendreq(price, pagenum = 0, posget = 'O') {
       };
     }))
     .then((arr) => arr.filter((e) => e !== null))
+    // If player exists in DB, overwrite certain properties
     .then((objs) => NFLPlayer.bulkCreate(objs, { updateOnDuplicate: ['preprice', 'postprice', 'NFLTeamId', 'active'] }));
-}
-
-async function scrape(price) {
-  currentweek = await get.CurrentWeek();
-  await NFLPlayer.update({ active: false }, { where: { active: true } });
-  for (let i = 0; i < 20; i++) {
-    console.log(i);
-    // eslint-disable-next-line no-await-in-loop
-    await sendreq(price, i);
-  }
-  await sendreq(price, 0, 'K');
-  await sendreq(price, 0, 'DEF');
-  await sendreq(price, 1, 'DEF');
-  console.log('done');
 }
 
 module.exports = scrape;

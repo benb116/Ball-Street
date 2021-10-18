@@ -16,6 +16,7 @@ function GameState() {
     .then(async (gamelines) => {
       const currentweek = (await get.CurrentWeek() || 0);
       const phasemap = {};
+
       // Build up the list of games for the DB and the phasemap.
       const gameobjs = gamelines.map((gameline) => {
         const terms = gameline.split('|');

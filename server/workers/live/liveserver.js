@@ -57,6 +57,7 @@ server.listen(process.env.PORT, () => {
   logger.info(`Live server listening on port ${process.env.PORT}`);
 });
 
+// Send latest points and stat info
 async function sendLatest(contestID) {
   const stats = get.hkeyall(rediskeys.statpriceHash());
   const projs = get.hkeyall(rediskeys.projpriceHash());
