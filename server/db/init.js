@@ -65,7 +65,7 @@ async function InitDB(sequelize) {
   // Define NFL teams
   const teams = {
     ARI: {
-      location: 'Arizona', name: 'Cardinals', id: 10, division: 'NFC West', gamePhase: 'pre', fullname: 'Arizona Cardinals',
+      location: 'Arizona', name: 'Cardinals', id: 22, division: 'NFC West', gamePhase: 'pre', fullname: 'Arizona Cardinals',
     },
     ATL: {
       location: 'Atlanta', name: 'Falcons', id: 1, division: 'NFC South', gamePhase: 'pre', fullname: 'Atlanta Falcons',
@@ -155,7 +155,7 @@ async function InitDB(sequelize) {
       location: 'Tampa Bay', name: 'Buccaneers', id: 27, division: 'NFC South', gamePhase: 'pre', fullname: 'Tampa Bay Buccaneers',
     },
     TEN: {
-      location: 'Tennessee', name: 'Titans', id: 22, division: 'AFC South', gamePhase: 'pre', fullname: 'Tennessee Titans',
+      location: 'Tennessee', name: 'Titans', id: 10, division: 'AFC South', gamePhase: 'pre', fullname: 'Tennessee Titans',
     },
     WAS: {
       location: 'Washington', name: 'Football Team', id: 28, division: 'NFC East', gamePhase: 'pre', fullname: 'Washington Football Team',

@@ -27,7 +27,7 @@ dict.multiplierTable = {
 };
 
 dict.teammap = {
-  ARI: 10,
+  ARI: 22,
   ATL: 1,
   BAL: 33,
   BUF: 2,
@@ -57,7 +57,7 @@ dict.teammap = {
   SEA: 26,
   LAR: 14,
   TB: 27,
-  TEN: 22,
+  TEN: 10,
   WAS: 28,
 };
 
