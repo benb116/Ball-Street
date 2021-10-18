@@ -114,8 +114,16 @@ function EstimateProjection(playerid, statpoints) {
   // is Defense
   const isDefense = (playerid < 40);
   const dbid = (playerid || 0);
+
   // Calculate and return
-  return statpoints + timeleft * (state.preProjObj[dbid] || 0) * (1 - 2 * isDefense);
+  if (isDefense) {
+    return (
+      1000
+      - ((1000 - (state.preProjObj[dbid] || 0)) * timeleft)
+      - (1000 - statpoints)
+    );
+  }
+  return statpoints + timeleft * (state.preProjObj[dbid] || 0);
 }
 
 // Set values in redis and publish an update
