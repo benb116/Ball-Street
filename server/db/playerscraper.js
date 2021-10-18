@@ -73,6 +73,7 @@ async function scrape(price) {
   }
   // Get kickers and defensive players
   await sendreq(price, 0, 'K');
+  await sendreq(price, 1, 'K');
   await sendreq(price, 0, 'DEF');
   await sendreq(price, 1, 'DEF');
   console.log('done');
