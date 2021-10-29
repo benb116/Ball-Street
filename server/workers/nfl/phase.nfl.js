@@ -64,13 +64,15 @@ async function convertTeamPlayers(teamID) {
       active: true,
     },
   }).then(u.dv);
+
   // Set postprice in database
-  // Bulk create with update on duplicate?
-  const statPromises = teamPlayers.map((p) => setPostPrice(p.id));
-  const statout = await Promise.all(statPromises);
-  const statmap = statout.reduce((acc, cur) => {
-    const [pid, val] = cur;
-    acc[pid] = val;
+  const statplayerObjs = teamPlayers.map(setPostPrice);
+  await NFLPlayer.bulkCreate(statplayerObjs, { updateOnDuplicate: ['postprice'] });
+
+  // Build statmap for use in conversion
+  const statmap = statplayerObjs.reduce((acc, cur) => {
+    const { id, postprice } = cur;
+    acc[id] = postprice;
     return acc;
   }, {});
 
@@ -95,11 +97,13 @@ async function convertTeamPlayers(teamID) {
 }
 
 // Set a player's postprice based on statlines
-async function setPostPrice(playerid) {
+function setPostPrice(p) {
+  const playerid = p.id;
   const stats = state.statObj[playerid];
   const statpoints = (stats ? dict.SumPoints(stats) : 0);
-  await NFLPlayer.update({ postprice: statpoints }, { where: { id: playerid } });
-  return [playerid, statpoints];
+  // eslint-disable-next-line no-param-reassign
+  p.postprice = statpoints;
+  return p;
 }
 
 // Convert any team players in an entry to points
