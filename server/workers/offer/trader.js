@@ -37,8 +37,6 @@ async function attemptFill(t, bidid, askid, tprice) {
   const boffer = u.dv(bidoffer);
   const aoffer = u.dv(askoffer);
 
-  if (aoffer.price > boffer.price) throw new Error('Price mismatch');
-
   resp.bid = (boffer || {});
   resp.ask = (aoffer || {});
 
@@ -52,6 +50,8 @@ async function attemptFill(t, bidid, askid, tprice) {
     logger.info(`Offer began closed: ${JSON.stringify(resp)}`);
     return resp;
   }
+
+  if (aoffer.price > boffer.price) throw new Error('Price mismatch');
 
   const biduser = boffer.UserId;
   const askuser = aoffer.UserId;
