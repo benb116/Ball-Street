@@ -119,4 +119,15 @@ out.ErrorTest = function ErrorTest(service, req, statusNumber, message) {
   };
 };
 
+// Compare strings in constant time
+// https://snyk.io/blog/node-js-timing-attack-ccc-ctf/
+out.OnCompare = function OnCompare(a, b) {
+  let mismatch = 0;
+  for (let i = 0; i < a.length; ++i) {
+    // eslint-disable-next-line no-bitwise
+    mismatch |= (a.charCodeAt(i) ^ b.charCodeAt(i));
+  }
+  return mismatch;
+};
+
 module.exports = out;

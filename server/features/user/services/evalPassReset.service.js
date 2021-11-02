@@ -19,7 +19,7 @@ const schema = Joi.object({
 
 async function evalPassReset(req) {
   const { token, password, confirmPassword } = u.validate(req, schema);
-  if (password !== confirmPassword) u.Error('Passwords do not match', 403);
+  if (u.OnCompare(password, confirmPassword)) u.Error('Passwords do not match', 403);
   const email = await get.key(rediskeys.passReset(token));
   if (!email) u.Error('Reset key could not be found, please try again', 404);
 

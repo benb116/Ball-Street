@@ -5,23 +5,22 @@
         "jest/globals": true
     },
     "extends": [
-        "plugin:react/recommended",
+        "plugin:security/recommended",
+        "plugin:node/recommended",
         "airbnb"
     ],
     "parserOptions": {
-        "ecmaFeatures": {
-            "jsx": true
-        },
         "ecmaVersion": 12,
         "sourceType": "module"
     },
     "plugins": [
-        "react",
-        "jest"
+        "jest",
+        "security"
     ],
     "rules": {
         "no-useless-concat": "off",
         "no-use-before-define": ["error", { "functions": false, "classes": true }],
-        "no-plusplus": [2, { "allowForLoopAfterthoughts": true }]
+        "no-plusplus": [2, { "allowForLoopAfterthoughts": true }],
+        "security/detect-object-injection": "off"
     }
 }
