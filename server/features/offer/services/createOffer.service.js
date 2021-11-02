@@ -94,6 +94,7 @@ async function createOffer(req) {
         week: await get.CurrentWeek(),
       },
     }, { transaction: t }).then(u.dv);
+    if (!gamedata) u.Error('Could not find game data for this player', 404);
     if (gamedata.phase !== 'mid') {
       u.Error("Can't make an offer before or after games", 406);
     }
