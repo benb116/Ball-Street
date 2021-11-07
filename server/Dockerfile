@@ -1,7 +1,7 @@
 # Server Dockerfile
 # Used to build all Node workers
 # Different entrypoints defined in docker compose
-FROM node:alpine3.13 AS BUILD_IMAGE
+FROM node:16-alpine3.13 AS BUILD_IMAGE
 
 # Use non-privileged user and make new folder for files
 USER node 

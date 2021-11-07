@@ -3,7 +3,7 @@
 # Targeting based on NODE_ENV in docker compose
 
 # dev environment
-FROM node:alpine3.13 as development
+FROM node:16-alpine3.13 as development
 # Non-privileged user
 USER node
 RUN mkdir -p /home/node/app/ && chown -R node:node /home/node
