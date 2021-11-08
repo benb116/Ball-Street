@@ -14,6 +14,7 @@ WORKDIR /home/node/app
 RUN npm install nodemon
 
 COPY --chown=node:node ./server/package.json ./
+COPY --chown=node:node ./server/package-lock.json ./
 RUN npm install
 ENV PATH /home/node/app/node_modules/.bin:$PATH
 
