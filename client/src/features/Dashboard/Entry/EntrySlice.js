@@ -2,15 +2,19 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
 
-import { getentryfunc, preaddfunc, predropfunc } from './Entry.api';
+import {
+  getentryfunc, preaddfunc, predropfunc, reorderrosterfunc,
+} from './Entry.api';
 
 export const getEntry = createAsyncThunk('entry/getEntry', getentryfunc);
 export const preAdd = createAsyncThunk('entry/preAdd', preaddfunc);
 export const preDrop = createAsyncThunk('entry/preDrop', predropfunc);
+export const reorderRoster = createAsyncThunk('entry/reorderRoster', reorderrosterfunc);
 
 const defaultState = {
   balance: 0,
   roster: {},
+  rposSelected: [0, ''],
   rosterUpdate: false,
 };
 
@@ -27,6 +31,13 @@ export const entrySlice = createSlice({
     },
     updateRoster: (state) => {
       state.rosterUpdate = true;
+    },
+    selectRPos: (state, { payload }) => {
+      if (state.rposSelected[0] === 0) {
+        state.rposSelected = payload;
+      } else {
+        state.rposSelected = [0, ''];
+      }
     },
   },
   extraReducers: {
@@ -46,6 +57,12 @@ export const entrySlice = createSlice({
     [preDrop.rejected]: (state, { payload }) => {
       if (payload) { toast.error(payload); }
     },
+    [reorderRoster.fulfilled]: (state, { payload }) => {
+      setEntry(state, payload);
+    },
+    [reorderRoster.rejected]: (state, { payload }) => {
+      if (payload) { toast.error(payload); }
+    },
   },
 });
 
@@ -61,10 +78,11 @@ function setEntry(state, payload) {
   return state;
 }
 
-export const { offerFilled, updateRoster } = entrySlice.actions;
+export const { offerFilled, updateRoster, selectRPos } = entrySlice.actions;
 
 export const entrySelector = (state) => state.entry;
 export const rosterUpdateSelector = (state) => state.entry.rosterUpdate;
 export const isOnRosterSelector = (playerID) => (state) => (
   Object.values(state.entry.roster).indexOf(playerID) >= 0
 );
+export const rposSelector = (state) => state.entry.rposSelected;

@@ -4,7 +4,7 @@ const u = require('../../util/util');
 const config = require('../../../config');
 
 const sequelize = require('../../../db');
-const { Entry } = require('../../../models');
+const { Entry, NFLPlayer } = require('../../../models');
 const { canUserSeeContest, errorHandler } = require('../../util/util.service');
 const { validators } = require('../../util/util.schema');
 
@@ -76,6 +76,25 @@ async function reorderRoster(req) {
     // If both are empty, don't do anything
     if (!playerIDin1 && !playerIDin2) {
       u.Error('No players found', 404);
+    }
+
+    if (playerIDin1) {
+      const player1 = await NFLPlayer.findByPk(playerIDin1).then(u.dv);
+      if (player1.NFLPositionId !== postype2) {
+        if (postype2 !== config.FlexNFLPositionId
+          || !config.NFLPosTypes[player1.NFLPositionId].canflex) {
+          u.Error('Cannot put that player in that position', 406);
+        }
+      }
+    }
+    if (playerIDin2) {
+      const player2 = await NFLPlayer.findByPk(playerIDin2).then(u.dv);
+      if (player2.NFLPositionId !== postype1) {
+        if (postype1 !== config.FlexNFLPositionId
+          || !config.NFLPosTypes[player2.NFLPositionId].canflex) {
+          u.Error('Cannot put that player in that position', 406);
+        }
+      }
     }
 
     theentry[value.body.pos1] = playerIDin2;

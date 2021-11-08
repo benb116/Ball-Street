@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable no-nested-ternary */
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -5,22 +7,85 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { allTeamsSelector, playerSelector, priceMapSelector } from '../Players/PlayersSlice';
 
-import { preDrop } from './EntrySlice';
+import {
+  preDrop, rposSelector, selectRPos, reorderRoster,
+} from './EntrySlice';
 import { cancelOffer, offersSelector } from '../Offers/OffersSlice';
 import { setModal } from '../Modal/ModalSlice';
 import RenderPrice from '../../../helpers/util';
 
+const flexID = 99;
+const rosterkey = {
+  QB1: 1,
+  RB1: 2,
+  RB2: 2,
+  WR1: 3,
+  WR2: 3,
+  TE1: 4,
+  FLEX1: flexID,
+  FLEX2: flexID,
+  K1: 5,
+  DEF1: 6,
+};
+
+const NFLPosTypes = {
+  1: { name: 'QB', canflex: false },
+  2: { name: 'RB', canflex: true },
+  3: { name: 'WR', canflex: true },
+  4: { name: 'TE', canflex: true },
+  5: { name: 'K', canflex: false },
+  6: { name: 'DEF', canflex: false },
+};
+NFLPosTypes[flexID] = { name: 'FLEX', canflex: true };
+
 function RosterItem({ playerid, position }) {
   const dispatch = useDispatch();
+
   const { leagueID, contestID } = useParams();
   const thisplayer = useSelector(playerSelector(playerid));
   const theteams = useSelector(allTeamsSelector);
+  const rposSelected = useSelector(rposSelector);
 
   const offers = useSelector(offersSelector);
   const priceMap = useSelector(priceMapSelector(playerid));
 
+  const reorderClick = () => {
+    if (rposSelected[0] !== 0) {
+      dispatch(reorderRoster({
+        leagueID,
+        contestID,
+        pos1: rposSelected[1],
+        pos2: position,
+      }));
+      dispatch(selectRPos([0, '']));
+    } else if (thisplayer.NFLPositionId) {
+      dispatch(selectRPos([thisplayer.NFLPositionId, position]));
+    } else {
+      dispatch(selectRPos([rosterkey[position].type, position]));
+    }
+  };
+
+  const shouldHighlight = () => {
+    const selectedType = rposSelected[0];
+    if (selectedType === 0) return false;
+    const thisType = rosterkey[position];
+    if (selectedType !== thisType) {
+      if (selectedType === flexID || thisType === flexID) {
+        if (selectedType === flexID && !NFLPosTypes[position].canflex) return false;
+        if (thisType === flexID && !NFLPosTypes[selectedType].canflex) return false;
+        return true;
+      }
+      return false;
+    }
+    return true;
+  };
+
   if (!thisplayer || !theteams[thisplayer.NFLTeamId]) {
-    return (<tr><td>{position}</td></tr>);
+    return (
+      <tr>
+        <td style={{ cursor: 'pointer', fontWeight: (shouldHighlight() ? 'bold' : 'normal') }} onClick={reorderClick}>{position}</td>
+      </tr>
+    );
   }
 
   const thephase = theteams[thisplayer.NFLTeamId].phase;
@@ -62,7 +127,7 @@ function RosterItem({ playerid, position }) {
 
   return (
     <tr playerid={thisplayer.id}>
-      <td>{position}</td>
+      <td style={{ cursor: 'pointer', fontWeight: (shouldHighlight() ? 'bold' : 'normal') }} onClick={reorderClick}>{position}</td>
       <td>{thisplayer.name}</td>
       <td>{thisplayer.teamAbr}</td>
       <td style={{ textAlign: 'right' }}>{RenderPrice(dispStat)}</td>
