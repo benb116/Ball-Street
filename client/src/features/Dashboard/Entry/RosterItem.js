@@ -128,7 +128,13 @@ function RosterItem({ playerid, position }) {
   return (
     <tr playerid={thisplayer.id}>
       <td style={{ cursor: 'pointer', fontWeight: (shouldHighlight() ? 'bold' : 'normal') }} onClick={reorderClick}>{position}</td>
-      <td>{thisplayer.name}</td>
+      <td>
+        {thisplayer.name}
+        {' '}
+        <span style={{ fontSize: '0.75em' }}>
+          {posName(thisplayer.NFLPositionId)}
+        </span>
+      </td>
       <td>{thisplayer.teamAbr}</td>
       <td style={{ textAlign: 'right' }}>{RenderPrice(dispStat)}</td>
       <td style={{ textAlign: 'right' }}>{RenderPrice(dispProj)}</td>
@@ -138,6 +144,11 @@ function RosterItem({ playerid, position }) {
       <ActionButton thephase={thephase} oclick={oclick} text={text} />
     </tr>
   );
+}
+
+function posName(posNum) {
+  if (!posNum) return '';
+  return `(${NFLPosTypes[posNum].name})`;
 }
 
 function ActionButton({ thephase, oclick, text }) {
