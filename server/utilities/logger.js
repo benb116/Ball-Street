@@ -20,19 +20,13 @@ const logger = createLogger({
   ],
 });
 
-//
-// If we're in development then **ALSO** log to the `console`
-// with the colorized simple format.
-//
-if (process.env.NODE_ENV === 'development') {
-  logger.add(new transports.Console({
-    format: format.combine(
-      format.colorize(),
-      format.simple(),
-    ),
-    level: 'verbose',
-  }));
-}
+logger.add(new transports.Console({
+  format: format.combine(
+    format.colorize(),
+    format.simple(),
+  ),
+  level: 'verbose',
+}));
 
 logger.verbose = function verb(msg) {
   logger.log('verbose', msg);
