@@ -27,6 +27,8 @@ const schema = Joi.object({
 async function tradeDrop(req, t) {
   const value = u.validate(req, schema);
 
+  const theplayer = value.body.nflplayerID;
+
   // Remove from roster
   const theentry = await Entry.findOne({
     where: {
@@ -38,14 +40,12 @@ async function tradeDrop(req, t) {
   });
   if (!theentry) { u.Error('No entry found', 404); }
 
-  const isOnTeam = u.isPlayerOnRoster(theentry, value.body.nflplayerID);
+  const isOnTeam = u.isPlayerOnRoster(theentry, theplayer);
   if (!isOnTeam) { u.Error('Player is not on roster', 406); }
   theentry[isOnTeam] = null;
 
   // How much to add to point total
-  const playerdata = await NFLPlayer.findByPk(value.body.nflplayerID, {
-    transaction: t,
-  }).then(u.dv);
+  const playerdata = await NFLPlayer.findByPk(theplayer, { transaction: t }).then(u.dv);
   if (!playerdata || !playerdata.active) { u.Error('Player not found', 404); }
 
   // Get player price and position
@@ -55,6 +55,7 @@ async function tradeDrop(req, t) {
       week: await get.CurrentWeek(),
     },
   }, { transaction: t }).then(u.dv);
+  if (!gamedata) u.Error('Could not find game data for this player', 404);
 
   if (value.body.price) {
     if (gamedata.phase !== 'mid') {

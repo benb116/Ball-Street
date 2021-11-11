@@ -83,7 +83,7 @@ async function attemptFill(t, bidid, askid, tprice) {
   const bidProm = service.tradeAdd(bidreq, t)
     .catch((err) => {
       logger.warn(`Offer could not be filled: ${boffer.id} - ${err.message}`);
-      Offer.destroy({ where: { id: boffer.id } })
+      return Offer.destroy({ where: { id: boffer.id } }, { transaction: t })
         .then(() => {
           client.publish('offerCancelled', JSON.stringify({
             userID: boffer.UserId,
@@ -94,7 +94,7 @@ async function attemptFill(t, bidid, askid, tprice) {
   const askProm = service.tradeDrop(askreq, t)
     .catch((err) => {
       logger.warn(`Offer could not be filled: ${aoffer.id} - ${err.message}`);
-      Offer.destroy({ where: { id: aoffer.id } })
+      return Offer.destroy({ where: { id: aoffer.id } }, { transaction: t })
         .then(() => {
           client.publish('offerCancelled', JSON.stringify({
             userID: aoffer.UserId,

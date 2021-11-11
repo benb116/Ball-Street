@@ -51,9 +51,7 @@ async function tradeAdd(req, t) {
   // console.log("POINTS", pts);
 
   // Get player price and position
-  const playerdata = await NFLPlayer.findByPk(theplayer, {
-    transaction: t,
-  }).then(u.dv);
+  const playerdata = await NFLPlayer.findByPk(theplayer, { transaction: t }).then(u.dv);
   if (!playerdata || !playerdata.active) { u.Error('Player not found', 404); }
 
   const playerType = playerdata.NFLPositionId;
@@ -80,7 +78,7 @@ async function tradeAdd(req, t) {
       week: await get.CurrentWeek(),
     },
   }, { transaction: t }).then(u.dv);
-    // console.log("PDATA", playerdata);
+  if (!gamedata) u.Error('Could not find game data for this player', 404);
 
   if (!value.body.price) {
     if (gamedata.phase !== 'pre') {
