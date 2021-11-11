@@ -2,11 +2,9 @@
 
 const models = require('../models');
 const logger = require('../utilities/logger');
-const InitDB = require('./init');
-const { set } = require('./redis');
+const { get } = require('./redis');
 
-async function PopulateDB(sequelize) {
-  await InitDB(sequelize);
+async function PopulateDB() {
   logger.info('Populating DB with initial data');
   const {
     Contest,
@@ -74,25 +72,25 @@ async function PopulateDB(sequelize) {
   ];
   await Membership.bulkCreate(mem);
   await Membership.bulkCreate(mem2);
-
+  const curweek = await get.CurrentWeek();
   // Define existing contest
   const con = {
     name: 'Ball Street Big One',
     LeagueId: 1,
     budget: 10000,
-    nflweek: 1,
+    nflweek: curweek,
   };
   const con2 = {
     name: 'Private Contest',
     LeagueId: 2,
     budget: 10000,
-    nflweek: 1,
+    nflweek: curweek,
   };
   const con3 = {
     name: 'Public Contest 2',
     LeagueId: 3,
     budget: 10000,
-    nflweek: 1,
+    nflweek: curweek,
   };
   await Contest.bulkCreate([con, con2, con3]);
 
@@ -164,38 +162,36 @@ async function PopulateDB(sequelize) {
   ];
   await Trade.bulkCreate(trds);
 
-  await set.CurrentWeek(1);
-
   await NFLGame.bulkCreate([
-    { week: 1, HomeId: 10, AwayId: 1 },
+    { week: curweek, HomeId: 10, AwayId: 1 },
     {
-      week: 1, HomeId: 33, AwayId: 2, phase: 'pre',
+      week: curweek, HomeId: 33, AwayId: 2, phase: 'pre',
     },
-    { week: 1, HomeId: 29, AwayId: 3 },
-    { week: 1, HomeId: 4, AwayId: 5 },
-    { week: 1, HomeId: 6, AwayId: 7 },
-    { week: 1, HomeId: 8, AwayId: 9 },
-    { week: 1, HomeId: 34, AwayId: 11 },
+    { week: curweek, HomeId: 29, AwayId: 3 },
+    { week: curweek, HomeId: 4, AwayId: 5 },
+    { week: curweek, HomeId: 6, AwayId: 7 },
+    { week: curweek, HomeId: 8, AwayId: 9 },
+    { week: curweek, HomeId: 34, AwayId: 11 },
     {
-      week: 1, HomeId: 30, AwayId: 12, phase: 'pre',
+      week: curweek, HomeId: 30, AwayId: 12, phase: 'pre',
     },
-    { week: 1, HomeId: 15, AwayId: 16 },
+    { week: curweek, HomeId: 15, AwayId: 16 },
     {
-      week: 1, HomeId: 17, AwayId: 18, phase: 'pre',
+      week: curweek, HomeId: 17, AwayId: 18, phase: 'pre',
     },
-    { week: 1, HomeId: 19, AwayId: 20 },
+    { week: curweek, HomeId: 19, AwayId: 20 },
     {
-      week: 1, HomeId: 13, AwayId: 21, phase: 'mid',
-    },
-    {
-      week: 1, HomeId: 23, AwayId: 24, phase: 'mid',
+      week: curweek, HomeId: 13, AwayId: 21, phase: 'mid',
     },
     {
-      week: 1, HomeId: 25, AwayId: 26, phase: 'mid',
+      week: curweek, HomeId: 23, AwayId: 24, phase: 'mid',
     },
-    { week: 1, HomeId: 14, AwayId: 27 },
     {
-      week: 1, HomeId: 22, AwayId: 28, phase: 'pre',
+      week: curweek, HomeId: 25, AwayId: 26, phase: 'mid',
+    },
+    { week: curweek, HomeId: 14, AwayId: 27 },
+    {
+      week: curweek, HomeId: 22, AwayId: 28, phase: 'pre',
     },
   ]);
 }

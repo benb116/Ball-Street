@@ -40,7 +40,7 @@ describe('reorderRoster service', () => {
     },
   ));
 
-  test('Reset request returns data', ErrorTest(
+  test('RB from FLEX to WR returns error', ErrorTest(
     service, { user: 3, params: { leagueID: 1, contestID: 1 }, body: { pos1: 'FLEX1', pos2: 'WR1' } },
     406, 'Cannot put that player in that position',
   ));
