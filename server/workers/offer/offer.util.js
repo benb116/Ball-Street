@@ -15,12 +15,22 @@ function getBook(books, ContestId, NFLPlayerId) {
   }
   const playerBook = books[ContestId][NFLPlayerId];
   // There may be existing offers and matches in the DB, so add them to the book
+  // If the book hasn't been inited, try to init
   if (!playerBook.init) {
-    playerBook.init = true;
-    playerBook.enqueue(() => initializeBook(playerBook).catch((err) => {
-      playerBook.init = false;
-      throw Error(err);
-    }));
+    // It's possible that the book will been called again before the first init is complete
+    // In that case, we don't want to mark the book as init=true until it's ready
+    // But we also don't want to have the second call reinit the book
+    // So add the init process as an item on the book queue
+    // The first will complete, and when the second is attempted, init will be true so exit.
+    playerBook.enqueue(async () => {
+      if (playerBook.init) return;
+      await initializeBook(playerBook)
+        .then(() => { playerBook.init = true; })
+        .catch((err) => {
+          playerBook.init = false;
+          throw Error(err);
+        });
+    });
   }
   return playerBook;
 }
