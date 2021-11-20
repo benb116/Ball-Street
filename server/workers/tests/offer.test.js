@@ -171,9 +171,11 @@ describe('Offer matching tests', () => {
     }));
   }), (config.RefreshTime + 1) * 1000);
 
-  test('Price update on fill', () => pMap.match.prom.then((data) => {
+  test('New best prices update on fill', () => pMap.match.prom.then((data) => {
     expect(data.pricedata).toEqual(expect.objectContaining({
-      21: { bestask: 0, bestbid: 400, nflplayerID: 21 },
+      21: {
+        bestask: 0, bestbid: 400, lastprice: 500, nflplayerID: 21,
+      },
     }));
   }), (config.RefreshTime + 1) * 1000);
 

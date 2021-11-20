@@ -14,7 +14,6 @@ const { leaderHash } = rediskeys;
 
 subscriber.subscribe('priceUpdate');
 subscriber.subscribe('statUpdate');
-subscriber.subscribe('lastTrade');
 subscriber.subscribe('leaderUpdate');
 subscriber.subscribe('protectedMatch');
 subscriber.subscribe('offerFilled');
@@ -26,7 +25,6 @@ subscriber.on('message', (channel, message) => {
   switch (channel) {
     case 'priceUpdate': priceUpdate(message); break;
     case 'statUpdate': statUpdate(message); break;
-    case 'lastTrade': lastTrade(message); break;
     case 'leaderUpdate': leaderUpdate(); break;
     case 'protectedMatch': protectedMatch(message); break;
     case 'offerFilled': offerFilled(message); break;
@@ -39,28 +37,22 @@ subscriber.on('message', (channel, message) => {
 // Add a price update to the map
 function priceUpdate(message) {
   const {
-    contestID, nflplayerID, bestbid, bestask,
+    contestID, nflplayerID, bestbid, bestask, lastprice,
   } = JSON.parse(message);
   if (!liveState.priceUpdateMap[contestID]) { liveState.priceUpdateMap[contestID] = {}; }
-  liveState.priceUpdateMap[contestID][nflplayerID] = {
-    nflplayerID,
-    bestbid,
-    bestask,
-  };
+  if (!liveState.priceUpdateMap[contestID][nflplayerID]) {
+    liveState.priceUpdateMap[contestID][nflplayerID] = {};
+  }
+
+  liveState.priceUpdateMap[contestID][nflplayerID].nflplayerID = nflplayerID;
+
+  if (bestbid !== undefined) liveState.priceUpdateMap[contestID][nflplayerID].bestbid = bestbid;
+  if (bestask !== undefined) liveState.priceUpdateMap[contestID][nflplayerID].bestask = bestask;
+  if (lastprice !== undefined) liveState.priceUpdateMap[contestID][nflplayerID].lastprice = lastprice;
 }
 
 function statUpdate(message) {
   sendToAll({ event: 'statUpdate', pricedata: JSON.parse(message) });
-}
-
-// Add a last trade update to the map
-function lastTrade(message) {
-  const { contestID, nflplayerID, lastprice } = JSON.parse(message);
-  if (!liveState.lastTradeMap[contestID]) { liveState.lastTradeMap[contestID] = {}; }
-  liveState.lastTradeMap[contestID][nflplayerID] = {
-    nflplayerID,
-    lastprice,
-  };
 }
 
 // When new leaderboards come in, send out to the correct ws
@@ -106,17 +98,11 @@ function offerCancelled(message) {
 // Send out new price data when it's available
 setInterval(() => {
   const priceUpdatecIDs = Object.keys(liveState.priceUpdateMap);
-  const lastTradecIDs = Object.keys(liveState.lastTradeMap);
 
   const priceMsgMap = priceUpdatecIDs.reduce((acc, cur) => {
     acc[cur] = { event: 'priceUpdate', pricedata: liveState.priceUpdateMap[cur] };
     return acc;
   }, {});
-  const tradeMsgMap = lastTradecIDs.reduce((acc, cur) => {
-    acc[cur] = { event: 'priceUpdate', pricedata: liveState.lastTradeMap[cur] };
-    return acc;
-  }, {});
 
   sendToContests(priceMsgMap);
-  sendToContests(tradeMsgMap);
 }, config.RefreshTime * 1000);

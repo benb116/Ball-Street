@@ -140,7 +140,7 @@ async function attemptFill(t, bidid, askid, tprice) {
   await Promise.all([createTrade, createHistory]);
 
   set.hkey(rediskeys.lasttradeHash(contestID), nflplayerID, price);
-  client.publish('lastTrade', JSON.stringify({
+  client.publish('priceUpdate', JSON.stringify({
     contestID,
     nflplayerID,
     lastprice: price,
