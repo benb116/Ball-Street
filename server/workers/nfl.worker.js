@@ -149,7 +149,7 @@ function SetValues(playerVals) {
     return acc;
   }, {});
 
-  if (playerVals.length) statUpdate(outobj);
+  if (playerVals.length) statUpdate.pub(outobj);
   if (statvals.length) set.hkey([rediskeys.statpriceHash(), ...statvals]);
   if (projvals.length) set.hkey([rediskeys.projpriceHash(), ...projvals]);
 }
