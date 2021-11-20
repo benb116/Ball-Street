@@ -130,9 +130,13 @@ function RosterItem({ playerid, position }) {
       <td style={{ cursor: 'pointer', fontWeight: (shouldHighlight() ? 'bold' : 'normal') }} onClick={reorderClick}>{position}</td>
       <td>
         {thisplayer.name}
-        {' '}
         <span style={{ fontSize: '0.75em' }}>
+          {' '}
           {posName(thisplayer.NFLPositionId)}
+        </span>
+        <span style={{ fontSize: '0.75em', color: 'red' }}>
+          {' '}
+          {(thisplayer.injuryStatus ? thisplayer.injuryStatus : '')}
         </span>
       </td>
       <td>{thisplayer.teamAbr}</td>

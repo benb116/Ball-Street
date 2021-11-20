@@ -73,7 +73,14 @@ function PlayerItem({ playerdata }) {
 
   return (
     <tr playerid={playerdata.id}>
-      <td style={{ width: '10rem', overflow: 'hidden' }}>{playerdata.name}</td>
+      <td style={{ width: '10rem', overflow: 'hidden' }}>
+        {playerdata.name}
+        {' '}
+        <span style={{ fontSize: '0.75em', color: 'red' }}>
+          {' '}
+          {(playerdata.injuryStatus ? playerdata.injuryStatus : '')}
+        </span>
+      </td>
       <td style={{ width: '2.2rem' }}>{playerdata.posName}</td>
       <td style={{ width: '2.2rem' }}>{teamAbr}</td>
       <td style={{ width: '2rem', textAlign: 'right' }}>{RenderPrice(dispProj)}</td>
@@ -118,6 +125,7 @@ PlayerItem.propTypes = {
     name: PropTypes.string.isRequired,
     posName: PropTypes.string.isRequired,
     NFLTeamId: PropTypes.number.isRequired,
+    injuryStatus: null,
     preprice: 0,
     postprice: 0,
     projPrice: 0,

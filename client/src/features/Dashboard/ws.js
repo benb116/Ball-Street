@@ -49,7 +49,7 @@ const initWS = (contestID) => {
           markPrice(Object.values(msg.pricedata));
           break;
         case 'injuryUpdate':
-          markInjury(Object.values(msg.pricedata));
+          markInjury(msg.update);
           break;
         default:
           break;
