@@ -2,8 +2,8 @@
 // Subscribe to redis updates and push out to clients
 const config = require('../config');
 
-const liveState = require('./live/livestate'); // Data stored in memory
-require('./live/liveserver'); // WS server
+const liveState = require('./live/state.live'); // Data stored in memory
+require('./live/server.live'); // WS server
 
 // Two clients - one to subscribe, one to read and write
 const { get, subscriber, rediskeys } = require('../db/redis');

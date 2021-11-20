@@ -1,4 +1,4 @@
-const liveState = require('./livestate'); // WS server
+const liveState = require('./state.live'); // WS server
 
 function sendToUser(userID, msg) {
   const thews = liveState.connmap.get(userID);

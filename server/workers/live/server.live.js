@@ -8,7 +8,7 @@ const { get, rediskeys } = require('../../db/redis');
 
 const session = require('../../middleware/session');
 
-const liveState = require('./livestate'); // Data stored in memory
+const liveState = require('./state.live'); // Data stored in memory
 
 const logger = require('../../utilities/logger');
 
