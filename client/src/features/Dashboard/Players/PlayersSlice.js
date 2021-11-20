@@ -68,6 +68,13 @@ export const playersSlice = createSlice({
         return g;
       });
     },
+    setInjury: (state, { payload }) => {
+      state.playerlist = state.playerlist.map((p) => {
+        if (p.NFLPlayerId !== payload.nflplayerID) return p;
+        p.injuryStatus = payload.status;
+        return p;
+      });
+    },
   },
   extraReducers: {
     [getPlayers.fulfilled]: (state, { payload }) => {
@@ -97,7 +104,7 @@ export const playersSlice = createSlice({
 });
 
 export const {
-  clear, setFilter, setSort, updatePrices, setPhase,
+  clear, setFilter, setSort, updatePrices, setPhase, setInjury,
 } = playersSlice.actions;
 
 export const allPlayersSelector = (state) => (

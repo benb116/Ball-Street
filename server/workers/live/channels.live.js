@@ -5,6 +5,7 @@ const protectedMatch = require('./channels/protectedMatch.channel');
 const offerFilled = require('./channels/offerFilled.channel');
 const offerCancelled = require('./channels/offerCancelled.channel');
 const phaseChange = require('./channels/phaseChange.channel');
+const injuryUpdate = require('./channels/injuryUpdate.channel');
 
 const channelMap = {
   priceUpdate,
@@ -14,6 +15,7 @@ const channelMap = {
   offerFilled,
   offerCancelled,
   phaseChange,
+  injuryUpdate,
 };
 
 module.exports = channelMap;
