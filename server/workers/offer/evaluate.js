@@ -58,8 +58,8 @@ function evaluateFn(book) {
       evalbid = Math.min(...bidPrices.filter((p) => p > evalbid));
       // If there are no more left, then exit this loop and go to pbids
       if (evalbid === Infinity) { evalbid = null; done = true; break; }
-      logger.verbose(`next best bid price: ${evalbid}`);
 
+      logger.verbose(`next best bid price: ${evalbid}`);
       bidIterator = book.bid[evalbid].entries();
     } else {
       // We've found the best bid
@@ -89,7 +89,7 @@ function evaluateFn(book) {
         }
         // If we've gotten to this point with no matches,
         // we can't match this bid with anything
-        // and all worse bids will also fail
+        // and all worse bids will also fail since they have worse prices
         done = true;
         logger.verbose('exhausted bids');
       }
