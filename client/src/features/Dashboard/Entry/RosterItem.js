@@ -89,6 +89,7 @@ function RosterItem({ playerid, position }) {
   }
 
   const thephase = theteams[thisplayer.NFLTeamId].phase;
+  const teamAbr = theteams[thisplayer.NFLTeamId].abr;
   const dispProj = thephase === 'pre' ? thisplayer.preprice : (priceMap.projPrice || 0);
   const dispStat = thephase === 'pre' ? thisplayer.postprice : (priceMap.statPrice || 0);
 
@@ -139,7 +140,7 @@ function RosterItem({ playerid, position }) {
           {(thisplayer.injuryStatus ? thisplayer.injuryStatus : '')}
         </span>
       </td>
-      <td>{thisplayer.teamAbr}</td>
+      <td>{teamAbr}</td>
       <td style={{ textAlign: 'right' }}>{RenderPrice(dispStat)}</td>
       <td style={{ textAlign: 'right' }}>{RenderPrice(dispProj)}</td>
       <td style={{ textAlign: 'right' }}>{(priceMap && Number(priceMap.lastprice)) ? Math.round(priceMap.lastprice / 100) : ''}</td>
