@@ -41,5 +41,13 @@ module.exports = function out(sequelize, DataTypes) {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
     },
+    injuryStatus: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      defaultValue: null,
+      validate: {
+        isIn: [[null, 'P', 'Q', 'D', 'O']],
+      },
+    },
   }, { sequelize });
 };

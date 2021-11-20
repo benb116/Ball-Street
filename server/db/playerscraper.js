@@ -98,6 +98,13 @@ async function sendreq(price, pagenum = 0, posget = 'O') {
       const [pos, posout] = teamout.split('</span> </div>\n        </div>\n        <div class=\"Grid-bind-end\">');
       const posid = (nflpos[pos] || nflpos[pos.split(',')[0]] || 0); // Could be WR,RB
       const preprice = Math.round(Number(posout.split('span class=\"Fw-b\">')[1].split('</span>')[0]) * 100);
+      const injout = posout.split('abbr class="F-injury"');
+      let injuryStatus = null;
+      if (injout.length === 2) {
+        // eslint-disable-next-line prefer-destructuring
+        injuryStatus = injout[1].split('>')[1].split('<')[0];
+        if (['P', 'Q', 'D'].indexOf(injuryStatus) === -1) injuryStatus = 'O';
+      }
       // Player object that will be added to DB
       return {
         id: (posget === 'DEF' ? teammap[team.toUpperCase()] : Number(id)),
@@ -107,11 +114,12 @@ async function sendreq(price, pagenum = 0, posget = 'O') {
         preprice: (price ? 1100 : preprice),
         postprice: (price ? 700 : 0),
         active: true,
+        injuryStatus,
       };
     }))
     .then((arr) => arr.filter((e) => e !== null))
     // If player exists in DB, overwrite certain properties
-    .then((objs) => NFLPlayer.bulkCreate(objs, { updateOnDuplicate: ['preprice', 'postprice', 'NFLTeamId', 'active'] }));
+    .then((objs) => NFLPlayer.bulkCreate(objs, { updateOnDuplicate: ['preprice', 'postprice', 'NFLTeamId', 'active', 'injuryStatus'] }));
 }
 
 module.exports = scrape;
