@@ -1,4 +1,3 @@
-/* eslint-disable no-await-in-loop */
 // Offer server worker
 // Processes jobs on the offer queue
 // Tries to reduce order book whenever an offer comes in
@@ -54,19 +53,24 @@ function protectedProcessor(job) {
 // Check the book and iteratively try to execute matches
 // Operations in this function are not added to the book queue
 // because this function is being run in the queue already.
+// Operations should be done serially
+// so async operations are awaited within this loop
 async function evaluateBook(playerBook) {
   let match = playerBook.evaluate();
   while (match) {
     logger.info(`match ${match.bid.id} ${match.ask.id}`);
-    // If the old offer is protected, create a protMatch
     const isBidOld = (match.bid.data.createdAt < match.ask.data.createdAt);
     const oldOffer = (isBidOld ? match.bid : match.ask);
     const newOffer = (!isBidOld ? match.bid : match.ask);
+
+    // If the old offer is protected, create a protMatch
     if (oldOffer.protected) {
+      // eslint-disable-next-line no-await-in-loop
       await playerBook.match(oldOffer, newOffer);
       addToProtectedMatchQueue(oldOffer, newOffer, playerBook.contestID, playerBook.nflplayerID);
     } else {
       // Otherwise try to fill the offer now
+      // eslint-disable-next-line no-await-in-loop
       const result = await fillOffers(match.bid.id, match.ask.id);
       // Remove filled or errored orders from the book
       if (result.bid.filled || result.bid.cancelled || result.bid.error) {
