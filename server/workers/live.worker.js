@@ -129,16 +129,6 @@ setInterval(() => {
     liveState.priceUpdateMap = {};
   }
 
-  if (Object.keys(liveState.statUpdateMap).length) {
-    liveState.contestmap.forEach((thecontestID, thews) => {
-      if (!thews) { liveState.contestmap.delete(thews); return; }
-      if (thews.readyState === 1) {
-        thews.send(JSON.stringify({ event: 'statUpdate', pricedata: liveState.statUpdateMap }));
-      }
-    });
-    liveState.statUpdateMap = {};
-  }
-
   if (Object.keys(liveState.lastTradeMap).length) {
     liveState.contestmap.forEach((thecontestID, thews) => {
       if (!thews) { liveState.contestmap.delete(thews); return; }
