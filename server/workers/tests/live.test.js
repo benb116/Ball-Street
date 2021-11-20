@@ -146,11 +146,15 @@ describe('Live server tests', () => {
   }));
 
   test('Get offer price', () => pMap.offerPrice.prom.then((data) => {
-    expect(data.pricedata['28026']).toStrictEqual({ nflplayerID: 28026, bestbid: 100, bestask: 0 });
+    expect(data.pricedata['28026']).toStrictEqual({
+      nflplayerID: 28026, bestbid: 100, bestask: 0, lastprice: 100,
+    });
   }));
 
   test('Get cancelled offer price', () => pMap.cancelPrice.prom.then((data) => {
-    expect(data.pricedata['28026']).toStrictEqual({ nflplayerID: 28026, bestbid: 0, bestask: 0 });
+    expect(data.pricedata['28026']).toStrictEqual({
+      nflplayerID: 28026, bestbid: 0, bestask: 0, lastprice: 100,
+    });
   }));
 
   test('Protected match', () => pMap.protMatch.prom.then((data) => {

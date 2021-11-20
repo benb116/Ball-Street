@@ -15,7 +15,7 @@ const channelMap = require('./live/channels.live');
 Object.keys(channelMap).map((c) => subscriber.subscribe(c));
 
 subscriber.on('message', (channel, message) => {
-  channelMap[channel](message);
+  channelMap[channel].sub(message);
 });
 
 // WS server on top of express

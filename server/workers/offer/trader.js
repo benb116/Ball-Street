@@ -11,10 +11,11 @@ const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
 };
 
-const { client, rediskeys, set } = require('../../db/redis');
+const { rediskeys, set } = require('../../db/redis');
 
 const service = require('../../features/trade/trade.service');
 const logger = require('../../utilities/logger');
+const { offerFilled, priceUpdate, offerCancelled } = require('../live/channels.live');
 
 // Try to fill the offers or return which one is done
 async function fillOffers(bidid, askid, price) {
@@ -84,23 +85,13 @@ async function attemptFill(t, bidid, askid, tprice) {
     .catch((err) => {
       logger.warn(`Offer could not be filled: ${boffer.id} - ${err.message}`);
       return Offer.destroy({ where: { id: boffer.id } }, { transaction: t })
-        .then(() => {
-          client.publish('offerCancelled', JSON.stringify({
-            userID: boffer.UserId,
-            offerID: boffer.id,
-          }));
-        }).finally(() => false);
+        .then(() => offerCancelled.pub(boffer.UserId, boffer.id)).finally(() => false);
     });
   const askProm = service.tradeDrop(askreq, t)
     .catch((err) => {
       logger.warn(`Offer could not be filled: ${aoffer.id} - ${err.message}`);
       return Offer.destroy({ where: { id: aoffer.id } }, { transaction: t })
-        .then(() => {
-          client.publish('offerCancelled', JSON.stringify({
-            userID: aoffer.UserId,
-            offerID: aoffer.id,
-          }));
-        }).finally(() => false);
+        .then(() => offerCancelled.pub(aoffer.UserId, aoffer.id)).finally(() => false);
     });
 
   // Check the response
@@ -140,19 +131,9 @@ async function attemptFill(t, bidid, askid, tprice) {
   await Promise.all([createTrade, createHistory]);
 
   set.hkey(rediskeys.lasttradeHash(contestID), nflplayerID, price);
-  client.publish('priceUpdate', JSON.stringify({
-    contestID,
-    nflplayerID,
-    lastprice: price,
-  }));
-  client.publish('offerFilled', JSON.stringify({
-    userID: boffer.UserId,
-    offerID: boffer.id,
-  }));
-  client.publish('offerFilled', JSON.stringify({
-    userID: aoffer.UserId,
-    offerID: aoffer.id,
-  }));
+  priceUpdate.pubLast(contestID, nflplayerID, price);
+  offerFilled.pub(boffer.UserId, boffer.id);
+  offerFilled.pub(aoffer.UserId, aoffer.id);
   logger.info(`finish trade - ${price}: ${bidid} ${askid}`);
   return {
     bid: bidoffer,

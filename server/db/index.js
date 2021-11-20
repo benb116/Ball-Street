@@ -31,10 +31,9 @@ if (process.env.NODE_ENV === 'test' || !process.env.NODE_ENV) {
   DB_HOST = sec.DB_HOST;
   DB_PORT = sec.DB_PORT;
   DB_NAME = sec.DB_NAME;
+} else {
+  logger.info(`DB connection settings - ${DB_HOST}:${DB_PORT}/${DB_NAME}`);
 }
-
-logger.info(`DB connection settings - ${DB_HOST}:${DB_PORT}/${DB_NAME}`);
-
 const sequelize = new Sequelize(
   `postgres://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT}/${DB_NAME}`,
   dbOptions,

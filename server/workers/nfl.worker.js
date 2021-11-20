@@ -1,6 +1,6 @@
 const axios = require('axios');
 const getNFLPlayers = require('../features/nflplayer/services/getNFLPlayers.service');
-const { rediskeys, set, client } = require('../db/redis');
+const { rediskeys, set } = require('../db/redis');
 
 const dict = require('./nfl/dict.nfl');
 const state = require('./nfl/state.nfl');
@@ -8,6 +8,7 @@ const logger = require('../utilities/logger');
 const { GameState, PullAllGames, setGamePhases } = require('./nfl/games.nfl');
 const { PullAllStats, UpdateStats } = require('./nfl/stats.nfl');
 const scrape = require('../db/playerscraper');
+const statUpdate = require('./live/channels/statUpdate.channel');
 
 const checkInterval = 10000;
 
@@ -145,8 +146,8 @@ function SetValues(playerVals) {
     };
     return acc;
   }, {});
-  if (playerVals.length) client.publish('statUpdate', JSON.stringify(outobj));
 
+  if (playerVals.length) statUpdate(outobj);
   if (statvals.length) set.hkey([rediskeys.statpriceHash(), ...statvals]);
   if (projvals.length) set.hkey([rediskeys.projpriceHash(), ...projvals]);
 }

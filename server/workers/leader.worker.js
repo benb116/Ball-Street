@@ -4,12 +4,11 @@
 const config = require('../config');
 const u = require('../features/util/util');
 
-const {
-  client, rediskeys, get, set,
-} = require('../db/redis');
+const { rediskeys, get, set } = require('../db/redis');
 const getNFLPlayers = require('../features/nflplayer/services/getNFLPlayers.service');
 const getWeekEntries = require('../features/entry/services/getWeekEntries.service');
 const { NFLGame } = require('../models');
+const leaderUpdate = require('./live/channels/leaderUpdate.channel');
 
 const { projpriceHash, leaderHash } = rediskeys;
 const rosterPositions = Object.keys(config.Roster);
@@ -116,7 +115,7 @@ async function calculateLeaderboard() {
   });
 
   // Announce new results
-  client.publish('leaderUpdate', '');
+  leaderUpdate.pub();
 }
 
 calculateLeaderboard();

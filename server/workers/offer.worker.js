@@ -5,7 +5,7 @@
 const Queue = require('bull');
 const config = require('../config');
 
-const { queueOptions, client } = require('../db/redis');
+const { queueOptions } = require('../db/redis');
 
 const offerQueue = new Queue('offer-queue', queueOptions);
 const protectedQueue = new Queue('protected-queue', queueOptions);
@@ -14,6 +14,7 @@ const { fillOffers } = require('./offer/trader');
 const { getBook, updateBest } = require('./offer/offer.util');
 const evalProtected = require('./offer/protected');
 const logger = require('../utilities/logger');
+const protectedMatch = require('./live/channels/protectedMatch.channel');
 
 // books[contestID][playerID] = Book
 const books = { };
@@ -97,9 +98,9 @@ function addToProtectedMatchQueue(eOffer, nOffer, ContestId, NFLPlayerId) {
     NFLPlayerId,
   }, { delay: config.ProtectionDelay * 1000 });
   // Send ping to user
-  client.publish('protectedMatch', JSON.stringify({
+  protectedMatch.pub({
     userID: eOffer.data.UserId,
     offerID: eOffer.id,
     expire: Date.now() + config.ProtectionDelay * 1000,
-  }));
+  });
 }

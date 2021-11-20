@@ -3,7 +3,7 @@ const Joi = require('joi');
 
 const { Op } = require('sequelize');
 const u = require('../../features/util/util');
-const { client, del, get } = require('../../db/redis');
+const { del, get } = require('../../db/redis');
 const {
   NFLPlayer, Entry, NFLGame, Contest,
 } = require('../../models');
@@ -12,6 +12,7 @@ const sequelize = require('../../db');
 const logger = require('../../utilities/logger');
 const state = require('./state.nfl');
 const dict = require('./dict.nfl');
+const phaseChange = require('../live/channels/phaseChange.channel');
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
@@ -48,10 +49,7 @@ async function setPhase(teamID, newphase) {
       return Promise.resolve();
     })
     .then(() => {
-      client.publish('phaseChange', JSON.stringify({
-        nflTeamID: teamID,
-        gamePhase: newphase,
-      }));
+      phaseChange.pub(teamID, newphase);
     })
     .then(() => del.key('/app/auth/nfldata/games')); // Force a refresh of game data
 }

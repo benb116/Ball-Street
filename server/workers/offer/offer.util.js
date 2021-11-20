@@ -1,9 +1,10 @@
 const u = require('../../features/util/util');
 const Book = require('./book.class');
-const { client, rediskeys, set } = require('../../db/redis');
+const { rediskeys, set } = require('../../db/redis');
 
 const { Offer, ProtectedMatch } = require('../../models');
 const logger = require('../../utilities/logger');
+const priceUpdate = require('../live/channels/priceUpdate.channel');
 
 // Access the correct book or make one if necessary
 function getBook(books, ContestId, NFLPlayerId) {
@@ -87,12 +88,7 @@ function updateBest(playerBook) {
   set.hkey(rediskeys.bestbidHash(contestID), nflplayerID, bestbid);
   set.hkey(rediskeys.bestaskHash(contestID), nflplayerID, bestask);
 
-  client.publish('priceUpdate', JSON.stringify({
-    contestID,
-    nflplayerID,
-    bestbid,
-    bestask,
-  }));
+  priceUpdate.pubBest(contestID, nflplayerID, bestbid, bestask);
 }
 
 module.exports = {

@@ -1,12 +1,18 @@
 const liveState = require('../state.live'); // Data stored in memory
 const { sendToContests } = require('../socket.live');
 
-const { get, rediskeys } = require('../../../db/redis');
+const { get, rediskeys, client } = require('../../../db/redis');
 
 const { leaderHash } = rediskeys;
 
+const leaderUpdate = {};
+
+leaderUpdate.pub = function pub() {
+  client.publish('leaderUpdate', JSON.stringify({}));
+};
+
 // When new leaderboards come in, send out to the correct ws
-function leaderUpdate() {
+leaderUpdate.sub = function sub() {
   const leaderMemo = {};
   liveState.contestmap.forEach(async (thecontestID) => {
     if (!leaderMemo[thecontestID]) {
@@ -20,6 +26,6 @@ function leaderUpdate() {
     return acc;
   }, {});
   sendToContests(leaderMsgMap);
-}
+};
 
 module.exports = leaderUpdate;
