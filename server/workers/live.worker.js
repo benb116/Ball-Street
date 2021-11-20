@@ -8,6 +8,7 @@ require('./live/liveserver'); // WS server
 // Two clients - one to subscribe, one to read and write
 const { get, subscriber, rediskeys } = require('../db/redis');
 const logger = require('../utilities/logger');
+const { sendToUser, sendToAll, sendToContests } = require('./live/socket.live');
 
 const { leaderHash } = rediskeys;
 
@@ -49,12 +50,7 @@ function priceUpdate(message) {
 }
 
 function statUpdate(message) {
-  liveState.contestmap.forEach(async (thecontestID, thews) => {
-    if (!thews) { liveState.contestmap.delete(thews); return; }
-    if (thews.readyState === 1) {
-      thews.send(JSON.stringify({ event: 'statUpdate', pricedata: JSON.parse(message) }));
-    }
-  });
+  sendToAll({ event: 'statUpdate', pricedata: JSON.parse(message) });
 }
 
 // Add a last trade update to the map
@@ -70,73 +66,57 @@ function lastTrade(message) {
 // When new leaderboards come in, send out to the correct ws
 function leaderUpdate() {
   const leaderMemo = {};
-  liveState.contestmap.forEach(async (thecontestID, thews) => {
-    if (!thews) { liveState.contestmap.delete(thews); return; }
+  liveState.contestmap.forEach(async (thecontestID) => {
     if (!leaderMemo[thecontestID]) {
       const out = await get.key(leaderHash(thecontestID));
       leaderMemo[thecontestID] = JSON.parse(out);
     }
-    if (thews.readyState === 1) {
-      thews.send(JSON.stringify({ event: 'leaderboard', leaderboard: leaderMemo[thecontestID] }));
-    }
   });
+  const allcontests = Object.keys(leaderMemo);
+  const leaderMsgMap = allcontests.reduce((acc, cur) => {
+    acc[cur] = { event: 'leaderboard', leaderboard: leaderMemo[cur] };
+    return acc;
+  }, {});
+  sendToContests(leaderMsgMap);
 }
 
 // When the game phase changes
 function phaseChange(message) {
-  liveState.contestmap.forEach(async (thecontestID, thews) => {
-    if (!thews) { liveState.contestmap.delete(thews); return; }
-    if (thews.readyState === 1) {
-      thews.send(JSON.stringify({ event: 'phaseChange', phase: JSON.parse(message) }));
-    }
-  });
+  sendToAll({ event: 'phaseChange', phase: JSON.parse(message) });
 }
 
 // When a protected match is made, alert the user via ws
 function protectedMatch(message) {
   const { userID, offerID, expire } = JSON.parse(message);
-  const thews = liveState.connmap.get(userID);
-  if (!thews) { liveState.connmap.delete(userID); return; }
-  thews.send(JSON.stringify({ event: 'protectedMatch', offerID, expire }));
+  sendToUser(userID, { event: 'protectedMatch', offerID, expire });
 }
 
 // When a offer is filled, alert the user via ws
 function offerFilled(message) {
   const { userID, offerID } = JSON.parse(message);
-  const thews = liveState.connmap.get(userID);
-  if (!thews) { liveState.connmap.delete(userID); return; }
-  thews.send(JSON.stringify({ event: 'offerFilled', offerID }));
+  sendToUser(userID, { event: 'offerFilled', offerID });
 }
 
 // When a offer is cancelled, alert the user via ws
 function offerCancelled(message) {
   const { userID, offerID } = JSON.parse(message);
-  const thews = liveState.connmap.get(userID);
-  if (!thews) { liveState.connmap.delete(userID); return; }
-  thews.send(JSON.stringify({ event: 'offerCancelled', offerID }));
+  sendToUser(userID, { event: 'offerCancelled', offerID });
 }
 
 // Send out new price data when it's available
 setInterval(() => {
-  if (Object.keys(liveState.priceUpdateMap).length) {
-    liveState.contestmap.forEach((thecontestID, thews) => {
-      if (!thews) { liveState.contestmap.delete(thews); return; }
-      if (!liveState.priceUpdateMap[thecontestID]) { return; }
-      if (thews.readyState === 1) {
-        thews.send(JSON.stringify({ event: 'priceUpdate', pricedata: liveState.priceUpdateMap[thecontestID] }));
-      }
-    });
-    liveState.priceUpdateMap = {};
-  }
+  const priceUpdatecIDs = Object.keys(liveState.priceUpdateMap);
+  const lastTradecIDs = Object.keys(liveState.lastTradeMap);
 
-  if (Object.keys(liveState.lastTradeMap).length) {
-    liveState.contestmap.forEach((thecontestID, thews) => {
-      if (!thews) { liveState.contestmap.delete(thews); return; }
-      if (!liveState.lastTradeMap[thecontestID]) { return; }
-      if (thews.readyState === 1) {
-        thews.send(JSON.stringify({ event: 'priceUpdate', pricedata: liveState.lastTradeMap[thecontestID] }));
-      }
-    });
-    liveState.lastTradeMap = {};
-  }
+  const priceMsgMap = priceUpdatecIDs.reduce((acc, cur) => {
+    acc[cur] = { event: 'priceUpdate', pricedata: liveState.priceUpdateMap[cur] };
+    return acc;
+  }, {});
+  const tradeMsgMap = lastTradecIDs.reduce((acc, cur) => {
+    acc[cur] = { event: 'priceUpdate', pricedata: liveState.lastTradeMap[cur] };
+    return acc;
+  }, {});
+
+  sendToContests(priceMsgMap);
+  sendToContests(tradeMsgMap);
 }, config.RefreshTime * 1000);
