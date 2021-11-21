@@ -49,6 +49,7 @@ setInterval(() => {
     acc[cur] = { event: 'priceUpdate', pricedata: liveState.priceUpdateMap[cur] };
     return acc;
   }, {});
+  liveState.priceUpdateMap = {};
 
   sendToContests(priceMsgMap);
 }, config.RefreshTime * 1000);
