@@ -78,6 +78,7 @@ function pullPreProj() {
     const teamID = p.NFLTeamId;
     if (!state.teamPlayerMap[teamID]) state.teamPlayerMap[teamID] = [];
     state.teamPlayerMap[teamID].push(p.id);
+    state.playerTeamMap[p.id] = teamID;
     return acc;
   }, {}));
 }
