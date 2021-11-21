@@ -9,6 +9,7 @@ const { GameState, PullAllGames, setGamePhases } = require('./nfl/games.nfl');
 const { PullAllStats, UpdateStats } = require('./nfl/stats.nfl');
 const scrape = require('../db/playerscraper');
 const statUpdate = require('./live/channels/statUpdate.channel');
+const PullLatestInjuries = require('./nfl/injury.nfl');
 
 const checkInterval = 10000;
 
@@ -52,6 +53,7 @@ async function repeat() {
   // Pull stats, find differences, calc and set values
   const statsChanged = await PullAllStats().then(GetNewStats);
   SetValues(CalcValues(statsChanged, gamesChanged));
+  await PullLatestInjuries();
 }
 
 // Populate the playerTeamMap
