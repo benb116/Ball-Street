@@ -10,10 +10,12 @@ const session = require('../middleware/session');
 const liveState = require('./live/state.live'); // Data stored in memory
 const logger = require('../utilities/logger');
 
+// All channels that may be used
 const channelMap = require('./live/channels.live');
 
 Object.keys(channelMap).map((c) => subscriber.subscribe(c));
 
+// When a message is received, route to correct channel subscriber
 subscriber.on('message', (channel, message) => {
   channelMap[channel].sub(message);
 });

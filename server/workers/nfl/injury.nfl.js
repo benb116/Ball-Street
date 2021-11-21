@@ -1,3 +1,6 @@
+// Get all injured players
+// Find changes and send out updates
+
 const axios = require('axios');
 const { NFLPlayer } = require('../../models');
 const injuryUpdate = require('../live/channels/injuryUpdate.channel');
@@ -18,10 +21,10 @@ async function PullLatestInjuries() {
       if (!objs.length) return objs;
       const outObj = objs.reduce((acc, cur) => {
         acc[cur.nflplayerID] = {};
-        // acc[cur.nflplayerID].nflplayerID = cur.nflplayerID;
         acc[cur.nflplayerID].status = cur.status;
         return acc;
       }, {});
+
       injuryUpdate.pub(outObj);
       return objs;
     })
