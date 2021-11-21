@@ -19,14 +19,14 @@ async function init() {
   // Which team is a player on
   logger.info('Creating playerTeamMap');
   state.playerTeamMap = await createPTMap();
+  // If production, pull down players for the week
+  if (process.env.NODE_ENV === 'production') {
+    logger.info('Scraping player data');
+    await scrape().catch(logger.error);
+  }
   // What was a player's pre-game projection
   logger.info('Creating preProjMap');
   state.preProjObj = await pullPreProj();
-  // If production, pull down players for the week
-  if (process.env.NODE_ENV === 'production') {
-    logger.info('Creating preProjMap');
-    await scrape().catch(logger.error);
-  }
   // What is the state of each game?
   logger.info('Getting gamestates');
   const phasemap = await GameState();
@@ -53,6 +53,7 @@ async function repeat() {
   // Pull stats, find differences, calc and set values
   const statsChanged = await PullAllStats().then(GetNewStats);
   SetValues(CalcValues(statsChanged, gamesChanged));
+  // Pull injury information and send updates
   await PullLatestInjuries();
 }
 
