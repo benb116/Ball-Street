@@ -10,8 +10,6 @@ async function PopulateDB() {
     Contest,
     User,
     Entry,
-    League,
-    Membership,
     Offer,
     Trade,
     NFLGame,
@@ -27,73 +25,26 @@ async function PopulateDB() {
     verified: (u !== 'email5@gmail.com' && u !== 'email6@gmail.com'),
   })));
 
-  const lea = {
-    name: 'Ball Street',
-    adminId: 1,
-    ispublic: true,
-  };
-
-  const lea2 = {
-    name: 'Ball Street Private',
-    adminId: 2,
-    ispublic: false,
-  };
-
-  const lea3 = {
-    name: 'Ball Street Public2',
-    adminId: 1,
-    ispublic: true,
-  };
-  await League.bulkCreate([lea, lea2, lea3]);
-
-  // Define memberships
-  const pubusrs = usrs.slice(0, 3);
-  const mem = pubusrs.map((e, i) => ({
-    UserId: i + 1,
-    LeagueId: 1,
-  }));
-  const mem2 = [
-    {
-      UserId: 1,
-      LeagueId: 2,
-    },
-    {
-      UserId: 2,
-      LeagueId: 2,
-    },
-    {
-      UserId: 3,
-      LeagueId: 2,
-    },
-    {
-      UserId: 1,
-      LeagueId: 3,
-    },
-  ];
-  await Membership.bulkCreate(mem);
-  await Membership.bulkCreate(mem2);
   const curweek = await get.CurrentWeek();
   // Define existing contest
   const con = {
     name: 'Ball Street Big One',
-    LeagueId: 1,
     budget: 10000,
     nflweek: curweek,
   };
   const con2 = {
     name: 'Private Contest',
-    LeagueId: 2,
     budget: 10000,
     nflweek: curweek,
   };
   const con3 = {
     name: 'Public Contest 2',
-    LeagueId: 3,
     budget: 10000,
     nflweek: curweek,
   };
   await Contest.bulkCreate([con, con2, con3]);
 
+  const pubusrs = usrs.slice(0, 3);
   const entrs = pubusrs.map((e, i) => ({
     UserId: i + 1, ContestId: 1, pointtotal: 10000, RB1: 31885,
   }));

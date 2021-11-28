@@ -18,7 +18,6 @@ const offerQueue = new Queue('offer-queue', queueOptions);
 const schema = Joi.object({
   user: validators.user,
   params: Joi.object().keys({
-    leagueID: Joi.number().optional(),
     contestID: Joi.number().optional(),
   }).required(),
   body: Joi.object().keys({

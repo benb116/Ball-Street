@@ -9,7 +9,6 @@ const { errorHandler } = require('../../util/util.service');
 const schema = Joi.object({
   user: validators.user,
   params: Joi.object().keys({
-    leagueID: validators.leagueIDOptional,
     contestID: validators.contestID,
   }).required(),
   body: validators.noObj,

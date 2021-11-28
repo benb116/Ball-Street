@@ -1,20 +1,24 @@
 import thunkReq from '../../helpers/thunkReqWrapper';
 
-function getcontestfunc({ leagueID, contestID }, thunkAPI) {
-  return thunkReq(thunkAPI, 'GET', `/app/api/leagues/${leagueID}/contests/${contestID}/`);
+function getcontestsfunc(a, thunkAPI) {
+  return thunkReq(thunkAPI, 'GET', '/app/api/contests/');
 }
-function getmyentryfunc({ leagueID, contestID }, thunkAPI) {
-  return thunkReq(thunkAPI, 'GET', `/app/api/leagues/${leagueID}/contests/${contestID}/entry`);
+function getcontestfunc({ contestID }, thunkAPI) {
+  return thunkReq(thunkAPI, 'GET', `/app/api/contests/${contestID}/`);
 }
-function getentriesfunc({ leagueID, contestID }, thunkAPI) {
-  return thunkReq(thunkAPI, 'GET', `/app/api/leagues/${leagueID}/contests/${contestID}/entries`);
+function getmyentryfunc({ contestID }, thunkAPI) {
+  return thunkReq(thunkAPI, 'GET', `/app/api/contests/${contestID}/entry`);
+}
+function getentriesfunc({ contestID }, thunkAPI) {
+  return thunkReq(thunkAPI, 'GET', `/app/api/contests/${contestID}/entries`);
 }
 
-function createentryfunc({ leagueID, contestID }, thunkAPI) {
-  return thunkReq(thunkAPI, 'POST', `/app/api/leagues/${leagueID}/contests/${contestID}/entry`, JSON.stringify({}));
+function createentryfunc({ contestID }, thunkAPI) {
+  return thunkReq(thunkAPI, 'POST', `/app/api/contests/${contestID}/entry`, JSON.stringify({}));
 }
 
 export {
+  getcontestsfunc,
   getcontestfunc,
   getentriesfunc,
   createentryfunc,

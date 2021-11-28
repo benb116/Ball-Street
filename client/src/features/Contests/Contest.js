@@ -16,20 +16,20 @@ import {
 const Contest = () => {
   const dispatch = useDispatch();
   const { handleSubmit } = useForm();
-  const { leagueID, contestID } = useParams();
+  const { contestID } = useParams();
 
   const thiscontest = useSelector(contestSelector);
   const thiscontestentries = useSelector(entriesSelector);
   const thiscontestmyentry = useSelector(myEntrySelector);
 
   useEffect(() => {
-    dispatch(getContest({ leagueID, contestID }));
-    dispatch(getEntries({ leagueID, contestID }));
-    dispatch(getMyEntry({ leagueID, contestID }));
-  }, [contestID, dispatch, leagueID]);
+    dispatch(getContest({ contestID }));
+    dispatch(getEntries({ contestID }));
+    dispatch(getMyEntry({ contestID }));
+  }, [contestID, dispatch]);
 
   const onCreateEntry = () => {
-    dispatch(createEntry({ leagueID, contestID }));
+    dispatch(createEntry({ contestID }));
   };
 
   return (
@@ -46,7 +46,6 @@ const Contest = () => {
           <EntryItem
             key={entry.UserId}
             entrydata={entry}
-            leagueID={leagueID}
             contestID={contestID}
           />
         ))}
@@ -67,7 +66,7 @@ const Contest = () => {
             </div>
           </form>
         )
-        : <Link to={`/leagues/${leagueID}/contests/${contestID}/dashboard`}>Go to dashboard</Link>}
+        : <Link to={`/contests/${contestID}/dashboard`}>Go to dashboard</Link>}
     </div>
   );
 };

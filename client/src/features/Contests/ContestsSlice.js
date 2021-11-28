@@ -3,6 +3,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
 
 import {
+  getcontestsfunc,
   getcontestfunc,
   getentriesfunc,
   createentryfunc,
@@ -10,15 +11,17 @@ import {
 } from './Contests.api';
 
 const defaultState = {
+  allcontests: [],
   thiscontest: {},
   thiscontestentries: [],
   thiscontestmyentry: {},
 };
 
+export const getContests = createAsyncThunk('contests/getContests', getcontestsfunc);
 export const getContest = createAsyncThunk('contests/getContest', getcontestfunc);
 export const getEntries = createAsyncThunk('contests/getEntries', getentriesfunc);
 export const getMyEntry = createAsyncThunk('contests/getMyEntry', getmyentryfunc);
-export const createEntry = createAsyncThunk('leagues/createEntry', createentryfunc);
+export const createEntry = createAsyncThunk('contests/createEntry', createentryfunc);
 
 export const contestsSlice = createSlice({
   name: 'contests',
@@ -27,6 +30,12 @@ export const contestsSlice = createSlice({
 
   },
   extraReducers: {
+    [getContests.fulfilled]: (state, { payload }) => {
+      state.allcontests = payload;
+    },
+    [getContests.rejected]: (state, { payload }) => {
+      if (payload) { toast.error(payload); }
+    },
     [getContest.fulfilled]: (state, { payload }) => {
       state.thiscontest = payload;
     },
@@ -52,6 +61,7 @@ export const contestsSlice = createSlice({
   },
 });
 
+export const contestsSelector = (state) => state.contests.allcontests;
 export const contestSelector = (state) => state.contests.thiscontest;
 export const entriesSelector = (state) => state.contests.thiscontestentries;
 export const myEntrySelector = (state) => state.contests.thiscontestmyentry;

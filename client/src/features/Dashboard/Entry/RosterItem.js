@@ -41,7 +41,7 @@ NFLPosTypes[flexID] = { name: 'FLEX', canflex: true };
 function RosterItem({ playerid, position }) {
   const dispatch = useDispatch();
 
-  const { leagueID, contestID } = useParams();
+  const { contestID } = useParams();
   const thisplayer = useSelector(playerSelector(playerid));
   const theteams = useSelector(allTeamsSelector);
   const rposSelected = useSelector(rposSelector);
@@ -52,7 +52,6 @@ function RosterItem({ playerid, position }) {
   const reorderClick = () => {
     if (rposSelected[0] !== 0) {
       dispatch(reorderRoster({
-        leagueID,
         contestID,
         pos1: rposSelected[1],
         pos2: position,
@@ -94,7 +93,7 @@ function RosterItem({ playerid, position }) {
   const dispStat = thephase === 'pre' ? thisplayer.postprice : (priceMap.statPrice || 0);
 
   const onpredrop = () => {
-    dispatch(preDrop({ leagueID, contestID, nflplayerID: playerid }));
+    dispatch(preDrop({ contestID, nflplayerID: playerid }));
   };
 
   const onask = () => {
@@ -111,7 +110,7 @@ function RosterItem({ playerid, position }) {
   playeroffer = offers.asks.find((o) => o.NFLPlayerId === thisplayer.id);
 
   const oncancelOffer = (oid) => {
-    dispatch(cancelOffer({ leagueID, contestID, offerID: oid }));
+    dispatch(cancelOffer({ contestID, offerID: oid }));
   };
 
   let oclick = onpredrop;

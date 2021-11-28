@@ -1,9 +1,9 @@
-const getLeagueContests = require('./services/getLeagueContests.service');
+const getContests = require('./services/getContests.service');
 const getContest = require('./services/getContest.service');
 const createContest = require('./services/createContest.service');
 
 module.exports = {
-  getLeagueContests,
+  getContests,
   getContest,
   createContest,
 };

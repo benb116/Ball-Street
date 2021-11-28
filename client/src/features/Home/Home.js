@@ -39,7 +39,7 @@ const Home = () => {
               {' '}
               <h3>{email}</h3>
             </div>
-            <Link to="/leagues">Leagues</Link>
+            <Link to="/contests">Contests</Link>
             <br />
             <button
               onClick={onLogOut}

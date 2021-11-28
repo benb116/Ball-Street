@@ -8,18 +8,18 @@ import { getTrades, tradesSelector, tradeUpdateSelector } from './TradesSlice';
 
 const Trades = () => {
   const dispatch = useDispatch();
-  const { leagueID, contestID } = useParams();
+  const { contestID } = useParams();
   const tUpdate = useSelector(tradeUpdateSelector);
 
   useEffect(() => {
-    dispatch(getTrades({ leagueID, contestID }));
-  }, [contestID, dispatch, leagueID]);
+    dispatch(getTrades({ contestID }));
+  }, [contestID, dispatch]);
 
   useEffect(() => {
     if (tUpdate) {
-      dispatch(getTrades({ leagueID, contestID }));
+      dispatch(getTrades({ contestID }));
     }
-  }, [contestID, dispatch, leagueID, tUpdate]);
+  }, [contestID, dispatch, tUpdate]);
 
   const trades = useSelector(tradesSelector);
   return (

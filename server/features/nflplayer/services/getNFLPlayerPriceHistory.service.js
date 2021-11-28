@@ -4,17 +4,11 @@ const Joi = require('joi');
 const u = require('../../util/util');
 
 const sequelize = require('../../../db');
-const { canUserSeeLeague } = require('../../util/util.service');
 const { validators } = require('../../util/util.schema');
-
-const isoOption = {
-  // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
-};
 
 const schema = Joi.object({
   user: validators.user,
   params: Joi.object().keys({
-    leagueID: validators.leagueID,
     contestID: validators.contestID,
     nflplayerID: validators.nflplayerID,
   }).required(),
@@ -24,10 +18,7 @@ const schema = Joi.object({
 function getNFLPlayerPriceHistory(req) {
   const value = u.validate(req, schema);
 
-  return sequelize.transaction(isoOption, async (t) => {
-    await canUserSeeLeague(t, value.user, value.params.leagueID);
-
-    return sequelize.query(`
+  return sequelize.query(`
       SELECT time_bucket('1 minute', "createdAt") as "bucket",
         "ContestId",
         "NFLPlayerId",
@@ -39,13 +30,11 @@ function getNFLPlayerPriceHistory(req) {
       GROUP BY bucket, "ContestId", "NFLPlayerId"
       ORDER BY bucket DESC;
     `, {
-      type: QueryTypes.SELECT,
-      bind: {
-        contestID: value.params.contestID,
-        nflplayerID: value.params.nflplayerID,
-      },
-      transaction: t,
-    });
+    type: QueryTypes.SELECT,
+    bind: {
+      contestID: value.params.contestID,
+      nflplayerID: value.params.nflplayerID,
+    },
   });
 }
 

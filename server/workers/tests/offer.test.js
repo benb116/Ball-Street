@@ -2,7 +2,6 @@
 const WebSocket = require('ws');
 const axios = require('axios');
 
-const leagueID = 2;
 const contestID = 2;
 
 const createOffer = require('../../features/offer/services/createOffer.service');
@@ -37,7 +36,6 @@ function reqBody(user = 1, nflplayerID = 21, isbid = false, price = 500, isProte
   return {
     user,
     params: {
-      leagueID,
       contestID,
     },
     body: {

@@ -3,7 +3,6 @@ const WebSocket = require('ws');
 const axios = require('axios');
 const config = require('../../config');
 
-const leagueID = 2;
 const contestID = 2;
 
 function getSessionID(email) {
@@ -30,7 +29,7 @@ function initWS(cookie) {
 function createOffer(cookie, isbid, price, isprotected) {
   return axios({
     method: 'post',
-    url: `http://localhost/app/api/leagues/${leagueID}/contests/${contestID}/offer/`,
+    url: `http://localhost/app/api/contests/${contestID}/offer/`,
     data: {
       offerobj: {
         nflplayerID: 28026,
@@ -49,14 +48,14 @@ function createOffer(cookie, isbid, price, isprotected) {
 async function cancelOffer(cookie) {
   const a = await axios({
     method: 'get',
-    url: `http://localhost/app/api/leagues/${leagueID}/contests/${contestID}/offers/`,
+    url: `http://localhost/app/api/contests/${contestID}/offers/`,
     headers: { cookie },
   }).then((offers) => offers.data.filter((o) => o.NFLPlayerId === 28026));
   if (!a.length) { return Promise.resolve(); }
 
   return axios({
     method: 'delete',
-    url: `http://localhost/app/api/leagues/${leagueID}/contests/${contestID}/offer/`,
+    url: `http://localhost/app/api/contests/${contestID}/offer/`,
     data: { offerID: a[0].id },
     headers: { cookie },
   }).catch((err) => {

@@ -24,7 +24,7 @@ Modal.setAppElement('#root');
 const OfferModal = () => {
   const dispatch = useDispatch();
   const { register, handleSubmit } = useForm();
-  const { leagueID, contestID } = useParams();
+  const { contestID } = useParams();
 
   const modalIsOpen = useSelector(modalStatusSelector);
   const modalInfo = useSelector(modalSelector);
@@ -36,13 +36,12 @@ const OfferModal = () => {
   function close() {
     dispatch(closeModal());
   }
-  // {leagueID, contestID, offerobj:
   function handleClick(data) {
     // eslint-disable-next-line no-param-reassign
     data.price *= 100;
     const offerobj = { ...modalInfo, ...data };
     delete offerobj.nflplayerName;
-    dispatch(createOffer({ leagueID, contestID, offerobj }));
+    dispatch(createOffer({ contestID, offerobj }));
     close();
   }
 

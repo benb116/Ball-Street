@@ -10,7 +10,6 @@ const { get } = require('../../../db/redis');
 const schema = Joi.object({
   user: validators.user,
   params: Joi.object().keys({
-    leagueID: validators.leagueIDOptional,
     contestID: validators.contestID,
   }).required(),
   body: Joi.object().keys({

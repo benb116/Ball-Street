@@ -9,8 +9,7 @@ import Forgot from './features/User/Forgot';
 import Verified from './features/Home/Verified';
 import Reset from './features/User/Reset';
 import Account from './features/User/Account';
-import Leagues from './features/Leagues/Leagues';
-import League from './features/Leagues/League';
+import Contests from './features/Contests/Contests';
 import Contest from './features/Contests/Contest';
 import Dashboard from './features/Dashboard/Dashboard';
 import PrivateRoute from './helpers/PrivateRoute';
@@ -38,10 +37,9 @@ function App() {
           <Route exact component={Verified} path="/verified" />
           <Route exact component={Reset} path="/resetPassword/:token" />
           <PrivateRoute exact component={Account} path="/account" />
-          <PrivateRoute exact component={Leagues} path="/leagues" />
-          <PrivateRoute exact component={League} path="/leagues/:leagueID" />
-          <PrivateRoute exact component={Contest} path="/leagues/:leagueID/contests/:contestID" />
-          <PrivateRoute exact component={Dashboard} path="/leagues/:leagueID/contests/:contestID/dashboard" />
+          <PrivateRoute exact component={Contests} path="/contests/" />
+          <PrivateRoute exact component={Contest} path="/contests/:contestID" />
+          <PrivateRoute exact component={Dashboard} path="/contests/:contestID/dashboard" />
         </Switch>
       </Router>
     </div>

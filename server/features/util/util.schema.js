@@ -25,12 +25,6 @@ validators.user = Joi.number().integer().greater(0).required()
     'any.required': 'You must be logged in',
   });
 
-validators.leagueIDOptional = Joi.number().optional();
-validators.leagueID = Joi.number().integer().required().messages({
-  'number.base': 'League ID is invalid',
-  'number.integer': 'League ID is invalid',
-  'any.required': 'Please specify a league',
-});
 validators.contestID = Joi.number().integer().required().messages({
   'number.base': 'Contest ID is invalid',
   'number.integer': 'Contest ID is invalid',
