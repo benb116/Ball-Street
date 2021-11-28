@@ -8,21 +8,21 @@ const { leaderHash } = rediskeys;
 const leaderUpdate = {};
 
 leaderUpdate.pub = function pub() {
-  client.publish('leaderUpdate', JSON.stringify({}));
+  client.publish('leaderUpdate', '');
 };
 
 // When new leaderboards come in, send out to the correct ws
-leaderUpdate.sub = function sub() {
+leaderUpdate.sub = async function sub() {
   const leaderMemo = {};
-  liveState.contestmap.forEach(async (thecontestID) => {
+  liveState.contestmap.forEach((thecontestID) => {
     if (!leaderMemo[thecontestID]) {
-      const out = await get.key(leaderHash(thecontestID));
-      leaderMemo[thecontestID] = JSON.parse(out);
+      leaderMemo[thecontestID] = null;
     }
   });
-  const allcontests = Object.keys(leaderMemo);
-  const leaderMsgMap = allcontests.reduce((acc, cur) => {
-    acc[cur] = { event: 'leaderboard', leaderboard: leaderMemo[cur] };
+  const allContests = Object.keys(leaderMemo);
+  const allLeaders = await Promise.all(allContests.map((cID) => get.key(leaderHash(cID))));
+  const leaderMsgMap = allContests.reduce((acc, cur, i) => {
+    acc[cur] = { event: 'leaderboard', leaderboard: JSON.parse(allLeaders[i]) };
     return acc;
   }, {});
   sendToContests(leaderMsgMap);
