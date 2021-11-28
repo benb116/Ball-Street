@@ -23,6 +23,8 @@ const PlayerFilter = () => {
   const thegames = useSelector(allGamesSelector);
   const theteams = useSelector(allTeamsSelector);
 
+  const sortgames = [...thegames].sort((a, b) => a.startTime - b.startTime);
+
   function handleChange(evt) {
     const { name } = evt.target;
     const { value } = evt.target;
@@ -52,7 +54,7 @@ const PlayerFilter = () => {
       </select>
       <select style={{ cursor: 'pointer' }} onChange={handleChange} name="game" value={filters.game}>
         <option value="">Game</option>
-        {thegames.map((g, i) => {
+        {sortgames.map((g, i) => {
           if (g.phase !== 'post') {
             return (
               <option key={g.HomeId} value={i}>

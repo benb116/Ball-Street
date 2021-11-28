@@ -53,6 +53,7 @@ function GameState() {
           week: currentweek,
           HomeId: homeTeamID,
           AwayId: awayTeamID,
+          startTime: starttime,
         };
       });
 
@@ -71,6 +72,7 @@ function GameState() {
             week: currentweek,
             HomeId: team1,
             AwayId: team2,
+            startTime: 2000000000,
           });
         }
       }

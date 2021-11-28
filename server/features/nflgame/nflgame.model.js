@@ -24,5 +24,9 @@ module.exports = function out(sequelize, DataTypes) {
         isIn: [['pre', 'mid', 'post']],
       },
     },
+    startTime: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   }, { sequelize });
 };

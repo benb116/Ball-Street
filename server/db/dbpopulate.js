@@ -163,35 +163,53 @@ async function PopulateDB() {
   await Trade.bulkCreate(trds);
 
   await NFLGame.bulkCreate([
-    { week: curweek, HomeId: 10, AwayId: 1 },
     {
-      week: curweek, HomeId: 33, AwayId: 2, phase: 'pre',
-    },
-    { week: curweek, HomeId: 29, AwayId: 3 },
-    { week: curweek, HomeId: 4, AwayId: 5 },
-    { week: curweek, HomeId: 6, AwayId: 7 },
-    { week: curweek, HomeId: 8, AwayId: 9 },
-    { week: curweek, HomeId: 34, AwayId: 11 },
-    {
-      week: curweek, HomeId: 30, AwayId: 12, phase: 'pre',
-    },
-    { week: curweek, HomeId: 15, AwayId: 16 },
-    {
-      week: curweek, HomeId: 17, AwayId: 18, phase: 'pre',
-    },
-    { week: curweek, HomeId: 19, AwayId: 20 },
-    {
-      week: curweek, HomeId: 13, AwayId: 21, phase: 'mid',
+      week: curweek, HomeId: 10, AwayId: 1, startTime: 100,
     },
     {
-      week: curweek, HomeId: 23, AwayId: 24, phase: 'mid',
+      week: curweek, HomeId: 33, AwayId: 2, phase: 'pre', startTime: 400,
     },
     {
-      week: curweek, HomeId: 25, AwayId: 26, phase: 'mid',
+      week: curweek, HomeId: 29, AwayId: 3, startTime: 100,
     },
-    { week: curweek, HomeId: 14, AwayId: 27 },
     {
-      week: curweek, HomeId: 22, AwayId: 28, phase: 'pre',
+      week: curweek, HomeId: 4, AwayId: 5, startTime: 100,
+    },
+    {
+      week: curweek, HomeId: 6, AwayId: 7, startTime: 100,
+    },
+    {
+      week: curweek, HomeId: 8, AwayId: 9, startTime: 100,
+    },
+    {
+      week: curweek, HomeId: 34, AwayId: 11, startTime: 100,
+    },
+    {
+      week: curweek, HomeId: 30, AwayId: 12, phase: 'pre', startTime: 400,
+    },
+    {
+      week: curweek, HomeId: 15, AwayId: 16, startTime: 100,
+    },
+    {
+      week: curweek, HomeId: 17, AwayId: 18, phase: 'pre', startTime: 400,
+    },
+    {
+      week: curweek, HomeId: 19, AwayId: 20, startTime: 100,
+    },
+    {
+      week: curweek, HomeId: 13, AwayId: 21, phase: 'mid', startTime: 200,
+    },
+    {
+      week: curweek, HomeId: 23, AwayId: 24, phase: 'mid', startTime: 200,
+    },
+    {
+      week: curweek, HomeId: 25, AwayId: 26, phase: 'mid', startTime: 200,
+    },
+    {
+      week: curweek, HomeId: 14, AwayId: 27, startTime: 100,
+    },
+    {
+      week: curweek, HomeId: 22, AwayId: 28, phase: 'pre', startTime: 400,
     },
   ]);
 }
