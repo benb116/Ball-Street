@@ -12,6 +12,7 @@ import {
   getMyEntry,
   myEntrySelector,
 } from './ContestsSlice';
+import RenderPrice from '../../helpers/util';
 
 const Contest = () => {
   const dispatch = useDispatch();
@@ -20,6 +21,7 @@ const Contest = () => {
 
   const thiscontest = useSelector(contestSelector);
   const thiscontestentries = useSelector(entriesSelector);
+  const sortedEntries = [...thiscontestentries].sort((a, b) => b.pointtotal - a.pointtotal);
   const thiscontestmyentry = useSelector(myEntrySelector);
 
   useEffect(() => {
@@ -42,7 +44,7 @@ const Contest = () => {
       Contest entries
       <br />
       <ul>
-        {thiscontestentries.map((entry) => (
+        {sortedEntries.map((entry) => (
           <EntryItem
             key={entry.UserId}
             entrydata={entry}
@@ -75,9 +77,11 @@ const Contest = () => {
 function EntryItem({ entrydata }) {
   return (
     <li>
-      {' '}
       {entrydata.UserId}
       {' '}
+      -
+      {' '}
+      {RenderPrice(entrydata.pointtotal)}
     </li>
   );
 }
@@ -85,6 +89,7 @@ function EntryItem({ entrydata }) {
 EntryItem.propTypes = {
   entrydata: PropTypes.shape({
     UserId: PropTypes.number.isRequired,
+    pointtotal: PropTypes.number.isRequired,
   }).isRequired,
 };
 export default Contest;
