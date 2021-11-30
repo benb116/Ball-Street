@@ -1,10 +1,10 @@
-const axios = require('axios');
-const logger = require('../../utilities/logger');
-const dict = require('./dict.nfl');
-const state = require('./state.nfl');
+import axios from 'axios'
+import logger from '../../utilities/logger'
+import { validStatLetters } from './dict.nfl'
+import state from './state.nfl'
 
 // Get all latest statlines and filter out ones we don't care about
-function PullAllStats() {
+export function PullAllStats() {
   return axios.get('https://relay-stream.sports.yahoo.com/nfl/stats.txt')
     .then((raw) => raw.data.split('\n'))
     .then((lines) => lines.filter(StatType))
@@ -16,11 +16,11 @@ function PullAllStats() {
 
 // Allow a statline if it's one of the valid stat categories
 function StatType(line) {
-  return (dict.validStatLetters.indexOf(line[0]) > -1) ? line[0] : false;
+  return (validStatLetters.indexOf(line[0]) > -1) ? line[0] : false;
 }
 
 // Determine if a statline has changed
-function UpdateStats(line) {
+export function UpdateStats(line) {
   const terms = line.split('|');
   const stattype = terms[0];
   const playerid = terms[1];
@@ -35,8 +35,3 @@ function UpdateStats(line) {
   state.statObj[playerid][stattype] = statline;
   return diff;
 }
-
-module.exports = {
-  PullAllStats,
-  UpdateStats,
-};

@@ -1,17 +1,17 @@
-const Queue = require('bull');
-const Joi = require('joi');
+import Queue from 'bull'
+import Joi from 'joi'
 
-const u = require('../../util/util');
-const { validators } = require('../../util/util.schema');
+import { dv, tobj, validate, uError } from '../../util/util'
+import validators from '../../util/util.schema'
+import { queueOptions } from '../../../db/redis'
 
-const sequelize = require('../../../db');
-const { Offer } = require('../../../models');
+import sequelize from '../../../db'
+import { Offer } from '../../../models'
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
 };
 
-const { queueOptions } = require('../../../db/redis');
 
 const offerQueue = new Queue('offer-queue', queueOptions);
 
@@ -29,22 +29,22 @@ const schema = Joi.object({
 });
 
 async function cancelOffer(req) {
-  const value = u.validate(req, schema);
+  const value = validate(req, schema);
 
   // Cancel offer, but if it's filled, let user know
   return sequelize.transaction(isoOption, async (t) => {
-    const o = await Offer.findByPk(value.body.offerID, u.tobj(t));
-    if (!o) { u.Error('No offer found', 404); }
-    if (o.UserId !== value.user) { u.Error('Unauthorized', 403); }
-    if (o.filled) { u.Error('Offer already filled', 406); }
-    if (o.cancelled) { u.Error('Offer already cancelled', 406); }
+    const o = await Offer.findByPk(value.body.offerID, tobj(t));
+    if (!o) { uError('No offer found', 404); }
+    if (o.UserId !== value.user) { uError('Unauthorized', 403); }
+    if (o.filled) { uError('Offer already filled', 406); }
+    if (o.cancelled) { uError('Offer already cancelled', 406); }
     o.cancelled = true;
     await o.save({ transaction: t });
     return o;
-  }).then(u.dv).then((offer) => {
+  }).then(dv).then((offer) => {
     offerQueue.add(offer);
     return offer;
   });
 }
 
-module.exports = cancelOffer;
+export default cancelOffer;

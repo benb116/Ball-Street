@@ -1,5 +1,5 @@
 node_modules/
-secret.js
+secret.*
 server/node_modules/
 server/secret.js
 server/stats.js
@@ -10,3 +10,4 @@ nginx.conf
 server/logs/
 **/*.log
 coverage/
+dist/

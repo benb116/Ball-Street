@@ -1,13 +1,13 @@
-const u = require('../../features/util/util');
-const Book = require('./book.class');
-const { rediskeys, client } = require('../../db/redis');
+import { dv } from '../../features/util/util'
+import Book from './book.class'
+import { rediskeys, client } from '../../db/redis'
 
-const { Offer, ProtectedMatch } = require('../../models');
-const logger = require('../../utilities/logger');
-const priceUpdate = require('../live/channels/priceUpdate.channel');
+import { Offer, ProtectedMatch } from '../../models'
+import logger from '../../utilities/logger'
+import priceUpdate from '../live/channels/priceUpdate.channel'
 
 // Access the correct book or make one if necessary
-function getBook(books, ContestId, NFLPlayerId) {
+export function getBook(books, ContestId, NFLPlayerId) {
   // eslint-disable-next-line no-param-reassign
   if (!books[ContestId]) { books[ContestId] = {}; }
   if (!books[ContestId][NFLPlayerId]) {
@@ -50,7 +50,7 @@ async function initializeBook(playerBook) {
     order: [
       ['updatedAt', 'ASC'],
     ],
-  }).then(u.dv);
+  }).then(dv);
   sortedOffers.forEach((o) => playerBook.add(o));
   // Also add protected matches that have been previously created
   const protMatches = await ProtectedMatch.findAll({
@@ -72,7 +72,7 @@ async function initializeBook(playerBook) {
 }
 
 // Send out latest price info based on book
-function updateBest(playerBook) {
+export function updateBest(playerBook) {
   const { contestID, nflplayerID } = playerBook;
 
   const bestbids = [playerBook.bestbid, playerBook.bestpbid].filter((e) => e);
@@ -90,8 +90,3 @@ function updateBest(playerBook) {
 
   priceUpdate.pubBest(contestID, nflplayerID, bestbid, bestask);
 }
-
-module.exports = {
-  getBook,
-  updateBest,
-};

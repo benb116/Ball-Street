@@ -1,9 +1,9 @@
-const u = require('../../util/util');
+import { dv, tobj, validate, uError } from '../../util/util'
 
-const { NFLPlayer } = require('../../../models');
+import { NFLPlayer } from '../../../models'
 
 function getNFLPlayers() {
-  return NFLPlayer.findAll({ where: { active: true } }).then(u.dv);
+  return NFLPlayer.findAll({ where: { active: true } }).then(dv);
 }
 
-module.exports = getNFLPlayers;
+export default getNFLPlayers;

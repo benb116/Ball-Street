@@ -1,11 +1,11 @@
-const { Op } = require('sequelize');
-const Joi = require('joi');
+import { Op } from 'sequelize'
+import Joi from 'joi'
 
-const u = require('../../util/util');
+import { dv, validate } from '../../util/util'
 
-const getEntry = require('./getEntry.service');
-const { validators } = require('../../util/util.schema');
-const { Entry } = require('../../../models');
+import getEntry from './getEntry.service'
+import validators from '../../util/util.schema'
+import { Entry } from '../../../models'
 
 const schema = Joi.object({
   user: validators.user,
@@ -17,7 +17,8 @@ const schema = Joi.object({
 
 // Get an entry's rank within a contest
 async function getEntryRank(req) {
-  const value = u.validate(req, schema);
+  const value = validate(req, schema);
+  // Requires authorization or looking at a public league
   const theentry = await getEntry(value);
 
   // Count entries with greater point total, then add one
@@ -29,9 +30,9 @@ async function getEntryRank(req) {
         [Op.gt]: theentry.pointtotal,
       },
     },
-  }).then(u.dv).catch(() => -1);
+  }).then(dv).catch(() => -1);
   theentry.rank = greaterEntries + 1;
   return theentry;
 }
 
-module.exports = getEntryRank;
+export default getEntryRank;

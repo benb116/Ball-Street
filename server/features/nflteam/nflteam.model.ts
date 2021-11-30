@@ -1,4 +1,4 @@
-module.exports = function model(sequelize, DataTypes) {
+export default function model(sequelize, DataTypes) {
   return sequelize.define('NFLTeam', {
     id: {
       type: DataTypes.INTEGER,

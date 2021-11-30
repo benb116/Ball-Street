@@ -1,10 +1,9 @@
-const Joi = require('joi');
+import Joi from 'joi'
 
-const u = require('../../util/util');
+import { dv, validate } from '../../util/util'
 
-const { validators } = require('../../util/util.schema');
-
-const { Offer } = require('../../../models');
+import { Offer } from '../../../models'
+import validators from '../../util/util.schema'
 
 const schema = Joi.object({
   user: validators.user,
@@ -16,7 +15,7 @@ const schema = Joi.object({
 });
 
 function getNFLPlayerOfferSummary(req) {
-  const value = u.validate(req, schema);
+  const value = validate(req, schema);
 
   const bids = Offer.count({
     group: 'price',
@@ -41,7 +40,7 @@ function getNFLPlayerOfferSummary(req) {
     attributes: ['price'],
   });
 
-  return Promise.all([bids, asks]).then(u.dv);
+  return Promise.all([bids, asks]).then(dv);
 }
 
-module.exports = getNFLPlayerOfferSummary;
+export default getNFLPlayerOfferSummary;

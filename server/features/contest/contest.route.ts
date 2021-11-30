@@ -1,12 +1,17 @@
-const router = require('express').Router({ mergeParams: true });
+import * as express from 'express'
 
-const contest = require('./contest.service');
-const { routeHandler } = require('../util/util.route');
+const router = express.Router({ mergeParams: true });
+
+import routeHandler from '../util/util.route'
+
+import getContest from './services/getContest.service'
+import getContests from './services/getContests.service'
+
 
 // Get all contests
-router.get('/', routeHandler(contest.getContests));
+router.get('/', routeHandler(getContests));
 
 // Get a specific contest
-router.get('/:contestID', routeHandler(contest.getContest));
+router.get('/:contestID', routeHandler(getContest));
 
-module.exports = router;
+export default router;

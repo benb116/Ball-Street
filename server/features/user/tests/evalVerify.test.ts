@@ -1,8 +1,8 @@
-const cryptoRandomString = require('crypto-random-string');
-const { client, rediskeys } = require('../../../db/redis');
-const service = require('../services/evalVerify.service');
-const { ErrorTest } = require('../../util/util');
-const config = require('../../../config');
+import cryptoRandomString from 'crypto-random-string'
+import { client, rediskeys } from '../../../db/redis'
+import service from '../services/evalVerify.service'
+import { ErrorTest } from '../../util/util'
+import config from '../../../config'
 
 describe('evalVerify service', () => {
   test('Valid request returns confirmation and redis key', async () => {

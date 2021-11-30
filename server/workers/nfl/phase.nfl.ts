@@ -1,18 +1,18 @@
 // Change the game phase (pre, mid, post)
-const Joi = require('joi');
+import Joi from 'joi'
 
-const { Op } = require('sequelize');
-const u = require('../../features/util/util');
-const { client } = require('../../db/redis');
-const {
+import { Op } from 'sequelize'
+import { dv, tobj, validate, isPlayerOnRoster } from '../../features/util/util'
+import { client } from '../../db/redis'
+import {
   NFLPlayer, Entry, NFLGame, Contest,
-} = require('../../models');
+} from '../../models'
 
-const sequelize = require('../../db');
-const logger = require('../../utilities/logger');
-const state = require('./state.nfl');
-const dict = require('./dict.nfl');
-const phaseChange = require('../live/channels/phaseChange.channel');
+import sequelize from '../../db'
+import logger from '../../utilities/logger'
+import state from './state.nfl'
+import { SumPoints } from './dict.nfl'
+import phaseChange from '../live/channels/phaseChange.channel'
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
@@ -35,7 +35,7 @@ const schema = Joi.object({
 // If changed to post, then convert players to points
 async function setPhase(teamID, newphase) {
   const req = { teamID, newphase };
-  u.validate(req, schema);
+  validate(req, schema);
 
   logger.info(`Team ${teamID} phase set to ${newphase}`);
 
@@ -61,7 +61,7 @@ async function convertTeamPlayers(teamID) {
       NFLTeamId: teamID,
       active: true,
     },
-  }).then(u.dv);
+  }).then(dv);
 
   // Set postprice in database
   const statplayerObjs = teamPlayers.map(setPostPrice);
@@ -77,16 +77,16 @@ async function convertTeamPlayers(teamID) {
   // Find all of this weeks entries across contests
   const weekcontests = await Contest.findAll({
     where: { nflweek: Number(process.env.WEEK) },
-  }).then(u.dv)
+  }).then(dv)
     .then((contests) => contests.map((c) => c.id));
   const allEntries = await Entry.findAll({
     where: { ContestId: { [Op.or]: weekcontests } },
-  }).then(u.dv);
+  }).then(dv);
 
   // Filter for all entries with a player on this team
   const teamEntries = allEntries
     .filter((e) => teamPlayers
-      .reduce((acc, cur) => (acc || u.isPlayerOnRoster(e, cur.id)), false));
+      .reduce((acc, cur) => (acc || isPlayerOnRoster(e, cur.id)), false));
   // Run in series to reduce DB load
   for (let i = 0; i < teamEntries.length; i++) {
     // eslint-disable-next-line no-await-in-loop
@@ -98,7 +98,7 @@ async function convertTeamPlayers(teamID) {
 function setPostPrice(p) {
   const playerid = p.id;
   const stats = state.statObj[playerid];
-  const statpoints = (stats ? dict.SumPoints(stats) : 0);
+  const statpoints = (stats ? SumPoints(stats) : 0);
   // eslint-disable-next-line no-param-reassign
   p.postprice = statpoints;
   return p;
@@ -112,10 +112,10 @@ async function convertEntry(e, players, statmap) {
         UserId: e.UserId,
         ContestId: e.ContestId,
       },
-    }, u.tobj(t));
+    }, tobj(t));
 
     players.forEach((p) => {
-      const pos = u.isPlayerOnRoster(theentry, p.id);
+      const pos = isPlayerOnRoster(theentry, p.id);
       if (pos) {
         theentry[pos] = null;
         theentry.pointtotal += (statmap[p.id] || 0);
@@ -126,4 +126,4 @@ async function convertEntry(e, players, statmap) {
   });
 }
 
-module.exports = setPhase;
+export default setPhase;

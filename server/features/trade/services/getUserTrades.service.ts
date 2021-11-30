@@ -1,9 +1,9 @@
-const Joi = require('joi');
+import Joi from 'joi'
 
-const u = require('../../util/util');
-const { validators } = require('../../util/util.schema');
+import { dv, tobj, validate, uError } from '../../util/util'
+import validators from '../../util/util.schema'
 
-const { Offer, Trade } = require('../../../models');
+import { Offer, Trade } from '../../../models'
 
 const schema = Joi.object({
   user: validators.user,
@@ -14,7 +14,7 @@ const schema = Joi.object({
 });
 
 async function getUserTrades(req) {
-  const value = u.validate(req, schema);
+  const value = validate(req, schema);
 
   const allbids = await Trade.findAll({
     include: [{
@@ -25,7 +25,7 @@ async function getUserTrades(req) {
         UserId: value.user,
       },
     }],
-  }).then(u.dv);
+  }).then(dv);
   const allasks = await Trade.findAll({
     include: [{
       model: Offer,
@@ -35,8 +35,8 @@ async function getUserTrades(req) {
         UserId: value.user,
       },
     }],
-  }).then(u.dv);
+  }).then(dv);
   return allbids.concat(allasks);
 }
 
-module.exports = getUserTrades;
+export default getUserTrades;

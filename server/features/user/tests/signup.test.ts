@@ -1,5 +1,5 @@
-const service = require('../services/signup.service');
-const { ErrorTest, ObjectTest } = require('../../util/util');
+import service from '../services/signup.service'
+import { ErrorTest, ObjectTest } from '../../util/util'
 
 describe('signup service', () => {
   test('Valid request returns data', ObjectTest(

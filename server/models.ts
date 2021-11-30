@@ -1,30 +1,30 @@
 // Set up models with associations
-const { DataTypes } = require('sequelize');
-const sequelize = require('./db');
+import { DataTypes } from 'sequelize'
+import sequelize from './db'
 
-const mcontest = require('./features/contest/contest.model');
-const mentry = require('./features/entry/entry.model');
-const mnflplayer = require('./features/nflplayer/nflplayer.model');
-const mnflposition = require('./features/nflposition/nflposition.model');
-const mnflteam = require('./features/nflteam/nflteam.model');
-const mnflgame = require('./features/nflgame/nflgame.model');
-const moffer = require('./features/offer/offer.model');
-const mprotectedmatch = require('./features/protectedmatch/protectedmatch.model');
-const mpricehistory = require('./features/pricehistory/pricehistory.model');
-const mtrade = require('./features/trade/trade.model');
-const muser = require('./features/user/user.model');
+import mcontest from './features/contest/contest.model'
+import mentry from './features/entry/entry.model'
+import mnflplayer from './features/nflplayer/nflplayer.model'
+import mnflposition from './features/nflposition/nflposition.model'
+import mnflteam from './features/nflteam/nflteam.model'
+import mnflgame from './features/nflgame/nflgame.model'
+import moffer from './features/offer/offer.model'
+import mprotectedmatch from './features/protectedmatch/protectedmatch.model'
+import mpricehistory from './features/pricehistory/pricehistory.model'
+import mtrade from './features/trade/trade.model'
+import muser from './features/user/user.model'
 
-const Contest = mcontest(sequelize, DataTypes);
-const Entry = mentry(sequelize, DataTypes);
-const NFLPlayer = mnflplayer(sequelize, DataTypes);
-const NFLPosition = mnflposition(sequelize, DataTypes);
-const NFLTeam = mnflteam(sequelize, DataTypes);
-const NFLGame = mnflgame(sequelize, DataTypes);
-const Offer = moffer(sequelize, DataTypes);
-const ProtectedMatch = mprotectedmatch(sequelize, DataTypes);
-const PriceHistory = mpricehistory(sequelize, DataTypes);
-const Trade = mtrade(sequelize, DataTypes);
-const User = muser(sequelize, DataTypes);
+export const Contest = mcontest(sequelize, DataTypes);
+export const Entry = mentry(sequelize, DataTypes);
+export const NFLPlayer = mnflplayer(sequelize, DataTypes);
+export const NFLPosition = mnflposition(sequelize, DataTypes);
+export const NFLTeam = mnflteam(sequelize, DataTypes);
+export const NFLGame = mnflgame(sequelize, DataTypes);
+export const Offer = moffer(sequelize, DataTypes);
+export const ProtectedMatch = mprotectedmatch(sequelize, DataTypes);
+export const PriceHistory = mpricehistory(sequelize, DataTypes);
+export const Trade = mtrade(sequelize, DataTypes);
+export const User = muser(sequelize, DataTypes);
 
 Contest.hasMany(Entry);
 Entry.belongsTo(Contest);
@@ -50,18 +50,4 @@ NFLPosition.hasMany(NFLPlayer);
 NFLGame.belongsTo(NFLTeam, { as: 'home', foreignKey: 'HomeId' });
 NFLGame.belongsTo(NFLTeam, { as: 'away', foreignKey: 'AwayId' });
 
-module.exports = {
-  Contest,
-  Entry,
-  NFLPlayer,
-  NFLPosition,
-  NFLTeam,
-  NFLGame,
-  Offer,
-  ProtectedMatch,
-  PriceHistory,
-  Trade,
-  User,
-};
-
-module.exports.sequelize = sequelize;
+export default sequelize

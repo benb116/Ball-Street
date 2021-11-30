@@ -1,10 +1,10 @@
-const Joi = require('joi');
+import Joi from 'joi'
 
-const u = require('../../util/util');
+import { validate, dv, uError } from '../../util/util'
 
-const { validators } = require('../../util/util.schema');
-const getEntryRank = require('../../entry/services/getEntryRank.service');
-const { Contest } = require('../../../models');
+import { Contest } from '../../../models'
+import validators from '../../util/util.schema'
+import getEntryRank from '../../entry/services/getEntryRank.service'
 
 const schema = Joi.object({
   user: validators.user,
@@ -16,9 +16,9 @@ const schema = Joi.object({
 
 // Get info for a specific contest
 async function getContest(req) {
-  const value = u.validate(req, schema);
-  const thecontest = await Contest.findByPk(value.params.contestID).then(u.dv);
-  if (!thecontest) { u.Error('No contest found', 404); }
+  const value = validate(req, schema);
+  const thecontest = await Contest.findByPk(value.params.contestID).then(dv);
+  if (!thecontest) { uError('No contest found', 404); }
   const theentry = await getEntryRank(value).catch(() => ({
     rank: null,
     pointtotal: null,
@@ -29,4 +29,4 @@ async function getContest(req) {
   return thecontest;
 }
 
-module.exports = getContest;
+export default getContest;

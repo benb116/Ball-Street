@@ -1,20 +1,18 @@
-const out = {};
-
-const config = require('../../config');
-const logger = require('../../utilities/logger');
+import config from '../../config'
+import logger from '../../utilities/logger'
 
 const rpos = Object.keys(config.Roster);
 
 // Clean up the raw response from the database
-out.dv = function dv(input) {
+export const dv = function dv(input) {
   if (input === null) { return input; }
-  if (input.length) { return input.map(out.dv); }
+  if (input.length) { return input.map(dv); }
   if (input.toJSON) { return input.toJSON(); }
   return input;
 };
 
 // Return whether a player type (number) cannot be put into a specific roster position
-out.isInvalidSpot = function isInvalidSpot(playerType, rosterPosName) {
+export const isInvalidSpot = function isInvalidSpot(playerType, rosterPosName) {
   const rosterType = config.Roster[rosterPosName];
   if (playerType === rosterType) {
     return false;
@@ -30,7 +28,7 @@ out.isInvalidSpot = function isInvalidSpot(playerType, rosterPosName) {
 };
 
 // Is a player on the entry's roster
-out.isPlayerOnRoster = function isPlayerOnRoster(entry, playerID) {
+export const isPlayerOnRoster = function isPlayerOnRoster(entry, playerID) {
   let res = false;
   for (let i = 0; i < rpos.length; i++) {
     if (entry[rpos[i]] === playerID) {
@@ -43,9 +41,9 @@ out.isPlayerOnRoster = function isPlayerOnRoster(entry, playerID) {
 
 // Could a player type be put into a spot on the roster
 // Is the spot open AND is the player type valid
-out.isOpenRoster = function isOpenRoster(theentry, playerType) {
+export const isOpenRoster = function isOpenRoster(theentry, playerType) {
   for (let i = 0; i < rpos.length; i++) {
-    if (theentry[rpos[i]] === null && !(out.isInvalidSpot(playerType, rpos[i]))) {
+    if (theentry[rpos[i]] === null && !(isInvalidSpot(playerType, rpos[i]))) {
       return rpos[i];
     }
   }
@@ -53,7 +51,7 @@ out.isOpenRoster = function isOpenRoster(theentry, playerType) {
 };
 
 // Transaction object to cause SELECT ... FOR UPDATE
-out.tobj = function tobj(t) {
+export const tobj = function tobj(t) {
   return {
     transaction: t,
     lock: t.LOCK.UPDATE,
@@ -61,36 +59,36 @@ out.tobj = function tobj(t) {
 };
 
 // Custom error function that returns a msg and http status
-out.Error = function uError(msg, status = 500) {
+export const uError = function uError(msg, status = 500) {
   const err = new Error(msg);
   err.status = status;
   throw err;
 };
 
 // Console.log passthrough for promises
-out.cl = function cl(input) {
+export const cl = function cl(input) {
   // eslint-disable-next-line no-console
   logger.info(input);
   return input;
 };
 
 // Validate an object based on a Joi schema
-out.validate = function validate(input, schema) {
+export const validate = function validate(input, schema) {
   const { value, error } = schema.validate(input);
-  if (error) { out.Error(error.details[0].message, 400); }
+  if (error) { uError(error.details[0].måœessage, 400); }
   return value;
 };
 
 // Functions used in Jest testing
 // Ensures that a service call returns an object with specific properties
-out.ObjectTest = function ObjectTest(service, req, contains) {
+export const ObjectTest = function ObjectTest(service, req, contains) {
   return async () => service(req).then((resp) => {
     expect(resp).toEqual(expect.objectContaining(contains));
   });
 };
 
 // Ensures that a service call returns an array with specific elements
-out.ArrayTest = function ArrayTest(service, req, items) {
+export const ArrayTest = function ArrayTest(service, req, items) {
   return async () => service(req).then((resp) => {
     items.forEach((e) => {
       let check = e;
@@ -103,7 +101,7 @@ out.ArrayTest = function ArrayTest(service, req, items) {
 };
 
 // Ensures that a service call throws an error with specific status number and message
-out.ErrorTest = function ErrorTest(service, req, statusNumber, message) {
+export const ErrorTest = function ErrorTest(service, req, statusNumber, message) {
   return async function errortest() {
     try {
       const o = await service(req);
@@ -121,7 +119,7 @@ out.ErrorTest = function ErrorTest(service, req, statusNumber, message) {
 
 // Compare strings in constant time
 // https://snyk.io/blog/node-js-timing-attack-ccc-ctf/
-out.OnCompare = function OnCompare(a, b) {
+export const OnCompare = function OnCompare(a, b) {
   let mismatch = 0;
   for (let i = 0; i < a.length; ++i) {
     // eslint-disable-next-line no-bitwise
@@ -129,5 +127,3 @@ out.OnCompare = function OnCompare(a, b) {
   }
   return mismatch;
 };
-
-module.exports = out;

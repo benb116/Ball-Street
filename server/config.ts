@@ -36,4 +36,4 @@ const config = {
 config.Roster.FLEX1 = config.FlexNFLPositionId;
 config.Roster.FLEX2 = config.FlexNFLPositionId;
 
-module.exports = config;
+export default config;

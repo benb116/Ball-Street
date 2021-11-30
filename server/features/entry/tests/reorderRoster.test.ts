@@ -1,5 +1,5 @@
-const service = require('../services/reorderRoster.service');
-const { ErrorTest, ObjectTest } = require('../../util/util');
+import service from '../services/reorderRoster.service'
+import { ErrorTest, ObjectTest } from '../../util/util'
 
 describe('reorderRoster service', () => {
   test('Valid request between same position returns data', ObjectTest(

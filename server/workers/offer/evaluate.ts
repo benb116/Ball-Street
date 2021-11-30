@@ -2,7 +2,7 @@
 // Find the match with the highest priority that can be made
 // Returns false for no matches
 
-const logger = require('../../utilities/logger');
+import logger from '../../utilities/logger'
 
 // Returns with a bid and ask object detailing the offers
 function evaluateFn(book) {
@@ -247,4 +247,4 @@ function bestUnmatchedProtAsk(book, notMatcher) {
   return bestPAskOffer;
 }
 
-module.exports = evaluateFn;
+export default evaluateFn;

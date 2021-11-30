@@ -1,11 +1,11 @@
-const priceUpdate = require('./channels/priceUpdate.channel');
-const statUpdate = require('./channels/statUpdate.channel');
-const leaderUpdate = require('./channels/leaderUpdate.channel');
-const protectedMatch = require('./channels/protectedMatch.channel');
-const offerFilled = require('./channels/offerFilled.channel');
-const offerCancelled = require('./channels/offerCancelled.channel');
-const phaseChange = require('./channels/phaseChange.channel');
-const injuryUpdate = require('./channels/injuryUpdate.channel');
+import priceUpdate from './channels/priceUpdate.channel'
+import statUpdate from './channels/statUpdate.channel'
+import leaderUpdate from './channels/leaderUpdate.channel'
+import protectedMatch from './channels/protectedMatch.channel'
+import offerFilled from './channels/offerFilled.channel'
+import offerCancelled from './channels/offerCancelled.channel'
+import phaseChange from './channels/phaseChange.channel'
+import injuryUpdate from './channels/injuryUpdate.channel'
 
 const channelMap = {
   priceUpdate,
@@ -18,4 +18,4 @@ const channelMap = {
   injuryUpdate,
 };
 
-module.exports = channelMap;
+export default channelMap;

@@ -1,23 +1,23 @@
-const cryptoRandomString = require('crypto-random-string');
-const Joi = require('joi');
+import cryptoRandomString from 'crypto-random-string'
+import Joi from 'joi'
 
-const u = require('../../util/util');
-const { validators } = require('../../util/util.schema');
-const { client, rediskeys } = require('../../../db/redis');
-const config = require('../../../config');
+import { dv, tobj, validate, uError } from '../../util/util'
+import validators from '../../util/util.schema'
+import { client, rediskeys } from '../../../db/redis'
+import config from '../../../config'
 
 const schema = Joi.object({
   email: validators.email,
 });
 
 async function genVerify(req) {
-  const { email } = u.validate(req, schema);
+  const { email } = validate(req, schema);
   try {
     const rand = cryptoRandomString({ length: config.verificationTokenLength, type: 'url-safe' });
     await client.SET(rediskeys.emailVer(rand), email, { EX: config.verificationTimeout * 60 });
     return sendVerificationEmail(email, rand);
   } catch (err) {
-    return u.Error('genVerify Error', 406);
+    return uError('genVerify Error', 406);
   }
 }
 
@@ -36,4 +36,4 @@ function SendEmail(to, subject, msg) {
   };
 }
 
-module.exports = genVerify;
+export default genVerify;

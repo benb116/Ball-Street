@@ -2,9 +2,9 @@
 /* eslint-disable no-useless-escape */
 
 // Pull player data from an API
-const axios = require('axios');
-const { NFLPlayer } = require('../models');
-const secret = require('../secret');
+import axios from 'axios'
+import { NFLPlayer } from '../models'
+import secret from '../secret'
 
 // Yahoo team ID numbers
 const teammap = {
@@ -121,4 +121,4 @@ async function sendreq(price, pagenum = 0, posget = 'O') {
     .then((objs) => NFLPlayer.bulkCreate(objs, { updateOnDuplicate: ['preprice', 'postprice', 'NFLTeamId', 'active', 'injuryStatus'] }));
 }
 
-module.exports = scrape;
+export default scrape;

@@ -1,5 +1,5 @@
-const { client } = require('../../../db/redis');
-const { sendToAll } = require('../socket.live');
+import { client } from '../../../db/redis'
+import { sendToAll } from '../socket.live'
 
 const phaseChange = {};
 
@@ -11,4 +11,4 @@ phaseChange.sub = function sub(message) {
   sendToAll({ event: 'phaseChange', phase: JSON.parse(message) });
 };
 
-module.exports = phaseChange;
+export default phaseChange;

@@ -2,19 +2,19 @@
 // Processes jobs on the offer queue
 // Tries to reduce order book whenever an offer comes in
 // Sends out matches to be filled
-const Queue = require('bull');
-const config = require('../config');
+import Queue from 'bull'
+import config from '../config'
 
-const { queueOptions } = require('../db/redis');
+import { queueOptions } from '../db/redis'
+
+import fillOffers from './offer/trader'
+import { getBook, updateBest } from './offer/offer.util'
+import evalProtected from './offer/protected'
+import logger from '../utilities/logger'
+import protectedMatch from './live/channels/protectedMatch.channel'
 
 const offerQueue = new Queue('offer-queue', queueOptions);
 const protectedQueue = new Queue('protected-queue', queueOptions);
-
-const { fillOffers } = require('./offer/trader');
-const { getBook, updateBest } = require('./offer/offer.util');
-const evalProtected = require('./offer/protected');
-const logger = require('../utilities/logger');
-const protectedMatch = require('./live/channels/protectedMatch.channel');
 
 // books[contestID][playerID] = Book
 const books = { };

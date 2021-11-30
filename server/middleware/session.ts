@@ -1,8 +1,7 @@
-const session = require('express-session');
-const connect = require('connect-redis');
-
-const { createClient } = require('redis');
-const { REDIS_PORT, REDIS_HOST } = require('../db/redis');
+import session from 'express-session'
+import connect from 'connect-redis'
+import { createClient } from 'redis'
+import { client, REDIS_PORT, REDIS_HOST } from '../db/redis'
 
 const connObj = {
   url: `redis://${REDIS_HOST}:${REDIS_PORT}`,
@@ -14,7 +13,7 @@ client.connect();
 
 const RedisStore = connect(session);
 
-module.exports = session({
+export default session({
   secret: process.env.COOKIE_SECRET,
   name: '_ballstreet',
   resave: false,

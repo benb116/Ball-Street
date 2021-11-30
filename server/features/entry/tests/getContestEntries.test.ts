@@ -1,5 +1,5 @@
-const service = require('../services/getContestEntries.service');
-const { ErrorTest, ArrayTest } = require('../../util/util');
+import service from '../services/getContestEntries.service'
+import { ErrorTest, ArrayTest } from '../../util/util'
 
 describe('getContestEntries service', () => {
   test('Valid request returns data', ArrayTest(

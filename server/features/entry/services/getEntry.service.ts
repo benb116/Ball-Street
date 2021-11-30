@@ -1,9 +1,9 @@
-const Joi = require('joi');
+import Joi from 'joi'
 
-const u = require('../../util/util');
+import { dv, tobj, validate, uError } from '../../util/util'
 
-const { Entry } = require('../../../models');
-const { validators } = require('../../util/util.schema');
+import { Entry } from '../../../models'
+import validators from '../../util/util.schema'
 
 const schema = Joi.object({
   user: validators.user,
@@ -15,15 +15,15 @@ const schema = Joi.object({
 
 // Get info for a specific contest
 async function getEntry(req) {
-  const value = u.validate(req, schema);
+  const value = validate(req, schema);
   const theentry = await Entry.findOne({
     where: {
       UserId: value.user,
       ContestId: value.params.contestID,
     },
-  }).then(u.dv);
-  if (!theentry) { u.Error('No entry found', 404); }
+  }).then(dv);
+  if (!theentry) { uError('No entry found', 404); }
   return theentry;
 }
 
-module.exports = getEntry;
+export default getEntry;

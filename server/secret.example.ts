@@ -10,4 +10,4 @@ const secret = {
   sportsdataio: 'apikey',
 };
 
-module.exports = secret;
+export default secret;

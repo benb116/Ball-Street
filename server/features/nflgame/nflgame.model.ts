@@ -1,4 +1,4 @@
-module.exports = function out(sequelize, DataTypes) {
+export default function out(sequelize, DataTypes) {
   return sequelize.define('NFLGame', {
     week: {
       type: DataTypes.INTEGER,

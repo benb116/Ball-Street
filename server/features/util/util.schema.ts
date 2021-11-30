@@ -1,6 +1,6 @@
 // Common validators for object properties
 
-const Joi = require('joi');
+import Joi from 'joi'
 
 const validators = {};
 
@@ -38,6 +38,4 @@ validators.nflplayerID = Joi.number().integer().required().messages({
 
 validators.noObj = Joi.object().length(0);
 
-module.exports = {
-  validators,
-};
+export default validators

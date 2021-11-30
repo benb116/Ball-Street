@@ -1,8 +1,8 @@
-const config = require('../../../config');
-const liveState = require('../state.live'); // Data stored in memory
-const { sendToContests } = require('../socket.live');
+import config from '../../../config'
+import liveState from '../state.live' // Data stored in memory
+import { sendToContests } from '../socket.live'
 
-const { client } = require('../../../db/redis');
+import { client } from '../../../db/redis'
 
 const priceUpdate = {};
 
@@ -54,4 +54,4 @@ setInterval(() => {
   sendToContests(priceMsgMap);
 }, config.RefreshTime * 1000);
 
-module.exports = priceUpdate;
+export default priceUpdate;

@@ -3,9 +3,9 @@
 // and return the results
 // If there's an error, return the specified status and error message.
 
-const { client } = require('../../db/redis');
+import { client } from '../../db/redis'
 
-function routeHandler(service, cacheExpiry) {
+function routeHandler(service, cacheExpiry = 0) {
   return async function routeHandlerInner(req, res) {
     try {
       // If a get request should be cached
@@ -37,4 +37,4 @@ function stripReq(inp) {
   return out;
 }
 
-module.exports = { routeHandler };
+export default routeHandler

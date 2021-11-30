@@ -1,6 +1,6 @@
-const config = require('../../config');
+import config from '../../config'
 
-module.exports = function out(sequelize, DataTypes) {
+export default function out(sequelize, DataTypes) {
   return sequelize.define('NFLPlayer', {
     id: {
       type: DataTypes.INTEGER,

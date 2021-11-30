@@ -1,18 +1,17 @@
 // Set up example DB records for use in testing
 
-const models = require('../models');
-const logger = require('../utilities/logger');
+import {
+  Contest,
+  User,
+  Entry,
+  Offer,
+  Trade,
+  NFLGame,
+} from '../models';
+import logger from '../utilities/logger';
 
 async function PopulateDB() {
   logger.info('Populating DB with initial data');
-  const {
-    Contest,
-    User,
-    Entry,
-    Offer,
-    Trade,
-    NFLGame,
-  } = models;
 
   // Define Users
   const usrs = ['email1@gmail.com', 'email2@gmail.com', 'email3@gmail.com', 'email4@gmail.com', 'email5@gmail.com', 'email6@gmail.com'];
@@ -164,4 +163,4 @@ async function PopulateDB() {
   ]);
 }
 
-module.exports = PopulateDB;
+export default PopulateDB;

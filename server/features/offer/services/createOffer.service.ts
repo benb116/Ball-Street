@@ -1,18 +1,18 @@
-const Queue = require('bull');
-const Joi = require('joi');
+import Queue from 'bull'
+import Joi from 'joi'
 
-const { Op } = require('sequelize');
-const config = require('../../../config');
-const u = require('../../util/util');
-const { validators } = require('../../util/util.schema');
+import { Op } from 'sequelize'
+import config from '../../../config'
+import { dv, tobj, validate, uError, isPlayerOnRoster, isOpenRoster } from '../../util/util'
+import validators from '../../util/util.schema'
 
-const sequelize = require('../../../db');
-const {
+import sequelize from '../../../db'
+import {
   Offer, Entry, NFLPlayer, NFLGame,
-} = require('../../../models');
+} from '../../../models'
 
-const { queueOptions } = require('../../../db/redis');
-const { errorHandler } = require('../../util/util.service');
+import { queueOptions } from '../../../db/redis'
+import { errorHandler } from '../../util/util.service'
 
 const offerQueue = new Queue('offer-queue', queueOptions);
 
@@ -47,7 +47,7 @@ const schema = Joi.object({
 });
 
 async function createOffer(req) {
-  const value = u.validate(req, schema);
+  const value = validate(req, schema);
 
   const obj = value.body.offerobj;
   obj.userID = value.user;
@@ -58,30 +58,30 @@ async function createOffer(req) {
         UserId: obj.userID,
         ContestId: value.params.contestID,
       },
-    }, u.tobj(t));
-    if (!theentry) { u.Error('No entry found', 404); }
+    }, tobj(t));
+    if (!theentry) { uError('No entry found', 404); }
 
     const playerdata = await NFLPlayer.findByPk(obj.nflplayerID, {
       attributes: ['NFLPositionId', 'NFLTeamId', 'active'],
       transaction: t,
-    }).then(u.dv);
-    if (!playerdata || !playerdata.active) { u.Error('Player not found', 404); }
+    }).then(dv);
+    if (!playerdata || !playerdata.active) { uError('Player not found', 404); }
 
     // Player should be in entry for ask, not for bid
-    const isOnTeam = u.isPlayerOnRoster(theentry, obj.nflplayerID);
+    const isOnTeam = isPlayerOnRoster(theentry, obj.nflplayerID);
     if (!obj.isbid) {
-      if (!isOnTeam) { u.Error('Player is not on roster', 404); }
+      if (!isOnTeam) { uError('Player is not on roster', 404); }
     } else {
-      if (isOnTeam) { u.Error('Player is on roster already', 409); }
+      if (isOnTeam) { uError('Player is on roster already', 409); }
 
       const pts = theentry.dataValues.pointtotal;
       if (obj.price > pts) {
-        u.Error("User doesn't have enough points to offer", 402);
+        uError("User doesn't have enough points to offer", 402);
       }
       // Only allow offer if there's currently room on the roster
       // TODO make linked offers? I.e. sell player at market price to make room for other player
-      if (!u.isOpenRoster(theentry, playerdata.NFLPositionId)) {
-        u.Error('There are no spots this player could fit into', 409);
+      if (!isOpenRoster(theentry, playerdata.NFLPositionId)) {
+        uError('There are no spots this player could fit into', 409);
       }
     }
 
@@ -91,10 +91,10 @@ async function createOffer(req) {
         [Op.or]: [{ HomeId: playerdata.NFLTeamId }, { AwayId: playerdata.NFLTeamId }],
         week: Number(process.env.WEEK),
       },
-    }, { transaction: t }).then(u.dv);
-    if (!gamedata) u.Error('Could not find game data for this player', 404);
+    }, { transaction: t }).then(dv);
+    if (!gamedata) uError('Could not find game data for this player', 404);
     if (gamedata.phase !== 'mid') {
-      u.Error("Can't make an offer before or after games", 406);
+      uError("Can't make an offer before or after games", 406);
     }
 
     return Offer.create({
@@ -109,7 +109,7 @@ async function createOffer(req) {
       lock: t.LOCK.UPDATE,
     });
   })
-    .then(u.dv).then((offer) => {
+    .then(dv).then((offer) => {
       offerQueue.add(offer);
       return offer;
     })
@@ -119,4 +119,4 @@ async function createOffer(req) {
     }));
 }
 
-module.exports = createOffer;
+export default createOffer;

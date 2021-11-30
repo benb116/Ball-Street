@@ -1,13 +1,13 @@
-const u = require('../../features/util/util');
+import u from '../../features/util/util'
 
-const { Offer } = require('../../models');
-const logger = require('../../utilities/logger');
-const { updateBest } = require('./offer.util');
-const { fillOffers } = require('./trader');
+import { Offer } from '../../models'
+import logger from '../../utilities/logger'
+import { updateBest } from './offer.util'
+import fillOffers from './trader'
 
 // Try to fill a protected match
 async function evalProtected(playerBook, proffer, neoffer) {
-  const poffer = await Offer.findByPk(proffer).then(u.dv);
+  const poffer = await Offer.findByPk(proffer).then(dv);
   if (!poffer || poffer.cancelled || poffer.filled) {
     logger.info(`Matchee unavailable ${poffer.id}`);
     await playerBook.unmatch(poffer);
@@ -17,7 +17,7 @@ async function evalProtected(playerBook, proffer, neoffer) {
   // Matching offer must not have been cancelled
   // Otherwise users could trigger and immediately cancel
   // to make every protOffer always ready to execute
-  const noffer = await Offer.findByPk(neoffer).then(u.dv);
+  const noffer = await Offer.findByPk(neoffer).then(dv);
   if (!noffer || noffer.cancelled) {
     logger.info(`Matcher unavailable ${noffer.id}`);
     await playerBook.unmatch(poffer);
@@ -69,4 +69,4 @@ async function runMatches(poffer, playerBook) {
   updateBest(playerBook);
 }
 
-module.exports = evalProtected;
+export default evalProtected;

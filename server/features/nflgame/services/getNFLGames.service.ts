@@ -1,5 +1,5 @@
-const { NFLGame, NFLTeam } = require('../../../models');
-const u = require('../../util/util');
+import { NFLGame, NFLTeam } from '../../../models'
+import { dv, tobj, validate, uError } from '../../util/util'
 
 async function getNFLGames() {
   const currentweek = Number(process.env.WEEK);
@@ -14,7 +14,7 @@ async function getNFLGames() {
     where: {
       week: currentweek,
     },
-  }).then(u.dv);
+  }).then(dv);
 }
 
-module.exports = getNFLGames;
+export default getNFLGames;

@@ -1,9 +1,18 @@
-const router = require('express').Router();
+import * as express from 'express'
 
-const service = require('./user.service');
-const authenticate = require('../../middleware/authenticate');
-const { routeHandler } = require('../util/util.route');
-const logger = require('../../utilities/logger');
+const router = express.Router();
+
+import authenticate from '../../middleware/authenticate'
+import routeHandler from '../util/util.route'
+import logger from '../../utilities/logger'
+
+import signup from './services/signup.service'
+import login from './services/login.service'
+import getAccount from './services/getAccount.service'
+import evalVerify from './services/evalVerify.service'
+
+import genPassReset from './services/genPassReset.service'
+import evalPassReset from './services/evalPassReset.service'
 
 function errorHandler(res, err) {
   if (!err) {
@@ -19,7 +28,7 @@ router.post('/login', async (req, res) => {
     password: req.body.password,
   };
   try {
-    const user = await service.login(inp);
+    const user = await login(inp);
     req.session.user = user; // add to session
     return res.json(user);
   } catch (err) {
@@ -35,7 +44,7 @@ router.post('/signup', async (req, res) => {
     skipVerification: req.body.skipVerification,
   };
   try {
-    const user = await service.signup(inp);
+    const user = await signup(inp);
     if (user.id) req.session.user = user; // add to session
     return res.json(user);
   } catch (err) {
@@ -46,7 +55,7 @@ router.post('/signup', async (req, res) => {
 router.get('/verify', async (req, res) => {
   const inp = { token: req.query.token };
   try {
-    const user = await service.evalVerify(inp);
+    const user = await evalVerify(inp);
     req.session.user = user; // add to session
     return res.redirect('/verified');
   } catch (err) {
@@ -59,7 +68,7 @@ router.post('/forgot', async (req, res) => {
     email: req.body.email,
   };
   try {
-    const done = await service.genPassReset(inp);
+    const done = await genPassReset(inp);
     return res.json({ resetLinkSent: done });
   } catch (err) {
     return errorHandler(res, err);
@@ -73,7 +82,7 @@ router.post('/resetPasswordToken', async (req, res) => {
     confirmPassword: req.body.confirmPassword,
   };
   try {
-    await service.evalPassReset(inp);
+    await evalPassReset(inp);
     req.session.destroy(() => {
       res.redirect('/login');
     });
@@ -83,7 +92,7 @@ router.post('/resetPasswordToken', async (req, res) => {
   }
 });
 
-router.get('/account', authenticate, routeHandler(service.getAccount));
+router.get('/account', authenticate, routeHandler(getAccount));
 
 router.delete('/logout', authenticate, (req, res) => {
   req.session.destroy(() => {
@@ -91,4 +100,4 @@ router.delete('/logout', authenticate, (req, res) => {
   });
 });
 
-module.exports = router;
+export default router;

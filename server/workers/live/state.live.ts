@@ -7,4 +7,4 @@ function liveState() {
 
 const out = liveState();
 
-module.exports = out;
+export default out;

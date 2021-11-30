@@ -1,12 +1,12 @@
 /* eslint-disable no-console */
-const WebSocket = require('ws');
-const axios = require('axios');
+import WebSocket from 'ws'
+import axios from 'axios'
 
 const contestID = 2;
 
-const createOffer = require('../../features/offer/services/createOffer.service');
-const { rediskeys, client } = require('../../db/redis');
-const config = require('../../config');
+import createOffer from '../../features/offer/services/createOffer.service'
+import { rediskeys, client } from '../../db/redis'
+import config from '../../config'
 
 const tests = [
   'offer1',

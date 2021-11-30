@@ -1,7 +1,7 @@
-const sequelize = require('../db');
-const { client, subscriber } = require('../db/redis');
+import sequelize from '../db'
+import { client, subscriber } from '../db/redis'
 
-module.exports = async () => {
+export default async () => {
   sequelize.close();
   await client.quit();
   await subscriber.quit();

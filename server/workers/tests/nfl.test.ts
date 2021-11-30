@@ -1,4 +1,4 @@
-const { SumPoints } = require('../nfl/dict.nfl');
+import { SumPoints } from '../nfl/dict.nfl'
 
 describe('NFL worker tests', () => {
   test('Test point calculation', () => {

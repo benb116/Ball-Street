@@ -1,4 +1,4 @@
-module.exports = function model(sequelize, DataTypes) {
+export default function model(sequelize, DataTypes) {
   return sequelize.define('PriceHistory', {
     lastTradePrice: { // What was the actual price that was traded at
       type: DataTypes.INTEGER,

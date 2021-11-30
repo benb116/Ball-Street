@@ -1,10 +1,10 @@
-const Joi = require('joi');
+import Joi from 'joi'
 
-const u = require('../../util/util');
+import { validate } from '../../util/util'
 
-const { Entry } = require('../../../models');
-const { errorHandler } = require('../../util/util.service');
-const { validators } = require('../../util/util.schema');
+import { Entry } from '../../../models'
+import { errorHandler } from '../../util/util.service'
+import validators from '../../util/util.schema'
 
 const schema = Joi.object({
   user: validators.user,
@@ -16,7 +16,7 @@ const schema = Joi.object({
 
 // Get info for a specific contest
 function getContestEntries(req) {
-  const value = u.validate(req, schema);
+  const value = validate(req, schema);
 
   return Entry.findAll({ where: { ContestId: value.params.contestID } })
     .catch(errorHandler({
@@ -24,4 +24,4 @@ function getContestEntries(req) {
     }));
 }
 
-module.exports = getContestEntries;
+export default getContestEntries;

@@ -1,10 +1,10 @@
-const Joi = require('joi');
+import Joi from 'joi'
 
-const u = require('../../util/util');
-const { validators } = require('../../util/util.schema');
+import { dv, tobj, validate, uError } from '../../util/util'
+import validators from '../../util/util.schema'
 
-const { Offer } = require('../../../models');
-const { errorHandler } = require('../../util/util.service');
+import { Offer } from '../../../models'
+import { errorHandler } from '../../util/util.service'
 
 const schema = Joi.object({
   user: validators.user,
@@ -15,7 +15,7 @@ const schema = Joi.object({
 });
 
 function getUserOffers(req) {
-  const value = u.validate(req, schema);
+  const value = validate(req, schema);
   return Offer.findAll({
     where: {
       UserId: value.user,
@@ -23,10 +23,10 @@ function getUserOffers(req) {
       filled: false,
       cancelled: false,
     },
-  }).then(u.dv)
+  }).then(dv)
     .catch(errorHandler({
       default: ['Cannot retrieve offers', 500],
     }));
 }
 
-module.exports = getUserOffers;
+export default getUserOffers;

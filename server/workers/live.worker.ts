@@ -1,17 +1,17 @@
 // Websocket server worker
 // Subscribe to redis updates and push out to clients
 
-const WebSocket = require('ws');
-const http = require('http');
-const express = require('express');
+import WebSocket from 'ws'
+import http from 'http'
+import express from 'express'
 
-const { client, subscriber, rediskeys } = require('../db/redis');
-const session = require('../middleware/session');
-const liveState = require('./live/state.live'); // Data stored in memory
-const logger = require('../utilities/logger');
+import { client, subscriber, rediskeys } from '../db/redis'
+import session from '../middleware/session'
+import liveState from './live/state.live' // Data stored in memory
+import logger from '../utilities/logger'
 
 // All channels that may be used
-const channelMap = require('./live/channels.live');
+import channelMap from './live/channels.live'
 
 // Set up redis subscribers
 (async () => {

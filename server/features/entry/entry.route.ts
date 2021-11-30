@@ -1,18 +1,24 @@
-const router = require('express').Router({ mergeParams: true });
+import * as express from 'express'
 
-const entry = require('./entry.service');
-const { routeHandler } = require('../util/util.route');
+const router = express.Router({ mergeParams: true });
+import routeHandler from '../util/util.route'
+
+import getContestEntries from './services/getContestEntries.service'
+import getEntry from './services/getEntry.service'
+import createEntry from './services/createEntry.service'
+import reorderRoster from './services/reorderRoster.service'
+
 
 // Get all entries in a contest
-router.get('/entries', routeHandler(entry.getContestEntries));
+router.get('/entries', routeHandler(getContestEntries));
 
 // Get a user's entry in a contest
-router.get('/entry', routeHandler(entry.getEntry));
+router.get('/entry', routeHandler(getEntry));
 
 // Create a user's entry in a contest
-router.post('/entry', routeHandler(entry.createEntry));
+router.post('/entry', routeHandler(createEntry));
 
 // Reorder a roster in an entry
-router.put('/entry', routeHandler(entry.reorderRoster));
+router.put('/entry', routeHandler(reorderRoster));
 
-module.exports = router;
+export default router;

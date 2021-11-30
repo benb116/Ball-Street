@@ -1,9 +1,9 @@
-const u = require('../../util/util');
+import { dv } from '../../util/util'
 
-const { Contest } = require('../../../models');
+import { Contest } from '../../../models'
 
 function getContests() {
-  return Contest.findAll().then(u.dv);
+  return Contest.findAll().then(dv);
 }
 
-module.exports = getContests;
+export default getContests;

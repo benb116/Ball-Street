@@ -1,4 +1,4 @@
-const sequelize = require('../db');
+import sequelize from '../db'
 
 afterAll(() => {
   sequelize.close();

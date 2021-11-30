@@ -1,9 +1,9 @@
-const Joi = require('joi');
+import Joi from 'joi'
 
-const u = require('../../util/util');
-const { validators } = require('../../util/util.schema');
+import { dv, tobj, validate, uError } from '../../util/util'
+import validators from '../../util/util.schema'
 
-const { User } = require('../../../models');
+import { User } from '../../../models'
 
 const schema = Joi.object({
   user: validators.user,
@@ -12,10 +12,10 @@ const schema = Joi.object({
 });
 
 async function getAccount(req) {
-  const value = u.validate(req, schema);
-  const theuser = await User.findByPk(value.user).then(u.dv);
-  if (!theuser) { u.Error('User not found', 404); }
+  const value = validate(req, schema);
+  const theuser = await User.findByPk(value.user).then(dv);
+  if (!theuser) { uError('User not found', 404); }
   return theuser;
 }
 
-module.exports = getAccount;
+export default getAccount;

@@ -1,8 +1,8 @@
-const { Op } = require('sequelize');
+import { Op } from 'sequelize'
 
-const u = require('../../util/util');
+import { dv, tobj, validate, uError } from '../../util/util'
 
-const { Entry, Contest, User } = require('../../../models');
+import { Entry, Contest, User } from '../../../models'
 
 async function getWeekEntries() {
   const weekcontests = await Contest.findAll({
@@ -10,7 +10,7 @@ async function getWeekEntries() {
       nflweek: Number(process.env.WEEK),
     },
   })
-    .then(u.dv)
+    .then(dv)
     .then((contests) => contests.map((c) => c.id));
 
   return Entry.findAll({
@@ -23,7 +23,7 @@ async function getWeekEntries() {
       model: User,
     },
   })
-    .then(u.dv);
+    .then(dv);
 }
 
-module.exports = getWeekEntries;
+export default getWeekEntries;

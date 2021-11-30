@@ -1,14 +1,14 @@
 // Leader worker
 // Calculates live leaderboards
 
-const config = require('../config');
-const u = require('../features/util/util');
+import config from '../config'
+import { dv } from '../features/util/util'
 
-const { rediskeys, client } = require('../db/redis');
-const getNFLPlayers = require('../features/nflplayer/services/getNFLPlayers.service');
-const getWeekEntries = require('../features/entry/services/getWeekEntries.service');
-const { NFLGame } = require('../models');
-const leaderUpdate = require('./live/channels/leaderUpdate.channel');
+import { rediskeys, client } from '../db/redis'
+import getNFLPlayers from '../features/nflplayer/services/getNFLPlayers.service'
+import getWeekEntries from '../features/entry/services/getWeekEntries.service'
+import { NFLGame } from '../models'
+import leaderUpdate from './live/channels/leaderUpdate.channel'
 
 const { projpriceHash, leaderHash } = rediskeys;
 const rosterPositions = Object.keys(config.Roster);
@@ -40,7 +40,7 @@ let phaseHold = false;
 
 async function calculateLeaderboard() {
   // Get current game phases (used to determine which point value to use)
-  const gamelist = await NFLGame.findAll({ where: { week: Number(process.env.WEEK) } }).then(u.dv);
+  const gamelist = await NFLGame.findAll({ where: { week: Number(process.env.WEEK) } }).then(dv);
   // Are all games in pre or post phase
   const newphaseHold = gamelist.reduce((acc, cur) => (acc && cur.phase !== 'mid'), true);
   // If yes, do one more calc then hold;

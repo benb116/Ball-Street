@@ -1,18 +1,24 @@
-const router = require('express').Router({ mergeParams: true });
+import * as express from 'express'
 
-const nflplayer = require('./nflplayer.service');
-const { routeHandler } = require('../util/util.route');
+const router = express.Router({ mergeParams: true });
+import routeHandler from '../util/util.route'
+
+import getNFLPlayerOfferSummary from './services/getNFLPlayerOfferSummary.service'
+import getNFLPlayerTradeVolume from './services/getNFLPlayerTradeVolume.service'
+import getNFLPlayerNumAdds from './services/getNFLPlayerNumAdds.service'
+import getNFLPlayerPriceHistory from './services/getNFLPlayerPriceHistory.service'
+
 
 // Get a player's orderbook in a contest
-router.get('/players/:nflplayerID/orderbook', routeHandler(nflplayer.getNFLPlayerOfferSummary));
+router.get('/players/:nflplayerID/orderbook', routeHandler(getNFLPlayerOfferSummary));
 
 // Get a player's trade statistics in a contest
-router.get('/players/:nflplayerID/tradestats', routeHandler(nflplayer.getNFLPlayerTradeVolume));
+router.get('/players/:nflplayerID/tradestats', routeHandler(getNFLPlayerTradeVolume));
 
 // Get a player's add statistics in a contest
-router.get('/players/:nflplayerID/addstats', routeHandler(nflplayer.getNFLPlayerNumAdds));
+router.get('/players/:nflplayerID/addstats', routeHandler(getNFLPlayerNumAdds));
 
 // Get a player's trade price history in a contest
-router.get('/players/:nflplayerID/pricehistory', routeHandler(nflplayer.getNFLPlayerPriceHistory));
+router.get('/players/:nflplayerID/pricehistory', routeHandler(getNFLPlayerPriceHistory));
 
-module.exports = router;
+export default router;

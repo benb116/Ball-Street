@@ -1,6 +1,6 @@
-const Queue = require('bull');
+import Queue from 'bull'
 
-const { queueOptions } = require('../../../db/redis');
+import { queueOptions } from '../../../db/redis'
 
 const offerQueue = new Queue('offer-queue', queueOptions);
 const protectedQueue = new Queue('protected-queue', queueOptions);
@@ -12,4 +12,4 @@ async function getOfferBacklog() {
   ]);
 }
 
-module.exports = getOfferBacklog;
+export default getOfferBacklog;

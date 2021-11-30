@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
-const WebSocket = require('ws');
-const axios = require('axios');
-const config = require('../../config');
+import WebSocket from 'ws'
+import axios from 'axios'
+import config from '../../config'
 
 const contestID = 2;
 

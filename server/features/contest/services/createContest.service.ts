@@ -1,10 +1,10 @@
-const Joi = require('joi');
+import Joi from 'joi'
 
-const u = require('../../util/util');
+import { validate } from '../../util/util'
 
-const { Contest } = require('../../../models');
-const { validators } = require('../../util/util.schema');
-const { errorHandler } = require('../../util/util.service');
+import { Contest } from '../../../models'
+import { errorHandler } from '../../util/util.service'
+import validators from '../../util/util.schema'
 
 const schema = Joi.object({
   user: validators.user,
@@ -26,7 +26,7 @@ const schema = Joi.object({
 
 // Get info for a specific contest
 async function createContest(req) {
-  const value = u.validate(req, schema);
+  const value = validate(req, schema);
   return Contest.create({
     name: value.body.name,
     nflweek: Number(process.env.WEEK),
@@ -36,4 +36,4 @@ async function createContest(req) {
   }));
 }
 
-module.exports = createContest;
+export default createContest;

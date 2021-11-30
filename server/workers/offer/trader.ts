@@ -2,20 +2,22 @@
 // Used by offer worker
 // Try to fill a pair of offers
 
-const u = require('../../features/util/util');
+import { dv, tobj } from '../../features/util/util'
 
-const sequelize = require('../../db');
-const { Offer, Trade, PriceHistory } = require('../../models');
-// const { Transaction } = require('sequelize');
+import sequelize from '../../db'
+import { Offer, Trade, PriceHistory } from '../../models'
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
 };
 
-const { rediskeys, client } = require('../../db/redis');
+import { rediskeys, client } from '../../db/redis'
 
-const service = require('../../features/trade/trade.service');
-const logger = require('../../utilities/logger');
-const { offerFilled, priceUpdate, offerCancelled } = require('../live/channels.live');
+import logger from '../../utilities/logger'
+import channels from '../live/channels.live'
+import tradeAdd from '../../features/trade/services/tradeAdd.service';
+import tradeDrop from '../../features/trade/services/tradeDrop.service';
+
+const { offerFilled, priceUpdate, offerCancelled } = channels;
 
 // Try to fill the offers or return which one is done
 async function fillOffers(bidid, askid, price) {
@@ -32,11 +34,11 @@ async function attemptFill(t, bidid, askid, tprice) {
   };
   // Check that both offers are valid
   const [bidoffer, askoffer] = await Promise.all([
-    Offer.findByPk(bidid, u.tobj(t)),
-    Offer.findByPk(askid, u.tobj(t)),
+    Offer.findByPk(bidid, tobj(t)),
+    Offer.findByPk(askid, tobj(t)),
   ]);
-  const boffer = u.dv(bidoffer);
-  const aoffer = u.dv(askoffer);
+  const boffer = dv(bidoffer);
+  const aoffer = dv(askoffer);
 
   resp.bid = (boffer || {});
   resp.ask = (aoffer || {});
@@ -81,13 +83,13 @@ async function attemptFill(t, bidid, askid, tprice) {
   };
 
   // Try to fill both
-  const bidProm = service.tradeAdd(bidreq, t)
+  const bidProm = tradeAdd(bidreq, t)
     .catch((err) => {
       logger.warn(`Offer could not be filled: ${boffer.id} - ${err.message}`);
       return Offer.destroy({ where: { id: boffer.id } }, { transaction: t })
         .then(() => offerCancelled.pub(boffer.UserId, boffer.id)).finally(() => false);
     });
-  const askProm = service.tradeDrop(askreq, t)
+  const askProm = tradeDrop(askreq, t)
     .catch((err) => {
       logger.warn(`Offer could not be filled: ${aoffer.id} - ${err.message}`);
       return Offer.destroy({ where: { id: aoffer.id } }, { transaction: t })
@@ -118,7 +120,7 @@ async function attemptFill(t, bidid, askid, tprice) {
     bidId: boffer.id,
     askId: aoffer.id,
     price,
-  }, u.tobj(t));
+  }, tobj(t));
 
   const contestID = boffer.ContestId;
 
@@ -126,7 +128,7 @@ async function attemptFill(t, bidid, askid, tprice) {
     ContestId: contestID,
     NFLPlayerId: nflplayerID,
     lastTradePrice: price,
-  }, u.tobj(t));
+  }, tobj(t));
 
   await Promise.all([createTrade, createHistory]);
 
@@ -141,7 +143,4 @@ async function attemptFill(t, bidid, askid, tprice) {
   };
 }
 
-module.exports = {
-  fillOffers,
-  attemptFill,
-};
+export default fillOffers

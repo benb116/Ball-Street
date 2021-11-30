@@ -1,7 +1,5 @@
-const dict = {};
-
 // Stat categories in the Yahoo file and their letters
-dict.yahooStatMap = {
+export const yahooStatMap = {
   r: 'rushing',
   w: 'receiving',
   q: 'passing',
@@ -13,10 +11,10 @@ dict.yahooStatMap = {
   f: 'defense',
   // t: 'offense total',
 };
-dict.validStatLetters = Object.keys(dict.yahooStatMap);
+export const validStatLetters = Object.keys(dict.yahooStatMap);
 
 // Dot product coefficients for stats in each category
-dict.multiplierTable = {
+export const multiplierTable = {
   q: [0, 0, 0, 0.04, 4, -1],
   r: [0, 0.1, 6],
   w: [0.5, 0.1, 6],
@@ -26,7 +24,7 @@ dict.multiplierTable = {
   f: [0, 1, 2, 2, 6, 2, 2, 0, 6, 0, 0, 0, 0, 0, 2, 0],
 };
 
-dict.teammap = {
+export const teammap = {
   ARI: 22,
   ATL: 1,
   BAL: 33,
@@ -62,7 +60,7 @@ dict.teammap = {
 };
 
 // Calculate the point total from a player's stats
-dict.SumPoints = function sumpoints(pstats) {
+export function SumPoints(pstats) {
   const categories = Object.keys(pstats);
   const rawpoints = categories.reduce((accPoints, curCat) => {
     let newPoints = accPoints;
@@ -97,5 +95,3 @@ dict.SumPoints = function sumpoints(pstats) {
   }, 0);
   return Math.round(rawpoints * 100);
 };
-
-module.exports = dict;

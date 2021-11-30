@@ -1,8 +1,8 @@
-const service = require('../services/genVerify.service');
-const { ErrorTest } = require('../../util/util');
+import service from '../services/genVerify.service'
+import { ErrorTest } from '../../util/util'
 
-const { client } = require('../../../db/redis');
-const config = require('../../../config');
+import { client } from '../../../db/redis'
+import config from '../../../config'
 
 describe('genVerify service', () => {
   test('Valid request returns confirmation and redis key', async () => {

@@ -1,5 +1,5 @@
-const { client } = require('../../../db/redis');
-const { sendToUser } = require('../socket.live');
+import { client } from '../../../db/redis'
+import { sendToUser } from '../socket.live'
 
 const offerFilled = {};
 
@@ -13,4 +13,4 @@ offerFilled.sub = function sub(message) {
   sendToUser(userID, { event: 'offerFilled', offerID });
 };
 
-module.exports = offerFilled;
+export default offerFilled;

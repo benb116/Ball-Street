@@ -2,18 +2,18 @@
 
 const { createClient } = require('redis');
 
-const REDIS_HOST = (process.env.REDIS_HOST || 'localhost');
-const REDIS_PORT = (process.env.REDIS_PORT || 6379);
+export const REDIS_HOST = (process.env.REDIS_HOST || 'localhost');
+export const REDIS_PORT = (process.env.REDIS_PORT || 6379);
 
 const connObj = {
   url: `redis://${REDIS_HOST}:${REDIS_PORT}`,
   socket: { connectTimeout: 10000 },
 };
-const client = createClient(connObj);
+export const client = createClient(connObj);
 client.connect();
-const subscriber = client.duplicate();
+export const subscriber = client.duplicate();
 
-const queueOptions = { redis: { port: REDIS_PORT, host: REDIS_HOST } };
+export const queueOptions = { redis: { port: REDIS_PORT, host: REDIS_HOST } };
 
 // Define redis keys for various entries
 function leaderHash(contestID) {
@@ -56,7 +56,7 @@ function passReset(rand) {
   return `passReset:${rand}`;
 }
 
-const rediskeys = {
+export const rediskeys = {
   bestbidHash,
   bestaskHash,
   lasttradeHash,
@@ -67,13 +67,4 @@ const rediskeys = {
   currentWeek,
   emailVer,
   passReset,
-};
-
-module.exports = {
-  client,
-  subscriber,
-  queueOptions,
-  rediskeys,
-  REDIS_HOST,
-  REDIS_PORT,
 };

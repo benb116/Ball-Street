@@ -1,8 +1,9 @@
 // This outputs the common sequelize object that is used for DB calls and transactions
 // Can set app-wide DB settings
 
-const { Sequelize, Transaction } = require('sequelize');
-const logger = require('../utilities/logger');
+import { Sequelize, Transaction } from 'sequelize'
+import logger from '../utilities/logger'
+import sec from '../secret'
 
 let {
   DB_USER,
@@ -25,12 +26,11 @@ const dbOptions = {
 // since test doesn't run within docker, doesn't have env vars
 if (process.env.NODE_ENV === 'test' || !process.env.NODE_ENV) {
   // eslint-disable-next-line global-require
-  const sec = require('../secret');
-  DB_USER = sec.db.user;
-  DB_PASS = sec.db.pass;
-  DB_HOST = sec.db.host;
-  DB_PORT = sec.db.port;
-  DB_NAME = sec.db.name;
+  DB_USER = sec.DB_USER;
+  DB_PASS = sec.DB_PASS;
+  DB_HOST = sec.DB_HOST;
+  DB_PORT = sec.DB_PORT;
+  DB_NAME = sec.DB_NAME;
 } else {
   logger.info(`DB connection settings - ${DB_HOST}:${DB_PORT}/${DB_NAME}`);
 }
@@ -52,4 +52,4 @@ async function testDB() {
 
 testDB();
 
-module.exports = sequelize;
+export default sequelize;

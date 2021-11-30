@@ -1,9 +1,9 @@
-const Joi = require('joi');
+import Joi from 'joi'
 
-const u = require('../../util/util');
+import { dv, validate } from '../../util/util'
 
-const { validators } = require('../../util/util.schema');
-const { Offer } = require('../../../models');
+import { Offer } from '../../../models'
+import validators from '../../util/util.schema'
 
 const schema = Joi.object({
   user: validators.user,
@@ -15,14 +15,14 @@ const schema = Joi.object({
 });
 
 function getNFLPlayerTradeVolume(req) {
-  const value = u.validate(req, schema);
+  const value = validate(req, schema);
 
   return Offer.count({
     where: {
       ContestId: value.params.contestID,
       NFLPlayerId: value.params.nflplayerID,
     },
-  }).then(u.dv).then((out) => out / 2);
+  }).then(dv).then((out) => out / 2);
 }
 
-module.exports = getNFLPlayerTradeVolume;
+export default getNFLPlayerTradeVolume;

@@ -1,11 +1,11 @@
-const bcrypt = require('bcrypt');
-const Joi = require('joi');
+import bcrypt from 'bcrypt'
+import Joi from 'joi'
 
-const u = require('../../util/util');
-const { rediskeys, client } = require('../../../db/redis');
-const config = require('../../../config');
-const { User } = require('../../../models');
-const { validators } = require('../../util/util.schema');
+import { dv, tobj, validate, uError } from '../../util/util'
+import { rediskeys, client } from '../../../db/redis'
+import  from '../../../config'
+import { User } from '../../../models'
+import validators from '../../util/util.schema'
 
 const schema = Joi.object({
   token: Joi.string().length(config.verificationTokenLength).required().messages({
@@ -14,22 +14,22 @@ const schema = Joi.object({
     'any.required': 'Token is required',
   }),
   password: validators.password,
-  confirmPassword: validators.password,
+  confirmPassword: validators.password,config
 });
 
 async function evalPassReset(req) {
-  const { token, password, confirmPassword } = u.validate(req, schema);
-  if (u.OnCompare(password, confirmPassword)) u.Error('Passwords do not match', 403);
+  const { token, password, confirmPassword } = validate(req, schema);
+  if (u.OnCompare(password, confirmPassword)) uError('Passwords do not match', 403);
   const email = await client.GET(rediskeys.passReset(token));
-  if (!email) u.Error('Reset key could not be found, please try again', 404);
+  if (!email) uError('Reset key could not be found, please try again', 404);
 
   client.DEL(rediskeys.passReset(token));
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash(password, salt);
   const theuser = await User.update({ pwHash: hash }, { where: { email } });
-  if (!theuser) u.Error('Password could not be changed', 404);
+  if (!theuser) uError('Password could not be changed', 404);
   // Send email telling user their password has been reset
   return true;
 }
 
-module.exports = evalPassReset;
+export default evalPassReset;

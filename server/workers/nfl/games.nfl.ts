@@ -1,14 +1,14 @@
-const axios = require('axios');
-const logger = require('../../utilities/logger');
-const setPhase = require('./phase.nfl');
-const state = require('./state.nfl');
-const { NFLGame } = require('../../models');
-const dict = require('./dict.nfl');
+import axios from 'axios'
+import logger from '../../utilities/logger'
+import setPhase from './phase.nfl'
+import state from './state.nfl'
+import { NFLGame } from '../../models'
+import { teammap } from './dict.nfl'
 
-const teamIDs = Object.values(dict.teammap);
+const teamIDs = Object.values(teammap);
 
 // Determine all games and their phases
-function GameState() {
+export function GameState() {
   return axios.get('https://relay-stream.sports.yahoo.com/nfl/games.txt')
     .then((raw) => raw.data.split('\n'))
     .then((rawlines) => rawlines.filter((l) => l[0] === 'g'))
@@ -92,7 +92,7 @@ function GameState() {
 }
 
 // Given a phasemap, set phases in DB or schedule change
-async function setGamePhases(phasemap) {
+export async function setGamePhases(phasemap) {
   const teams = Object.keys(phasemap);
   for (let i = 0; i < teams.length; i++) {
     // Do these in series to avoid overloading DB connections
@@ -119,7 +119,7 @@ async function setGamePhases(phasemap) {
 
 // Pull game info and update timefractions
 // timefrac is time elapsed / total game time for use in live projections
-function PullAllGames() {
+export function PullAllGames() {
   return axios.get('https://relay-stream.sports.yahoo.com/nfl/games.txt')
     .then((raw) => raw.data.split('\n'))
     .then((rawlines) => rawlines.filter((l) => l[0] === 'g'))
@@ -169,9 +169,3 @@ function PullAllGames() {
       return [];
     });
 }
-
-module.exports = {
-  GameState,
-  setGamePhases,
-  PullAllGames,
-};

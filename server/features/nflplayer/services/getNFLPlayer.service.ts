@@ -1,9 +1,9 @@
-const Joi = require('joi');
+import Joi from 'joi'
 
-const u = require('../../util/util');
-const { validators } = require('../../util/util.schema');
+import { dv, tobj, validate, uError } from '../../util/util'
+import validators from '../../util/util.schema'
 
-const { NFLPlayer } = require('../../../models');
+import { NFLPlayer } from '../../../models'
 
 const schema = Joi.object({
   user: validators.user,
@@ -14,16 +14,16 @@ const schema = Joi.object({
 });
 
 async function getNFLPlayer(req) {
-  const value = u.validate(req, schema);
+  const value = validate(req, schema);
 
   const theplayer = await NFLPlayer.findOne({
     where: {
       id: value.params.nflplayerID,
       active: true,
     },
-  }).then(u.dv);
-  if (!theplayer) { u.Error('No player found', 404); }
+  }).then(dv);
+  if (!theplayer) { uError('No player found', 404); }
   return theplayer;
 }
 
-module.exports = getNFLPlayer;
+export default getNFLPlayer;

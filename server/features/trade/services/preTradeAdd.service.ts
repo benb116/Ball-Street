@@ -1,12 +1,12 @@
-const Joi = require('joi');
+import Joi from 'joi'
 
-const sequelize = require('../../../db');
+import sequelize from '../../../db'
 
-const u = require('../../util/util');
-const { validators } = require('../../util/util.schema');
-const { errorHandler } = require('../../util/util.service');
+import { dv, tobj, validate, uError } from '../../util/util'
+import validators from '../../util/util.schema'
+import { errorHandler } from '../../util/util.service'
 
-const tradeAdd = require('./tradeAdd.service');
+import tradeAdd from './tradeAdd.service'
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
@@ -30,7 +30,7 @@ const schema = Joi.object({
 
 // Try to add within a transaction, errors will rollback
 async function preTradeAdd(req) {
-  const value = u.validate(req, schema);
+  const value = validate(req, schema);
 
   return sequelize.transaction(isoOption, async (t) => tradeAdd(value, t))
     .catch(errorHandler({
@@ -38,4 +38,4 @@ async function preTradeAdd(req) {
     }));
 }
 
-module.exports = preTradeAdd;
+export default preTradeAdd;

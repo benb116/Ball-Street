@@ -1,15 +1,15 @@
-const axios = require('axios');
-const getNFLPlayers = require('../features/nflplayer/services/getNFLPlayers.service');
-const { rediskeys, client } = require('../db/redis');
+import axios from 'axios'
+import getNFLPlayers from '../features/nflplayer/services/getNFLPlayers.service'
+import { rediskeys, client } from '../db/redis'
 
-const dict = require('./nfl/dict.nfl');
-const state = require('./nfl/state.nfl');
-const logger = require('../utilities/logger');
-const { GameState, PullAllGames, setGamePhases } = require('./nfl/games.nfl');
-const { PullAllStats, UpdateStats } = require('./nfl/stats.nfl');
-const scrape = require('../db/playerscraper');
-const statUpdate = require('./live/channels/statUpdate.channel');
-const PullLatestInjuries = require('./nfl/injury.nfl');
+import { SumPoints } from './nfl/dict.nfl'
+import state from './nfl/state.nfl'
+import logger from '../utilities/logger'
+import { GameState, PullAllGames, setGamePhases } from './nfl/games.nfl'
+import { PullAllStats, UpdateStats } from './nfl/stats.nfl'
+import scrape from '../db/playerscraper'
+import statUpdate from './live/channels/statUpdate.channel'
+import PullLatestInjuries from './nfl/injury.nfl'
 
 const checkInterval = 10000;
 
@@ -103,7 +103,7 @@ function CalcPlayer(playerid) {
   // Get a player's stat object
   const stats = (state.statObj[playerid] || {});
   // Calculate points
-  const statpoints = dict.SumPoints(stats);
+  const statpoints = SumPoints(stats);
   // Estimate projection
   const projpoints = EstimateProjection(playerid, statpoints);
   return [playerid, Math.round(statpoints), Math.round(projpoints)];

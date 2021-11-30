@@ -1,9 +1,9 @@
-const Joi = require('joi');
+import Joi from 'joi'
 
-const u = require('../../util/util');
-const { rediskeys, client } = require('../../../db/redis');
-const config = require('../../../config');
-const { User } = require('../../../models');
+import { dv, tobj, validate, uError } from '../../util/util'
+import { rediskeys, client } from '../../../db/redis'
+import config from '../../../config'
+import { User } from '../../../models'
 
 const schema = Joi.object({
   token: Joi.string().length(config.verificationTokenLength).required().messages({
@@ -14,15 +14,15 @@ const schema = Joi.object({
 });
 
 async function evalVerify(req) {
-  const { token } = u.validate(req, schema);
+  const { token } = validate(req, schema);
   const email = await client.GET(rediskeys.emailVer(token));
-  if (!email) u.Error('Email could not be verified', 404);
+  if (!email) uError('Email could not be verified', 404);
   client.DEL(rediskeys.emailVer(token));
   const user = await User.update({ verified: true }, {
     where: { email }, returning: true, plain: true,
   });
-  const theuser = u.dv(user[1]);
+  const theuser = dv(user[1]);
   return { id: theuser.id, email: theuser.email, name: theuser.name };
 }
 
-module.exports = evalVerify;
+export default evalVerify;

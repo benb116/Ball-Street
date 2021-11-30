@@ -1,28 +1,38 @@
 // Route controller for the API
 // Does not include user auth routes
 
-const router = require('express').Router();
-const contestsRouter = require('express').Router({ mergeParams: true });
-const contestRouter = require('express').Router({ mergeParams: true });
+import * as express from 'express'
 
-const authenticate = require('../../middleware/authenticate');
+const router = express.Router();
+const contestsRouter = express.Router({ mergeParams: true });
+const thecontestRouter = express.Router({ mergeParams: true });
+
+import authenticate from '../../middleware/authenticate'
+
+import nfldataRouter from '../../features/nflplayer/nfldata.route'
+import entryRouter from '../../features/entry/entry.route'
+import offerRouter from '../../features/offer/offer.route'
+import tradeRouter from '../../features/trade/trade.route'
+import nflplayerRouter from '../../features/nflplayer/nflplayer.route'
+import contestRouter from '../../features/contest/contest.route'
+
 
 // NFLdata is public
-router.use('/nfldata/', require('../../features/nflplayer/nfldata.route'));
+router.use('/nfldata/', nfldataRouter);
 
 // For all else, require authentication
 router.use(authenticate);
 
 // Stacked routers
 
-contestRouter.use('/:contestID/', require('../../features/entry/entry.route'));
-contestRouter.use('/:contestID/', require('../../features/offer/offer.route'));
-contestRouter.use('/:contestID/', require('../../features/trade/trade.route'));
-contestRouter.use('/:contestID/', require('../../features/nflplayer/nflplayer.route'));
+thecontestRouter.use('/:contestID/', entryRouter);
+thecontestRouter.use('/:contestID/', offerRouter);
+thecontestRouter.use('/:contestID/', tradeRouter);
+thecontestRouter.use('/:contestID/', nflplayerRouter);
 
+contestsRouter.use('/contests/', thecontestRouter);
 contestsRouter.use('/contests/', contestRouter);
-contestsRouter.use('/contests/', require('../../features/contest/contest.route'));
 
 router.use(contestsRouter);
 
-module.exports = router;
+export default router;

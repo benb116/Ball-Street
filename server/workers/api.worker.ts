@@ -1,10 +1,12 @@
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
+import * as express from 'express'
+import cors from 'cors'
+import helmet from 'helmet'
 
-const session = require('../middleware/session');
-const limiter = require('../middleware/limiter');
-const logger = require('../utilities/logger');
+import session from '../middleware/session'
+import limiter from '../middleware/limiter'
+import logger from '../utilities/logger'
+import userRoute from '../features/user/user.route'
+import apiRoute from './api/routes.api'
 
 const isProduction = process.env.NODE_ENV === 'production';
 logger.info(`NODE_ENV = ${process.env.NODE_ENV}, isProduction = ${isProduction}`);
@@ -21,8 +23,8 @@ if (isProduction) {
 
 // React proxy appends /app to the domain
 const routePrefix = (isProduction ? '' : '/app');
-app.use(`${routePrefix}/auth/`, require('../features/user/user.route'));
-app.use(`${routePrefix}/api/`, require('./api/routes.api'));
+app.use(`${routePrefix}/auth/`, userRoute);
+app.use(`${routePrefix}/api/`, apiRoute);
 
 const server = app.listen(process.env.PORT || 5000, () => {
   logger.info(`Listening on port ${server.address().port}`);

@@ -1,8 +1,8 @@
-const Sequelize = require('sequelize');
+import sequelize from 'sequelize'
 
-const config = require('../../config');
+import config from '../../config'
 
-module.exports = function model(sequelize, DataTypes) {
+export default function model(sequelize, DataTypes) {
   return sequelize.define('Offer', {
     id: {
       type: DataTypes.UUID,

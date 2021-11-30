@@ -1,10 +1,10 @@
-const { QueryTypes } = require('sequelize');
-const Joi = require('joi');
+import { QueryTypes } from 'sequelize'
+import Joi from 'joi'
 
-const u = require('../../util/util');
+import { validate } from '../../util/util'
 
-const sequelize = require('../../../db');
-const { validators } = require('../../util/util.schema');
+import sequelize from '../../../db'
+import validators from '../../util/util.schema'
 
 const schema = Joi.object({
   user: validators.user,
@@ -16,7 +16,7 @@ const schema = Joi.object({
 });
 
 function getNFLPlayerPriceHistory(req) {
-  const value = u.validate(req, schema);
+  const value = validate(req, schema);
 
   return sequelize.query(`
       SELECT time_bucket('1 minute', "createdAt") as "bucket",
@@ -38,4 +38,4 @@ function getNFLPlayerPriceHistory(req) {
   });
 }
 
-module.exports = getNFLPlayerPriceHistory;
+export default getNFLPlayerPriceHistory;

@@ -1,5 +1,5 @@
-const { client } = require('../../../db/redis');
-const { sendToAll } = require('../socket.live');
+import { client } from '../../../db/redis'
+import { sendToAll } from '../socket.live'
 
 const statUpdate = {};
 
@@ -11,4 +11,4 @@ statUpdate.sub = function sub(message) {
   sendToAll({ event: 'statUpdate', pricedata: JSON.parse(message) });
 };
 
-module.exports = statUpdate;
+export default statUpdate;

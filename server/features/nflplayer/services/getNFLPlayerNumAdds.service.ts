@@ -1,12 +1,12 @@
-const { Op } = require('sequelize');
-const Joi = require('joi');
+import { Op } from 'sequelize'
+import Joi from 'joi'
 
-const u = require('../../util/util');
-const config = require('../../../config');
+import { dv, validate } from '../../util/util'
+import config from '../../../config'
 
-const { validators } = require('../../util/util.schema');
+import validators from '../../util/util.schema'
 
-const { Entry } = require('../../../models');
+import { Entry } from '../../../models'
 
 const schema = Joi.object({
   user: validators.user,
@@ -18,14 +18,14 @@ const schema = Joi.object({
 });
 
 function getNFLPlayerNumAdds(req) {
-  const value = u.validate(req, schema);
+  const value = validate(req, schema);
 
   return Entry.count({
     where: {
       ContestId: value.params.contestID,
       [Op.or]: gen(value.params.nflplayerID),
     },
-  }).then(u.dv);
+  }).then(dv);
 
   function gen(_player) {
     const rpos = Object.keys(config.Roster);
@@ -37,4 +37,4 @@ function getNFLPlayerNumAdds(req) {
   }
 }
 
-module.exports = getNFLPlayerNumAdds;
+export default getNFLPlayerNumAdds;

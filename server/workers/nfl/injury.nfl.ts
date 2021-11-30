@@ -1,12 +1,12 @@
 // Get all injured players
 // Find changes and send out updates
 
-const axios = require('axios');
-const { NFLPlayer } = require('../../models');
-const injuryUpdate = require('../live/channels/injuryUpdate.channel');
-const state = require('./state.nfl');
+import axios from 'axios'
+import { NFLPlayer } from '../../models'
+import injuryUpdate from '../live/channels/injuryUpdate.channel'
+import state from './state.nfl'
 
-async function PullLatestInjuries() {
+export default async function PullLatestInjuries() {
   return axios.get('https://football.fantasysports.yahoo.com/f1/injuries')
     .then(Format)
     .then((arr) => arr.filter((e) => {
@@ -54,5 +54,3 @@ function Format(raw) {
     };
   });
 }
-
-module.exports = PullLatestInjuries;

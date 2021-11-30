@@ -1,12 +1,12 @@
-const bcrypt = require('bcrypt');
-const Joi = require('joi');
+import bcrypt from 'bcrypt'
+import Joi from 'joi'
 
-const u = require('../../util/util');
-const { validators } = require('../../util/util.schema');
+import { dv, tobj, validate, uError } from '../../util/util'
+import validators from '../../util/util.schema'
 
-const { User } = require('../../../models');
-const genVerify = require('./genVerify.service');
-const { errorHandler } = require('../../util/util.service');
+import { User } from '../../../models'
+import genVerify from './genVerify.service'
+import { errorHandler } from '../../util/util.service'
 
 const schema = Joi.object({
   name: Joi.string().required().messages({
@@ -21,14 +21,14 @@ const schema = Joi.object({
 async function signup(req) {
   const {
     name, email, password, skipVerification,
-  } = u.validate(req, schema);
+  } = validate(req, schema);
   try {
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);
     const theuser = await User.create({
       name, email, pwHash: hash, verified: skipVerification,
-    }).then(u.dv);
-    if (!theuser) { u.Error('User could not be created', 500); }
+    }).then(dv);
+    if (!theuser) { uError('User could not be created', 500); }
     if (!skipVerification) return genVerify({ email: theuser.email });
     return { id: theuser.id, email: theuser.email, name: theuser.name };
   } catch (err) {
@@ -40,4 +40,4 @@ async function signup(req) {
     return f(err);
   }
 }
-module.exports = signup;
+export default signup;

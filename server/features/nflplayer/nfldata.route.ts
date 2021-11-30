@@ -1,16 +1,19 @@
-const router = require('express').Router({ mergeParams: true });
+import * as express from 'express'
 
-const nflplayer = require('./nflplayer.service');
-const { routeHandler } = require('../util/util.route');
-const getNFLGames = require('../nflgame/services/getNFLGames.service');
+const router = express.Router({ mergeParams: true });
+import routeHandler from '../util/util.route'
+
+import getNFLGames from '../nflgame/services/getNFLGames.service'
+import getNFLPlayer from './services/getNFLPlayer.service'
+import getNFLPlayers from './services/getNFLPlayers.service'
 
 // Get all players
-router.get('/', routeHandler(nflplayer.getNFLPlayers, 10));
+router.get('/', routeHandler(getNFLPlayers, 10));
 
 // Get all games
 router.get('/games', routeHandler(getNFLGames));
 
 // Get a player's info
-router.get('/:nflplayerID', routeHandler(nflplayer.getNFLPlayer, 10));
+router.get('/:nflplayerID', routeHandler(getNFLPlayer, 10));
 
-module.exports = router;
+export default router;

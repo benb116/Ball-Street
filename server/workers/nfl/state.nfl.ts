@@ -10,4 +10,4 @@ function nflState() {
 
 const out = nflState();
 
-module.exports = out;
+export default out;

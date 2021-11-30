@@ -1,18 +1,17 @@
 // Set up the database with proper tables and NFL data
 
-const config = require('../config');
-const models = require('../models');
-const logger = require('../utilities/logger');
-const scrape = require('./playerscraper');
+import config from '../config'
+import {
+  NFLPosition,
+  NFLTeam,
+  NFLPlayer,
+} from '../models'
+import logger from '../utilities/logger'
+import scrape from './playerscraper'
 
 async function InitDB(sequelize) {
   logger.info('Initializing the database');
   await sequelize.sync({ force: true });
-  const {
-    NFLPosition,
-    NFLTeam,
-    NFLPlayer,
-  } = models;
 
   // Define NFL positions
   const nflpos = {
@@ -158,4 +157,4 @@ async function InitDB(sequelize) {
   await scrape(true);
 }
 
-module.exports = InitDB;
+export default InitDB;

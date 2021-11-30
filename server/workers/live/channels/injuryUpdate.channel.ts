@@ -1,5 +1,5 @@
-const { client } = require('../../../db/redis');
-const { sendToAll } = require('../socket.live');
+import { client } from '../../../db/redis'
+import { sendToAll } from '../socket.live'
 
 const injuryUpdate = {};
 
@@ -11,4 +11,4 @@ injuryUpdate.sub = function sub(message) {
   sendToAll({ event: 'injuryUpdate', update: JSON.parse(message) });
 };
 
-module.exports = injuryUpdate;
+export default injuryUpdate;

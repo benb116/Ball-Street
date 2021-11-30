@@ -1,23 +1,23 @@
-const cryptoRandomString = require('crypto-random-string');
-const Joi = require('joi');
+import cryptoRandomString from 'crypto-random-string'
+import Joi from 'joi'
 
-const u = require('../../util/util');
-const { validators } = require('../../util/util.schema');
-const { client, rediskeys } = require('../../../db/redis');
-const config = require('../../../config');
+import { dv, tobj, validate, uError } from '../../util/util'
+import validators from '../../util/util.schema'
+import { client, rediskeys } from '../../../db/redis'
+import config from '../../../config'
 
 const schema = Joi.object({
   email: validators.email,
 });
 
 async function genPassReset(req) {
-  const { email } = u.validate(req, schema);
+  const { email } = validate(req, schema);
   try {
     const rand = cryptoRandomString({ length: config.verificationTokenLength, type: 'url-safe' });
     await client.SET(rediskeys.passReset(rand), email, { EX: config.verificationTimeout * 60 });
     return await sendPassResetEmail(email, rand);
   } catch (err) {
-    return u.Error('genPassReset Error', 406);
+    return uError('genPassReset Error', 406);
   }
 }
 
@@ -26,4 +26,4 @@ async function sendPassResetEmail(email, rand) {
   return link;
 }
 
-module.exports = genPassReset;
+export default genPassReset;

@@ -1,4 +1,4 @@
-module.exports = function model(sequelize, DataTypes) {
+export default function model(sequelize, DataTypes) {
   return sequelize.define('Contest', {
     name: {
       type: DataTypes.STRING,

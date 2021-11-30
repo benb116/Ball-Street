@@ -1,7 +1,7 @@
-const liveState = require('../state.live'); // Data stored in memory
-const { sendToContests } = require('../socket.live');
+import liveState from '../state.live' // Data stored in memory
+import { sendToContests } from '../socket.live'
 
-const { rediskeys, client } = require('../../../db/redis');
+import { rediskeys, client } from '../../../db/redis'
 
 const { leaderHash } = rediskeys;
 
@@ -28,4 +28,4 @@ leaderUpdate.sub = async function sub() {
   sendToContests(leaderMsgMap);
 };
 
-module.exports = leaderUpdate;
+export default leaderUpdate;

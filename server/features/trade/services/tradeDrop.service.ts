@@ -1,10 +1,10 @@
-const Joi = require('joi');
+import Joi from 'joi'
 
-const { Op } = require('sequelize');
-const u = require('../../util/util');
-const { validators } = require('../../util/util.schema');
+import { Op } from 'sequelize'
+import { dv, tobj, validate, uError, isPlayerOnRoster, isOpenRoster } from '../../util/util'
+import validators from '../../util/util.schema'
 
-const { Entry, NFLPlayer, NFLGame } = require('../../../models');
+import { Entry, NFLPlayer, NFLGame } from '../../../models'
 
 const schema = Joi.object({
   user: validators.user,
@@ -23,7 +23,7 @@ const schema = Joi.object({
 });
 
 async function tradeDrop(req, t) {
-  const value = u.validate(req, schema);
+  const value = validate(req, schema);
 
   const theplayer = value.body.nflplayerID;
 
@@ -36,15 +36,15 @@ async function tradeDrop(req, t) {
     transaction: t,
     lock: t.LOCK.UPDATE,
   });
-  if (!theentry) { u.Error('No entry found', 404); }
+  if (!theentry) { uError('No entry found', 404); }
 
-  const isOnTeam = u.isPlayerOnRoster(theentry, theplayer);
-  if (!isOnTeam) { u.Error('Player is not on roster', 406); }
+  const isOnTeam = isPlayerOnRoster(theentry, theplayer);
+  if (!isOnTeam) { uError('Player is not on roster', 406); }
   theentry[isOnTeam] = null;
 
   // How much to add to point total
-  const playerdata = await NFLPlayer.findByPk(theplayer, { transaction: t }).then(u.dv);
-  if (!playerdata || !playerdata.active) { u.Error('Player not found', 404); }
+  const playerdata = await NFLPlayer.findByPk(theplayer, { transaction: t }).then(dv);
+  if (!playerdata || !playerdata.active) { uError('Player not found', 404); }
 
   // Get player price and position
   const gamedata = await NFLGame.findOne({
@@ -52,24 +52,24 @@ async function tradeDrop(req, t) {
       [Op.or]: [{ HomeId: playerdata.NFLTeamId }, { AwayId: playerdata.NFLTeamId }],
       week: Number(process.env.WEEK),
     },
-  }, { transaction: t }).then(u.dv);
-  if (!gamedata) u.Error('Could not find game data for this player', 404);
+  }, { transaction: t }).then(dv);
+  if (!gamedata) uError('Could not find game data for this player', 404);
 
   if (value.body.price) {
     if (gamedata.phase !== 'mid') {
-      u.Error("Can't trade before or after games", 406);
+      uError("Can't trade before or after games", 406);
     }
     theentry.pointtotal += value.body.price;
   } else {
     if (gamedata.phase !== 'pre') {
-      u.Error("Can't drop during or after games", 406);
+      uError("Can't drop during or after games", 406);
     }
     theentry.pointtotal += playerdata.preprice;
   }
 
   await theentry.save({ transaction: t });
 
-  return u.dv(theentry);
+  return dv(theentry);
 }
 
-module.exports = tradeDrop;
+export default tradeDrop;
