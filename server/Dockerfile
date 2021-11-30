@@ -27,7 +27,8 @@ RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 WORKDIR /home/node/app
 
 COPY --from=BUILD_IMAGE /home/node/app/ ./
+ENV PATH /home/node/app/node_modules/.bin:$PATH
 
-COPY --chown=node:node ./server ./
+COPY --chown=node:node ./server/dist ./
 
 ENTRYPOINT []
