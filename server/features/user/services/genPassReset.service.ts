@@ -21,7 +21,7 @@ async function genPassReset(req) {
   }
 }
 
-async function sendPassResetEmail(email, rand) {
+async function sendPassResetEmail(email: string, rand: string) {
   const link = `${config.CallbackURL}/resetPassword/${rand}`;
   return link;
 }

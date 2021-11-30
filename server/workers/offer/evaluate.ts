@@ -177,7 +177,7 @@ function evaluateFn(book) {
   return false;
 }
 
-function findMatcher(book, id) {
+function findMatcher(book, id: string) {
   return Object.keys(book.protMatchMap).find((key) => book.protMatchMap[key] === id);
 }
 
@@ -213,7 +213,7 @@ function bestUnmatchedAsk(book) {
 
 // Find the best unmatched protected ask offer available
 // If notMatcher is true, also make sure it is not matched to a pbid
-function bestUnmatchedProtAsk(book, notMatcher) {
+function bestUnmatchedProtAsk(book, notMatcher: boolean) {
   const paskPrices = Object.keys(book.pask).map(Number);
   let evalpask = book.bestpask;
   // It's possible that the "best" protected price has already been matched

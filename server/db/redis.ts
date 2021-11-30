@@ -3,7 +3,7 @@
 import { createClient } from 'redis';
 
 export const REDIS_HOST = (process.env.REDIS_HOST || 'localhost');
-export const REDIS_PORT = (process.env.REDIS_PORT || 6379);
+export const REDIS_PORT = (Number(process.env.REDIS_PORT) || 6379);
 
 const connObj = {
   url: `redis://${REDIS_HOST}:${REDIS_PORT}`,
@@ -16,19 +16,19 @@ export const subscriber = client.duplicate();
 export const queueOptions = { redis: { port: REDIS_PORT, host: REDIS_HOST } };
 
 // Define redis keys for various entries
-function leaderHash(contestID) {
+function leaderHash(contestID: number) {
   return `contest${contestID}:leaderboard`;
 }
 
-function bestbidHash(contestID) {
+function bestbidHash(contestID: number) {
   return `contest${contestID}:bestbid`;
 }
 
-function bestaskHash(contestID) {
+function bestaskHash(contestID: number) {
   return `contest${contestID}:bestask`;
 }
 
-function lasttradeHash(contestID) {
+function lasttradeHash(contestID: number) {
   return `contest${contestID}:lasttrade`;
 }
 
@@ -48,11 +48,11 @@ function currentWeek() {
   return 'currentWeek';
 }
 
-function emailVer(rand) {
+function emailVer(rand: string) {
   return `emailVer:${rand}`;
 }
 
-function passReset(rand) {
+function passReset(rand: string) {
   return `passReset:${rand}`;
 }
 

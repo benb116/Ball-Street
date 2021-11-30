@@ -61,8 +61,8 @@ async function repeat() {
 function createPTMap() {
   return axios.get('https://relay-stream.sports.yahoo.com/nfl/players.txt')
     .then((raw) => raw.data.split('\n'))
-    .then((rawlines) => rawlines.filter((l) => l[0] === 'm'))
-    .then((playerlines) => playerlines.reduce((acc, line) => {
+    .then((rawlines) => rawlines.filter((l: string) => l[0] === 'm'))
+    .then((playerlines) => playerlines.reduce((acc, line: string) => {
       const terms = line.split('|');
       const playerID = terms[1];
       const teamID = Number(terms[2]);
@@ -84,21 +84,21 @@ function pullPreProj() {
 }
 
 // Find stat changes since last time
-function GetNewStats(lines) {
+function GetNewStats(lines: string[]) {
   const newlines = lines.filter(UpdateStats);
   return newlines;
 }
 
 // Calculate new point values (actual and live projection)
 function CalcValues(statlines = [], newteamTimes = []) {
-  const statPlayers = statlines.map((l) => l.split('|')[1]);
+  const statPlayers = statlines.map((l: string) => Number(l.split('|')[1]));
   const teamPlayers = newteamTimes.map((t) => state.teamPlayerMap[t]).flat();
   const playersToCalc = [statPlayers, teamPlayers].flat();
   return playersToCalc.map(CalcPlayer).filter((e) => e !== false);
 }
 
 // Calculate statpoints and projpoints for players with changed stats
-function CalcPlayer(playerid) {
+function CalcPlayer(playerid: number) {
   if (!playerid) return false;
   // Get a player's stat object
   const stats = (state.statObj[playerid] || {});
@@ -110,7 +110,7 @@ function CalcPlayer(playerid) {
 }
 
 // Calculate new live projection for a player
-function EstimateProjection(playerid, statpoints) {
+function EstimateProjection(playerid: number, statpoints: number) {
   // Find player's team
   const teamID = (state.playerTeamMap[playerid] || playerid);
   // Find time remaining

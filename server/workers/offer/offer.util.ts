@@ -7,7 +7,7 @@ import logger from '../../utilities/logger';
 import priceUpdate from '../live/channels/priceUpdate.channel';
 
 // Access the correct book or make one if necessary
-export function getBook(books, ContestId, NFLPlayerId) {
+export function getBook(books, ContestId: number, NFLPlayerId: number) {
   // eslint-disable-next-line no-param-reassign
   if (!books[ContestId]) { books[ContestId] = {}; }
   if (!books[ContestId][NFLPlayerId]) {

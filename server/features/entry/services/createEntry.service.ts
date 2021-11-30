@@ -21,8 +21,8 @@ async function createEntry(req) {
   const obj = {};
   obj.UserId = value.user;
   obj.ContestId = value.params.contestID;
-  const thecontest = await Contest.findByPk(value.params.contestID).then(u.dv);
-  if (!thecontest) { u.Error('No contest found', 404); }
+  const thecontest = await Contest.findByPk(value.params.contestID).then(dv);
+  if (!thecontest) { uError('No contest found', 404); }
   const theweek = Number(process.env.WEEK);
   if (theweek !== thecontest.nflweek) uError('Incorrect week', 406);
   obj.pointtotal = thecontest.budget;

@@ -51,13 +51,16 @@ wss.on('connection', async (ws, request) => {
 
   // Add to contest map (ws <-> contest)
   const requestTerms = request.url.split('/');
-  const contestID = requestTerms[requestTerms.length - 1];
+  const contestID = Number(requestTerms[requestTerms.length - 1]);
   liveState.contestmap.delete(ws);
   liveState.contestmap.set(ws, contestID);
 
   // Send starting data
   ws.send(JSON.stringify({ event: 'priceUpdate', pricedata: await sendLatest(contestID) }));
-  ws.send(JSON.stringify({ event: 'leaderboard', leaderboard: JSON.parse(await client.GET(rediskeys.leaderHash(contestID))) }));
+  ws.send(JSON.stringify({
+    event: 'leaderboard',
+    leaderboard: JSON.parse(await client.GET(rediskeys.leaderHash(contestID)) || '{}'),
+  }));
 
   ws.on('close', () => {
     liveState.connmap.delete(userId);
@@ -70,7 +73,7 @@ server.listen(process.env.PORT, () => {
 });
 
 // Send latest points and stat info
-async function sendLatest(contestID) {
+async function sendLatest(contestID: number) {
   const stats = client.HGETALL(rediskeys.statpriceHash());
   const projs = client.HGETALL(rediskeys.projpriceHash());
   const bbids = client.HGETALL(rediskeys.bestbidHash(contestID));
@@ -80,9 +83,9 @@ async function sendLatest(contestID) {
     const [statsOut, projsOut, bbidsOut, basksOut, lastsOut] = out;
     const retobj = {};
 
-    function buildObj(arr, label) {
+    function buildObj(arr, label: string) {
       if (arr) {
-        Object.keys(arr).forEach((p) => {
+        Object.keys(arr).forEach((p: string) => {
           if (!retobj[p]) retobj[p] = {};
           retobj[p].nflplayerID = Number(p);
           retobj[p][label] = Number(arr[p]);

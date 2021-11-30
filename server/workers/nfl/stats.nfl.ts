@@ -15,12 +15,12 @@ export function PullAllStats() {
 }
 
 // Allow a statline if it's one of the valid stat categories
-function StatType(line) {
+function StatType(line: string) {
   return (validStatLetters.indexOf(line[0]) > -1) ? line[0] : false;
 }
 
 // Determine if a statline has changed
-export function UpdateStats(line) {
+export function UpdateStats(line: string) {
   const terms = line.split('|');
   const stattype = terms[0];
   const playerid = terms[1];

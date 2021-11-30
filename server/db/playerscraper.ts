@@ -51,13 +51,13 @@ const nflpos = {
   DEF: 6,
 };
 
-const baseurl = (posget, weeknum) => `https://football.fantasysports.yahoo.com/f1/316236/players?status=ALL&pos=${posget}&cut_type=9&stat1=S_PW_${weeknum}&myteam=1&sort=PTS&sdir=1&count=`;
+const baseurl = (posget: string, weeknum: number) => `https://football.fantasysports.yahoo.com/f1/316236/players?status=ALL&pos=${posget}&cut_type=9&stat1=S_PW_${weeknum}&myteam=1&sort=PTS&sdir=1&count=`;
 const cookie = secret.yahooCookie;
 let currentweek = 3;
 
 // Pull player info
 // If price, include constant pre- and post-prices
-async function scrape(price) {
+async function scrape(price = false) {
   currentweek = Number(process.env.WEEK);
   // Set all existing player records to inactive, will update if duplicated
   await NFLPlayer.update({ active: false }, { where: { active: true } });
@@ -79,7 +79,7 @@ async function scrape(price) {
 }
 
 // Pull one page of players
-async function sendreq(price, pagenum = 0, posget = 'O') {
+async function sendreq(price: boolean, pagenum = 0, posget = 'O') {
   // Send request
   return axios.get(baseurl(posget, currentweek) + pagenum * 25, { headers: { cookie } })
   // Clean up HTML response

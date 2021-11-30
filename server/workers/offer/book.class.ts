@@ -4,7 +4,7 @@ import evaluateFn from './evaluate';
 
 // Inspired by https://web.archive.org/web/20110219163448/http://howtohft.wordpress.com/2011/02/15/how-to-build-a-fast-limit-order-book/
 class Book {
-  constructor(contestID, nflPlayerID) {
+  constructor(contestID: number, nflPlayerID: number) {
     this.contestID = contestID;
     this.nflplayerID = nflPlayerID;
 
@@ -118,8 +118,8 @@ class Book {
   }
 
   // Which tree should an offer be added to
-  whichTree(isbid, isprotected) {
-    const combo = isbid + 2 * isprotected;
+  whichTree(isbid: boolean, isprotected: boolean) {
+    const combo = Number(isbid) + 2 * Number(isprotected);
     let thetree = {};
     switch (combo) {
       case 0: // unprotected ask

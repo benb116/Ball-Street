@@ -22,7 +22,7 @@ function getNFLPlayerTradeVolume(req) {
       ContestId: value.params.contestID,
       NFLPlayerId: value.params.nflplayerID,
     },
-  }).then(dv).then((out) => out / 2);
+  }).then(dv).then((out: number) => out / 2);
 }
 
 export default getNFLPlayerTradeVolume;

@@ -21,14 +21,14 @@ async function genVerify(req) {
   }
 }
 
-async function sendVerificationEmail(email, rand) {
+async function sendVerificationEmail(email: string, rand: string) {
   const link = `${config.CallbackURL}/app/auth/verify?token=${rand}`;
   const msg = `Please click this link to verify your Ball Street account:\n${link}`;
   SendEmail(email, 'Verify your Ball Street Account', msg);
   return Promise.resolve({ needsVerification: true });
 }
 
-function SendEmail(to, subject, msg) {
+function SendEmail(to: string, subject: string, msg: string) {
   return {
     to,
     subject,

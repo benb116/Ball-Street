@@ -90,7 +90,7 @@ async function evaluateBook(playerBook) {
 }
 
 // Add a protMatch to the queue and send a ping
-function addToProtectedMatchQueue(eOffer, nOffer, ContestId, NFLPlayerId) {
+function addToProtectedMatchQueue(eOffer, nOffer, ContestId: number, NFLPlayerId: number) {
   protectedQueue.add({
     existingOffer: eOffer.id,
     newOffer: nOffer.id,

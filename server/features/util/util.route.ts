@@ -30,11 +30,11 @@ function routeHandler(service, cacheExpiry = 0) {
 
 // Strip extraneous info from input
 function stripReq(inp) {
-  const out = {};
-  out.user = inp.session?.user?.id || null;
-  out.params = inp.params;
-  out.body = inp.body;
-  return out;
+  return {
+    user: inp.session?.user?.id || null,
+    params: inp.params,
+    body: inp.body,
+  };
 }
 
 export default routeHandler;

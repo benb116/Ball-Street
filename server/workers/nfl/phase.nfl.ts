@@ -35,7 +35,7 @@ const schema = Joi.object({
 
 // Mark a team's phase in the DB, then publish a change to clients
 // If changed to post, then convert players to points
-async function setPhase(teamID, newphase) {
+async function setPhase(teamID: number, newphase: string) {
   const req = { teamID, newphase };
   validate(req, schema);
 
@@ -57,7 +57,7 @@ async function setPhase(teamID, newphase) {
 }
 
 // Convert all players on a team in all entries to points
-async function convertTeamPlayers(teamID) {
+async function convertTeamPlayers(teamID: number) {
   const teamPlayers = await NFLPlayer.findAll({
     where: {
       NFLTeamId: teamID,

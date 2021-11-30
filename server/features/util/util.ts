@@ -12,7 +12,7 @@ export const dv = function dv(input) {
 };
 
 // Return whether a player type (number) cannot be put into a specific roster position
-export const isInvalidSpot = function isInvalidSpot(playerType, rosterPosName) {
+export const isInvalidSpot = function isInvalidSpot(playerType: number, rosterPosName: string) {
   const rosterType = config.Roster[rosterPosName];
   if (playerType === rosterType) {
     return false;
@@ -28,7 +28,7 @@ export const isInvalidSpot = function isInvalidSpot(playerType, rosterPosName) {
 };
 
 // Is a player on the entry's roster
-export const isPlayerOnRoster = function isPlayerOnRoster(entry, playerID) {
+export const isPlayerOnRoster = function isPlayerOnRoster(entry, playerID: number) {
   let res = false;
   for (let i = 0; i < rpos.length; i++) {
     if (entry[rpos[i]] === playerID) {
@@ -41,7 +41,7 @@ export const isPlayerOnRoster = function isPlayerOnRoster(entry, playerID) {
 
 // Could a player type be put into a spot on the roster
 // Is the spot open AND is the player type valid
-export const isOpenRoster = function isOpenRoster(theentry, playerType) {
+export const isOpenRoster = function isOpenRoster(theentry, playerType: number) {
   for (let i = 0; i < rpos.length; i++) {
     if (theentry[rpos[i]] === null && !(isInvalidSpot(playerType, rpos[i]))) {
       return rpos[i];
@@ -59,7 +59,7 @@ export const tobj = function tobj(t) {
 };
 
 // Custom error function that returns a msg and http status
-export const uError = function uError(msg, status = 500) {
+export const uError = function uError(msg: string, status = 500) {
   const err = new Error(msg);
   err.status = status;
   throw err;
@@ -101,7 +101,7 @@ export const ArrayTest = function ArrayTest(service, req, items) {
 };
 
 // Ensures that a service call throws an error with specific status number and message
-export const ErrorTest = function ErrorTest(service, req, statusNumber, message) {
+export const ErrorTest = function ErrorTest(service, req, statusNumber: number, message: string) {
   return async function errortest() {
     try {
       const o = await service(req);
@@ -119,11 +119,15 @@ export const ErrorTest = function ErrorTest(service, req, statusNumber, message)
 
 // Compare strings in constant time
 // https://snyk.io/blog/node-js-timing-attack-ccc-ctf/
-export const OnCompare = function OnCompare(a, b) {
+export const OnCompare = function OnCompare(a: string, b: string) {
   let mismatch = 0;
   for (let i = 0; i < a.length; ++i) {
     // eslint-disable-next-line no-bitwise
     mismatch |= (a.charCodeAt(i) ^ b.charCodeAt(i));
   }
   return mismatch;
+};
+// Filter out duplicates
+export const onlyUnique = function onlyUnique(value, index: number, self) {
+  return self.indexOf(value) === index;
 };

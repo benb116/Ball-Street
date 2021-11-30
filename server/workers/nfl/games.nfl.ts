@@ -11,13 +11,13 @@ const teamIDs = Object.values(teammap);
 export function GameState() {
   return axios.get('https://relay-stream.sports.yahoo.com/nfl/games.txt')
     .then((raw) => raw.data.split('\n'))
-    .then((rawlines) => rawlines.filter((l) => l[0] === 'g'))
+    .then((rawlines) => rawlines.filter((l: string) => l[0] === 'g'))
     .then(async (gamelines) => {
       const currentweek = (Number(process.env.WEEK) || 0);
       const phasemap = {};
 
       // Build up the list of games for the DB and the phasemap.
-      const gameobjs = gamelines.map((gameline) => {
+      const gameobjs = gamelines.map((gameline: string) => {
         const terms = gameline.split('|');
         const awayTeamID = Number(terms[2]);
         const homeTeamID = Number(terms[3]);
@@ -125,7 +125,7 @@ export function PullAllGames() {
     .then((rawlines) => rawlines.filter((l) => l[0] === 'g'))
     .then((gamelines) => {
       const changedTimes = [];
-      gamelines.forEach(async (gameline) => {
+      gamelines.forEach(async (gameline: string) => {
         const terms = gameline.split('|');
         const team1 = Number(terms[2]);
         const team2 = Number(terms[3]);
@@ -147,12 +147,13 @@ export function PullAllGames() {
         // Calculate time left in the game
         const quarter = Number(terms[6]);
         const time = terms[7].split(':');
+        const isOT = Number(quarter === 5);
         // Calculation should take into account overtime
         const timeElapsed = (
           (quarter - 1) * 15 * 60)
-          + ((15 - 5 * (quarter === 5)) * 60 - Number(time[0]) * 60 + Number(time[1])
+          + ((15 - 5 * isOT) * 60 - Number(time[0]) * 60 + Number(time[1])
           );
-        const timefrac = timeElapsed / ((60 * 60) + (10 * 60 * (quarter === 5)));
+        const timefrac = timeElapsed / ((60 * 60) + (10 * 60 * isOT));
         if (state.timeObj[team1] === undefined || state.timeObj[team1] !== timefrac) {
           state.timeObj[team1] = timefrac;
           changedTimes.push(team1);

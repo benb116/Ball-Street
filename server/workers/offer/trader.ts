@@ -21,17 +21,17 @@ const isoOption = {
 const { offerFilled, priceUpdate, offerCancelled } = channels;
 
 // Try to fill the offers or return which one is done
-async function fillOffers(bidid, askid, price) {
+async function fillOffers(bidid: string, askid: string, price = false) {
   logger.info(`begin trade: ${bidid} ${askid}`);
   const out = sequelize.transaction(isoOption,
     async (t) => attemptFill(t, bidid, askid, price));
   return out;
 }
 
-async function attemptFill(t, bidid, askid, tprice) {
+async function attemptFill(t, bidid: string, askid: string, tprice: boolean) {
   const resp = {
-    bid: { id: bidid },
-    ask: { id: askid },
+    bid: { id: bidid, closed: false },
+    ask: { id: askid, closed: false },
   };
   // Check that both offers are valid
   const [bidoffer, askoffer] = await Promise.all([
@@ -61,7 +61,7 @@ async function attemptFill(t, bidid, askid, tprice) {
   const askuser = aoffer.UserId;
   const nflplayerID = boffer.NFLPlayerId;
 
-  let price = tprice;
+  let price = Number(tprice);
   if (!tprice) {
     price = (boffer.createdAt < aoffer.createdAt ? boffer.price : aoffer.price);
   }

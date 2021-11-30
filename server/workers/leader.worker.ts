@@ -2,7 +2,7 @@
 // Calculates live leaderboards
 
 import config from '../config';
-import { dv } from '../features/util/util';
+import { dv, onlyUnique } from '../features/util/util';
 
 import { rediskeys, client } from '../db/redis';
 import getNFLPlayers from '../features/nflplayer/services/getNFLPlayers.service';
@@ -12,11 +12,6 @@ import leaderUpdate from './live/channels/leaderUpdate.channel';
 
 const { projpriceHash, leaderHash } = rediskeys;
 const rosterPositions = Object.keys(config.Roster);
-
-// Filter out duplicates
-function onlyUnique(value, index, self) {
-  return self.indexOf(value) === index;
-}
 
 // Get player preprice info (used for players without stat info)
 let playerMap;
@@ -57,22 +52,20 @@ async function calculateLeaderboard() {
   // Get all entries across all contests
   const weekentries = await getWeekEntries();
   // Normalize as objects with balance, roster array, contests and user name
-  const normalizedEntries = weekentries.map((e) => {
-    const out = {};
-    out.balance = e.pointtotal;
-    out.roster = rosterPositions.reduce((acc, cur) => {
+  const normalizedEntries = weekentries.map((e) => ({
+    balance: e.pointtotal,
+    roster: rosterPositions.reduce((acc, cur: string) => {
       if (e[cur]) { acc.push(e[cur]); }
       return acc;
-    }, []);
-    out.contest = e.ContestId;
-    out.username = e.User.name;
-    out.userID = e.User.id;
-    return out;
-  });
+    }, []),
+    contest: e.ContestId,
+    username: e.User.name,
+    userID: e.User.id,
+  }));
   // console.log(normalizedEntries);
 
   // Get a list of all contests that have entries
-  const contests = normalizedEntries.map((e) => e.contest).filter(onlyUnique);
+  const contests = normalizedEntries.map((e) => e.contest).filter(onlyUnique).map(Number);
 
   // Pull latest price info for all contests
   // Build one big price map
@@ -108,7 +101,7 @@ async function calculateLeaderboard() {
   // console.log(contestSplit);
 
   // For each contest, sort and store
-  contests.forEach((c) => {
+  contests.forEach((c: number) => {
     const cleader = contestSplit[c];
     cleader.sort((a, b) => ((a.total < b.total) ? 1 : -1));
     client.SET(leaderHash(c), JSON.stringify(cleader));

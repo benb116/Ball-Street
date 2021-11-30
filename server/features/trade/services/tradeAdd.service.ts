@@ -2,7 +2,7 @@ import Joi from 'joi';
 
 import { Op } from 'sequelize';
 import {
-  dv, validate, uError, isPlayerOnRoster, isOpenRoster,
+  dv, validate, uError, isPlayerOnRoster, isOpenRoster, isInvalidSpot,
 } from '../../util/util';
 import validators from '../../util/util.schema';
 
@@ -57,7 +57,7 @@ async function tradeAdd(req, t) {
   const playerType = playerdata.NFLPositionId;
   if (value.body.rosterposition) { // If a roster position was specified
     // Is it a valid one?
-    const isinvalid = u.isInvalidSpot(playerType, value.body.rosterposition);
+    const isinvalid = isInvalidSpot(playerType, value.body.rosterposition);
     if (isinvalid) { uError(isinvalid, 406); }
     // Is it an empty one?
     if (theentry[value.body.rosterposition] !== null) {
@@ -67,8 +67,11 @@ async function tradeAdd(req, t) {
   } else {
     // Find an open spot
     const isOpen = isOpenRoster(theentry, playerType);
-    if (!isOpen) { uError('There are no open spots', 406); }
-    theentry[isOpen] = theplayer;
+    if (!isOpen) {
+      uError('There are no open spots', 406);
+    } else {
+      theentry[isOpen] = theplayer;
+    }
   }
 
   // Get player price and position

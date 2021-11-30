@@ -1,10 +1,11 @@
+import { dv } from '../../features/util/util';
 import { Offer } from '../../models';
 import logger from '../../utilities/logger';
 import { updateBest } from './offer.util';
 import fillOffers from './trader';
 
 // Try to fill a protected match
-async function evalProtected(playerBook, proffer, neoffer) {
+async function evalProtected(playerBook, proffer: string, neoffer: string) {
   const poffer = await Offer.findByPk(proffer).then(dv);
   if (!poffer || poffer.cancelled || poffer.filled) {
     logger.info(`Matchee unavailable ${poffer.id}`);

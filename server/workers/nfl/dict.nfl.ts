@@ -11,7 +11,7 @@ export const yahooStatMap = {
   f: 'defense',
   // t: 'offense total',
 };
-export const validStatLetters = Object.keys(dict.yahooStatMap);
+export const validStatLetters = Object.keys(yahooStatMap);
 
 // Dot product coefficients for stats in each category
 export const multiplierTable = {
@@ -65,9 +65,9 @@ export function SumPoints(pstats) {
   const rawpoints = categories.reduce((accPoints, curCat) => {
     let newPoints = accPoints;
     const line = pstats[curCat].split('|');
-    const multipliers = (dict.multiplierTable[curCat] || []);
+    const multipliers = (multiplierTable[curCat] || []);
     // eslint-disable-next-line no-param-reassign
-    newPoints += line.reduce((accStatPoints, val, lineIndex) => {
+    newPoints += line.reduce((accStatPoints: number, val: string, lineIndex: string) => {
       // eslint-disable-next-line no-param-reassign
       accStatPoints += Number(val) * (multipliers[lineIndex] || 0);
       return accStatPoints;

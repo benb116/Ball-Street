@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import Joi from 'joi';
 
-import { validate, uError } from '../../util/util';
+import { validate, uError, OnCompare } from '../../util/util';
 import { rediskeys, client } from '../../../db/redis';
 import config from '../../../config';
 import { User } from '../../../models';
@@ -19,7 +19,7 @@ const schema = Joi.object({
 
 async function evalPassReset(req) {
   const { token, password, confirmPassword } = validate(req, schema);
-  if (u.OnCompare(password, confirmPassword)) uError('Passwords do not match', 403);
+  if (OnCompare(password, confirmPassword)) uError('Passwords do not match', 403);
   const email = await client.GET(rediskeys.passReset(token));
   if (!email) uError('Reset key could not be found, please try again', 404);
 

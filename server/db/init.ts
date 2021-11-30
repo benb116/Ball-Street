@@ -140,16 +140,15 @@ async function InitDB(sequelize) {
   await NFLTeam.bulkCreate(teamrecords);
 
   const teamdefrecords = teamfullnamearr.map((t) => {
-    const obj = {};
     const abr = teamfullnameMap[t];
-    obj.id = teams[abr].id;
-    obj.name = t;
-    obj.NFLPositionId = nflpos.DEF.id;
-    obj.NFLTeamId = teams[abr].id;
-    obj.preprice = 1100;
-    obj.postprice = 700;
-
-    return obj;
+    return {
+      id: teams[abr].id,
+      name: t,
+      NFLPositionId: nflpos.DEF.id,
+      NFLTeamId: teams[abr].id,
+      preprice: 1100,
+      postprice: 700,
+    };
   });
   await NFLPlayer.bulkCreate(teamdefrecords);
 
