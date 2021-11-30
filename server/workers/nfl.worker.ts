@@ -1,15 +1,15 @@
-import axios from 'axios'
-import getNFLPlayers from '../features/nflplayer/services/getNFLPlayers.service'
-import { rediskeys, client } from '../db/redis'
+import axios from 'axios';
+import getNFLPlayers from '../features/nflplayer/services/getNFLPlayers.service';
+import { rediskeys, client } from '../db/redis';
 
-import { SumPoints } from './nfl/dict.nfl'
-import state from './nfl/state.nfl'
-import logger from '../utilities/logger'
-import { GameState, PullAllGames, setGamePhases } from './nfl/games.nfl'
-import { PullAllStats, UpdateStats } from './nfl/stats.nfl'
-import scrape from '../db/playerscraper'
-import statUpdate from './live/channels/statUpdate.channel'
-import PullLatestInjuries from './nfl/injury.nfl'
+import { SumPoints } from './nfl/dict.nfl';
+import state from './nfl/state.nfl';
+import logger from '../utilities/logger';
+import { GameState, PullAllGames, setGamePhases } from './nfl/games.nfl';
+import { PullAllStats, UpdateStats } from './nfl/stats.nfl';
+import scrape from '../db/playerscraper';
+import statUpdate from './live/channels/statUpdate.channel';
+import PullLatestInjuries from './nfl/injury.nfl';
 
 const checkInterval = 10000;
 

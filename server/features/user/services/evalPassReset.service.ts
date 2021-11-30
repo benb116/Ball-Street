@@ -1,11 +1,11 @@
-import bcrypt from 'bcrypt'
-import Joi from 'joi'
+import bcrypt from 'bcrypt';
+import Joi from 'joi';
 
-import { dv, tobj, validate, uError } from '../../util/util'
-import { rediskeys, client } from '../../../db/redis'
-import  from '../../../config'
-import { User } from '../../../models'
-import validators from '../../util/util.schema'
+import { validate, uError } from '../../util/util';
+import { rediskeys, client } from '../../../db/redis';
+import config from '../../../config';
+import { User } from '../../../models';
+import validators from '../../util/util.schema';
 
 const schema = Joi.object({
   token: Joi.string().length(config.verificationTokenLength).required().messages({

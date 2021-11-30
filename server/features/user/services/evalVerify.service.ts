@@ -1,9 +1,9 @@
-import Joi from 'joi'
+import Joi from 'joi';
 
-import { dv, tobj, validate, uError } from '../../util/util'
-import { rediskeys, client } from '../../../db/redis'
-import config from '../../../config'
-import { User } from '../../../models'
+import { dv, validate, uError } from '../../util/util';
+import { rediskeys, client } from '../../../db/redis';
+import config from '../../../config';
+import { User } from '../../../models';
 
 const schema = Joi.object({
   token: Joi.string().length(config.verificationTokenLength).required().messages({

@@ -1,4 +1,4 @@
-import liveState from './state.live' // WS server
+import liveState from './state.live'; // WS server
 
 export function sendToUser(userID, msg) {
   const thews = liveState.connmap.get(userID);

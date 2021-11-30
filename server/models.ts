@@ -1,18 +1,17 @@
-// Set up models with associations
-import { DataTypes } from 'sequelize'
-import sequelize from './db'
+import { DataTypes } from 'sequelize';
+import sequelize from './db';
 
-import mcontest from './features/contest/contest.model'
-import mentry from './features/entry/entry.model'
-import mnflplayer from './features/nflplayer/nflplayer.model'
-import mnflposition from './features/nflposition/nflposition.model'
-import mnflteam from './features/nflteam/nflteam.model'
-import mnflgame from './features/nflgame/nflgame.model'
-import moffer from './features/offer/offer.model'
-import mprotectedmatch from './features/protectedmatch/protectedmatch.model'
-import mpricehistory from './features/pricehistory/pricehistory.model'
-import mtrade from './features/trade/trade.model'
-import muser from './features/user/user.model'
+import mcontest from './features/contest/contest.model';
+import mentry from './features/entry/entry.model';
+import mnflplayer from './features/nflplayer/nflplayer.model';
+import mnflposition from './features/nflposition/nflposition.model';
+import mnflteam from './features/nflteam/nflteam.model';
+import mnflgame from './features/nflgame/nflgame.model';
+import moffer from './features/offer/offer.model';
+import mprotectedmatch from './features/protectedmatch/protectedmatch.model';
+import mpricehistory from './features/pricehistory/pricehistory.model';
+import mtrade from './features/trade/trade.model';
+import muser from './features/user/user.model';
 
 export const Contest = mcontest(sequelize, DataTypes);
 export const Entry = mentry(sequelize, DataTypes);
@@ -50,4 +49,4 @@ NFLPosition.hasMany(NFLPlayer);
 NFLGame.belongsTo(NFLTeam, { as: 'home', foreignKey: 'HomeId' });
 NFLGame.belongsTo(NFLTeam, { as: 'away', foreignKey: 'AwayId' });
 
-export default sequelize
+export default sequelize;

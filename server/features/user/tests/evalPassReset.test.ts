@@ -1,8 +1,8 @@
-import cryptoRandomString from 'crypto-random-string'
-import { client, rediskeys } from '../../../db/redis'
-import service from '../services/evalPassReset.service'
-import { ErrorTest } from '../../util/util'
-import config from '../../../config'
+import cryptoRandomString from 'crypto-random-string';
+import { client, rediskeys } from '../../../db/redis';
+import service from '../services/evalPassReset.service';
+import { ErrorTest } from '../../util/util';
+import config from '../../../config';
 
 describe('evalPassReset service', () => {
   test('Valid request returns confirmation and redis key', async () => {

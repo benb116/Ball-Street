@@ -1,9 +1,9 @@
-import Joi from 'joi'
+import Joi from 'joi';
 
-import { dv, tobj, validate, uError } from '../../util/util'
+import { dv, validate, uError } from '../../util/util';
 
-import { Entry } from '../../../models'
-import validators from '../../util/util.schema'
+import { Entry } from '../../../models';
+import validators from '../../util/util.schema';
 
 const schema = Joi.object({
   user: validators.user,

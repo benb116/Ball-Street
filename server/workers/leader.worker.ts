@@ -1,14 +1,14 @@
 // Leader worker
 // Calculates live leaderboards
 
-import config from '../config'
-import { dv } from '../features/util/util'
+import config from '../config';
+import { dv } from '../features/util/util';
 
-import { rediskeys, client } from '../db/redis'
-import getNFLPlayers from '../features/nflplayer/services/getNFLPlayers.service'
-import getWeekEntries from '../features/entry/services/getWeekEntries.service'
-import { NFLGame } from '../models'
-import leaderUpdate from './live/channels/leaderUpdate.channel'
+import { rediskeys, client } from '../db/redis';
+import getNFLPlayers from '../features/nflplayer/services/getNFLPlayers.service';
+import getWeekEntries from '../features/entry/services/getWeekEntries.service';
+import { NFLGame } from '../models';
+import leaderUpdate from './live/channels/leaderUpdate.channel';
 
 const { projpriceHash, leaderHash } = rediskeys;
 const rosterPositions = Object.keys(config.Roster);

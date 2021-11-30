@@ -1,12 +1,13 @@
-import * as express from 'express'
-import cors from 'cors'
-import helmet from 'helmet'
+import * as express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
 
-import session from '../middleware/session'
-import limiter from '../middleware/limiter'
-import logger from '../utilities/logger'
-import userRoute from '../features/user/user.route'
-import apiRoute from './api/routes.api'
+import session from '../middleware/session';
+import limiter from '../middleware/limiter';
+import logger from '../utilities/logger';
+
+import userRoute from '../features/user/user.route';
+import apiRoute from './api/routes.api';
 
 const isProduction = process.env.NODE_ENV === 'production';
 logger.info(`NODE_ENV = ${process.env.NODE_ENV}, isProduction = ${isProduction}`);

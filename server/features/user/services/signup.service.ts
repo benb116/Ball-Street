@@ -1,12 +1,12 @@
-import bcrypt from 'bcrypt'
-import Joi from 'joi'
+import bcrypt from 'bcrypt';
+import Joi from 'joi';
 
-import { dv, tobj, validate, uError } from '../../util/util'
-import validators from '../../util/util.schema'
+import { dv, validate, uError } from '../../util/util';
+import validators from '../../util/util.schema';
 
-import { User } from '../../../models'
-import genVerify from './genVerify.service'
-import { errorHandler } from '../../util/util.service'
+import { User } from '../../../models';
+import genVerify from './genVerify.service';
+import { errorHandler } from '../../util/util.service';
 
 const schema = Joi.object({
   name: Joi.string().required().messages({
@@ -29,7 +29,7 @@ async function signup(req) {
       name, email, pwHash: hash, verified: skipVerification,
     }).then(dv);
     if (!theuser) { uError('User could not be created', 500); }
-    if (!skipVerification) return genVerify({ email: theuser.email });
+    if (!skipVerification) return await genVerify({ email: theuser.email });
     return { id: theuser.id, email: theuser.email, name: theuser.name };
   } catch (err) {
     const f = errorHandler({

@@ -1,6 +1,6 @@
-import { dv } from '../../util/util'
+import { dv } from '../../util/util';
 
-import { Contest } from '../../../models'
+import { Contest } from '../../../models';
 
 function getContests() {
   return Contest.findAll().then(dv);

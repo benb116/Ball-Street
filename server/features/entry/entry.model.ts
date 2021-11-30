@@ -1,4 +1,4 @@
-import config from '../../config'
+import config from '../../config';
 
 // The model has common columns (UserId, ContestId, pointtotal)
 // This script also generates columns based on the set roster in config
@@ -38,4 +38,4 @@ function model(DataTypes) {
 
 export default function out(sequelize, DataTypes) {
   return sequelize.define('Entry', model(DataTypes), { sequelize });
-};
+}

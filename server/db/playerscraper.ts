@@ -2,9 +2,9 @@
 /* eslint-disable no-useless-escape */
 
 // Pull player data from an API
-import axios from 'axios'
-import { NFLPlayer } from '../models'
-import secret from '../secret'
+import axios from 'axios';
+import { NFLPlayer } from '../models';
+import secret from '../secret';
 
 // Yahoo team ID numbers
 const teammap = {

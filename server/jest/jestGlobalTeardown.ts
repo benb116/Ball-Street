@@ -1,5 +1,5 @@
-import sequelize from '../db'
-import { client, subscriber } from '../db/redis'
+import sequelize from '../db';
+import { client, subscriber } from '../db/redis';
 
 export default async () => {
   sequelize.close();

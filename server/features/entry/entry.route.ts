@@ -1,13 +1,12 @@
-import * as express from 'express'
+import * as express from 'express';
+import routeHandler from '../util/util.route';
+
+import getContestEntries from './services/getContestEntries.service';
+import getEntry from './services/getEntry.service';
+import createEntry from './services/createEntry.service';
+import reorderRoster from './services/reorderRoster.service';
 
 const router = express.Router({ mergeParams: true });
-import routeHandler from '../util/util.route'
-
-import getContestEntries from './services/getContestEntries.service'
-import getEntry from './services/getEntry.service'
-import createEntry from './services/createEntry.service'
-import reorderRoster from './services/reorderRoster.service'
-
 
 // Get all entries in a contest
 router.get('/entries', routeHandler(getContestEntries));

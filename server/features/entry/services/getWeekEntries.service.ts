@@ -1,8 +1,8 @@
-import { Op } from 'sequelize'
+import { Op } from 'sequelize';
 
-import { dv, tobj, validate, uError } from '../../util/util'
+import { dv } from '../../util/util';
 
-import { Entry, Contest, User } from '../../../models'
+import { Entry, Contest, User } from '../../../models';
 
 async function getWeekEntries() {
   const weekcontests = await Contest.findAll({

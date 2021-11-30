@@ -1,18 +1,20 @@
-import Queue from 'bull'
-import Joi from 'joi'
+import Queue from 'bull';
+import Joi from 'joi';
 
-import { Op } from 'sequelize'
-import config from '../../../config'
-import { dv, tobj, validate, uError, isPlayerOnRoster, isOpenRoster } from '../../util/util'
-import validators from '../../util/util.schema'
+import { Op } from 'sequelize';
+import config from '../../../config';
+import {
+  dv, tobj, validate, uError, isPlayerOnRoster, isOpenRoster,
+} from '../../util/util';
+import validators from '../../util/util.schema';
 
-import sequelize from '../../../db'
+import sequelize from '../../../db';
 import {
   Offer, Entry, NFLPlayer, NFLGame,
-} from '../../../models'
+} from '../../../models';
+import { queueOptions } from '../../../db/redis';
 
-import { queueOptions } from '../../../db/redis'
-import { errorHandler } from '../../util/util.service'
+import { errorHandler } from '../../util/util.service';
 
 const offerQueue = new Queue('offer-queue', queueOptions);
 

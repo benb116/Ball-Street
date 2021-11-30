@@ -1,11 +1,11 @@
-import { Op } from 'sequelize'
-import Joi from 'joi'
+import { Op } from 'sequelize';
+import Joi from 'joi';
 
-import { dv, validate } from '../../util/util'
+import { dv, validate } from '../../util/util';
 
-import getEntry from './getEntry.service'
-import validators from '../../util/util.schema'
-import { Entry } from '../../../models'
+import getEntry from './getEntry.service';
+import validators from '../../util/util.schema';
+import { Entry } from '../../../models';
 
 const schema = Joi.object({
   user: validators.user,

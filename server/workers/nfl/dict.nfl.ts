@@ -94,4 +94,4 @@ export function SumPoints(pstats) {
     return newPoints;
   }, 0);
   return Math.round(rawpoints * 100);
-};
+}

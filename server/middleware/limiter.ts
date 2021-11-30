@@ -1,7 +1,7 @@
-import rateLimit from 'express-rate-limit'
-import RedisStore from 'rate-limit-redis'
-import { client } from '../db/redis'
-import logger from '../utilities/logger'
+import rateLimit from 'express-rate-limit';
+import RedisStore from 'rate-limit-redis';
+import { client } from '../db/redis';
+import logger from '../utilities/logger';
 
 // Rate limiter middleware
 export default rateLimit({

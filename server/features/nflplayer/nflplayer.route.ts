@@ -1,13 +1,12 @@
-import * as express from 'express'
+import * as express from 'express';
+import routeHandler from '../util/util.route';
+
+import getNFLPlayerOfferSummary from './services/getNFLPlayerOfferSummary.service';
+import getNFLPlayerTradeVolume from './services/getNFLPlayerTradeVolume.service';
+import getNFLPlayerNumAdds from './services/getNFLPlayerNumAdds.service';
+import getNFLPlayerPriceHistory from './services/getNFLPlayerPriceHistory.service';
 
 const router = express.Router({ mergeParams: true });
-import routeHandler from '../util/util.route'
-
-import getNFLPlayerOfferSummary from './services/getNFLPlayerOfferSummary.service'
-import getNFLPlayerTradeVolume from './services/getNFLPlayerTradeVolume.service'
-import getNFLPlayerNumAdds from './services/getNFLPlayerNumAdds.service'
-import getNFLPlayerPriceHistory from './services/getNFLPlayerPriceHistory.service'
-
 
 // Get a player's orderbook in a contest
 router.get('/players/:nflplayerID/orderbook', routeHandler(getNFLPlayerOfferSummary));

@@ -1,7 +1,7 @@
-import liveState from '../state.live' // Data stored in memory
-import { sendToContests } from '../socket.live'
+import liveState from '../state.live'; // Data stored in memory
+import { sendToContests } from '../socket.live';
 
-import { rediskeys, client } from '../../../db/redis'
+import { rediskeys, client } from '../../../db/redis';
 
 const { leaderHash } = rediskeys;
 

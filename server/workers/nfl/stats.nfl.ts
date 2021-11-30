@@ -1,7 +1,7 @@
-import axios from 'axios'
-import logger from '../../utilities/logger'
-import { validStatLetters } from './dict.nfl'
-import state from './state.nfl'
+import axios from 'axios';
+import logger from '../../utilities/logger';
+import { validStatLetters } from './dict.nfl';
+import state from './state.nfl';
 
 // Get all latest statlines and filter out ones we don't care about
 export function PullAllStats() {

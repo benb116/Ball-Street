@@ -1,18 +1,18 @@
-import * as express from 'express'
+import * as express from 'express';
+
+import authenticate from '../../middleware/authenticate';
+import routeHandler from '../util/util.route';
+import logger from '../../utilities/logger';
+
+import signup from './services/signup.service';
+import login from './services/login.service';
+import getAccount from './services/getAccount.service';
+import evalVerify from './services/evalVerify.service';
+
+import genPassReset from './services/genPassReset.service';
+import evalPassReset from './services/evalPassReset.service';
 
 const router = express.Router();
-
-import authenticate from '../../middleware/authenticate'
-import routeHandler from '../util/util.route'
-import logger from '../../utilities/logger'
-
-import signup from './services/signup.service'
-import login from './services/login.service'
-import getAccount from './services/getAccount.service'
-import evalVerify from './services/evalVerify.service'
-
-import genPassReset from './services/genPassReset.service'
-import evalPassReset from './services/evalPassReset.service'
 
 function errorHandler(res, err) {
   if (!err) {

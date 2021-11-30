@@ -7,20 +7,33 @@
     "extends": [
         "plugin:security/recommended",
         "plugin:node/recommended",
-        "airbnb"
+        "airbnb",
+        "airbnb-typescript",
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended"
     ],
+    "parser": "@typescript-eslint/parser",
     "parserOptions": {
-        "ecmaVersion": 12,
-        "sourceType": "module"
+        "ecmaVersion": 2020,
+        "sourceType": "module",
+        "project": ["./tsconfig.json"]
     },
     "plugins": [
         "jest",
-        "security"
+        "node",
+        "security",
+        "@typescript-eslint"
     ],
     "rules": {
         "no-useless-concat": "off",
         "no-use-before-define": ["error", { "functions": false, "classes": true }],
         "no-plusplus": [2, { "allowForLoopAfterthoughts": true }],
-        "security/detect-object-injection": "off"
+        "security/detect-object-injection": "off",
+        "node/no-unsupported-features/es-syntax": ["error", { "ignores": ["modules"] } ],
+        "node/no-missing-import": ["error", {
+            "allowModules": [],
+            "tryExtensions": [".js", ".json", ".node", ".ts"]
+        }]
     }
 }

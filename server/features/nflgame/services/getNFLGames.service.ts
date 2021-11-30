@@ -1,5 +1,5 @@
-import { NFLGame, NFLTeam } from '../../../models'
-import { dv, tobj, validate, uError } from '../../util/util'
+import { NFLGame, NFLTeam } from '../../../models';
+import { dv } from '../../util/util';
 
 async function getNFLGames() {
   const currentweek = Number(process.env.WEEK);

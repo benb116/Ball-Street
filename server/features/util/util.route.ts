@@ -3,7 +3,7 @@
 // and return the results
 // If there's an error, return the specified status and error message.
 
-import { client } from '../../db/redis'
+import { client } from '../../db/redis';
 
 function routeHandler(service, cacheExpiry = 0) {
   return async function routeHandlerInner(req, res) {
@@ -37,4 +37,4 @@ function stripReq(inp) {
   return out;
 }
 
-export default routeHandler
+export default routeHandler;

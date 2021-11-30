@@ -1,10 +1,10 @@
 // Get all injured players
 // Find changes and send out updates
 
-import axios from 'axios'
-import { NFLPlayer } from '../../models'
-import injuryUpdate from '../live/channels/injuryUpdate.channel'
-import state from './state.nfl'
+import axios from 'axios';
+import { NFLPlayer } from '../../models';
+import injuryUpdate from '../live/channels/injuryUpdate.channel';
+import state from './state.nfl';
 
 export default async function PullLatestInjuries() {
   return axios.get('https://football.fantasysports.yahoo.com/f1/injuries')

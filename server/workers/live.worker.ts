@@ -1,17 +1,17 @@
 // Websocket server worker
 // Subscribe to redis updates and push out to clients
 
-import WebSocket from 'ws'
-import http from 'http'
-import express from 'express'
+import WebSocket from 'ws';
+import http from 'http';
+import express from 'express';
 
-import { client, subscriber, rediskeys } from '../db/redis'
-import session from '../middleware/session'
-import liveState from './live/state.live' // Data stored in memory
-import logger from '../utilities/logger'
+import { client, subscriber, rediskeys } from '../db/redis';
+import session from '../middleware/session';
+import liveState from './live/state.live'; // Data stored in memory
+import logger from '../utilities/logger';
 
 // All channels that may be used
-import channelMap from './live/channels.live'
+import channelMap from './live/channels.live';
 
 // Set up redis subscribers
 (async () => {

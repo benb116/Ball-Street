@@ -14,4 +14,4 @@ export default function model(sequelize, DataTypes) {
       allowNull: false,
     },
   }, { sequelize });
-};
+}

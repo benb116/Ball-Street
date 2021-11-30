@@ -1,5 +1,5 @@
-import service from '../services/preTradeDrop.service'
-import { ErrorTest, ObjectTest } from '../../util/util'
+import service from '../services/preTradeDrop.service';
+import { ErrorTest, ObjectTest } from '../../util/util';
 
 describe('preTradeDrop service', () => {
   test('Valid request returns data', ObjectTest(

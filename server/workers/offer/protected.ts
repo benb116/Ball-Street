@@ -1,9 +1,7 @@
-import u from '../../features/util/util'
-
-import { Offer } from '../../models'
-import logger from '../../utilities/logger'
-import { updateBest } from './offer.util'
-import fillOffers from './trader'
+import { Offer } from '../../models';
+import logger from '../../utilities/logger';
+import { updateBest } from './offer.util';
+import fillOffers from './trader';
 
 // Try to fill a protected match
 async function evalProtected(playerBook, proffer, neoffer) {

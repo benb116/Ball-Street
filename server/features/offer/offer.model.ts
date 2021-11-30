@@ -1,6 +1,4 @@
-import sequelize from 'sequelize'
-
-import config from '../../config'
+import config from '../../config';
 
 export default function model(sequelize, DataTypes) {
   return sequelize.define('Offer', {
@@ -70,4 +68,4 @@ export default function model(sequelize, DataTypes) {
       },
     ],
   });
-};
+}

@@ -1,12 +1,11 @@
-import * as express from 'express'
+import * as express from 'express';
+
+import routeHandler from '../util/util.route';
+
+import getContest from './services/getContest.service';
+import getContests from './services/getContests.service';
 
 const router = express.Router({ mergeParams: true });
-
-import routeHandler from '../util/util.route'
-
-import getContest from './services/getContest.service'
-import getContests from './services/getContests.service'
-
 
 // Get all contests
 router.get('/', routeHandler(getContests));

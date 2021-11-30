@@ -1,5 +1,5 @@
-import logger from '../../utilities/logger'
-import { uError } from './util'
+import logger from '../../utilities/logger';
+import { uError } from './util';
 
 export const errorHandler = function errorHandler(responseMap) {
   return function errorHandlerInner(err) {
@@ -12,4 +12,4 @@ export const errorHandler = function errorHandler(responseMap) {
     logger.error(`Unknown error: ${err}`);
     return uError(outmess[0], (outmess[1] || 500));
   };
-}
+};

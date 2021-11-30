@@ -1,5 +1,5 @@
-import { client } from '../../../db/redis'
-import { sendToAll } from '../socket.live'
+import { client } from '../../../db/redis';
+import { sendToAll } from '../socket.live';
 
 const injuryUpdate = {};
 

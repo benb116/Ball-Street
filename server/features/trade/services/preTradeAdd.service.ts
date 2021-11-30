@@ -1,12 +1,12 @@
-import Joi from 'joi'
+import Joi from 'joi';
 
-import sequelize from '../../../db'
+import sequelize from '../../../db';
 
-import { dv, tobj, validate, uError } from '../../util/util'
-import validators from '../../util/util.schema'
-import { errorHandler } from '../../util/util.service'
+import { validate } from '../../util/util';
+import validators from '../../util/util.schema';
+import { errorHandler } from '../../util/util.service';
 
-import tradeAdd from './tradeAdd.service'
+import tradeAdd from './tradeAdd.service';
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ

@@ -2,20 +2,21 @@
 // Used by offer worker
 // Try to fill a pair of offers
 
-import { dv, tobj } from '../../features/util/util'
+import { dv, tobj } from '../../features/util/util';
 
-import sequelize from '../../db'
-import { Offer, Trade, PriceHistory } from '../../models'
+import sequelize from '../../db';
+import { Offer, Trade, PriceHistory } from '../../models';
+
+import { rediskeys, client } from '../../db/redis';
+
+import logger from '../../utilities/logger';
+import channels from '../live/channels.live';
+import tradeAdd from '../../features/trade/services/tradeAdd.service';
+import tradeDrop from '../../features/trade/services/tradeDrop.service';
+
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
 };
-
-import { rediskeys, client } from '../../db/redis'
-
-import logger from '../../utilities/logger'
-import channels from '../live/channels.live'
-import tradeAdd from '../../features/trade/services/tradeAdd.service';
-import tradeDrop from '../../features/trade/services/tradeDrop.service';
 
 const { offerFilled, priceUpdate, offerCancelled } = channels;
 
@@ -143,4 +144,4 @@ async function attemptFill(t, bidid, askid, tprice) {
   };
 }
 
-export default fillOffers
+export default fillOffers;

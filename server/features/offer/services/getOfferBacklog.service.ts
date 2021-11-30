@@ -1,6 +1,6 @@
-import Queue from 'bull'
+import Queue from 'bull';
 
-import { queueOptions } from '../../../db/redis'
+import { queueOptions } from '../../../db/redis';
 
 const offerQueue = new Queue('offer-queue', queueOptions);
 const protectedQueue = new Queue('protected-queue', queueOptions);

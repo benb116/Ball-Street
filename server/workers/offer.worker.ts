@@ -2,16 +2,16 @@
 // Processes jobs on the offer queue
 // Tries to reduce order book whenever an offer comes in
 // Sends out matches to be filled
-import Queue from 'bull'
-import config from '../config'
+import Queue from 'bull';
+import config from '../config';
 
-import { queueOptions } from '../db/redis'
+import { queueOptions } from '../db/redis';
 
-import fillOffers from './offer/trader'
-import { getBook, updateBest } from './offer/offer.util'
-import evalProtected from './offer/protected'
-import logger from '../utilities/logger'
-import protectedMatch from './live/channels/protectedMatch.channel'
+import fillOffers from './offer/trader';
+import { getBook, updateBest } from './offer/offer.util';
+import evalProtected from './offer/protected';
+import logger from '../utilities/logger';
+import protectedMatch from './live/channels/protectedMatch.channel';
 
 const offerQueue = new Queue('offer-queue', queueOptions);
 const protectedQueue = new Queue('protected-queue', queueOptions);

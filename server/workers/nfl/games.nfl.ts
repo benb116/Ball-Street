@@ -1,9 +1,9 @@
-import axios from 'axios'
-import logger from '../../utilities/logger'
-import setPhase from './phase.nfl'
-import state from './state.nfl'
-import { NFLGame } from '../../models'
-import { teammap } from './dict.nfl'
+import axios from 'axios';
+import logger from '../../utilities/logger';
+import setPhase from './phase.nfl';
+import state from './state.nfl';
+import { NFLGame } from '../../models';
+import { teammap } from './dict.nfl';
 
 const teamIDs = Object.values(teammap);
 

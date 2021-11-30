@@ -1,5 +1,5 @@
-import config from '../../config'
-import logger from '../../utilities/logger'
+import config from '../../config';
+import logger from '../../utilities/logger';
 
 const rpos = Object.keys(config.Roster);
 

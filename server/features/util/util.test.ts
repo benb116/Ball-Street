@@ -1,4 +1,4 @@
-import { isInvalidSpot, isPlayerOnRoster, isOpenRoster } from './util'
+import { isInvalidSpot, isPlayerOnRoster, isOpenRoster } from './util';
 
 describe('util testing', () => {
   test('isInvalidSpot', () => {

@@ -37,4 +37,4 @@ export default function out(sequelize, DataTypes) {
       },
     },
   });
-};
+}

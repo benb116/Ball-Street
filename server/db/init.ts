@@ -1,13 +1,13 @@
 // Set up the database with proper tables and NFL data
 
-import config from '../config'
+import config from '../config';
 import {
   NFLPosition,
   NFLTeam,
   NFLPlayer,
-} from '../models'
-import logger from '../utilities/logger'
-import scrape from './playerscraper'
+} from '../models';
+import logger from '../utilities/logger';
+import scrape from './playerscraper';
 
 async function InitDB(sequelize) {
   logger.info('Initializing the database');

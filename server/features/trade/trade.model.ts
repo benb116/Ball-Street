@@ -17,4 +17,4 @@ export default function model(sequelize, DataTypes) {
       primaryKey: true,
     },
   }, { sequelize });
-};
+}

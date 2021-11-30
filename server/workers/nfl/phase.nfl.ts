@@ -1,18 +1,20 @@
 // Change the game phase (pre, mid, post)
-import Joi from 'joi'
+import Joi from 'joi';
 
-import { Op } from 'sequelize'
-import { dv, tobj, validate, isPlayerOnRoster } from '../../features/util/util'
-import { client } from '../../db/redis'
+import { Op } from 'sequelize';
+import {
+  dv, tobj, validate, isPlayerOnRoster,
+} from '../../features/util/util';
+import { client } from '../../db/redis';
 import {
   NFLPlayer, Entry, NFLGame, Contest,
-} from '../../models'
+} from '../../models';
 
-import sequelize from '../../db'
-import logger from '../../utilities/logger'
-import state from './state.nfl'
-import { SumPoints } from './dict.nfl'
-import phaseChange from '../live/channels/phaseChange.channel'
+import sequelize from '../../db';
+import logger from '../../utilities/logger';
+import state from './state.nfl';
+import { SumPoints } from './dict.nfl';
+import phaseChange from '../live/channels/phaseChange.channel';
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ

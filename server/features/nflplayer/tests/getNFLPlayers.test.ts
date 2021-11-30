@@ -1,4 +1,4 @@
-import service from '../services/getNFLPlayers.service'
+import service from '../services/getNFLPlayers.service';
 
 describe('getNFLPlayers service', () => {
   test('Valid request returns data', async () => {

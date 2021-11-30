@@ -1,11 +1,11 @@
-import * as express from 'express'
+import * as express from 'express';
+import routeHandler from '../util/util.route';
+
+import getUserTrades from './services/getUserTrades.service';
+import preTradeAdd from './services/preTradeAdd.service';
+import preTradeDrop from './services/preTradeDrop.service';
 
 const router = express.Router({ mergeParams: true });
-import routeHandler from '../util/util.route'
-
-import getUserTrades from './services/getUserTrades.service'
-import preTradeAdd from './services/preTradeAdd.service'
-import preTradeDrop from './services/preTradeDrop.service'
 
 // Show a user's trades in a contest
 router.get('/trades', routeHandler(getUserTrades));

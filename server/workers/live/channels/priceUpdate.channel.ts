@@ -1,8 +1,8 @@
-import config from '../../../config'
-import liveState from '../state.live' // Data stored in memory
-import { sendToContests } from '../socket.live'
+import config from '../../../config';
+import liveState from '../state.live'; // Data stored in memory
+import { sendToContests } from '../socket.live';
 
-import { client } from '../../../db/redis'
+import { client } from '../../../db/redis';
 
 const priceUpdate = {};
 

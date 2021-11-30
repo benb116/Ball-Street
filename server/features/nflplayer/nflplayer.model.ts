@@ -1,4 +1,4 @@
-import config from '../../config'
+import config from '../../config';
 
 export default function out(sequelize, DataTypes) {
   return sequelize.define('NFLPlayer', {
@@ -50,4 +50,4 @@ export default function out(sequelize, DataTypes) {
       },
     },
   }, { sequelize });
-};
+}

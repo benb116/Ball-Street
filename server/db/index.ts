@@ -1,9 +1,9 @@
 // This outputs the common sequelize object that is used for DB calls and transactions
 // Can set app-wide DB settings
 
-import { Sequelize, Transaction } from 'sequelize'
-import logger from '../utilities/logger'
-import sec from '../secret'
+import { Sequelize, Transaction } from 'sequelize';
+import logger from '../utilities/logger';
+import sec from '../secret';
 
 let {
   DB_USER,
@@ -29,7 +29,7 @@ if (process.env.NODE_ENV === 'test' || !process.env.NODE_ENV) {
   DB_USER = sec.DB_USER;
   DB_PASS = sec.DB_PASS;
   DB_HOST = sec.DB_HOST;
-  DB_PORT = sec.DB_PORT;
+  DB_PORT = sec.DB_PORT.toString();
   DB_NAME = sec.DB_NAME;
 } else {
   logger.info(`DB connection settings - ${DB_HOST}:${DB_PORT}/${DB_NAME}`);

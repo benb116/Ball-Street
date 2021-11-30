@@ -24,4 +24,4 @@ export default function model(sequelize, DataTypes) {
       unique: true,
     },
   }, { sequelize });
-};
+}

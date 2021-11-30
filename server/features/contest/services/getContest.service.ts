@@ -1,10 +1,10 @@
-import Joi from 'joi'
+import Joi from 'joi';
 
-import { validate, dv, uError } from '../../util/util'
+import { validate, dv, uError } from '../../util/util';
 
-import { Contest } from '../../../models'
-import validators from '../../util/util.schema'
-import getEntryRank from '../../entry/services/getEntryRank.service'
+import { Contest } from '../../../models';
+import validators from '../../util/util.schema';
+import getEntryRank from '../../entry/services/getEntryRank.service';
 
 const schema = Joi.object({
   user: validators.user,

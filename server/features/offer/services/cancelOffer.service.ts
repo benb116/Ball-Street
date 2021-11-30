@@ -1,17 +1,18 @@
-import Queue from 'bull'
-import Joi from 'joi'
+import Queue from 'bull';
+import Joi from 'joi';
 
-import { dv, tobj, validate, uError } from '../../util/util'
-import validators from '../../util/util.schema'
-import { queueOptions } from '../../../db/redis'
+import {
+  dv, tobj, validate, uError,
+} from '../../util/util';
+import validators from '../../util/util.schema';
+import { queueOptions } from '../../../db/redis';
 
-import sequelize from '../../../db'
-import { Offer } from '../../../models'
+import sequelize from '../../../db';
+import { Offer } from '../../../models';
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
 };
-
 
 const offerQueue = new Queue('offer-queue', queueOptions);
 

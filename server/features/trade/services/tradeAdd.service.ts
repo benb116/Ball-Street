@@ -1,10 +1,12 @@
-import Joi from 'joi'
+import Joi from 'joi';
 
-import { Op } from 'sequelize'
-import { dv, tobj, validate, uError, isPlayerOnRoster, isOpenRoster } from '../../util/util'
-import validators from '../../util/util.schema'
+import { Op } from 'sequelize';
+import {
+  dv, validate, uError, isPlayerOnRoster, isOpenRoster,
+} from '../../util/util';
+import validators from '../../util/util.schema';
 
-import { Entry, NFLPlayer, NFLGame } from '../../../models'
+import { Entry, NFLPlayer, NFLGame } from '../../../models';
 
 const schema = Joi.object({
   user: validators.user,

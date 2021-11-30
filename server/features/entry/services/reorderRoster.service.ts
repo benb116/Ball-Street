@@ -1,12 +1,14 @@
-import Joi from 'joi'
+import Joi from 'joi';
 
-import { dv, tobj, validate, uError } from '../../util/util'
-import config from '../../../config'
+import {
+  dv, tobj, validate, uError,
+} from '../../util/util';
+import config from '../../../config';
 
-import sequelize from '../../../db'
-import { Entry, NFLPlayer } from '../../../models'
-import { errorHandler } from '../../util/util.service'
-import validators from '../../util/util.schema'
+import sequelize from '../../../db';
+import { Entry, NFLPlayer } from '../../../models';
+import { errorHandler } from '../../util/util.service';
+import validators from '../../util/util.schema';
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ

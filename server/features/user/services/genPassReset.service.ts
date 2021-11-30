@@ -1,10 +1,10 @@
-import cryptoRandomString from 'crypto-random-string'
-import Joi from 'joi'
+import cryptoRandomString from 'crypto-random-string';
+import Joi from 'joi';
 
-import { dv, tobj, validate, uError } from '../../util/util'
-import validators from '../../util/util.schema'
-import { client, rediskeys } from '../../../db/redis'
-import config from '../../../config'
+import { validate, uError } from '../../util/util';
+import validators from '../../util/util.schema';
+import { client, rediskeys } from '../../../db/redis';
+import config from '../../../config';
 
 const schema = Joi.object({
   email: validators.email,
