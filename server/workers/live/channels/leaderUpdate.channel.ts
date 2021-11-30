@@ -18,7 +18,9 @@ const leaderUpdate = {
       }
     });
     const allContests = Object.keys(leaderMemo);
-    const allLeaders = await Promise.all(allContests.map((cID) => client.GET(leaderHash(cID))));
+    const allLeaders = await Promise.all(
+      allContests.map((cID) => client.GET(leaderHash(Number(cID)))),
+    );
     const leaderMsgMap = allContests.reduce((acc, cur, i) => {
       acc[cur] = { event: 'leaderboard', leaderboard: JSON.parse(allLeaders[i]) };
       return acc;

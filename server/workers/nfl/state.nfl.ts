@@ -1,13 +1,10 @@
-function nflState() {
-  this.playerTeamMap = {}; // PlayerID: TeamID
-  this.teamPlayerMap = {}; // TeamID: [PlayerID]
-  this.statObj = {}; // PlayerID: StatCat: Statline
-  this.timeObj = {}; // TeamID: Timefrac
-  this.preProjObj = {}; // PlayerID: Pregame projection
-  this.injObj = {};
-  return this;
-}
-
-const out = nflState();
+const out = {
+  playerTeamMap: {}, // PlayerID: TeamID
+  teamPlayerMap: {}, // TeamID: [PlayerID]
+  statObj: {}, // PlayerID: StatCat: Statline
+  timeObj: {}, // TeamID: Timefrac
+  preProjObj: {}, // PlayerID: Pregame projection
+  injObj: {},
+};
 
 export default out;
