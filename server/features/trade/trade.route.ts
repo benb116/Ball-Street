@@ -1,4 +1,4 @@
-import * as express from 'express';
+import express from 'express';
 import routeHandler from '../util/util.route';
 
 import getUserTrades from './services/getUserTrades.service';

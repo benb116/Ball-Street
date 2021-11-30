@@ -1,4 +1,4 @@
-import * as express from 'express';
+import express from 'express';
 
 import authenticate from '../../middleware/authenticate';
 import routeHandler from '../util/util.route';

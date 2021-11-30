@@ -27,7 +27,7 @@
     ],
     "rules": {
         "no-useless-concat": "off",
-        "no-use-before-define": ["error", { "functions": false, "classes": true }],
+        "@typescript-eslint/no-use-before-define": ["error", { "functions": false, "classes": true }],
         "no-plusplus": [2, { "allowForLoopAfterthoughts": true }],
         "security/detect-object-injection": "off",
         "node/no-unsupported-features/es-syntax": ["error", { "ignores": ["modules"] } ],

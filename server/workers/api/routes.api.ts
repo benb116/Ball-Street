@@ -1,7 +1,7 @@
 // Route controller for the API
 // Does not include user auth routes
 
-import * as express from 'express';
+import express from 'express';
 
 import authenticate from '../../middleware/authenticate';
 
