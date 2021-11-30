@@ -23,10 +23,5 @@ module.exports = function model(sequelize, DataTypes) {
       allowNull: false,
       unique: true,
     },
-    NFLDivisionId: {
-      type: DataTypes.INTEGER,
-      references: { model: 'NFLDivisions' },
-      allowNull: false,
-    },
   }, { sequelize });
 };

@@ -8,10 +8,10 @@ describe('getNFLGames service', () => {
       AwayId: 5,
       HomeId: 4,
       away: expect.objectContaining({
-        NFLDivisionId: 7, abr: 'CLE', fullname: 'Cleveland Browns', id: 5, location: 'Cleveland', name: 'Browns',
+        abr: 'CLE', fullname: 'Cleveland Browns', id: 5, location: 'Cleveland', name: 'Browns',
       }),
       home: expect.objectContaining({
-        NFLDivisionId: 7, abr: 'CIN', fullname: 'Cincinnati Bengals', id: 4, location: 'Cincinnati', name: 'Bengals',
+        abr: 'CIN', fullname: 'Cincinnati Bengals', id: 4, location: 'Cincinnati', name: 'Bengals',
       }),
       phase: null,
       startTime: 100,
@@ -20,10 +20,10 @@ describe('getNFLGames service', () => {
       AwayId: 7,
       HomeId: 6,
       away: expect.objectContaining({
-        NFLDivisionId: 6, abr: 'DEN', fullname: 'Denver Broncos', id: 7, location: 'Denver', name: 'Broncos',
+        abr: 'DEN', fullname: 'Denver Broncos', id: 7, location: 'Denver', name: 'Broncos',
       }),
       home: expect.objectContaining({
-        NFLDivisionId: 1, abr: 'DAL', fullname: 'Dallas Cowboys', id: 6, location: 'Dallas', name: 'Cowboys',
+        abr: 'DAL', fullname: 'Dallas Cowboys', id: 6, location: 'Dallas', name: 'Cowboys',
       }),
       phase: null,
       startTime: 100,
@@ -32,10 +32,10 @@ describe('getNFLGames service', () => {
       AwayId: 9,
       HomeId: 8,
       away: expect.objectContaining({
-        NFLDivisionId: 3, abr: 'GB', fullname: 'Green Bay Packers', id: 9, location: 'Green Bay', name: 'Packers',
+        abr: 'GB', fullname: 'Green Bay Packers', id: 9, location: 'Green Bay', name: 'Packers',
       }),
       home: expect.objectContaining({
-        NFLDivisionId: 3, abr: 'DET', fullname: 'Detroit Lions', id: 8, location: 'Detroit', name: 'Lions',
+        abr: 'DET', fullname: 'Detroit Lions', id: 8, location: 'Detroit', name: 'Lions',
       }),
       phase: null,
       startTime: 100,
@@ -44,10 +44,10 @@ describe('getNFLGames service', () => {
       AwayId: 1,
       HomeId: 10,
       away: expect.objectContaining({
-        NFLDivisionId: 4, abr: 'ATL', fullname: 'Atlanta Falcons', id: 1, location: 'Atlanta', name: 'Falcons',
+        abr: 'ATL', fullname: 'Atlanta Falcons', id: 1, location: 'Atlanta', name: 'Falcons',
       }),
       home: expect.objectContaining({
-        NFLDivisionId: 8, abr: 'TEN', fullname: 'Tennessee Titans', id: 10, location: 'Tennessee', name: 'Titans',
+        abr: 'TEN', fullname: 'Tennessee Titans', id: 10, location: 'Tennessee', name: 'Titans',
       }),
       phase: null,
       startTime: 100,
@@ -56,10 +56,10 @@ describe('getNFLGames service', () => {
       AwayId: 21,
       HomeId: 13,
       away: expect.objectContaining({
-        NFLDivisionId: 1, abr: 'PHI', fullname: 'Philadelphia Eagles', id: 21, location: 'Philadelphia', name: 'Eagles',
+        abr: 'PHI', fullname: 'Philadelphia Eagles', id: 21, location: 'Philadelphia', name: 'Eagles',
       }),
       home: expect.objectContaining({
-        NFLDivisionId: 6, abr: 'LV', fullname: 'Las Vegas Raiders', id: 13, location: 'Las Vegas', name: 'Raiders',
+        abr: 'LV', fullname: 'Las Vegas Raiders', id: 13, location: 'Las Vegas', name: 'Raiders',
       }),
       phase: 'mid',
       startTime: 200,
@@ -68,10 +68,10 @@ describe('getNFLGames service', () => {
       AwayId: 27,
       HomeId: 14,
       away: expect.objectContaining({
-        NFLDivisionId: 4, abr: 'TB', fullname: 'Tampa Bay Buccaneers', id: 27, location: 'Tampa Bay', name: 'Buccaneers',
+        abr: 'TB', fullname: 'Tampa Bay Buccaneers', id: 27, location: 'Tampa Bay', name: 'Buccaneers',
       }),
       home: expect.objectContaining({
-        NFLDivisionId: 2, abr: 'LAR', fullname: 'Los Angeles Rams', id: 14, location: 'Los Angeles', name: 'Rams',
+        abr: 'LAR', fullname: 'Los Angeles Rams', id: 14, location: 'Los Angeles', name: 'Rams',
       }),
       phase: null,
       startTime: 100,
@@ -80,10 +80,10 @@ describe('getNFLGames service', () => {
       AwayId: 16,
       HomeId: 15,
       away: expect.objectContaining({
-        NFLDivisionId: 3, abr: 'MIN', fullname: 'Minnesota Vikings', id: 16, location: 'Minnesota', name: 'Vikings',
+        abr: 'MIN', fullname: 'Minnesota Vikings', id: 16, location: 'Minnesota', name: 'Vikings',
       }),
       home: expect.objectContaining({
-        NFLDivisionId: 5, abr: 'MIA', fullname: 'Miami Dolphins', id: 15, location: 'Miami', name: 'Dolphins',
+        abr: 'MIA', fullname: 'Miami Dolphins', id: 15, location: 'Miami', name: 'Dolphins',
       }),
       phase: null,
       startTime: 100,
@@ -92,10 +92,10 @@ describe('getNFLGames service', () => {
       AwayId: 18,
       HomeId: 17,
       away: expect.objectContaining({
-        NFLDivisionId: 4, abr: 'NO', fullname: 'New Orleans Saints', id: 18, location: 'New Orleans', name: 'Saints',
+        abr: 'NO', fullname: 'New Orleans Saints', id: 18, location: 'New Orleans', name: 'Saints',
       }),
       home: expect.objectContaining({
-        NFLDivisionId: 5, abr: 'NE', fullname: 'New England Patriots', id: 17, location: 'New England', name: 'Patriots',
+        abr: 'NE', fullname: 'New England Patriots', id: 17, location: 'New England', name: 'Patriots',
       }),
       phase: 'pre',
       startTime: 400,
@@ -104,10 +104,10 @@ describe('getNFLGames service', () => {
       AwayId: 20,
       HomeId: 19,
       away: expect.objectContaining({
-        NFLDivisionId: 5, abr: 'NYJ', fullname: 'New York Jets', id: 20, location: 'New York', name: 'Jets',
+        abr: 'NYJ', fullname: 'New York Jets', id: 20, location: 'New York', name: 'Jets',
       }),
       home: expect.objectContaining({
-        NFLDivisionId: 1, abr: 'NYG', fullname: 'New York Giants', id: 19, location: 'New York', name: 'Giants',
+        abr: 'NYG', fullname: 'New York Giants', id: 19, location: 'New York', name: 'Giants',
       }),
       phase: null,
       startTime: 100,
@@ -116,10 +116,10 @@ describe('getNFLGames service', () => {
       AwayId: 28,
       HomeId: 22,
       away: expect.objectContaining({
-        NFLDivisionId: 1, abr: 'WAS', fullname: 'Washington Football Team', id: 28, location: 'Washington', name: 'Football Team',
+        abr: 'WAS', fullname: 'Washington Football Team', id: 28, location: 'Washington', name: 'Football Team',
       }),
       home: expect.objectContaining({
-        NFLDivisionId: 2, abr: 'ARI', fullname: 'Arizona Cardinals', id: 22, location: 'Arizona', name: 'Cardinals',
+        abr: 'ARI', fullname: 'Arizona Cardinals', id: 22, location: 'Arizona', name: 'Cardinals',
       }),
       phase: 'pre',
       startTime: 400,
@@ -128,10 +128,10 @@ describe('getNFLGames service', () => {
       AwayId: 24,
       HomeId: 23,
       away: expect.objectContaining({
-        NFLDivisionId: 6, abr: 'LAC', fullname: 'Los Angeles Chargers', id: 24, location: 'Los Angeles', name: 'Chargers',
+        abr: 'LAC', fullname: 'Los Angeles Chargers', id: 24, location: 'Los Angeles', name: 'Chargers',
       }),
       home: expect.objectContaining({
-        NFLDivisionId: 7, abr: 'PIT', fullname: 'Pittsburgh Steelers', id: 23, location: 'Pittsburgh', name: 'Steelers',
+        abr: 'PIT', fullname: 'Pittsburgh Steelers', id: 23, location: 'Pittsburgh', name: 'Steelers',
       }),
       phase: 'mid',
       startTime: 200,
@@ -140,10 +140,10 @@ describe('getNFLGames service', () => {
       AwayId: 26,
       HomeId: 25,
       away: expect.objectContaining({
-        NFLDivisionId: 2, abr: 'SEA', fullname: 'Seattle Seahawks', id: 26, location: 'Seattle', name: 'Seahawks',
+        abr: 'SEA', fullname: 'Seattle Seahawks', id: 26, location: 'Seattle', name: 'Seahawks',
       }),
       home: expect.objectContaining({
-        NFLDivisionId: 2, abr: 'SF', fullname: 'San Francisco 49ers', id: 25, location: 'San Francisco', name: '49ers',
+        abr: 'SF', fullname: 'San Francisco 49ers', id: 25, location: 'San Francisco', name: '49ers',
       }),
       phase: 'mid',
       startTime: 200,
@@ -152,10 +152,10 @@ describe('getNFLGames service', () => {
       AwayId: 3,
       HomeId: 29,
       away: expect.objectContaining({
-        NFLDivisionId: 3, abr: 'CHI', fullname: 'Chicago Bears', id: 3, location: 'Chicago', name: 'Bears',
+        abr: 'CHI', fullname: 'Chicago Bears', id: 3, location: 'Chicago', name: 'Bears',
       }),
       home: expect.objectContaining({
-        NFLDivisionId: 4, abr: 'CAR', fullname: 'Carolina Panthers', id: 29, location: 'Carolina', name: 'Panthers',
+        abr: 'CAR', fullname: 'Carolina Panthers', id: 29, location: 'Carolina', name: 'Panthers',
       }),
       phase: null,
       startTime: 100,
@@ -164,10 +164,10 @@ describe('getNFLGames service', () => {
       AwayId: 12,
       HomeId: 30,
       away: expect.objectContaining({
-        NFLDivisionId: 6, abr: 'KC', fullname: 'Kansas City Chiefs', id: 12, location: 'Kansas City', name: 'Chiefs',
+        abr: 'KC', fullname: 'Kansas City Chiefs', id: 12, location: 'Kansas City', name: 'Chiefs',
       }),
       home: expect.objectContaining({
-        NFLDivisionId: 8, abr: 'JAX', fullname: 'Jacksonville Jaguars', id: 30, location: 'Jacksonville', name: 'Jaguars',
+        abr: 'JAX', fullname: 'Jacksonville Jaguars', id: 30, location: 'Jacksonville', name: 'Jaguars',
       }),
       phase: 'pre',
       startTime: 400,
@@ -176,10 +176,10 @@ describe('getNFLGames service', () => {
       AwayId: 2,
       HomeId: 33,
       away: expect.objectContaining({
-        NFLDivisionId: 5, abr: 'BUF', fullname: 'Buffalo Bills', id: 2, location: 'Buffalo', name: 'Bills',
+        abr: 'BUF', fullname: 'Buffalo Bills', id: 2, location: 'Buffalo', name: 'Bills',
       }),
       home: expect.objectContaining({
-        NFLDivisionId: 7, abr: 'BAL', fullname: 'Baltimore Ravens', id: 33, location: 'Baltimore', name: 'Ravens',
+        abr: 'BAL', fullname: 'Baltimore Ravens', id: 33, location: 'Baltimore', name: 'Ravens',
       }),
       phase: 'pre',
       startTime: 400,
@@ -188,10 +188,10 @@ describe('getNFLGames service', () => {
       AwayId: 11,
       HomeId: 34,
       away: expect.objectContaining({
-        NFLDivisionId: 8, abr: 'IND', fullname: 'Indianapolis Colts', id: 11, location: 'Indianapolis', name: 'Colts',
+        abr: 'IND', fullname: 'Indianapolis Colts', id: 11, location: 'Indianapolis', name: 'Colts',
       }),
       home: expect.objectContaining({
-        NFLDivisionId: 8, abr: 'HOU', fullname: 'Houston Texans', id: 34, location: 'Houston', name: 'Texans',
+        abr: 'HOU', fullname: 'Houston Texans', id: 34, location: 'Houston', name: 'Texans',
       }),
       phase: null,
       startTime: 100,
