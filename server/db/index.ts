@@ -26,11 +26,11 @@ const dbOptions = {
 // since test doesn't run within docker, doesn't have env vars
 if (process.env.NODE_ENV === 'test' || !process.env.NODE_ENV) {
   // eslint-disable-next-line global-require
-  DB_USER = sec.DB_USER;
-  DB_PASS = sec.DB_PASS;
-  DB_HOST = sec.DB_HOST;
-  DB_PORT = sec.DB_PORT.toString();
-  DB_NAME = sec.DB_NAME;
+  DB_USER = sec.db.user;
+  DB_PASS = sec.db.pass;
+  DB_HOST = sec.db.host;
+  DB_PORT = sec.db.port.toString();
+  DB_NAME = sec.db.name;
 } else {
   logger.info(`DB connection settings - ${DB_HOST}:${DB_PORT}/${DB_NAME}`);
 }
