@@ -2,7 +2,8 @@ const secret = {
   db: {
     user: 'user',
     pass: 'pass',
-    host: 'localhost:port/',
+    host: 'localhost',
+    port: 1234,
     name: 'dbName',
   },
   cookieSecret: 'cookiesecret',

@@ -19,7 +19,7 @@ module.exports = function out(sequelize, DataTypes) {
     },
     phase: {
       type: DataTypes.STRING(255),
-      default: 'post',
+      defaultValue: 'post',
       validate: {
         isIn: [['pre', 'mid', 'post']],
       },

@@ -13,7 +13,7 @@ module.exports = function model(sequelize, DataTypes) {
     ispublic: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      default: true,
+      defaultValue: true,
     },
   }, { sequelize });
 };

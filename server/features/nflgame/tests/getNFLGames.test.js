@@ -13,7 +13,7 @@ describe('getNFLGames service', () => {
       home: expect.objectContaining({
         abr: 'CIN', fullname: 'Cincinnati Bengals', id: 4, location: 'Cincinnati', name: 'Bengals',
       }),
-      phase: null,
+      phase: 'post',
       startTime: 100,
       week: Number(process.env.WEEK),
     }, {
@@ -25,7 +25,7 @@ describe('getNFLGames service', () => {
       home: expect.objectContaining({
         abr: 'DAL', fullname: 'Dallas Cowboys', id: 6, location: 'Dallas', name: 'Cowboys',
       }),
-      phase: null,
+      phase: 'post',
       startTime: 100,
       week: Number(process.env.WEEK),
     }, {
@@ -37,7 +37,7 @@ describe('getNFLGames service', () => {
       home: expect.objectContaining({
         abr: 'DET', fullname: 'Detroit Lions', id: 8, location: 'Detroit', name: 'Lions',
       }),
-      phase: null,
+      phase: 'post',
       startTime: 100,
       week: Number(process.env.WEEK),
     }, {
@@ -49,7 +49,7 @@ describe('getNFLGames service', () => {
       home: expect.objectContaining({
         abr: 'TEN', fullname: 'Tennessee Titans', id: 10, location: 'Tennessee', name: 'Titans',
       }),
-      phase: null,
+      phase: 'post',
       startTime: 100,
       week: Number(process.env.WEEK),
     }, {
@@ -73,7 +73,7 @@ describe('getNFLGames service', () => {
       home: expect.objectContaining({
         abr: 'LAR', fullname: 'Los Angeles Rams', id: 14, location: 'Los Angeles', name: 'Rams',
       }),
-      phase: null,
+      phase: 'post',
       startTime: 100,
       week: Number(process.env.WEEK),
     }, {
@@ -85,7 +85,7 @@ describe('getNFLGames service', () => {
       home: expect.objectContaining({
         abr: 'MIA', fullname: 'Miami Dolphins', id: 15, location: 'Miami', name: 'Dolphins',
       }),
-      phase: null,
+      phase: 'post',
       startTime: 100,
       week: Number(process.env.WEEK),
     }, {
@@ -109,7 +109,7 @@ describe('getNFLGames service', () => {
       home: expect.objectContaining({
         abr: 'NYG', fullname: 'New York Giants', id: 19, location: 'New York', name: 'Giants',
       }),
-      phase: null,
+      phase: 'post',
       startTime: 100,
       week: Number(process.env.WEEK),
     }, {
@@ -157,7 +157,7 @@ describe('getNFLGames service', () => {
       home: expect.objectContaining({
         abr: 'CAR', fullname: 'Carolina Panthers', id: 29, location: 'Carolina', name: 'Panthers',
       }),
-      phase: null,
+      phase: 'post',
       startTime: 100,
       week: Number(process.env.WEEK),
     }, {
@@ -193,7 +193,7 @@ describe('getNFLGames service', () => {
       home: expect.objectContaining({
         abr: 'HOU', fullname: 'Houston Texans', id: 34, location: 'Houston', name: 'Texans',
       }),
-      phase: null,
+      phase: 'post',
       startTime: 100,
       week: Number(process.env.WEEK),
     }],

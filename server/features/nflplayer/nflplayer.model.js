@@ -12,7 +12,7 @@ module.exports = function out(sequelize, DataTypes) {
     },
     jersey: {
       type: DataTypes.INTEGER,
-      default: 0,
+      defaultValue: 0,
     },
     preprice: { // How much can someone pay to add before games start
       type: DataTypes.INTEGER,
