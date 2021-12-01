@@ -2,6 +2,7 @@
 // Used by offer worker
 // Try to fill a pair of offers
 
+import { Transaction } from 'sequelize';
 import { dv, tobj } from '../../features/util/util';
 
 import sequelize from '../../db';
@@ -28,7 +29,7 @@ async function fillOffers(bidid: string, askid: string, price = false) {
   return out;
 }
 
-async function attemptFill(t, bidid: string, askid: string, tprice: boolean) {
+async function attemptFill(t: Transaction, bidid: string, askid: string, tprice: boolean) {
   const resp = {
     bid: { id: bidid, closed: false },
     ask: { id: askid, closed: false },

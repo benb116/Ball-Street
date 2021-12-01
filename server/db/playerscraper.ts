@@ -7,7 +7,7 @@ import { NFLPlayer } from '../models';
 import secret from '../secret';
 
 // Yahoo team ID numbers
-const teammap = {
+const teammap: Record<string, number> = {
   ARI: 22,
   ATL: 1,
   BAL: 33,
@@ -42,7 +42,7 @@ const teammap = {
   WAS: 28,
 };
 
-const nflpos = {
+const nflpos: Record<string, number> = {
   QB: 1,
   RB: 2,
   WR: 3,
@@ -86,8 +86,8 @@ async function sendreq(price: boolean, pagenum = 0, posget = 'O') {
     .then((res) => res.data.split('<tbody>')[1])
     .then((res) => res.split('</tbody>')[0])
     .then((res) => res.split('</td></tr>'))
-    .then((out) => out.map((playerline) => {
-      if (!playerline.length) return null;
+    .then((out) => out.filter((o: string) => o.length))
+    .then((out) => out.map((playerline: string) => {
       // Pull out info
       const term = (posget === 'DEF' ? 'teams' : 'players');
       const trimfront = playerline.split(`<a class="Nowrap name F-link" href="https://sports.yahoo.com/nfl/${term}/`)[1];
@@ -116,7 +116,6 @@ async function sendreq(price: boolean, pagenum = 0, posget = 'O') {
         injuryStatus,
       };
     }))
-    .then((arr) => arr.filter((e) => e !== null))
     // If player exists in DB, overwrite certain properties
     .then((objs) => NFLPlayer.bulkCreate(objs, { updateOnDuplicate: ['preprice', 'postprice', 'NFLTeamId', 'active', 'injuryStatus'] }));
 }
