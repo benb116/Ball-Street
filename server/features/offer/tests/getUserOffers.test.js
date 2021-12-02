@@ -3,7 +3,7 @@ const { ErrorTest, ArrayTest } = require('../../util/util');
 
 describe('getUserOffers service', () => {
   test('Valid request returns data', ArrayTest(
-    service, { user: 2, params: { leagueID: 2, contestID: 2 }, body: {} },
+    service, { user: 2, params: { contestID: 2 }, body: {} },
     [{
       ContestId: 2,
       NFLPlayerId: 31885,
@@ -17,12 +17,12 @@ describe('getUserOffers service', () => {
   ));
 
   test('Missing contestID returns error 400', ErrorTest(
-    service, { user: 2, params: { leagueID: 2 }, body: {} },
+    service, { user: 2, params: { }, body: {} },
     400, 'Please specify a contest',
   ));
 
   test('Missing userID returns error 400', ErrorTest(
-    service, { params: { leagueID: 1, contestID: 2 }, body: {} },
+    service, { params: { contestID: 2 }, body: {} },
     400, 'You must be logged in',
   ));
 });

@@ -5,7 +5,7 @@ describe('createOffer service', () => {
   test('Valid request returns data', ObjectTest(
     service, {
       user: 1,
-      params: { leagueID: 2, contestID: 2 },
+      params: { contestID: 2 },
       body: {
         offerobj: {
           nflplayerID: 31885,
@@ -29,7 +29,7 @@ describe('createOffer service', () => {
   test('Duplicate offer returns error 406', ErrorTest(
     service, {
       user: 2,
-      params: { leagueID: 2, contestID: 2 },
+      params: { contestID: 2 },
       body: {
         offerobj: {
           nflplayerID: 31885,
@@ -44,7 +44,7 @@ describe('createOffer service', () => {
   test('Insufficient funds returns error 402', ErrorTest(
     service, {
       user: 1,
-      params: { leagueID: 2, contestID: 2 },
+      params: { contestID: 2 },
       body: {
         offerobj: {
           nflplayerID: 31221,
@@ -59,7 +59,7 @@ describe('createOffer service', () => {
   test('Non-existent player returns 404', ErrorTest(
     service, {
       user: 1,
-      params: { leagueID: 2, contestID: 2 },
+      params: { contestID: 2 },
       body: {
         offerobj: {
           nflplayerID: 99999,
@@ -74,7 +74,7 @@ describe('createOffer service', () => {
   test('Bid existing returns error 409', ErrorTest(
     service, {
       user: 1,
-      params: { leagueID: 2, contestID: 2 },
+      params: { contestID: 2 },
       body: {
         offerobj: {
           nflplayerID: 30266,
@@ -89,7 +89,7 @@ describe('createOffer service', () => {
   test('Ask non-existing returns error 404', ErrorTest(
     service, {
       user: 1,
-      params: { leagueID: 2, contestID: 2 },
+      params: { contestID: 2 },
       body: {
         offerobj: {
           nflplayerID: 31221,
@@ -104,7 +104,7 @@ describe('createOffer service', () => {
   test('No open spots returns error 409', ErrorTest(
     service, {
       user: 1,
-      params: { leagueID: 2, contestID: 2 },
+      params: { contestID: 2 },
       body: {
         offerobj: {
           nflplayerID: 28378,
@@ -119,7 +119,7 @@ describe('createOffer service', () => {
   test('No entry returns error 404', ErrorTest(
     service, {
       user: 4,
-      params: { leagueID: 2, contestID: 2 },
+      params: { contestID: 2 },
       body: {
         offerobj: {
           nflplayerID: 31885,
@@ -134,7 +134,7 @@ describe('createOffer service', () => {
   test('Missing contestID returns error 400', ErrorTest(
     service, {
       user: 1,
-      params: { leagueID: 2 },
+      params: { },
       body: {
         offerobj: {
           nflplayerID: 31885,
@@ -148,7 +148,7 @@ describe('createOffer service', () => {
 
   test('Missing userID returns error 400', ErrorTest(
     service, {
-      params: { leagueID: 2, contestID: 2 },
+      params: { contestID: 2 },
       body: {
         offerobj: {
           nflplayerID: 31885,
@@ -163,7 +163,7 @@ describe('createOffer service', () => {
   test('Not mid games returns error 406', ErrorTest(
     service, {
       user: 2,
-      params: { leagueID: 2, contestID: 2 },
+      params: { contestID: 2 },
       body: {
         offerobj: {
           nflplayerID: 32231,

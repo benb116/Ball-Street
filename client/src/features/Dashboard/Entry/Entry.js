@@ -10,22 +10,22 @@ import RosterItem from './RosterItem';
 
 const Entry = () => {
   const dispatch = useDispatch();
-  const { leagueID, contestID } = useParams();
+  const { contestID } = useParams();
 
   const thisentry = useSelector(entrySelector);
   const rUpdate = useSelector(rosterUpdateSelector);
   const rpos = Object.keys(thisentry.roster);
 
   useEffect(() => {
-    dispatch(getEntry({ leagueID, contestID }));
-  }, [contestID, dispatch, leagueID]);
+    dispatch(getEntry({ contestID }));
+  }, [contestID, dispatch]);
 
   // When an offer is filled, the rUpdate flag is raised
   useEffect(() => {
     if (rUpdate) {
-      dispatch(getEntry({ leagueID, contestID }));
+      dispatch(getEntry({ contestID }));
     }
-  }, [contestID, dispatch, leagueID, rUpdate]);
+  }, [contestID, dispatch, rUpdate]);
 
   return (
     <div

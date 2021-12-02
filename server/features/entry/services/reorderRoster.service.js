@@ -5,7 +5,7 @@ const config = require('../../../config');
 
 const sequelize = require('../../../db');
 const { Entry, NFLPlayer } = require('../../../models');
-const { canUserSeeContest, errorHandler } = require('../../util/util.service');
+const { errorHandler } = require('../../util/util.service');
 const { validators } = require('../../util/util.schema');
 
 const isoOption = {
@@ -15,7 +15,6 @@ const isoOption = {
 const schema = Joi.object({
   user: validators.user,
   params: Joi.object().keys({
-    leagueID: validators.leagueID,
     contestID: validators.contestID,
   }).required(),
   body: Joi.object().keys({
@@ -54,13 +53,6 @@ async function reorderRoster(req) {
         u.Error('Cannot put that player in that position', 406);
       }
     }
-
-    await canUserSeeContest(
-      t,
-      value.user,
-      value.params.leagueID,
-      value.params.contestID,
-    );
 
     const theentry = await Entry.findOne({
       where: {

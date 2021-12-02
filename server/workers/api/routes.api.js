@@ -2,8 +2,6 @@
 // Does not include user auth routes
 
 const router = require('express').Router();
-const leaguesRouter = require('express').Router({ mergeParams: true });
-const leagueRouter = require('express').Router({ mergeParams: true });
 const contestsRouter = require('express').Router({ mergeParams: true });
 const contestRouter = require('express').Router({ mergeParams: true });
 
@@ -16,7 +14,6 @@ router.use('/nfldata/', require('../../features/nflplayer/nfldata.route'));
 router.use(authenticate);
 
 // Stacked routers
-// /leagues/:leagueID/contests/:contestID/...
 
 contestRouter.use('/:contestID/', require('../../features/entry/entry.route'));
 contestRouter.use('/:contestID/', require('../../features/offer/offer.route'));
@@ -26,11 +23,6 @@ contestRouter.use('/:contestID/', require('../../features/nflplayer/nflplayer.ro
 contestsRouter.use('/contests/', contestRouter);
 contestsRouter.use('/contests/', require('../../features/contest/contest.route'));
 
-leagueRouter.use('/:leagueID/', contestsRouter);
-
-leaguesRouter.use('/leagues/', leagueRouter);
-leaguesRouter.use('/leagues/', require('../../features/league/league.route'));
-
-router.use(leaguesRouter);
+router.use(contestsRouter);
 
 module.exports = router;

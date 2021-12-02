@@ -8,8 +8,7 @@
 * Forgot Password
 
 * Account page
-* Leagues
-* League > Contests
+* Contests
 * Contest 
 
 * Dashboard

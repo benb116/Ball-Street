@@ -11,7 +11,7 @@ import RenderPrice from '../../../helpers/util';
 
 function PlayerItem({ playerdata }) {
   const dispatch = useDispatch();
-  const { leagueID, contestID } = useParams();
+  const { contestID } = useParams();
   const offers = useSelector(offersSelector);
   const theteams = useSelector(allTeamsSelector);
 
@@ -25,11 +25,11 @@ function PlayerItem({ playerdata }) {
   const dispStat = thephase === 'pre' ? playerdata.postprice : (priceMap.statPrice || 0);
 
   const onpredrop = () => {
-    dispatch(preDrop({ leagueID, contestID, nflplayerID: playerdata.id }));
+    dispatch(preDrop({ contestID, nflplayerID: playerdata.id }));
   };
 
   const onpreadd = () => {
-    dispatch(preAdd({ leagueID, contestID, nflplayerID: playerdata.id }));
+    dispatch(preAdd({ contestID, nflplayerID: playerdata.id }));
   };
 
   const onask = () => {
@@ -56,7 +56,7 @@ function PlayerItem({ playerdata }) {
   const playerofferasks = offers.asks.find((o) => o.NFLPlayerId === playerdata.id);
   const playeroffer = playerofferbids || playerofferasks;
   const oncancelOffer = (oid) => {
-    dispatch(cancelOffer({ leagueID, contestID, offerID: oid }));
+    dispatch(cancelOffer({ contestID, offerID: oid }));
   };
 
   let oclick = (showDrop ? onpredrop : onpreadd);

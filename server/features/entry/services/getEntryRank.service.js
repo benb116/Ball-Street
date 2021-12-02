@@ -10,7 +10,6 @@ const { Entry } = require('../../../models');
 const schema = Joi.object({
   user: validators.user,
   params: Joi.object().keys({
-    leagueID: validators.leagueIDOptional,
     contestID: validators.contestID,
   }).required(),
   body: validators.noObj,
@@ -19,7 +18,6 @@ const schema = Joi.object({
 // Get an entry's rank within a contest
 async function getEntryRank(req) {
   const value = u.validate(req, schema);
-  // Requires authorization or looking at a public league
   const theentry = await getEntry(value);
 
   // Count entries with greater point total, then add one

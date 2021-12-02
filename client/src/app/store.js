@@ -1,6 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { userSlice } from '../features/User/UserSlice';
-import { leaguesSlice } from '../features/Leagues/LeaguesSlice';
 
 import { entrySlice } from '../features/Dashboard/Entry/EntrySlice';
 import { leaderboardSlice } from '../features/Dashboard/Leaderboard/LeaderboardSlice';
@@ -13,7 +12,6 @@ import { tradesSlice } from '../features/Dashboard/Trades/TradesSlice';
 export default configureStore({
   reducer: {
     user: userSlice.reducer,
-    leagues: leaguesSlice.reducer,
     contests: contestsSlice.reducer,
     // dashboard: {
     entry: entrySlice.reducer,

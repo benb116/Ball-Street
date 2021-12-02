@@ -8,11 +8,6 @@ module.exports = function model(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    LeagueId: {
-      type: DataTypes.INTEGER,
-      references: { model: 'Leagues' },
-      allowNull: false,
-    },
     budget: {
       type: DataTypes.INTEGER,
       allowNull: false,

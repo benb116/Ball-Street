@@ -2,10 +2,10 @@ const service = require('../services/preTradeDrop.service');
 const { ErrorTest, ObjectTest } = require('../../util/util');
 
 describe('preTradeDrop service', () => {
-  test('Valid request in private league returns data', ObjectTest(
+  test('Valid request returns data', ObjectTest(
     service, {
       user: 2,
-      params: { leagueID: 2, contestID: 2 },
+      params: { contestID: 2 },
       body: {
         nflplayerID: 32398,
       },
@@ -30,7 +30,7 @@ describe('preTradeDrop service', () => {
   test('Duplicate drop returns error 406', ErrorTest(
     service, {
       user: 2,
-      params: { leagueID: 2, contestID: 2 },
+      params: { contestID: 2 },
       body: {
         nflplayerID: 31019,
       },
@@ -41,7 +41,7 @@ describe('preTradeDrop service', () => {
   test('Predrop with price returns error 400', ErrorTest(
     service, {
       user: 2,
-      params: { leagueID: 2, contestID: 2 },
+      params: { contestID: 2 },
       body: {
         nflplayerID: 29360,
         price: 100,
@@ -53,7 +53,7 @@ describe('preTradeDrop service', () => {
   test('No entry returns error 404', ErrorTest(
     service, {
       user: 4,
-      params: { leagueID: 2, contestID: 2 },
+      params: { contestID: 2 },
       body: {
         nflplayerID: 31019,
       },
@@ -64,7 +64,7 @@ describe('preTradeDrop service', () => {
   test('Missing contestID returns error 400', ErrorTest(
     service, {
       user: 1,
-      params: { leagueID: 2 },
+      params: { },
       body: {
         nflplayerID: 31019,
       },
@@ -74,7 +74,7 @@ describe('preTradeDrop service', () => {
 
   test('Missing userID returns error 400', ErrorTest(
     service, {
-      params: { leagueID: 2, contestID: 2 },
+      params: { contestID: 2 },
       body: {
         nflplayerID: 31019,
       },
@@ -85,7 +85,7 @@ describe('preTradeDrop service', () => {
   test('Not pre games returns error 406', ErrorTest(
     service, {
       user: 2,
-      params: { leagueID: 2, contestID: 2 },
+      params: { contestID: 2 },
       body: {
         nflplayerID: 30266,
       },

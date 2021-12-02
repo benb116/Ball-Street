@@ -8,11 +8,11 @@ import { cancelOffer, getOffers, offersSelector } from './OffersSlice';
 
 const Offers = () => {
   const dispatch = useDispatch();
-  const { leagueID, contestID } = useParams();
+  const { contestID } = useParams();
 
   useEffect(() => {
-    dispatch(getOffers({ leagueID, contestID }));
-  }, [contestID, dispatch, leagueID]);
+    dispatch(getOffers({ contestID }));
+  }, [contestID, dispatch]);
 
   const offers = useSelector(offersSelector);
 
@@ -55,7 +55,7 @@ function OfferItem({ offerdata }) {
   const [, setCount] = useState(0); // integer state
 
   const dispatch = useDispatch();
-  const { leagueID, contestID } = useParams();
+  const { contestID } = useParams();
 
   const playerdata = useSelector(playerSelector(offerdata.NFLPlayerId));
   const teamdata = useSelector(allTeamsSelector);
@@ -65,7 +65,7 @@ function OfferItem({ offerdata }) {
   }
 
   const oncancelOffer = (oid) => {
-    dispatch(cancelOffer({ leagueID, contestID, offerID: oid }));
+    dispatch(cancelOffer({ contestID, offerID: oid }));
   };
 
   // Want to rerender this once a second if the expire flag is set

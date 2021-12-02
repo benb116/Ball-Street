@@ -5,7 +5,7 @@ describe('preTradeAdd service', () => {
   test('Valid request returns data', ObjectTest(
     service, {
       user: 1,
-      params: { leagueID: 2, contestID: 2 },
+      params: { contestID: 2 },
       body: {
         nflplayerID: 27648,
         rosterposition: 'TE1',
@@ -31,7 +31,7 @@ describe('preTradeAdd service', () => {
   test('Duplicate add returns error 406', ErrorTest(
     service, {
       user: 2,
-      params: { leagueID: 2, contestID: 2 },
+      params: { contestID: 2 },
       body: {
         nflplayerID: 31885,
         rosterposition: 'RB1',
@@ -43,7 +43,7 @@ describe('preTradeAdd service', () => {
   test('Preadd with price returns error 400', ErrorTest(
     service, {
       user: 2,
-      params: { leagueID: 2, contestID: 2 },
+      params: { contestID: 2 },
       body: {
         nflplayerID: 27631,
         rosterposition: 'RB1',
@@ -56,7 +56,7 @@ describe('preTradeAdd service', () => {
   test('Insufficient funds returns error 402', ErrorTest(
     service, {
       user: 3,
-      params: { leagueID: 2, contestID: 2 },
+      params: { contestID: 2 },
       body: {
         nflplayerID: 27648,
         rosterposition: 'FLEX1',
@@ -68,7 +68,7 @@ describe('preTradeAdd service', () => {
   test('Player in spot returns error 406', ErrorTest(
     service, {
       user: 1,
-      params: { leagueID: 2, contestID: 2 },
+      params: { contestID: 2 },
       body: {
         nflplayerID: 31199,
         rosterposition: 'K1',
@@ -80,7 +80,7 @@ describe('preTradeAdd service', () => {
   test('No open spots returns error 406', ErrorTest(
     service, {
       user: 1,
-      params: { leagueID: 2, contestID: 2 },
+      params: { contestID: 2 },
       body: {
         nflplayerID: 31199,
       },
@@ -91,7 +91,7 @@ describe('preTradeAdd service', () => {
   test('No entry returns error 404', ErrorTest(
     service, {
       user: 4,
-      params: { leagueID: 2, contestID: 2 },
+      params: { contestID: 2 },
       body: {
         nflplayerID: 27648,
         rosterposition: 'TE1',
@@ -103,7 +103,7 @@ describe('preTradeAdd service', () => {
   test('Missing contestID returns error 400', ErrorTest(
     service, {
       user: 1,
-      params: { leagueID: 2 },
+      params: { },
       body: {
         nflplayerID: 27648,
         rosterposition: 'TE1',
@@ -114,7 +114,7 @@ describe('preTradeAdd service', () => {
 
   test('Missing userID returns error 400', ErrorTest(
     service, {
-      params: { leagueID: 2, contestID: 2 },
+      params: { contestID: 2 },
       body: {
         nflplayerID: 27648,
         rosterposition: 'TE1',
@@ -126,7 +126,7 @@ describe('preTradeAdd service', () => {
   test('Not pre games returns error 406', ErrorTest(
     service, {
       user: 1,
-      params: { leagueID: 1, contestID: 1 },
+      params: { contestID: 1 },
       body: {
         nflplayerID: 31019,
         rosterposition: 'TE1',
