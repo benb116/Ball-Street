@@ -3,7 +3,7 @@
 // Tries to reduce order book whenever an offer comes in
 // Sends out matches to be filled
 import Queue from 'bull';
-import config from '../config';
+import { ProtectionDelay } from '../config';
 
 import { queueOptions } from '../db/redis';
 
@@ -96,11 +96,11 @@ function addToProtectedMatchQueue(eOffer, nOffer, ContestId: number, NFLPlayerId
     newOffer: nOffer.id,
     ContestId,
     NFLPlayerId,
-  }, { delay: config.ProtectionDelay * 1000 });
+  }, { delay: ProtectionDelay * 1000 });
   // Send ping to user
   protectedMatch.pub({
     userID: eOffer.data.UserId,
     offerID: eOffer.id,
-    expire: Date.now() + config.ProtectionDelay * 1000,
+    expire: Date.now() + ProtectionDelay * 1000,
   });
 }

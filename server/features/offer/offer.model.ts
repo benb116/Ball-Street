@@ -1,5 +1,5 @@
 import Sequelize from 'sequelize';
-import config from '../../config';
+import { DefaultProtected } from '../../config';
 
 export default function model(sequelize, DataTypes) {
   return sequelize.define('Offer', {
@@ -19,7 +19,7 @@ export default function model(sequelize, DataTypes) {
     protected: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: config.DefaultProtected,
+      defaultValue: DefaultProtected,
     },
     filled: {
       type: DataTypes.BOOLEAN,

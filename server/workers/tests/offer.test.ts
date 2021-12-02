@@ -4,7 +4,7 @@ import axios from 'axios';
 
 import createOffer from '../../features/offer/services/createOffer.service';
 import { rediskeys, client } from '../../db/redis';
-import config from '../../config';
+import { ProtectionDelay, RefreshTime } from '../../config';
 
 const contestID = 2;
 
@@ -161,13 +161,13 @@ describe('Offer matching tests', () => {
     expect(data.pricedata).toEqual(expect.objectContaining({
       21: { bestask: 500, bestbid: 0, nflplayerID: 21 },
     }));
-  }), (config.RefreshTime + 1) * 1000);
+  }), (RefreshTime + 1) * 1000);
 
   test('Price update on non-match', () => pMap.nonMatch.prom.then((data) => {
     expect(data.pricedata).toEqual(expect.objectContaining({
       21: { bestask: 500, bestbid: 400, nflplayerID: 21 },
     }));
-  }), (config.RefreshTime + 1) * 1000);
+  }), (RefreshTime + 1) * 1000);
 
   test('New best prices update on fill', () => pMap.match.prom.then((data) => {
     expect(data.pricedata).toEqual(expect.objectContaining({
@@ -175,7 +175,7 @@ describe('Offer matching tests', () => {
         bestask: 0, bestbid: 400, lastprice: 500, nflplayerID: 21,
       },
     }));
-  }), (config.RefreshTime + 1) * 1000);
+  }), (RefreshTime + 1) * 1000);
 
   test('Notify on fill', () => pMap.fillNot.prom.then((data) => {
     expect(data).toEqual(expect.objectContaining({ event: 'offerFilled' }));
@@ -191,12 +191,12 @@ describe('Offer matching tests', () => {
     expect(data).toEqual(expect.objectContaining({ event: 'protectedMatch' }));
     expect(data.offerID).toHaveLength(36);
     expect(data.expire).toBeGreaterThan(1629167862185);
-  }), config.ProtectionDelay * 1000 + 5000);
+  }), ProtectionDelay * 1000 + 5000);
 
   test('Fill protected', () => pMap.fillProtected.prom.then((data) => {
     expect(data).toEqual(expect.objectContaining({ event: 'offerFilled' }));
     expect(data.offerID).toHaveLength(36);
-  }), config.ProtectionDelay * 1000 + 5000);
+  }), ProtectionDelay * 1000 + 5000);
 });
 
 /*

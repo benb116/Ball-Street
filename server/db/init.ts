@@ -1,6 +1,6 @@
 // Set up the database with proper tables and NFL data
 
-import config from '../config';
+import { FlexNFLPositionId } from '../config';
 import {
   NFLPosition,
   NFLTeam,
@@ -15,7 +15,7 @@ async function InitDB(sequelize) {
 
   // Define NFL positions
   const nflpos = {
-    FLEX: { id: config.FlexNFLPositionId, canflex: false },
+    FLEX: { id: FlexNFLPositionId, canflex: false },
     QB: { id: 1, canflex: false },
     RB: { id: 2, canflex: true },
     WR: { id: 3, canflex: true },

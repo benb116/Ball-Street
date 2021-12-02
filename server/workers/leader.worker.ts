@@ -1,7 +1,7 @@
 // Leader worker
 // Calculates live leaderboards
 
-import config from '../config';
+import { Roster } from '../config';
 import { dv, onlyUnique } from '../features/util/util';
 
 import { rediskeys, client } from '../db/redis';
@@ -11,7 +11,7 @@ import { NFLGame } from '../models';
 import leaderUpdate from './live/channels/leaderUpdate.channel';
 
 const { projpriceHash, leaderHash } = rediskeys;
-const rosterPositions = Object.keys(config.Roster);
+const rosterPositions = Object.keys(Roster);
 
 // Get player preprice info (used for players without stat info)
 let playerMap;

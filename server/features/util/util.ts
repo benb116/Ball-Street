@@ -1,7 +1,7 @@
-import config from '../../config';
+import { FlexNFLPositionId, NFLPosTypes, Roster } from '../../config';
 import logger from '../../utilities/logger';
 
-const rpos = Object.keys(config.Roster);
+const rpos = Object.keys(Roster);
 
 // Clean up the raw response from the database
 export const dv = function dv(input) {
@@ -13,12 +13,12 @@ export const dv = function dv(input) {
 
 // Return whether a player type (number) cannot be put into a specific roster position
 export const isInvalidSpot = function isInvalidSpot(playerType: number, rosterPosName: string) {
-  const rosterType = config.Roster[rosterPosName];
+  const rosterType = Roster[rosterPosName];
   if (playerType === rosterType) {
     return false;
   }
-  if (rosterType === config.FlexNFLPositionId) {
-    const playercanflex = config.NFLPosTypes[playerType].canflex;
+  if (rosterType === FlexNFLPositionId) {
+    const playercanflex = NFLPosTypes[playerType].canflex;
     if (playercanflex) {
       return false;
     }

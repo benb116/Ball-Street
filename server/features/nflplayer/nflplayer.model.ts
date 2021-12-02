@@ -1,4 +1,4 @@
-import config from '../../config';
+import { FlexNFLPositionId } from '../../config';
 
 export default function out(sequelize, DataTypes) {
   return sequelize.define('NFLPlayer', {
@@ -28,7 +28,7 @@ export default function out(sequelize, DataTypes) {
       allowNull: false,
       validate: {
         isNotFlex(value) { // Make sure we never list a player as a true flex
-          if (value === config.FlexNFLPositionId) { throw new Error('Cannot have a NFLPlayer as a flex'); }
+          if (value === FlexNFLPositionId) { throw new Error('Cannot have a NFLPlayer as a flex'); }
         },
       },
     },

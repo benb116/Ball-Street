@@ -2,13 +2,13 @@ import cryptoRandomString from 'crypto-random-string';
 import { client, rediskeys } from '../../../db/redis';
 import service from '../services/evalVerify.service';
 import { ErrorTest } from '../../util/util';
-import config from '../../../config';
+import { verificationTimeout, verificationTokenLength } from '../../../config';
 
 describe('evalVerify service', () => {
   test('Valid request returns confirmation and redis key', async () => {
     const email = 'email5@gmail.com';
-    const rand = cryptoRandomString({ length: config.verificationTokenLength, type: 'url-safe' });
-    await client.SET(rediskeys.emailVer(rand), email, { EX: config.verificationTimeout * 60 });
+    const rand = cryptoRandomString({ length: verificationTokenLength, type: 'url-safe' });
+    await client.SET(rediskeys.emailVer(rand), email, { EX: verificationTimeout * 60 });
 
     const output = await service({ token: rand });
     expect(output).toEqual(expect.objectContaining({

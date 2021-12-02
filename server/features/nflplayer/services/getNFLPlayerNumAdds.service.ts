@@ -2,7 +2,7 @@ import { Op } from 'sequelize';
 import Joi from 'joi';
 
 import { dv, validate } from '../../util/util';
-import config from '../../../config';
+import { Roster } from '../../../config';
 
 import validators from '../../util/util.schema';
 
@@ -28,7 +28,7 @@ function getNFLPlayerNumAdds(req) {
   }).then(dv);
 
   function gen(_player: number) {
-    const rpos = Object.keys(config.Roster);
+    const rpos = Object.keys(Roster);
     return rpos.map((r) => {
       const out = {};
       out[r] = _player;

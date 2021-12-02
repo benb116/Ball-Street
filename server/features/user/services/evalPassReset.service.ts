@@ -3,18 +3,18 @@ import Joi from 'joi';
 
 import { validate, uError, OnCompare } from '../../util/util';
 import { rediskeys, client } from '../../../db/redis';
-import config from '../../../config';
+import { verificationTokenLength } from '../../../config';
 import { User } from '../../../models';
 import validators from '../../util/util.schema';
 
 const schema = Joi.object({
-  token: Joi.string().length(config.verificationTokenLength).required().messages({
+  token: Joi.string().length(verificationTokenLength).required().messages({
     'string.base': 'Token is invalid',
-    'string.length': `Token must be ${config.verificationTokenLength} characters long`,
+    'string.length': `Token must be ${verificationTokenLength} characters long`,
     'any.required': 'Token is required',
   }),
   password: validators.password,
-  confirmPassword: validators.password,config
+  confirmPassword: validators.password,
 });
 
 async function evalPassReset(req) {

@@ -3,7 +3,7 @@ import Joi from 'joi';
 import {
   dv, tobj, validate, uError,
 } from '../../util/util';
-import config from '../../../config';
+import { FlexNFLPositionId, NFLPosTypes, Roster } from '../../../config';
 
 import sequelize from '../../../db';
 import { Entry, NFLPlayer } from '../../../models';
@@ -35,20 +35,20 @@ async function reorderRoster(req) {
   const value = validate(req, schema);
 
   return sequelize.transaction(isoOption, async (t) => {
-    const postype1 = config.Roster[value.body.pos1];
-    const postype2 = config.Roster[value.body.pos2];
+    const postype1 = Roster[value.body.pos1];
+    const postype2 = Roster[value.body.pos2];
 
     // Can this swap be done?
     // If same position type, then always yes
     // If not then
     if (postype1 !== postype2) {
       // If neither is a flex position, then definitely can't
-      if (postype1 === config.FlexNFLPositionId || postype2 === config.FlexNFLPositionId) {
+      if (postype1 === FlexNFLPositionId || postype2 === FlexNFLPositionId) {
         // if pos1 is flex but pos2 is a type that can't flex then no
-        if (postype1 === config.FlexNFLPositionId && !config.NFLPosTypes[postype2].canflex) {
+        if (postype1 === FlexNFLPositionId && !NFLPosTypes[postype2].canflex) {
           uError('Cannot put a non-flex player in a flex position', 406);
         // same other way around
-        } else if (postype2 === config.FlexNFLPositionId && !config.NFLPosTypes[postype1].canflex) {
+        } else if (postype2 === FlexNFLPositionId && !NFLPosTypes[postype1].canflex) {
           uError('Cannot put a non-flex player in a flex position', 406);
         }
       } else {
@@ -75,8 +75,8 @@ async function reorderRoster(req) {
     if (playerIDin1) {
       const player1 = await NFLPlayer.findByPk(playerIDin1).then(dv);
       if (player1.NFLPositionId !== postype2) {
-        if (postype2 !== config.FlexNFLPositionId
-          || !config.NFLPosTypes[player1.NFLPositionId].canflex) {
+        if (postype2 !== FlexNFLPositionId
+          || !NFLPosTypes[player1.NFLPositionId].canflex) {
           uError('Cannot put that player in that position', 406);
         }
       }
@@ -84,8 +84,8 @@ async function reorderRoster(req) {
     if (playerIDin2) {
       const player2 = await NFLPlayer.findByPk(playerIDin2).then(dv);
       if (player2.NFLPositionId !== postype1) {
-        if (postype1 !== config.FlexNFLPositionId
-          || !config.NFLPosTypes[player2.NFLPositionId].canflex) {
+        if (postype1 !== FlexNFLPositionId
+          || !NFLPosTypes[player2.NFLPositionId].canflex) {
           uError('Cannot put that player in that position', 406);
         }
       }

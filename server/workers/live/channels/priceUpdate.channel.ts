@@ -1,4 +1,4 @@
-import config from '../../../config';
+import { RefreshTime } from '../../../config';
 import liveState from '../state.live'; // Data stored in memory
 import { sendToContests } from '../socket.live';
 
@@ -53,6 +53,6 @@ setInterval(() => {
   liveState.priceUpdateMap = {};
 
   sendToContests(priceMsgMap);
-}, config.RefreshTime * 1000);
+}, RefreshTime * 1000);
 
 export default priceUpdate;

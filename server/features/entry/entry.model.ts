@@ -1,4 +1,4 @@
-import config from '../../config';
+import { Roster } from '../../config';
 
 // The model has common columns (UserId, ContestId, pointtotal)
 // This script also generates columns based on the set roster in config
@@ -24,7 +24,7 @@ function model(DataTypes) {
   };
 
   // Add position columns as defined by config
-  const rpos = Object.keys(config.Roster);
+  const rpos = Object.keys(Roster);
   rpos.forEach((p) => {
     modelobj[p] = {
       type: DataTypes.INTEGER,

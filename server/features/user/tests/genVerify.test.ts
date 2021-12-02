@@ -2,7 +2,7 @@ import service from '../services/genVerify.service';
 import { ErrorTest } from '../../util/util';
 
 import { client } from '../../../db/redis';
-import config from '../../../config';
+import { verificationTokenLength } from '../../../config';
 
 describe('genVerify service', () => {
   test('Valid request returns confirmation and redis key', async () => {
@@ -13,7 +13,7 @@ describe('genVerify service', () => {
     const redisOutput = await client.KEYS('emailVer:*');
     expect(redisOutput.length).toBeGreaterThan(0);
     const thekey = redisOutput[0];
-    expect(redisOutput[0].split('emailVer:')[1].length).toBe(config.verificationTokenLength);
+    expect(redisOutput[0].split('emailVer:')[1].length).toBe(verificationTokenLength);
     const thettl = await client.TTL(thekey).then(Number);
     expect(thettl).toBeGreaterThan(0);
   });

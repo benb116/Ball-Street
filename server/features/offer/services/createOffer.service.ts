@@ -2,7 +2,7 @@ import Queue from 'bull';
 import Joi from 'joi';
 
 import { Op } from 'sequelize';
-import config from '../../../config';
+import { DefaultProtected } from '../../../config';
 import {
   dv, tobj, validate, uError, isPlayerOnRoster, isOpenRoster,
 } from '../../util/util';
@@ -105,7 +105,7 @@ async function createOffer(req) {
       NFLPlayerId: obj.nflplayerID,
       isbid: obj.isbid,
       price: obj.price,
-      protected: obj.protected || config.DefaultProtected,
+      protected: obj.protected || DefaultProtected,
     }, {
       transaction: t,
       lock: t.LOCK.UPDATE,

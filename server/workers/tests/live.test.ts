@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import WebSocket from 'ws';
 import axios from 'axios';
-import config from '../../config';
+import { ProtectionDelay } from '../../config';
 
 const contestID = 2;
 
@@ -163,5 +163,5 @@ describe('Live server tests', () => {
 
   test('Offer fill', () => pMap.fillOffer.prom.then((data) => {
     expect(data.event).toBe('offerFilled');
-  }), 10000 + config.ProtectionDelay * 1000);
+  }), 10000 + ProtectionDelay * 1000);
 });
