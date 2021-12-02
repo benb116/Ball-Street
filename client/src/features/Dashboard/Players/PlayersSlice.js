@@ -88,7 +88,7 @@ export const playersSlice = createSlice({
       if (payload) { toast.error(payload); }
     },
     [getGames.fulfilled]: (state, { payload }) => {
-      state.gamelist = payload;
+      state.gamelist = [...payload].sort((a, b) => a.startTime - b.startTime);
       state.teamMap = payload.reduce((acc, cur) => {
         acc[cur.away.id] = cur.away;
         acc[cur.away.id].phase = cur.phase;
