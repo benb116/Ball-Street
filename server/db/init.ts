@@ -1,6 +1,6 @@
 // Set up the database with proper tables and NFL data
 
-import { FlexNFLPositionId } from '../config';
+import { RosterPosTypes } from '../config';
 import {
   NFLPosition,
   NFLTeam,
@@ -13,17 +13,7 @@ async function InitDB(sequelize) {
   logger.info('Initializing the database');
   await sequelize.sync({ force: true });
 
-  // Define NFL positions
-  const nflpos = {
-    FLEX: { id: FlexNFLPositionId, canflex: false },
-    QB: { id: 1, canflex: false },
-    RB: { id: 2, canflex: true },
-    WR: { id: 3, canflex: true },
-    TE: { id: 4, canflex: true },
-    K: { id: 5, canflex: false },
-    DEF: { id: 6, canflex: false },
-  };
-  const nflposrecords = Object.keys(nflpos).map((p) => ({ ...nflpos[p], name: p }));
+  const nflposrecords = Object.keys(RosterPosTypes).map((p) => ({ ...RosterPosTypes[p], name: p }));
   await NFLPosition.bulkCreate(nflposrecords);
   // NFLPosition.findAll().then(console.log);
 
@@ -140,11 +130,11 @@ async function InitDB(sequelize) {
   await NFLTeam.bulkCreate(teamrecords);
 
   const teamdefrecords = teamfullnamearr.map((t) => {
-    const abr = teamfullnameMap[t];
+    const abr: string = teamfullnameMap[t];
     return {
       id: teams[abr].id,
       name: t,
-      NFLPositionId: nflpos.DEF.id,
+      NFLPositionId: RosterPosTypes.DEF.id,
       NFLTeamId: teams[abr].id,
       preprice: 1100,
       postprice: 700,

@@ -3,6 +3,7 @@
 
 // Pull player data from an API
 import axios from 'axios';
+import { RosterPosTypes } from '../config';
 import { NFLPlayer } from '../models';
 import secret from '../secret';
 
@@ -40,15 +41,6 @@ const teammap: Record<string, number> = {
   TB: 27,
   TEN: 10,
   WAS: 28,
-};
-
-const nflpos: Record<string, number> = {
-  QB: 1,
-  RB: 2,
-  WR: 3,
-  TE: 4,
-  K: 5,
-  DEF: 6,
 };
 
 const baseurl = (posget: string, weeknum: number) => `https://football.fantasysports.yahoo.com/f1/316236/players?status=ALL&pos=${posget}&cut_type=9&stat1=S_PW_${weeknum}&myteam=1&sort=PTS&sdir=1&count=`;
@@ -95,7 +87,7 @@ async function sendreq(price: boolean, pagenum = 0, posget = 'O') {
       const [name, nameout] = idout.split('</a> <span class="Fz-xxs">');
       const [team, teamout] = nameout.split(' - ');
       const [pos, posout] = teamout.split('</span> </div>\n        </div>\n        <div class=\"Grid-bind-end\">');
-      const posid = (nflpos[pos] || nflpos[pos.split(',')[0]] || 0); // Could be WR,RB
+      const posid = (RosterPosTypes[pos].id || RosterPosTypes[pos.split(',')[0]].id || 0); // Could be WR,RB
       const preprice = Math.round(Number(posout.split('span class=\"Fw-b\">')[1].split('</span>')[0]) * 100);
       const injout = posout.split('abbr class="F-injury"');
       let injuryStatus = null;
