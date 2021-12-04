@@ -111,7 +111,7 @@ export async function setGamePhases(phasemap) {
       await setPhase(teamID, phase);
       if (phase === 'post') {
         // Mark that the time is done so PullAllGames doesn't try to do this again
-        state.timeObj[teamID] = 'done';
+        state.timeObj[teamID] = 0;
       }
     }
   }
@@ -131,14 +131,14 @@ export function PullAllGames() {
         const team2 = Number(terms[3]);
 
         // We've already marked this game as done, so end
-        if (state.timeObj[team1] === 'done') {
+        if (state.timeObj[team1] === 0) {
           return;
         }
         // If a game has finished, change the phase
         const gameState = terms[4]; // F finished, P playing, S not started yet
         if (gameState === 'F') {
-          state.timeObj[team1] = 'done';
-          state.timeObj[team2] = 'done';
+          state.timeObj[team1] = 0;
+          state.timeObj[team2] = 0;
           await setPhase(team1, 'post');
           await setPhase(team2, 'post');
           return;
