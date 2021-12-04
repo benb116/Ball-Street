@@ -32,7 +32,7 @@ async function createContest(req) {
     nflweek: Number(process.env.WEEK),
     budget: value.body.budget,
   }).catch(errorHandler({
-    default: ['Contest could not be created', 500],
+    default: { message: 'Contest could not be created', status: 500 },
   }));
 }
 

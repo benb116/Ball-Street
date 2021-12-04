@@ -25,7 +25,7 @@ function getUserOffers(req) {
     },
   }).then(dv)
     .catch(errorHandler({
-      default: ['Cannot retrieve offers', 500],
+      default: { message: 'Cannot retrieve offers', status: 500 },
     }));
 }
 

@@ -20,7 +20,7 @@ function getContestEntries(req) {
 
   return Entry.findAll({ where: { ContestId: value.params.contestID } })
     .catch(errorHandler({
-      default: ['Entries could not be retrieved', 500],
+      default: { message: 'Entries could not be retrieved', status: 500 },
     }));
 }
 

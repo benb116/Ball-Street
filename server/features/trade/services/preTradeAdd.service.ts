@@ -34,7 +34,7 @@ async function preTradeAdd(req) {
 
   return sequelize.transaction(isoOption, async (t) => tradeAdd(value, t))
     .catch(errorHandler({
-      default: ['Could not add player', 500],
+      default: { message: 'Could not add player', status: 500 },
     }));
 }
 

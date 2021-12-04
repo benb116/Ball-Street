@@ -97,7 +97,7 @@ async function reorderRoster(req) {
     await theentry.save({ transaction: t });
     return dv(theentry);
   }).catch(errorHandler({
-    default: ['Roster could not be reordered', 500],
+    default: { message: 'Roster could not be reordered', status: 500 },
   }));
 }
 

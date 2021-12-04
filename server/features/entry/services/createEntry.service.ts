@@ -28,8 +28,8 @@ async function createEntry(req) {
   obj.pointtotal = thecontest.budget;
   return Entry.create(obj).then(dv)
     .catch(errorHandler({
-      default: ['Entry could not be created', 500],
-      Entries_pkey: ['An entry already exists', 406],
+      default: { message: 'Entry could not be created', status: 500 },
+      Entries_pkey: { message: 'An entry already exists', status: 406 },
     }));
 }
 

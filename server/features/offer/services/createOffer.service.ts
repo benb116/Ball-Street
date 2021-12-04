@@ -116,8 +116,8 @@ async function createOffer(req) {
       return offer;
     })
     .catch(errorHandler({
-      default: ['Offer could not be created', 500],
-      'IX_Offer-OneActive': ['An offer already exists for this player', 406],
+      default: { message: 'Offer could not be created', status: 500 },
+      'IX_Offer-OneActive': { message: 'An offer already exists for this player', status: 406 },
     }));
 }
 

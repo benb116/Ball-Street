@@ -31,7 +31,7 @@ async function preTradeDrop(req) {
 
   return sequelize.transaction(isoOption, async (t) => tradeDrop(value, t))
     .catch(errorHandler({
-      default: ['Could not drop player', 500],
+      default: { message: 'Could not drop player', status: 500 },
     }));
 }
 

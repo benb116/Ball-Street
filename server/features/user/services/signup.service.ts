@@ -33,9 +33,9 @@ async function signup(req) {
     return { id: theuser.id, email: theuser.email, name: theuser.name };
   } catch (err) {
     const f = errorHandler({
-      default: ['Could not create user', 500],
-      Users_email_key: ['An account with that email already exists', 406],
-      'User.name cannot be null': ['Please enter a name', 406],
+      default: { message: 'Could not create user', status: 500 },
+      Users_email_key: { message: 'An account with that email already exists', status: 406 },
+      'User.name cannot be null': { message: 'Please enter a name', status: 406 },
     });
     return f(err);
   }
