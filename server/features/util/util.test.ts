@@ -13,7 +13,7 @@ describe('util testing', () => {
       UserId: 3, ContestId: 2, pointtotal: 500, RB1: 31885, K1: 30266,
     };
     expect(isPlayerOnRoster(theentry, 30266)).toBe('K1');
-    expect(isPlayerOnRoster(theentry, 12345)).toBe(false);
+    expect(isPlayerOnRoster(theentry, 12345)).toBe('');
   });
 
   test('isOpenRoster', () => {

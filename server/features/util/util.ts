@@ -28,8 +28,8 @@ export const isInvalidSpot = function isInvalidSpot(playerType: number, rosterPo
 };
 
 // Is a player on the entry's roster
-export const isPlayerOnRoster = function isPlayerOnRoster(entry, playerID: number) {
-  let res = false;
+export const isPlayerOnRoster = function isPlayerOnRoster(entry, playerID: number): string {
+  let res = '';
   for (let i = 0; i < rpos.length; i++) {
     if (entry[rpos[i]] === playerID) {
       res = rpos[i];

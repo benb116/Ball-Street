@@ -14,7 +14,7 @@ export function GameState() {
     .then((rawlines) => rawlines.filter((l: string) => l[0] === 'g'))
     .then(async (gamelines) => {
       const currentweek = (Number(process.env.WEEK) || 0);
-      const phasemap = {};
+      const phasemap: Record<string, string | number> = {};
 
       // Build up the list of games for the DB and the phasemap.
       const gameobjs = gamelines.map((gameline: string) => {
@@ -63,8 +63,8 @@ export function GameState() {
         gameteams.forEach((gt) => { remainteams = remainteams.filter((t) => t !== Number(gt)); });
         if (remainteams.length % 2 !== 0) { logger.error(`Odd number of bye week teams? ${gamelines}`); }
         while (remainteams.length > 1) {
-          const team1 = remainteams.shift();
-          const team2 = remainteams.shift();
+          const team1 = remainteams.shift() as number;
+          const team2 = remainteams.shift() as number;
           phasemap[team1] = 'post';
           phasemap[team2] = 'post';
           gameobjs.push({
@@ -92,7 +92,7 @@ export function GameState() {
 }
 
 // Given a phasemap, set phases in DB or schedule change
-export async function setGamePhases(phasemap) {
+export async function setGamePhases(phasemap: Record<string, string | number>) {
   const phaseTeams = Object.keys(phasemap);
   for (let i = 0; i < phaseTeams.length; i++) {
     // Do these in series to avoid overloading DB connections
@@ -122,9 +122,9 @@ export async function setGamePhases(phasemap) {
 export function PullAllGames() {
   return axios.get('https://relay-stream.sports.yahoo.com/nfl/games.txt')
     .then((raw) => raw.data.split('\n'))
-    .then((rawlines) => rawlines.filter((l) => l[0] === 'g'))
+    .then((rawlines) => rawlines.filter((l: string) => l[0] === 'g'))
     .then((gamelines) => {
-      const changedTimes = [];
+      const changedTimes: number[] = [];
       gamelines.forEach(async (gameline: string) => {
         const terms = gameline.split('|');
         const team1 = Number(terms[2]);

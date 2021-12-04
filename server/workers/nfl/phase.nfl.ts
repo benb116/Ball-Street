@@ -88,7 +88,7 @@ async function convertTeamPlayers(teamID: number) {
   // Filter for all entries with a player on this team
   const teamEntries = allEntries
     .filter((e) => teamPlayers
-      .reduce((acc, cur) => (acc || isPlayerOnRoster(e, cur.id)), false));
+      .reduce((acc, cur) => (acc || (isPlayerOnRoster(e, cur.id) !== '')), false));
   // Run in series to reduce DB load
   for (let i = 0; i < teamEntries.length; i++) {
     // eslint-disable-next-line no-await-in-loop
