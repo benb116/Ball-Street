@@ -75,20 +75,20 @@ export const cl = function cl(input) {
 // Validate an object based on a Joi schema
 export const validate = function validate(input, schema) {
   const { value, error } = schema.validate(input);
-  if (error) { uError(error.details[0].måœessage, 400); }
+  if (error) { uError(error.details[0].message, 400); }
   return value;
 };
 
 // Functions used in Jest testing
 // Ensures that a service call returns an object with specific properties
-export const ObjectTest = function ObjectTest(service, req, contains) {
+export const ObjectTest = function ObjectTest(service, req, contains: any) {
   return async () => service(req).then((resp) => {
     expect(resp).toEqual(expect.objectContaining(contains));
   });
 };
 
 // Ensures that a service call returns an array with specific elements
-export const ArrayTest = function ArrayTest(service, req, items) {
+export const ArrayTest = function ArrayTest(service, req, items: any[]) {
   return async () => service(req).then((resp) => {
     items.forEach((e) => {
       let check = e;
@@ -128,6 +128,6 @@ export const OnCompare = function OnCompare(a: string, b: string) {
   return mismatch;
 };
 // Filter out duplicates
-export const onlyUnique = function onlyUnique(value, index: number, self) {
+export const onlyUnique = function onlyUnique(value: any, index: number, self: any[]) {
   return self.indexOf(value) === index;
 };

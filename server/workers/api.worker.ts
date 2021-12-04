@@ -29,6 +29,7 @@ const routePrefix = (isProduction ? '' : '/app');
 app.use(`${routePrefix}/auth/`, userRoute);
 app.use(`${routePrefix}/api/`, apiRoute);
 
-const server = app.listen(process.env.PORT || 5000, () => {
-  logger.info(`Listening on port ${server.address().port}`);
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  logger.info(`Listening on port ${PORT}`);
 });

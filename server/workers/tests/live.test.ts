@@ -2,10 +2,11 @@
 import WebSocket from 'ws';
 import axios from 'axios';
 import { ProtectionDelay } from '../../config';
+import { OfferType } from '../offer/book.class';
 
 const contestID = 2;
 
-function getSessionID(email) {
+function getSessionID(email: string) {
   return axios({
     method: 'post',
     url: 'http://localhost/app/auth/login',
@@ -20,13 +21,13 @@ function getSessionID(email) {
     });
 }
 
-function initWS(cookie) {
+function initWS(cookie: string) {
   return new WebSocket(`ws://localhost/ballstreetlive/contest/${contestID}`, {
     headers: { cookie },
   });
 }
 
-function createOffer(cookie, isbid, price, isprotected) {
+function createOffer(cookie: string, isbid: boolean, price: number, isprotected: boolean) {
   return axios({
     method: 'post',
     url: `http://localhost/app/api/contests/${contestID}/offer/`,
@@ -45,12 +46,12 @@ function createOffer(cookie, isbid, price, isprotected) {
   });
 }
 
-async function cancelOffer(cookie) {
+async function cancelOffer(cookie: string) {
   const a = await axios({
     method: 'get',
     url: `http://localhost/app/api/contests/${contestID}/offers/`,
     headers: { cookie },
-  }).then((offers) => offers.data.filter((o) => o.NFLPlayerId === 28026));
+  }).then((offers) => offers.data.filter((o: OfferType) => o.NFLPlayerId === 28026));
   if (!a.length) { return Promise.resolve(); }
 
   return axios({
@@ -65,17 +66,25 @@ async function cancelOffer(cookie) {
 }
 
 const tests = ['open1', 'leader', 'initPrice', 'offerPrice', 'cancelPrice', 'protMatch', 'fillOffer'];
+interface PromiseMap {
+  [key: string]: {
+    prom: Promise<unknown>
+    res: (value: unknown) => void,
+    rej: (value: unknown) => void,
+    done: boolean
+  }
+}
 const pMap = tests.reduce((acc, cur) => {
-  let pRes;
-  let pRej;
+  let pRes: (value: unknown) => void = () => {};
+  let pRej: (value: unknown) => void = () => {};
   acc[cur] = {
     prom: new Promise((res, rej) => { pRes = res; pRej = rej; }),
+    res: pRes,
+    rej: pRej,
+    done: false,
   };
-  acc[cur].res = pRes;
-  acc[cur].rej = pRej;
-  acc[cur].done = false;
   return acc;
-}, {});
+}, {} as PromiseMap);
 
 async function initUsers() {
   const session1 = await getSessionID('email1@gmail.com');
@@ -83,12 +92,12 @@ async function initUsers() {
   const ws1 = initWS(session1);
   // const ws2 = initWS(session2);
   ws1.on('open', () => {
-    pMap.open1.res();
+    pMap.open1.res(true);
   });
   ws1.on('error', console.log);
 
   ws1.on('message', async (text) => {
-    const msg = JSON.parse(text);
+    const msg = JSON.parse(text.toString());
     switch (msg.event) {
       case 'offerFilled':
         pMap.fillOffer.res(msg);
@@ -99,7 +108,7 @@ async function initUsers() {
         pMap.protMatch.res(msg);
         break;
       case 'leaderboard':
-        pMap.leader.res();
+        pMap.leader.res(true);
         break;
       case 'phaseChange':
         break;
@@ -133,11 +142,11 @@ beforeAll(() => initUsers().catch(console.error));
 
 describe('Live server tests', () => {
   test('Open WS connection', () => pMap.open1.prom.then((data) => {
-    expect(data).toBe();
+    expect(data).toBe(true);
   }));
 
   test('Get leaderboard', () => pMap.leader.prom.then((data) => {
-    expect(data).toBe();
+    expect(data).toBe(true);
   }), 12000);
 
   test('Get initial price', () => pMap.initPrice.prom.then((data) => {

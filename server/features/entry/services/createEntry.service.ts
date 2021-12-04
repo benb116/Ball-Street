@@ -18,14 +18,16 @@ const schema = Joi.object({
 async function createEntry(req) {
   const value = validate(req, schema);
 
-  const obj = {};
-  obj.UserId = value.user;
-  obj.ContestId = value.params.contestID;
   const thecontest = await Contest.findByPk(value.params.contestID).then(dv);
   if (!thecontest) { uError('No contest found', 404); }
   const theweek = Number(process.env.WEEK);
   if (theweek !== thecontest.nflweek) uError('Incorrect week', 406);
-  obj.pointtotal = thecontest.budget;
+
+  const obj = {
+    UserId: value.user,
+    ContestId: value.params.contestID,
+    pointtotal: thecontest.budget,
+  };
   return Entry.create(obj).then(dv)
     .catch(errorHandler({
       default: { message: 'Entry could not be created', status: 500 },

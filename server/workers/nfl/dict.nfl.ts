@@ -14,7 +14,7 @@ export const yahooStatMap = {
 export const validStatLetters = Object.keys(yahooStatMap);
 
 // Dot product coefficients for stats in each category
-export const multiplierTable = {
+export const multiplierTable: Record<string, number[]> = {
   q: [0, 0, 0, 0.04, 4, -1],
   r: [0, 0.1, 6],
   w: [0.5, 0.1, 6],
@@ -25,14 +25,14 @@ export const multiplierTable = {
 };
 
 // Calculate the point total from a player's stats
-export function SumPoints(pstats) {
+export function SumPoints(pstats: Record<string, string>) {
   const categories = Object.keys(pstats);
   const rawpoints = categories.reduce((accPoints, curCat) => {
     let newPoints = accPoints;
     const line = pstats[curCat].split('|');
     const multipliers = (multiplierTable[curCat] || []);
     // eslint-disable-next-line no-param-reassign
-    newPoints += line.reduce((accStatPoints: number, val: string, lineIndex: string) => {
+    newPoints += line.reduce((accStatPoints: number, val: string, lineIndex: number) => {
       // eslint-disable-next-line no-param-reassign
       accStatPoints += Number(val) * (multipliers[lineIndex] || 0);
       return accStatPoints;

@@ -3,10 +3,11 @@
 // and return the results
 // If there's an error, return the specified status and error message.
 
+import { Request, Response } from 'express';
 import { client } from '../../db/redis';
 
 function routeHandler(service, cacheExpiry = 0) {
-  return async function routeHandlerInner(req, res) {
+  return async function routeHandlerInner(req: Request, res: Response) {
     try {
       // If a get request should be cached
       if (cacheExpiry && req.method === 'GET') {
@@ -29,7 +30,7 @@ function routeHandler(service, cacheExpiry = 0) {
 }
 
 // Strip extraneous info from input
-function stripReq(inp) {
+function stripReq(inp: Request) {
   return {
     user: inp.session?.user?.id || 0,
     params: inp.params,

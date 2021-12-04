@@ -3,7 +3,7 @@
 
 import axios from 'axios';
 import { NFLPlayer } from '../../models';
-import injuryUpdate from '../live/channels/injuryUpdate.channel';
+import injuryUpdate, { InjuryUpdateType } from '../live/channels/injuryUpdate.channel';
 import state from './state.nfl';
 
 export default async function PullLatestInjuries() {
@@ -16,13 +16,13 @@ export default async function PullLatestInjuries() {
       state.injObj[e.nflplayerID] = e.status;
       return oldstatus !== e.status;
     }))
-    .then((objs) => {
+    .then((objs: InjuryType[]) => {
       // Pushout updates for each
       if (!objs.length) return objs;
       const outObj = objs.reduce((acc, cur) => {
         acc[cur.nflplayerID] = cur.status;
         return acc;
-      }, {});
+      }, {} as InjuryUpdateType);
 
       injuryUpdate.pub(outObj);
       return objs;
@@ -35,13 +35,20 @@ export default async function PullLatestInjuries() {
     ));
 }
 
-function Format(raw) {
+interface InjuryDataType {
+  data: string,
+}
+interface InjuryType {
+  nflplayerID: number,
+  status: string,
+}
+
+function Format(raw: InjuryDataType) {
   const main = raw.data.split('<tbody>')[1].split('</tbody')[0];
 
   const units = main.split('</tr>');
 
-  return units.map((u) => {
-    if (!u.length) return null;
+  return units.filter((u: string) => u.length).map((u) => {
     const start = u.split('data-ys-playerid="')[1];
     const [playerid, pidout] = start.split('" data-ys-playernote');
     const statusout = pidout.split('</abbr>')[0];
@@ -50,6 +57,6 @@ function Format(raw) {
     return {
       nflplayerID: Number(playerid),
       status,
-    };
+    } as InjuryType;
   });
 }

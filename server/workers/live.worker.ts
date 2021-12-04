@@ -3,7 +3,7 @@
 
 import WebSocket from 'ws';
 import http from 'http';
-import express from 'express';
+import express, { Request } from 'express';
 
 import { client, subscriber, rediskeys } from '../db/redis';
 import session from '../middleware/session';
@@ -30,7 +30,7 @@ app.use(session);
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ noServer: true });
 
-server.on('upgrade', (request, socket, head) => {
+server.on('upgrade', (request: Request, socket, head) => {
   session(request, {}, () => {
     if (!request.session.user) {
       socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
@@ -80,15 +80,43 @@ async function sendLatest(contestID: number) {
   const basks = client.HGETALL(rediskeys.bestaskHash(contestID));
   const lasts = client.HGETALL(rediskeys.lasttradeHash(contestID));
   return Promise.all([stats, projs, bbids, basks, lasts]).then((out) => {
-    const [statsOut, projsOut, bbidsOut, basksOut, lastsOut] = out;
-    const retobj = {};
+    interface ValueOut {
+      [key: string]: string
+    }
+    const statsOut: ValueOut = out[0];
+    const projsOut: ValueOut = out[1];
+    const bbidsOut: ValueOut = out[2];
+    const basksOut: ValueOut = out[3];
+    const lastsOut: ValueOut = out[4];
 
-    function buildObj(arr, label: string) {
-      if (arr) {
-        Object.keys(arr).forEach((p: string) => {
-          if (!retobj[p]) retobj[p] = {};
-          retobj[p].nflplayerID = Number(p);
-          retobj[p][label] = Number(arr[p]);
+    interface LatestItem {
+      statPrice: number,
+      projPrice: number,
+      bestbid: number,
+      bestask: number,
+      lastprice: number,
+      nflplayerID: number,
+    }
+    const retobj: Record<string, LatestItem> = {};
+
+    function buildObj(outobj: ValueOut, label: string) {
+      if (outobj) {
+        Object.keys(outobj).forEach((p: string) => {
+          if (!retobj[p]) {
+            retobj[p] = {
+              statPrice: 0,
+              projPrice: 0,
+              bestbid: 0,
+              bestask: 0,
+              lastprice: 0,
+              nflplayerID: Number(p),
+            };
+          }
+          if (label === 'statPrice') retobj[p].statPrice = Number(outobj[p]);
+          if (label === 'projPrice') retobj[p].projPrice = Number(outobj[p]);
+          if (label === 'bestbid') retobj[p].bestbid = Number(outobj[p]);
+          if (label === 'bestask') retobj[p].bestask = Number(outobj[p]);
+          if (label === 'lastprice') retobj[p].lastprice = Number(outobj[p]);
         });
       }
     }

@@ -30,7 +30,7 @@ function getNFLPlayerNumAdds(req) {
   function gen(_player: number) {
     const rpos = Object.keys(Roster);
     return rpos.map((r) => {
-      const out = {};
+      const out: Record<string, number> = {};
       out[r] = _player;
       return out;
     });

@@ -4,6 +4,10 @@ import { dv } from '../../util/util';
 
 import { Entry, Contest, User } from '../../../models';
 
+interface ContestObj {
+  id: number,
+}
+
 async function getWeekEntries() {
   const weekcontests = await Contest.findAll({
     where: {
@@ -11,7 +15,7 @@ async function getWeekEntries() {
     },
   })
     .then(dv)
-    .then((contests) => contests.map((c) => c.id));
+    .then((contests: ContestObj[]) => contests.map((c) => c.id));
 
   return Entry.findAll({
     where: {

@@ -62,7 +62,7 @@ function createPTMap() {
   return axios.get('https://relay-stream.sports.yahoo.com/nfl/players.txt')
     .then((raw) => raw.data.split('\n'))
     .then((rawlines) => rawlines.filter((l: string) => l[0] === 'm'))
-    .then((playerlines) => playerlines.reduce((acc, line: string) => {
+    .then((playerlines) => playerlines.reduce((acc: Record<string, number>, line: string) => {
       const terms = line.split('|');
       const playerID = terms[1];
       const teamID = Number(terms[2]);
@@ -73,7 +73,7 @@ function createPTMap() {
 
 // Populate the preProjMap
 function pullPreProj() {
-  return getNFLPlayers().then((data) => data.reduce((acc, p) => {
+  return getNFLPlayers().then((data) => data.reduce((acc: Record<string, number>, p) => {
     acc[p.id] = p.preprice;
     const teamID = p.NFLTeamId;
     if (!state.teamPlayerMap[teamID]) state.teamPlayerMap[teamID] = [];
@@ -90,23 +90,31 @@ function GetNewStats(lines: string[]) {
 }
 
 // Calculate new point values (actual and live projection)
-function CalcValues(statlines = [], newteamTimes = []) {
+function CalcValues(statlines: string[] = [], newteamTimes : number[] = []) {
   const statPlayers = statlines.map((l: string) => Number(l.split('|')[1]));
   const teamPlayers = newteamTimes.map((t) => state.teamPlayerMap[t]).flat();
   const playersToCalc = [statPlayers, teamPlayers].flat();
-  return playersToCalc.map(CalcPlayer).filter((e) => e !== false);
+  return playersToCalc.filter((p) => p).map(CalcPlayer);
 }
 
+interface PlayerValType {
+  nflplayerID: number,
+  statPrice: number,
+  projPrice: number,
+}
 // Calculate statpoints and projpoints for players with changed stats
 function CalcPlayer(playerid: number) {
-  if (!playerid) return false;
   // Get a player's stat object
   const stats = (state.statObj[playerid] || {});
   // Calculate points
   const statpoints = SumPoints(stats);
   // Estimate projection
   const projpoints = EstimateProjection(playerid, statpoints);
-  return [playerid, Math.round(statpoints), Math.round(projpoints)];
+  return {
+    nflplayerID: playerid,
+    statPrice: Math.round(statpoints),
+    projPrice: Math.round(projpoints),
+  };
 }
 
 // Calculate new live projection for a player
@@ -132,24 +140,24 @@ function EstimateProjection(playerid: number, statpoints: number) {
 }
 
 // Set values in redis and publish an update
-function SetValues(playerVals) {
+function SetValues(playerVals: PlayerValType[]) {
   const statvals = playerVals.reduce((acc, cur) => {
-    acc.push(cur[0].toString(), cur[1].toString());
+    acc.push(cur.nflplayerID.toString(), cur.statPrice.toString());
     return acc;
-  }, []);
+  }, [] as string[]);
   const projvals = playerVals.reduce((acc, cur) => {
-    acc.push(cur[0].toString(), cur[2].toString());
+    acc.push(cur.nflplayerID.toString(), cur.projPrice.toString());
     return acc;
-  }, []);
+  }, [] as string[]);
 
   const outobj = playerVals.reduce((acc, cur) => {
-    acc[cur[0]] = {
-      nflplayerID: cur[0],
-      statPrice: Number(cur[1]),
-      projPrice: Number(cur[2]),
+    acc[cur.nflplayerID] = {
+      nflplayerID: cur.nflplayerID,
+      statPrice: cur.statPrice,
+      projPrice: cur.projPrice,
     };
     return acc;
-  }, {});
+  }, {} as Record<string, PlayerValType>);
 
   if (playerVals.length) statUpdate.pub(outobj);
   if (statvals.length) client.HSET(rediskeys.statpriceHash(), statvals);

@@ -7,7 +7,11 @@ import logger from '../../utilities/logger';
 import priceUpdate from '../live/channels/priceUpdate.channel';
 
 // Access the correct book or make one if necessary
-export function getBook(books, ContestId: number, NFLPlayerId: number) {
+export function getBook(
+  books: Record<string, Record<string, Book>>,
+  ContestId: number,
+  NFLPlayerId: number,
+) {
   // eslint-disable-next-line no-param-reassign
   if (!books[ContestId]) { books[ContestId] = {}; }
   if (!books[ContestId][NFLPlayerId]) {
@@ -75,8 +79,8 @@ async function initializeBook(playerBook: Book) {
 export function updateBest(playerBook: Book) {
   const { contestID, nflplayerID } = playerBook;
 
-  const bestbids = [playerBook.bestbid, playerBook.bestpbid].filter((e) => e);
-  const bestasks = [playerBook.bestask, playerBook.bestpask].filter((e) => e);
+  const bestbids = [playerBook.bestbid, playerBook.bestpbid].filter((e) => e !== null).map(Number);
+  const bestasks = [playerBook.bestask, playerBook.bestpask].filter((e) => e !== null).map(Number);
 
   let bestbid = 0;
   let bestask = 0;

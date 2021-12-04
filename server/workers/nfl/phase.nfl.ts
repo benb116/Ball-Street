@@ -107,7 +107,7 @@ function setPostPrice(p) {
 }
 
 // Convert any team players in an entry to points
-async function convertEntry(e, players, statmap) {
+async function convertEntry(e, players, statmap: Record<string, number>) {
   return sequelize.transaction(isoOption, async (t) => {
     const theentry = await Entry.findOne({
       where: {

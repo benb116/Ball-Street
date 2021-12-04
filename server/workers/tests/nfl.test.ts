@@ -2,7 +2,7 @@ import { SumPoints } from '../nfl/dict.nfl';
 
 describe('NFL worker tests', () => {
   test('Test point calculation', () => {
-    const statobjs = [
+    const statobjs: Record<string, string>[] = [
       { q: '34|23|11|304|0|0|3|14|0|0|0|15', r: '8|11|2|5|0|0|4' },
       { w: '2|23|0|12|0|0|4|1' },
       { x: '2|17|0|0|12' },

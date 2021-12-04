@@ -14,9 +14,14 @@ const { projpriceHash, leaderHash } = rediskeys;
 const rosterPositions = Object.keys(Roster);
 
 // Get player preprice info (used for players without stat info)
-let playerMap;
+interface PlayerMapItem {
+  pre: number | null,
+  post: number | null,
+  team: number
+}
+let playerMap: Record<string, PlayerMapItem>;
 // Get game phase information
-let gamePhase;
+let gamePhase: Record<string, string>;
 // State determining whether to check for point changes
 // No reason to check when no games are going on
 let phaseHold = false;
@@ -24,11 +29,12 @@ let phaseHold = false;
 // Populate price and team info for all players
 (async () => {
   const playerlist = await getNFLPlayers();
-  playerMap = playerlist.reduce((acc, cur) => {
-    if (!acc[cur.id]) acc[cur.id] = {};
-    acc[cur.id].pre = cur.preprice;
-    acc[cur.id].post = cur.postprice;
-    acc[cur.id].team = cur.NFLTeamId;
+  playerMap = playerlist.reduce((acc: Record<string, PlayerMapItem>, cur) => {
+    acc[cur.id] = {
+      pre: cur.preprice,
+      post: cur.postprice,
+      team: cur.NFLTeamId,
+    };
     return acc;
   }, {});
 })();
@@ -37,13 +43,21 @@ async function calculateLeaderboard() {
   // Get current game phases (used to determine which point value to use)
   const gamelist = await NFLGame.findAll({ where: { week: Number(process.env.WEEK) } }).then(dv);
   // Are all games in pre or post phase
-  const newphaseHold = gamelist.reduce((acc, cur) => (acc && cur.phase !== 'mid'), true);
+  interface GameItem {
+    phase: string,
+    HomeId: number,
+    AwayId: number,
+  }
+  const newphaseHold = gamelist.reduce((acc: boolean, cur: GameItem) => (acc && cur.phase !== 'mid'), true);
   // If yes, do one more calc then hold;
   if (phaseHold && newphaseHold) return;
   phaseHold = newphaseHold;
 
+  interface PhaseMap {
+    [key: number]: string,
+  }
   // Which phase is a given team in
-  gamePhase = gamelist.reduce((acc, cur) => {
+  gamePhase = gamelist.reduce((acc: PhaseMap, cur: GameItem) => {
     acc[cur.HomeId] = cur.phase;
     acc[cur.AwayId] = cur.phase;
     return acc;
@@ -75,7 +89,7 @@ async function calculateLeaderboard() {
 
   // Sum each entry based on the price map
   const projTotals = normalizedEntries.map((e) => {
-    e.total = e.roster.reduce((acc, cur) => {
+    e.total = e.roster.reduce((acc: number, cur: number) => {
       const playerPhase = gamePhase[playerMap[cur].team];
       switch (playerPhase) {
         case 'pre': // preprice
@@ -92,8 +106,13 @@ async function calculateLeaderboard() {
   });
   // console.log(projTotals);
 
+  interface LeaderItemType {
+    user: string,
+    id: number,
+    total: number,
+  }
   // Bin entries in an array for each contest
-  const contestSplit = projTotals.reduce((acc, cur) => {
+  const contestSplit = projTotals.reduce((acc: Record<string, LeaderItemType[]>, cur) => {
     if (!acc[cur.contest]) { acc[cur.contest] = []; }
     acc[cur.contest].push({ user: cur.username, id: cur.userID, total: cur.total });
     return acc;
@@ -103,7 +122,7 @@ async function calculateLeaderboard() {
   // For each contest, sort and store
   contests.forEach((c: number) => {
     const cleader = contestSplit[c];
-    cleader.sort((a, b) => ((a.total < b.total) ? 1 : -1));
+    cleader.sort((a:LeaderItemType, b:LeaderItemType) => ((a.total < b.total) ? 1 : -1));
     client.SET(leaderHash(c), JSON.stringify(cleader));
   });
 

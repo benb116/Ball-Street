@@ -88,7 +88,10 @@ export function GameState() {
         });
       return phasemap;
     })
-    .catch(logger.error);
+    .catch((err) => {
+      logger.error(err);
+      return {};
+    });
 }
 
 // Given a phasemap, set phases in DB or schedule change

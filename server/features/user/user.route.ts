@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Response } from 'express';
 
 import authenticate from '../../middleware/authenticate';
 import routeHandler from '../util/util.route';
@@ -14,7 +14,7 @@ import evalPassReset from './services/evalPassReset.service';
 
 const router = express.Router();
 
-function errorHandler(res, err) {
+function errorHandler(res: Response, err) {
   if (!err) {
     logger.error(err);
     return res.status(500).json({ error: 'Unexpected error' });

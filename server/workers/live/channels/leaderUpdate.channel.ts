@@ -11,7 +11,7 @@ const leaderUpdate = {
   },
   // When new leaderboards come in, send out to the correct ws
   sub: async function sub() {
-    const leaderMemo = {};
+    const leaderMemo: Record<string, null> = {};
     liveState.contestmap.forEach((thecontestID) => {
       if (!leaderMemo[thecontestID]) {
         leaderMemo[thecontestID] = null;
@@ -21,8 +21,8 @@ const leaderUpdate = {
     const allLeaders = await Promise.all(
       allContests.map((cID) => client.GET(leaderHash(Number(cID)))),
     );
-      acc[cur] = { event: 'leaderboard', leaderboard: JSON.parse(allLeaders[i]) };
     const leaderMsgMap: MessageMapType = allContests.reduce((acc, cur, i) => {
+      acc[cur] = { event: 'leaderboard', leaderboard: JSON.parse(allLeaders[i] || '[]') };
       return acc;
     }, {} as MessageMapType);
     sendToContests(leaderMsgMap);

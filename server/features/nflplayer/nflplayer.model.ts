@@ -27,7 +27,7 @@ export default function out(sequelize, DataTypes) {
       references: { model: 'NFLPositions' },
       allowNull: false,
       validate: {
-        isNotFlex(value) { // Make sure we never list a player as a true flex
+        isNotFlex(value: number) { // Make sure we never list a player as a true flex
           if (value === FlexNFLPositionId) { throw new Error('Cannot have a NFLPlayer as a flex'); }
         },
       },

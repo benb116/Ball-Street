@@ -20,17 +20,25 @@ const tests = [
   'matchbetter',
 ];
 
+interface PromiseMap {
+  [key: string]: {
+    prom: Promise<unknown>
+    res: (value: unknown) => void,
+    rej: (value: unknown) => void,
+    done: boolean
+  }
+}
 const pMap = tests.reduce((acc, cur) => {
-  let pRes;
-  let pRej;
+  let pRes: (value: unknown) => void = () => {};
+  let pRej: (value: unknown) => void = () => {};
   acc[cur] = {
     prom: new Promise((res, rej) => { pRes = res; pRej = rej; }),
+    res: pRes,
+    rej: pRej,
+    done: false,
   };
-  acc[cur].res = pRes;
-  acc[cur].rej = pRej;
-  acc[cur].done = false;
   return acc;
-}, {});
+}, {} as PromiseMap);
 
 function reqBody(user = 1, nflplayerID = 21, isbid = false, price = 500, isProtected = false) {
   return {
@@ -49,7 +57,7 @@ function reqBody(user = 1, nflplayerID = 21, isbid = false, price = 500, isProte
   };
 }
 
-function getSessionID(email) {
+function getSessionID(email: string) {
   return axios({
     method: 'post',
     url: 'http://localhost/app/auth/login',
@@ -65,7 +73,7 @@ function getSessionID(email) {
     });
 }
 
-function initWS(cookie) {
+function initWS(cookie: string) {
   return new WebSocket(`ws://localhost/ballstreetlive/contest/${contestID}`, {
     headers: { cookie },
   });
@@ -81,7 +89,7 @@ async function run() {
   let cancelOffer = '';
 
   ws1.on('message', async (text) => {
-    const msg = JSON.parse(text);
+    const msg = JSON.parse(text.toString());
     switch (msg.event) {
       case 'offerFilled':
         if (!pMap.fillNot.done) {
@@ -134,7 +142,7 @@ async function run2() {
   const ws2 = initWS(session2);
 
   ws2.on('message', async (text) => {
-    const msg = JSON.parse(text);
+    const msg = JSON.parse(text.toString());
     switch (msg.event) {
       case 'offerFilled':
         if (!pMap.fillProtected.done) {
