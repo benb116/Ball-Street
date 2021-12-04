@@ -1,6 +1,6 @@
 import { RefreshTime } from '../../../config';
 import liveState from '../state.live'; // Data stored in memory
-import { sendToContests } from '../socket.live';
+import { MessageMapType, sendToContests } from '../socket.live';
 
 import { client } from '../../../db/redis';
 
@@ -52,7 +52,7 @@ setInterval(() => {
   const priceMsgMap = priceUpdatecIDs.reduce((acc, cur) => {
     acc[cur] = { event: 'priceUpdate', pricedata: liveState.priceUpdateMap[cur] };
     return acc;
-  }, {});
+  }, {} as MessageMapType);
   liveState.priceUpdateMap = {};
 
   sendToContests(priceMsgMap);

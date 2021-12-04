@@ -1,5 +1,5 @@
 import liveState from '../state.live'; // Data stored in memory
-import { sendToContests } from '../socket.live';
+import { MessageMapType, sendToContests } from '../socket.live';
 
 import { rediskeys, client } from '../../../db/redis';
 
@@ -21,10 +21,10 @@ const leaderUpdate = {
     const allLeaders = await Promise.all(
       allContests.map((cID) => client.GET(leaderHash(Number(cID)))),
     );
-    const leaderMsgMap = allContests.reduce((acc, cur, i) => {
       acc[cur] = { event: 'leaderboard', leaderboard: JSON.parse(allLeaders[i]) };
+    const leaderMsgMap: MessageMapType = allContests.reduce((acc, cur, i) => {
       return acc;
-    }, {});
+    }, {} as MessageMapType);
     sendToContests(leaderMsgMap);
   },
 };
