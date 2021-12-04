@@ -1,11 +1,12 @@
 import { dv } from '../../features/util/util';
 import { Offer } from '../../models';
 import logger from '../../utilities/logger';
+import Book from './book.class';
 import { updateBest } from './offer.util';
 import fillOffers from './trader';
 
 // Try to fill a protected match
-async function evalProtected(playerBook, proffer: string, neoffer: string) {
+async function evalProtected(playerBook: Book, proffer: string, neoffer: string) {
   const poffer = await Offer.findByPk(proffer).then(dv);
   if (!poffer || poffer.cancelled || poffer.filled) {
     logger.info(`Matchee unavailable ${poffer.id}`);
@@ -29,7 +30,7 @@ async function evalProtected(playerBook, proffer: string, neoffer: string) {
 }
 
 // Find possible matches for a protected offer
-async function runMatches(poffer, playerBook) {
+async function runMatches(poffer, playerBook: Book) {
   const ispbid = poffer.isbid;
   // Find all offers that could be matched
   let matchingOfferIDs = playerBook.findProtectedMatches(poffer);

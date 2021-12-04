@@ -37,7 +37,7 @@ export function getBook(books, ContestId: number, NFLPlayerId: number) {
 }
 
 // Generate the starting book based on existing offers in DB
-async function initializeBook(playerBook) {
+async function initializeBook(playerBook: Book) {
   const { contestID, nflplayerID } = playerBook;
   // Should be sorted oldest first since Maps maintain order
   const sortedOffers = await Offer.findAll({
@@ -72,7 +72,7 @@ async function initializeBook(playerBook) {
 }
 
 // Send out latest price info based on book
-export function updateBest(playerBook) {
+export function updateBest(playerBook: Book) {
   const { contestID, nflplayerID } = playerBook;
 
   const bestbids = [playerBook.bestbid, playerBook.bestpbid].filter((e) => e);

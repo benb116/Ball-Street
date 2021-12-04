@@ -12,6 +12,7 @@ import { getBook, updateBest } from './offer/offer.util';
 import evalProtected from './offer/protected';
 import logger from '../utilities/logger';
 import protectedMatch from './live/channels/protectedMatch.channel';
+import Book, { OfferType } from './offer/book.class';
 
 const offerQueue = new Queue('offer-queue', queueOptions);
 const protectedQueue = new Queue('protected-queue', queueOptions);
@@ -27,7 +28,11 @@ offerQueue.process(parallelProcessors, processor);
 // When a protected match comes back around
 protectedQueue.process(parallelProcessors, protectedProcessor);
 
-function processor(job) {
+interface OfferJob {
+  data: OfferType
+}
+
+function processor(job: OfferJob) {
   const { ContestId, NFLPlayerId } = job.data;
   logger.info(JSON.stringify(job.data));
   // Get the appropriate book (or make one)
@@ -56,7 +61,7 @@ function protectedProcessor(job) {
 // because this function is being run in the queue already.
 // Operations should be done serially
 // so async operations are awaited within this loop
-async function evaluateBook(playerBook) {
+async function evaluateBook(playerBook: Book) {
   let match = playerBook.evaluate();
   while (match) {
     logger.info(`match ${match.bid.id} ${match.ask.id}`);

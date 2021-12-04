@@ -1,9 +1,45 @@
+/* eslint-disable @typescript-eslint/lines-between-class-members */
 import { ProtectedMatch } from '../../models';
 import logger from '../../utilities/logger';
 import evaluateFn from './evaluate';
 
+interface OfferItem {
+  createdAt: number,
+  UserId: number,
+  price: number,
+}
+export interface OfferType {
+  createdAt: string,
+  UserId: number,
+  price: number,
+  id: string,
+  isbid: boolean,
+  protected: boolean,
+  cancelled: boolean,
+  ContestId: number,
+  NFLPlayerId: number,
+}
+type LimitMap = Map<string, OfferItem>;
+type LimitTree = Record<string, LimitMap>;
+
+interface MatcherType {
+  id: string
+}
 // Inspired by https://web.archive.org/web/20110219163448/http://howtohft.wordpress.com/2011/02/15/how-to-build-a-fast-limit-order-book/
 class Book {
+  contestID: number;
+  nflplayerID: number;
+  queue: Promise<void>;
+  init: boolean;
+  bid: LimitTree;
+  pbid: LimitTree;
+  ask: LimitTree;
+  pask: LimitTree;
+  bestbid: null;
+  bestpbid: null;
+  bestask: null;
+  bestpask: null;
+  protMatchMap: Record<string, string>;
   constructor(contestID: number, nflPlayerID: number) {
     this.contestID = contestID;
     this.nflplayerID = nflPlayerID;
@@ -61,7 +97,7 @@ class Book {
   }
 
   // Add an offer to the book
-  add(offer) {
+  add(offer: OfferType) {
     const { isbid, price } = offer;
     // which tree to add to
     const thetree = this.whichTree(isbid, offer.protected);
@@ -78,7 +114,7 @@ class Book {
   }
 
   // Remove and offer from the book
-  cancel(offer) {
+  cancel(offer: OfferType) {
     const { isbid, price } = offer;
     const thetree = this.whichTree(isbid, offer.protected);
 
@@ -93,7 +129,8 @@ class Book {
 
   // Mark that a protected offer has been matched
   // So it doesn't rematch over and over
-  async match(matchee, matcher) {
+
+  async match(matchee: MatcherType, matcher: MatcherType) {
     await ProtectedMatch.create({
       existingId: matchee.id,
       newId: matcher.id,
@@ -104,7 +141,7 @@ class Book {
 
   // Mark that a protected offer is no longer matched
   // So it can be matched again
-  async unmatch(matchee) {
+  async unmatch(matchee: MatcherType) {
     await ProtectedMatch.destroy({
       where: {
         existingId: matchee.id,
@@ -118,7 +155,7 @@ class Book {
   }
 
   // Which tree should an offer be added to
-  whichTree(isbid: boolean, isprotected: boolean) {
+  whichTree(isbid: boolean, isprotected: boolean): LimitTree {
     const combo = Number(isbid) + 2 * Number(isprotected);
     let thetree = {};
     switch (combo) {
@@ -141,7 +178,7 @@ class Book {
   }
 
   // Find all offers in the book that could match a specific protected offer
-  findProtectedMatches(offer) {
+  findProtectedMatches(offer: OfferType) {
     const { isbid, price } = offer;
     // Search all unprotected opposite offers
     const thetree = this.whichTree(!isbid, false);
