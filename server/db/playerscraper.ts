@@ -5,43 +5,8 @@
 import axios from 'axios';
 import { RosterPosTypes } from '../config';
 import { NFLPlayer } from '../models';
+import teams from '../nflinfo';
 import secret from '../secret';
-
-// Yahoo team ID numbers
-const teammap: Record<string, number> = {
-  ARI: 22,
-  ATL: 1,
-  BAL: 33,
-  BUF: 2,
-  CAR: 29,
-  CHI: 3,
-  CIN: 4,
-  CLE: 5,
-  DAL: 6,
-  DEN: 7,
-  DET: 8,
-  GB: 9,
-  HOU: 34,
-  IND: 11,
-  JAX: 30,
-  KC: 12,
-  MIA: 15,
-  MIN: 16,
-  NE: 17,
-  NO: 18,
-  NYG: 19,
-  NYJ: 20,
-  LV: 13,
-  PHI: 21,
-  PIT: 23,
-  LAC: 24,
-  SF: 25,
-  SEA: 26,
-  LAR: 14,
-  TB: 27,
-  TEN: 10,
-  WAS: 28,
-};
 
 const baseurl = (posget: string, weeknum: number) => `https://football.fantasysports.yahoo.com/f1/316236/players?status=ALL&pos=${posget}&cut_type=9&stat1=S_PW_${weeknum}&myteam=1&sort=PTS&sdir=1&count=`;
 const cookie = secret.yahooCookie;
@@ -98,9 +63,9 @@ async function sendreq(price: boolean, pagenum = 0, posget = 'O') {
       }
       // Player object that will be added to DB
       return {
-        id: (posget === 'DEF' ? teammap[team.toUpperCase()] : Number(id)),
+        id: (posget === 'DEF' ? teams[team.toUpperCase()].id : Number(id)),
         name,
-        NFLTeamId: teammap[team.toUpperCase()],
+        NFLTeamId: teams[team.toUpperCase()].id,
         NFLPositionId: posid,
         preprice: (price ? 1100 : preprice),
         postprice: (price ? 700 : 0),

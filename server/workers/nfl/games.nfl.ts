@@ -3,9 +3,9 @@ import logger from '../../utilities/logger';
 import setPhase from './phase.nfl';
 import state from './state.nfl';
 import { NFLGame } from '../../models';
-import { teammap } from './dict.nfl';
+import teams from '../../nflinfo';
 
-const teamIDs = Object.values(teammap);
+const teamIDs = Object.values(teams).map((t) => t.id, [] as number[]);
 
 // Determine all games and their phases
 export function GameState() {
@@ -93,10 +93,10 @@ export function GameState() {
 
 // Given a phasemap, set phases in DB or schedule change
 export async function setGamePhases(phasemap) {
-  const teams = Object.keys(phasemap);
-  for (let i = 0; i < teams.length; i++) {
+  const phaseTeams = Object.keys(phasemap);
+  for (let i = 0; i < phaseTeams.length; i++) {
     // Do these in series to avoid overloading DB connections
-    const teamID = Number(teams[i]);
+    const teamID = Number(phaseTeams[i]);
     const phase = phasemap[teamID];
     // If we set a timestamp as the phase, delay until that time to set mid
     if (Number.isInteger(phase)) {
