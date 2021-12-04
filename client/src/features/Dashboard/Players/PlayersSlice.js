@@ -71,7 +71,7 @@ export const playersSlice = createSlice({
     setInjury: (state, { payload }) => {
       state.playerlist = state.playerlist.map((p) => {
         if (!payload[p.id]) return p;
-        p.injuryStatus = payload[p.id].status;
+        p.injuryStatus = payload[p.id];
         return p;
       });
     },

@@ -20,8 +20,7 @@ export default async function PullLatestInjuries() {
       // Pushout updates for each
       if (!objs.length) return objs;
       const outObj = objs.reduce((acc, cur) => {
-        acc[cur.nflplayerID] = {};
-        acc[cur.nflplayerID].status = cur.status;
+        acc[cur.nflplayerID] = cur.status;
         return acc;
       }, {});
 
