@@ -7,7 +7,12 @@ import offerCancelled from './channels/offerCancelled.channel';
 import phaseChange from './channels/phaseChange.channel';
 import injuryUpdate from './channels/injuryUpdate.channel';
 
-const channelMap = {
+interface LiveChannel {
+  sub(message: string): void,
+  pub(...args: any[]): void,
+}
+
+const channelMap: Record<string, LiveChannel> = {
   priceUpdate,
   statUpdate,
   leaderUpdate,

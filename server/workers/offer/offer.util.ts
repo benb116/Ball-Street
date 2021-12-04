@@ -88,5 +88,5 @@ export function updateBest(playerBook) {
   client.HSET(rediskeys.bestbidHash(contestID), [nflplayerID.toString(), bestbid.toString()]);
   client.HSET(rediskeys.bestaskHash(contestID), [nflplayerID.toString(), bestask.toString()]);
 
-  priceUpdate.pubBest(contestID, nflplayerID, bestbid, bestask);
+  priceUpdate.pub('best', contestID, nflplayerID, bestbid, bestask);
 }

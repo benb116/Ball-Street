@@ -6,21 +6,24 @@ import { client } from '../../../db/redis';
 
 const priceUpdate = {
 
-  pubBest: function pub(contestID: number, nflplayerID: number, bestbid: number, bestask: number) {
-    client.publish('priceUpdate', JSON.stringify({
-      contestID,
-      nflplayerID,
-      bestbid,
-      bestask,
-    }));
-  },
-
-  pubLast: function pub(contestID: number, nflplayerID: number, lastprice: number) {
-    client.publish('priceUpdate', JSON.stringify({
-      contestID,
-      nflplayerID,
-      lastprice,
-    }));
+  pub: function pub(
+    pubtype: string, contestID: number, nflplayerID: number, bestbid: number, bestask: number,
+  ) {
+    if (pubtype === 'best') {
+      client.publish('priceUpdate', JSON.stringify({
+        contestID,
+        nflplayerID,
+        bestbid,
+        bestask,
+      }));
+    }
+    if (pubtype === 'last') {
+      client.publish('priceUpdate', JSON.stringify({
+        contestID,
+        nflplayerID,
+        lastprice: bestbid,
+      }));
+    }
   },
 
   // Add a price update to the map

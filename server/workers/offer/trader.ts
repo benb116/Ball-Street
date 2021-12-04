@@ -135,7 +135,7 @@ async function attemptFill(t: Transaction, bidid: string, askid: string, tprice:
   await Promise.all([createTrade, createHistory]);
 
   client.HSET(rediskeys.lasttradeHash(contestID), [nflplayerID.toString(), price.toString()]);
-  priceUpdate.pubLast(contestID, nflplayerID, price);
+  priceUpdate.pub('last', contestID, nflplayerID, price);
   offerFilled.pub(boffer.UserId, boffer.id);
   offerFilled.pub(aoffer.UserId, aoffer.id);
   logger.info(`finish trade - ${price}: ${bidid} ${askid}`);
