@@ -31,7 +31,7 @@ function routeHandler(service, cacheExpiry = 0) {
 // Strip extraneous info from input
 function stripReq(inp) {
   return {
-    user: inp.session?.user?.id || null,
+    user: inp.session?.user?.id || 0,
     params: inp.params,
     body: inp.body,
   };

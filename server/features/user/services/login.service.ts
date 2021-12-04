@@ -22,7 +22,9 @@ async function login(req) {
   if (!theuser.verified) {
     return genVerify({ email });
   }
-  return { id: theuser.id, email: theuser.email, name: theuser.name };
+  return {
+    needsVerification: false, id: theuser.id, email: theuser.email, name: theuser.name,
+  };
 }
 
 export default login;

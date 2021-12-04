@@ -29,7 +29,7 @@ router.post('/login', async (req, res) => {
   };
   try {
     const user = await login(inp);
-    req.session.user = user; // add to session
+    if (!user.needsVerification) req.session.user = { id: user.id }; // add to session
     return res.json(user);
   } catch (err) {
     return errorHandler(res, err);
@@ -45,7 +45,7 @@ router.post('/signup', async (req, res) => {
   };
   try {
     const user = await signup(inp);
-    if (user.id) req.session.user = user; // add to session
+    if (!user.needsVerification) req.session.user = { id: user.id }; // add to session
     return res.json(user);
   } catch (err) {
     return errorHandler(res, err);
@@ -56,7 +56,7 @@ router.get('/verify', async (req, res) => {
   const inp = { token: req.query.token };
   try {
     const user = await evalVerify(inp);
-    req.session.user = user; // add to session
+    req.session.user = { id: user.id }; // add to session
     return res.redirect('/verified');
   } catch (err) {
     return errorHandler(res, err);

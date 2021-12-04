@@ -25,7 +25,7 @@ async function sendVerificationEmail(email: string, rand: string) {
   const link = `${CallbackURL}/app/auth/verify?token=${rand}`;
   const msg = `Please click this link to verify your Ball Street account:\n${link}`;
   SendEmail(email, 'Verify your Ball Street Account', msg);
-  return Promise.resolve({ needsVerification: true });
+  return Promise.resolve({ needsVerification: true, id: 0 });
 }
 
 function SendEmail(to: string, subject: string, msg: string) {

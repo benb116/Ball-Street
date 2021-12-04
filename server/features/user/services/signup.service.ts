@@ -30,7 +30,9 @@ async function signup(req) {
     }).then(dv);
     if (!theuser) { uError('User could not be created', 500); }
     if (!skipVerification) return await genVerify({ email: theuser.email });
-    return { id: theuser.id, email: theuser.email, name: theuser.name };
+    return {
+      needsVerification: false, id: theuser.id, email: theuser.email, name: theuser.name,
+    };
   } catch (err) {
     const f = errorHandler({
       default: { message: 'Could not create user', status: 500 },

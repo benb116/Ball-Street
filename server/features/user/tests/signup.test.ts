@@ -6,7 +6,7 @@ describe('signup service', () => {
     service, {
       name: 'Ben', email: '123@gmail.com', password: 'password1', skipVerification: true,
     },
-    { email: '123@gmail.com', id: 7, name: 'Ben' },
+    { needsVerification: false, email: '123@gmail.com', id: 7, name: 'Ben' },
   ));
 
   test('Valid request returns data', ObjectTest(

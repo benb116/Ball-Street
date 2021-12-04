@@ -14,6 +14,12 @@ client.connect();
 
 const RedisStore = connect(session);
 
+declare module 'express-session' {
+  export interface SessionData {
+    user: { id: number };
+  }
+}
+
 export default session({
   secret: (process.env.COOKIE_SECRET || secret.cookieSecret),
   name: '_ballstreet',
