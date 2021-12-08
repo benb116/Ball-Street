@@ -11,39 +11,34 @@ services:
             - ./client:/home/node/app
 
     api:
-        command: 
-            ./node_modules/.bin/nodemon workers/api.worker.js # nodemon for restart in debugging
+        command: nodemon dist/workers/api.worker.js
         restart: unless-stopped
         volumes:
-            - ./server/dist:/home/node/app
+            - ./server/dist:/home/node/app/dist
     
     leader:
-        command: 
-            ./node_modules/.bin/nodemon workers/leader.worker.js
+        command: nodemon dist/workers/leader.worker.js
         restart: unless-stopped
         volumes:
-            - ./server/dist:/home/node/app
+            - ./server/dist:/home/node/app/dist
 
     offer:
-        command: 
-            ./node_modules/.bin/nodemon workers/offer.worker.js
+        command: nodemon dist/workers/offer.worker.js
         restart: unless-stopped
         volumes:
-            - ./server/dist:/home/node/app
+            - ./server/dist:/home/node/app/dist
 
     live:
-        command: 
-            ./node_modules/.bin/nodemon workers/live.worker.js
+        command: nodemon dist/workers/live.worker.js
         restart: unless-stopped
         volumes:
-            - ./server/dist:/home/node/app
+            - ./server/dist:/home/node/app/dist
 
     nfl:
-        command: 
-            ./node_modules/.bin/nodemon workers/nfl.worker.js
+        command: nodemon dist/workers/nfl.worker.js
         restart: unless-stopped
         volumes:
-            - ./server/dist:/home/node/app
+            - ./server/dist:/home/node/app/dist
 
     db: # Postgres with Timescale extension
         ports:
