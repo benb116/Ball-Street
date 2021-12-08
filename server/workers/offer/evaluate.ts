@@ -3,9 +3,21 @@
 // Returns false for no matches
 
 import logger from '../../utilities/logger';
+import Book, { OfferItem } from './book.class';
+
+export interface MatchItem {
+  id: string,
+  data: OfferItem,
+  protected: boolean,
+}
+
+interface MatchPair {
+  bid: MatchItem,
+  ask: MatchItem
+}
 
 // Returns with a bid and ask object detailing the offers
-function evaluateFn(book) {
+function evaluateFn(book: Book) {
   // Get all prices that are being offered
   const bidPrices = Object.keys(book.bid).map(Number);
   const pbidPrices = Object.keys(book.pbid).map(Number);
@@ -39,17 +51,17 @@ function evaluateFn(book) {
   // and last protbid with protask
 
   // Try to match the best bid first
-  let evalbid = book.bestbid;
+  let evalbid = Number(book.bestbid);
   let done = false; // flag, done looking at unprot bids, check prot bids next
   // Each map has an iterator that will spit out entries oldest first
   // Keep track of the iterator of the current best price for bids
   let bidIterator;
-  if (!book.bestbid) { done = true; } else {
+  if (!evalbid) { done = true; } else {
     logger.verbose('Try to match the best bid');
     bidIterator = book.bid[evalbid].entries();
   }
   // Iterate through the map(s) to find the best offer
-  while (!done) {
+  while (evalbid) {
     bestbidOffer = bidIterator.next().value;
     // If none, we've exhausted a specific price level
     // Move to the next best price and try again
@@ -57,7 +69,7 @@ function evaluateFn(book) {
       // eslint-disable-next-line no-loop-func
       evalbid = Math.min(...bidPrices.filter((p) => p > evalbid));
       // If there are no more left, then exit this loop and go to pbids
-      if (evalbid === Infinity) { evalbid = null; done = true; break; }
+      if (evalbid === Infinity) { done = true; break; }
 
       logger.verbose(`next best bid price: ${evalbid}`);
       bidIterator = book.bid[evalbid].entries();
@@ -70,7 +82,7 @@ function evaluateFn(book) {
         return {
           bid: { id: bestbidOffer[0], data: bestbidOffer[1], protected: false },
           ask: { id: bestaskOffer[0], data: bestaskOffer[1], protected: false },
-        };
+        } as MatchPair;
       }
 
       // If that falls through, find an unmatched protected ask
@@ -85,7 +97,7 @@ function evaluateFn(book) {
           return {
             bid: { id: bestbidOffer[0], data: bestbidOffer[1], protected: false },
             ask: { id: bestpaskOffer[0], data: bestpaskOffer[1], protected: true },
-          };
+          } as MatchPair;
         }
         // If we've gotten to this point with no matches,
         // we can't match this bid with anything
@@ -100,10 +112,10 @@ function evaluateFn(book) {
   }
 
   // Try to match the best pbid next
-  let evalpbid = book.bestpbid;
+  let evalpbid = Number(book.bestpbid);
   done = false; // done looking at prot bid
   let pbidIterator;
-  if (!book.bestpbid) { done = true; } else {
+  if (!evalpbid) { done = true; } else {
     logger.verbose('Try to match the best pbid');
     pbidIterator = book.pbid[evalpbid].entries();
   }
@@ -116,7 +128,7 @@ function evaluateFn(book) {
       // eslint-disable-next-line no-loop-func
       evalpbid = Math.min(...pbidPrices.filter((p) => p > evalpbid));
       // If there are no more left, then exit
-      if (evalpbid === Infinity) { evalpbid = null; done = true; break; }
+      if (evalpbid === Infinity) { done = true; break; }
       logger.verbose(`next best pbid price: ${evalpbid}`);
 
       pbidIterator = book.pbid[evalpbid].entries();
@@ -150,7 +162,7 @@ function evaluateFn(book) {
           return {
             bid: { id: bestpbidOffer[0], data: bestpbidOffer[1], protected: true },
             ask: { id: bestaskOffer[0], data: bestaskOffer[1], protected: false },
-          };
+          } as MatchPair;
         }
       }
 
@@ -164,7 +176,7 @@ function evaluateFn(book) {
           return {
             bid: { id: bestpbidOffer[0], data: bestpbidOffer[1], protected: true },
             ask: { id: bestpaskOffer[0], data: bestpaskOffer[1], protected: true },
-          };
+          } as MatchPair;
         }
         // If we've gotten to this point with no matches,
         // we can't match this bid with anything
@@ -177,16 +189,16 @@ function evaluateFn(book) {
   return false;
 }
 
-function findMatcher(book, id: string) {
+function findMatcher(book: Book, id: string) {
   return Object.keys(book.protMatchMap).find((key) => book.protMatchMap[key] === id);
 }
 
 // Find the best unmatched ask offer available
-function bestUnmatchedAsk(book) {
+function bestUnmatchedAsk(book: Book) {
+  if (!book.bestask) return null;
   const askPrices = Object.keys(book.ask).map(Number);
   let evalask = book.bestask;
   let bestAskOffer;
-  if (!evalask) return null;
   let AskIterator = book.ask[evalask].entries();
   if (book.ask[evalask]) {
     // Absolute best offer
@@ -202,7 +214,7 @@ function bestUnmatchedAsk(book) {
       // eslint-disable-next-line no-loop-func
       evalask = Math.min(...askPrices.filter((p) => p > evalask));
       // If there are no more left, then can't match any asks
-      if (evalask === Infinity) { evalask = null; return null; }
+      if (evalask === Infinity) { return null; }
 
       AskIterator = book.ask[evalask].entries();
       bestAskOffer = AskIterator.next().value;
@@ -213,14 +225,14 @@ function bestUnmatchedAsk(book) {
 
 // Find the best unmatched protected ask offer available
 // If notMatcher is true, also make sure it is not matched to a pbid
-function bestUnmatchedProtAsk(book, notMatcher: boolean) {
+function bestUnmatchedProtAsk(book: Book, notMatcher = false) {
+  if (!book.bestpask) return null;
   const paskPrices = Object.keys(book.pask).map(Number);
   let evalpask = book.bestpask;
   // It's possible that the "best" protected price has already been matched
   // Best not to match it again (and send another ping to user)
   // Instead, match the next best unmatched protected offer
   let bestPAskOffer;
-  if (!evalpask) return null;
   let pAskIterator = book.pask[evalpask].entries();
   if (book.pask[evalpask]) {
     // Absolute best protected offer
@@ -231,14 +243,13 @@ function bestUnmatchedProtAsk(book, notMatcher: boolean) {
   while (book.protMatchMap[bestPAskOffer[0]]
       || (notMatcher && findMatcher(book, bestPAskOffer[0]))) {
     bestPAskOffer = pAskIterator.next().value;
-
     // If none, we've exhausted a specific price level
     // Move to the next best available
     if (!bestPAskOffer) {
       // eslint-disable-next-line no-loop-func
       evalpask = Math.min(...paskPrices.filter((p) => p > evalpask));
       // If there are no more left, then can't match this protected
-      if (evalpask === Infinity) { evalpask = null; return null; }
+      if (evalpask === Infinity) { return null; }
 
       pAskIterator = book.pask[evalpask].entries();
       bestPAskOffer = pAskIterator.next().value;

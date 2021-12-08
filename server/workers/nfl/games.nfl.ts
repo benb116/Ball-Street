@@ -105,13 +105,13 @@ export async function setGamePhases(phasemap: Record<string, string | number>) {
     if (Number.isInteger(phase)) {
       setTimeout(() => {
         setPhase(teamID, 'mid');
-      }, (phase * 1000 - Date.now()));
+      }, (Number(phase) * 1000 - Date.now()));
       // eslint-disable-next-line no-await-in-loop
       await setPhase(teamID, 'pre');
       logger.info(`Team ${teamID} game scheduled for ${phase}`);
     } else {
       // eslint-disable-next-line no-await-in-loop
-      await setPhase(teamID, phase);
+      await setPhase(teamID, phase.toString());
       if (phase === 'post') {
         // Mark that the time is done so PullAllGames doesn't try to do this again
         state.timeObj[teamID] = 0;

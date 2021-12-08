@@ -22,7 +22,7 @@ const tests = [
 
 interface PromiseMap {
   [key: string]: {
-    prom: Promise<unknown>
+    prom: Promise<any>
     res: (value: unknown) => void,
     rej: (value: unknown) => void,
     done: boolean
@@ -88,7 +88,7 @@ async function run() {
 
   let cancelOffer = '';
 
-  ws1.on('message', async (text) => {
+  ws1.on('message', async (text: string) => {
     const msg = JSON.parse(text.toString());
     switch (msg.event) {
       case 'offerFilled':
@@ -141,7 +141,7 @@ async function run2() {
   const session2 = await getSessionID('email2@gmail.com');
   const ws2 = initWS(session2);
 
-  ws2.on('message', async (text) => {
+  ws2.on('message', async (text: string) => {
     const msg = JSON.parse(text.toString());
     switch (msg.event) {
       case 'offerFilled':

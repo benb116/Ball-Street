@@ -8,7 +8,7 @@ describe('evalPassReset service', () => {
   test('Valid request returns confirmation and redis key', async () => {
     const email = 'email4@gmail.com';
     const rand = cryptoRandomString({ length: verificationTokenLength, type: 'url-safe' });
-    await client.SET(rediskeys.passReset(rand), email, 'EX', verificationTimeout * 60);
+    await client.SET(rediskeys.passReset(rand), email, { EX: verificationTimeout * 60 });
 
     // Check to make sure the redis key was set
     const redisOutput = await client.KEYS('passReset:*');
@@ -25,7 +25,7 @@ describe('evalPassReset service', () => {
   test('Bad password returns error', async () => {
     const email = 'email4@gmail.com';
     const rand = cryptoRandomString({ length: verificationTokenLength, type: 'url-safe' });
-    await client.SET(rediskeys.passReset(rand), email, 'EX', verificationTimeout * 60);
+    await client.SET(rediskeys.passReset(rand), email, { EX: verificationTimeout * 60 });
 
     // Check to make sure the redis key was set
     const redisOutput = await client.KEYS('passReset:*');
@@ -51,7 +51,7 @@ describe('evalPassReset service', () => {
   test('Unequal confirm password returns error', async () => {
     const email = 'email4@gmail.com';
     const rand = cryptoRandomString({ length: verificationTokenLength, type: 'url-safe' });
-    await client.SET(rediskeys.passReset(rand), email, 'EX', verificationTimeout * 60);
+    await client.SET(rediskeys.passReset(rand), email, { EX: verificationTimeout * 60 });
 
     // Check to make sure the redis key was set
     const redisOutput = await client.KEYS('passReset:*');

@@ -68,7 +68,7 @@ async function cancelOffer(cookie: string) {
 const tests = ['open1', 'leader', 'initPrice', 'offerPrice', 'cancelPrice', 'protMatch', 'fillOffer'];
 interface PromiseMap {
   [key: string]: {
-    prom: Promise<unknown>
+    prom: Promise<any>
     res: (value: unknown) => void,
     rej: (value: unknown) => void,
     done: boolean
@@ -96,7 +96,7 @@ async function initUsers() {
   });
   ws1.on('error', console.log);
 
-  ws1.on('message', async (text) => {
+  ws1.on('message', async (text: string) => {
     const msg = JSON.parse(text.toString());
     switch (msg.event) {
       case 'offerFilled':

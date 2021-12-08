@@ -3,7 +3,7 @@ import { ProtectedMatch } from '../../models';
 import logger from '../../utilities/logger';
 import evaluateFn from './evaluate';
 
-interface OfferItem {
+export interface OfferItem {
   createdAt: number,
   UserId: number,
   price: number,
@@ -35,10 +35,10 @@ class Book {
   pbid: LimitTree;
   ask: LimitTree;
   pask: LimitTree;
-  bestbid: null;
-  bestpbid: null;
-  bestask: null;
-  bestpask: null;
+  bestbid: number | null;
+  bestpbid: number | null;
+  bestask: number | null;
+  bestpask: number | null;
   protMatchMap: Record<string, string>;
   constructor(contestID: number, nflPlayerID: number) {
     this.contestID = contestID;
@@ -90,7 +90,7 @@ class Book {
   }
 
   // Add a function to the book's serial queue
-  enqueue(fn) {
+  enqueue(fn: (inp: any) => any) {
     this.queue = this.queue.then(fn).catch((err) => {
       logger.error(`Book error: Contest:${this.contestID} Player:${this.nflplayerID}`, err);
     });

@@ -14,7 +14,8 @@ export default function model(sequelize, DataTypes) {
     },
     fullname: { // Philadelphia Eagles
       type: DataTypes.VIRTUAL,
-      get() {
+      get(): string {
+        // @ts-expect-error - Location and name are in model
         return `${this.location} ${this.name}`;
       },
     },

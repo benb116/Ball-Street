@@ -1,3 +1,4 @@
+import { Transaction } from 'sequelize';
 import { FlexNFLPositionId, NFLPosTypes, Roster } from '../../config';
 import logger from '../../utilities/logger';
 
@@ -51,7 +52,7 @@ export const isOpenRoster = function isOpenRoster(theentry, playerType: number) 
 };
 
 // Transaction object to cause SELECT ... FOR UPDATE
-export const tobj = function tobj(t) {
+export const tobj = function tobj(t: Transaction) {
   return {
     transaction: t,
     lock: t.LOCK.UPDATE,
@@ -66,7 +67,7 @@ export const uError = function uError(msg: string, status = 500) {
 };
 
 // Console.log passthrough for promises
-export const cl = function cl(input) {
+export const cl = function cl(input: any) {
   // eslint-disable-next-line no-console
   logger.info(input);
   return input;
@@ -82,14 +83,14 @@ export const validate = function validate(input, schema) {
 // Functions used in Jest testing
 // Ensures that a service call returns an object with specific properties
 export const ObjectTest = function ObjectTest(service, req, contains: any) {
-  return async () => service(req).then((resp) => {
+  return async () => service(req).then((resp: any) => {
     expect(resp).toEqual(expect.objectContaining(contains));
   });
 };
 
 // Ensures that a service call returns an array with specific elements
 export const ArrayTest = function ArrayTest(service, req, items: any[]) {
-  return async () => service(req).then((resp) => {
+  return async () => service(req).then((resp: any) => {
     items.forEach((e) => {
       let check = e;
       if (typeof check === 'object' && check !== null) {

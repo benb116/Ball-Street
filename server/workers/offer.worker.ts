@@ -13,6 +13,7 @@ import evalProtected from './offer/protected';
 import logger from '../utilities/logger';
 import protectedMatch from './live/channels/protectedMatch.channel';
 import Book, { OfferType } from './offer/book.class';
+import { MatchItem } from './offer/evaluate';
 
 const offerQueue = new Queue('offer-queue', queueOptions);
 const protectedQueue = new Queue('protected-queue', queueOptions);
@@ -32,6 +33,16 @@ interface OfferJob {
   data: OfferType
 }
 
+interface ProtMatchType {
+  existingOffer: string,
+  newOffer: string,
+  ContestId: number,
+  NFLPlayerId: number,
+}
+interface ProtMatchJob {
+  data: ProtMatchType,
+}
+
 function processor(job: OfferJob) {
   const { ContestId, NFLPlayerId } = job.data;
   logger.info(JSON.stringify(job.data));
@@ -47,7 +58,7 @@ function processor(job: OfferJob) {
   playerBook.enqueue(() => { evaluateBook(playerBook); });
 }
 
-function protectedProcessor(job) {
+function protectedProcessor(job: ProtMatchJob) {
   logger.info(JSON.stringify(job.data));
   const { ContestId, NFLPlayerId } = job.data;
   const playerBook = getBook(books, ContestId, NFLPlayerId);
@@ -95,13 +106,15 @@ async function evaluateBook(playerBook: Book) {
 }
 
 // Add a protMatch to the queue and send a ping
-function addToProtectedMatchQueue(eOffer, nOffer, ContestId: number, NFLPlayerId: number) {
+function addToProtectedMatchQueue(
+  eOffer: MatchItem, nOffer: MatchItem, ContestId: number, NFLPlayerId: number,
+) {
   protectedQueue.add({
     existingOffer: eOffer.id,
     newOffer: nOffer.id,
     ContestId,
     NFLPlayerId,
-  }, { delay: ProtectionDelay * 1000 });
+  } as ProtMatchType, { delay: ProtectionDelay * 1000 });
   // Send ping to user
   protectedMatch.pub({
     userID: eOffer.data.UserId,

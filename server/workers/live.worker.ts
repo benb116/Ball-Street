@@ -31,7 +31,7 @@ const server = http.createServer(app);
 const wss = new WebSocket.Server({ noServer: true });
 
 server.on('upgrade', (request: Request, socket, head) => {
-  session(request, {}, () => {
+  session(request, socket, () => {
     if (!request.session.user) {
       socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
       socket.destroy();
@@ -44,7 +44,7 @@ server.on('upgrade', (request: Request, socket, head) => {
 });
 
 // New ws connection
-wss.on('connection', async (ws, request) => {
+wss.on('connection', async (ws, request: Request) => {
   // Add to connection map (ws <-> user)
   const userId = request.session.user.id;
   liveState.connmap.set(userId, ws);
