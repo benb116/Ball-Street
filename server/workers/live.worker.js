@@ -5,7 +5,7 @@ const WebSocket = require('ws');
 const http = require('http');
 const express = require('express');
 
-const { get, subscriber, rediskeys } = require('../db/redis');
+const { client, subscriber, rediskeys } = require('../db/redis');
 const session = require('../middleware/session');
 const liveState = require('./live/state.live'); // Data stored in memory
 const logger = require('../utilities/logger');
@@ -13,12 +13,16 @@ const logger = require('../utilities/logger');
 // All channels that may be used
 const channelMap = require('./live/channels.live');
 
-Object.keys(channelMap).map((c) => subscriber.subscribe(c));
-
-// When a message is received, route to correct channel subscriber
-subscriber.on('message', (channel, message) => {
-  channelMap[channel].sub(message);
-});
+// Set up redis subscribers
+(async () => {
+  await subscriber.connect();
+  Object.keys(channelMap).forEach((c) => {
+    subscriber.subscribe(c, (message, channel) => {
+      // When a message comes in, dispatch it to correct subscriber fn
+      channelMap[channel].sub(message);
+    }).catch(logger.error);
+  });
+})();
 
 // WS server on top of express
 const app = express();
@@ -53,7 +57,7 @@ wss.on('connection', async (ws, request) => {
 
   // Send starting data
   ws.send(JSON.stringify({ event: 'priceUpdate', pricedata: await sendLatest(contestID) }));
-  ws.send(JSON.stringify({ event: 'leaderboard', leaderboard: JSON.parse(await get.key(rediskeys.leaderHash(contestID))) }));
+  ws.send(JSON.stringify({ event: 'leaderboard', leaderboard: JSON.parse(await client.GET(rediskeys.leaderHash(contestID))) }));
 
   ws.on('close', () => {
     liveState.connmap.delete(userId);
@@ -67,11 +71,11 @@ server.listen(process.env.PORT, () => {
 
 // Send latest points and stat info
 async function sendLatest(contestID) {
-  const stats = get.hkeyall(rediskeys.statpriceHash());
-  const projs = get.hkeyall(rediskeys.projpriceHash());
-  const bbids = get.hkeyall(rediskeys.bestbidHash(contestID));
-  const basks = get.hkeyall(rediskeys.bestaskHash(contestID));
-  const lasts = get.hkeyall(rediskeys.lasttradeHash(contestID));
+  const stats = client.HGETALL(rediskeys.statpriceHash());
+  const projs = client.HGETALL(rediskeys.projpriceHash());
+  const bbids = client.HGETALL(rediskeys.bestbidHash(contestID));
+  const basks = client.HGETALL(rediskeys.bestaskHash(contestID));
+  const lasts = client.HGETALL(rediskeys.lasttradeHash(contestID));
   return Promise.all([stats, projs, bbids, basks, lasts]).then((out) => {
     const [statsOut, projsOut, bbidsOut, basksOut, lastsOut] = out;
     const retobj = {};

@@ -1,9 +1,8 @@
-const { get } = require('../../../db/redis');
 const { NFLGame, NFLTeam } = require('../../../models');
 const u = require('../../util/util');
 
 async function getNFLGames() {
-  const currentweek = await get.CurrentWeek();
+  const currentweek = Number(process.env.WEEK);
   return NFLGame.findAll({
     include: [{
       model: NFLTeam,

@@ -5,7 +5,7 @@ const axios = require('axios');
 const contestID = 2;
 
 const createOffer = require('../../features/offer/services/createOffer.service');
-const { rediskeys, set } = require('../../db/redis');
+const { rediskeys, client } = require('../../db/redis');
 const config = require('../../config');
 
 const tests = [
@@ -72,8 +72,8 @@ function initWS(cookie) {
 }
 
 async function run() {
-  await set.hkey(rediskeys.bestbidHash(contestID), 21, 0);
-  await set.hkey(rediskeys.bestaskHash(contestID), 21, 0);
+  await client.HSET(rediskeys.bestbidHash(contestID), ['21', '0']);
+  await client.HSET(rediskeys.bestaskHash(contestID), ['21', '0']);
 
   const session1 = await getSessionID('email1@gmail.com');
   const ws1 = initWS(session1);

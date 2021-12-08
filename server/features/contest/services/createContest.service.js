@@ -5,7 +5,6 @@ const u = require('../../util/util');
 const { Contest } = require('../../../models');
 const { validators } = require('../../util/util.schema');
 const { errorHandler } = require('../../util/util.service');
-const { get } = require('../../../db/redis');
 
 const schema = Joi.object({
   user: validators.user,
@@ -30,7 +29,7 @@ async function createContest(req) {
   const value = u.validate(req, schema);
   return Contest.create({
     name: value.body.name,
-    nflweek: await get.CurrentWeek(),
+    nflweek: Number(process.env.WEEK),
     budget: value.body.budget,
   }).catch(errorHandler({
     default: ['Contest could not be created', 500],

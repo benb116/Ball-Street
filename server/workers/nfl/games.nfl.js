@@ -2,7 +2,6 @@ const axios = require('axios');
 const logger = require('../../utilities/logger');
 const setPhase = require('./phase.nfl');
 const state = require('./state.nfl');
-const { get } = require('../../db/redis');
 const { NFLGame } = require('../../models');
 const dict = require('./dict.nfl');
 
@@ -14,7 +13,7 @@ function GameState() {
     .then((raw) => raw.data.split('\n'))
     .then((rawlines) => rawlines.filter((l) => l[0] === 'g'))
     .then(async (gamelines) => {
-      const currentweek = (await get.CurrentWeek() || 0);
+      const currentweek = (Number(process.env.WEEK) || 0);
       const phasemap = {};
 
       // Build up the list of games for the DB and the phasemap.

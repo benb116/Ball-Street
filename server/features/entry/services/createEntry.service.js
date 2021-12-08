@@ -5,7 +5,6 @@ const u = require('../../util/util');
 const { Entry, Contest } = require('../../../models');
 const { errorHandler } = require('../../util/util.service');
 const { validators } = require('../../util/util.schema');
-const { get } = require('../../../db/redis');
 
 const schema = Joi.object({
   user: validators.user,
@@ -24,7 +23,7 @@ async function createEntry(req) {
   obj.ContestId = value.params.contestID;
   const thecontest = await Contest.findByPk(value.params.contestID).then(u.dv);
   if (!thecontest) { u.Error('No contest found', 404); }
-  const theweek = await get.CurrentWeek();
+  const theweek = Number(process.env.WEEK);
   if (theweek !== thecontest.nflweek) u.Error('Incorrect week', 406);
   obj.pointtotal = thecontest.budget;
   return Entry.create(obj).then(u.dv)

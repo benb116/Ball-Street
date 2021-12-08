@@ -53,8 +53,8 @@ services:
           - dbdata:/data/db
 
     redis:
-      ports:
-        - 6379:6379 # Expose ports
+        ports:
+            - 6379:6379 # Expose ports
 
 networks:
     app-network:

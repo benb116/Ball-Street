@@ -5,7 +5,6 @@
 const axios = require('axios');
 const { NFLPlayer } = require('../models');
 const secret = require('../secret');
-const { get } = require('./redis');
 
 // Yahoo team ID numbers
 const teammap = {
@@ -59,7 +58,7 @@ let currentweek = 3;
 // Pull player info
 // If price, include constant pre- and post-prices
 async function scrape(price) {
-  currentweek = await get.CurrentWeek();
+  currentweek = Number(process.env.WEEK);
   // Set all existing player records to inactive, will update if duplicated
   await NFLPlayer.update({ active: false }, { where: { active: true } });
 

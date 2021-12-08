@@ -1,7 +1,7 @@
 const liveState = require('../state.live'); // Data stored in memory
 const { sendToContests } = require('../socket.live');
 
-const { get, rediskeys, client } = require('../../../db/redis');
+const { rediskeys, client } = require('../../../db/redis');
 
 const { leaderHash } = rediskeys;
 
@@ -20,7 +20,7 @@ leaderUpdate.sub = async function sub() {
     }
   });
   const allContests = Object.keys(leaderMemo);
-  const allLeaders = await Promise.all(allContests.map((cID) => get.key(leaderHash(cID))));
+  const allLeaders = await Promise.all(allContests.map((cID) => client.GET(leaderHash(cID))));
   const leaderMsgMap = allContests.reduce((acc, cur, i) => {
     acc[cur] = { event: 'leaderboard', leaderboard: JSON.parse(allLeaders[i]) };
     return acc;

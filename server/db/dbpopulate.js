@@ -2,7 +2,6 @@
 
 const models = require('../models');
 const logger = require('../utilities/logger');
-const { get } = require('./redis');
 
 async function PopulateDB() {
   logger.info('Populating DB with initial data');
@@ -25,7 +24,7 @@ async function PopulateDB() {
     verified: (u !== 'email5@gmail.com' && u !== 'email6@gmail.com'),
   })));
 
-  const curweek = await get.CurrentWeek();
+  const curweek = Number(process.env.WEEK);
   // Define existing contest
   const con = {
     name: 'Ball Street Big One',

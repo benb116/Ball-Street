@@ -1,7 +1,7 @@
 const Joi = require('joi');
 
 const u = require('../../util/util');
-const { rediskeys, get, del } = require('../../../db/redis');
+const { rediskeys, client } = require('../../../db/redis');
 const config = require('../../../config');
 const { User } = require('../../../models');
 
@@ -15,9 +15,9 @@ const schema = Joi.object({
 
 async function evalVerify(req) {
   const { token } = u.validate(req, schema);
-  const email = await get.key(rediskeys.emailVer(token));
+  const email = await client.GET(rediskeys.emailVer(token));
   if (!email) u.Error('Email could not be verified', 404);
-  del.key(rediskeys.emailVer(token));
+  client.DEL(rediskeys.emailVer(token));
   const user = await User.update({ verified: true }, {
     where: { email }, returning: true, plain: true,
   });

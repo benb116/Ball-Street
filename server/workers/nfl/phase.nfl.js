@@ -3,7 +3,7 @@ const Joi = require('joi');
 
 const { Op } = require('sequelize');
 const u = require('../../features/util/util');
-const { del, get } = require('../../db/redis');
+const { client } = require('../../db/redis');
 const {
   NFLPlayer, Entry, NFLGame, Contest,
 } = require('../../models');
@@ -51,7 +51,7 @@ async function setPhase(teamID, newphase) {
     .then(() => {
       phaseChange.pub(teamID, newphase);
     })
-    .then(() => del.key('/app/auth/nfldata/games')); // Force a refresh of game data
+    .then(() => client.DEL('/app/auth/nfldata/games')); // Force a refresh of game data
 }
 
 // Convert all players on a team in all entries to points
@@ -76,7 +76,7 @@ async function convertTeamPlayers(teamID) {
 
   // Find all of this weeks entries across contests
   const weekcontests = await Contest.findAll({
-    where: { nflweek: await get.CurrentWeek() },
+    where: { nflweek: Number(process.env.WEEK) },
   }).then(u.dv)
     .then((contests) => contests.map((c) => c.id));
   const allEntries = await Entry.findAll({

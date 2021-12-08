@@ -3,12 +3,11 @@ const { Op } = require('sequelize');
 const u = require('../../util/util');
 
 const { Entry, Contest, User } = require('../../../models');
-const { get } = require('../../../db/redis');
 
 async function getWeekEntries() {
   const weekcontests = await Contest.findAll({
     where: {
-      nflweek: await get.CurrentWeek(),
+      nflweek: Number(process.env.WEEK),
     },
   })
     .then(u.dv)

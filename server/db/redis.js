@@ -1,36 +1,19 @@
 // Set up redis connections and utilities
 
-const { promisify } = require('util');
-const redis = require('redis');
-const logger = require('../utilities/logger');
+const { createClient } = require('redis');
 
 const REDIS_HOST = (process.env.REDIS_HOST || 'localhost');
 const REDIS_PORT = (process.env.REDIS_PORT || 6379);
 
-// Used for all commands and publishing
-const client = (function createClient() {
-  return redis.createClient(
-    REDIS_PORT,
-    REDIS_HOST,
-  );
-}());
-
-// Used for subscribing (must be separate client)
-const subscriber = (function createClient() {
-  return redis.createClient(
-    REDIS_PORT,
-    REDIS_HOST,
-  );
-}());
+const connObj = {
+  url: `redis://${REDIS_HOST}:${REDIS_PORT}`,
+  socket: { connectTimeout: 10000 },
+};
+const client = createClient(connObj);
+client.connect();
+const subscriber = client.duplicate();
 
 const queueOptions = { redis: { port: REDIS_PORT, host: REDIS_HOST } };
-
-const getAsync = promisify(client.get).bind(client);
-const setAsync = promisify(client.set).bind(client);
-const delAsync = promisify(client.del).bind(client);
-const hsetAsync = promisify(client.hset).bind(client);
-const hgetAsync = promisify(client.hget).bind(client);
-const hgetallAsync = promisify(client.hgetall).bind(client);
 
 // Define redis keys for various entries
 function leaderHash(contestID) {
@@ -73,19 +56,6 @@ function passReset(rand) {
   return `passReset:${rand}`;
 }
 
-// Functions for setting or getting config values
-async function getCurrentWeek() {
-  return Number(process.env.WEEK);
-}
-
-async function setCurrentWeek(weeknum) {
-  if (Number.isInteger(weeknum)) {
-    return setAsync(currentWeek(), weeknum.toString());
-  }
-  logger.error(`Can't set weeknum to ${weeknum}`);
-  return Promise.reject();
-}
-
 const rediskeys = {
   bestbidHash,
   bestaskHash,
@@ -99,29 +69,11 @@ const rediskeys = {
   passReset,
 };
 
-const get = {
-  CurrentWeek: getCurrentWeek,
-  key: getAsync,
-  hkey: hgetAsync,
-  hkeyall: hgetallAsync,
-};
-
-const set = {
-  CurrentWeek: setCurrentWeek,
-  key: setAsync,
-  hkey: hsetAsync,
-};
-
-const del = {
-  key: delAsync,
-};
-
 module.exports = {
   client,
   subscriber,
   queueOptions,
   rediskeys,
-  get,
-  set,
-  del,
+  REDIS_HOST,
+  REDIS_PORT,
 };

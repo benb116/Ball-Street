@@ -4,7 +4,7 @@
 const config = require('../config');
 const u = require('../features/util/util');
 
-const { rediskeys, get, set } = require('../db/redis');
+const { rediskeys, client } = require('../db/redis');
 const getNFLPlayers = require('../features/nflplayer/services/getNFLPlayers.service');
 const getWeekEntries = require('../features/entry/services/getWeekEntries.service');
 const { NFLGame } = require('../models');
@@ -40,7 +40,7 @@ let phaseHold = false;
 
 async function calculateLeaderboard() {
   // Get current game phases (used to determine which point value to use)
-  const gamelist = await NFLGame.findAll({ where: { week: await get.CurrentWeek() } }).then(u.dv);
+  const gamelist = await NFLGame.findAll({ where: { week: Number(process.env.WEEK) } }).then(u.dv);
   // Are all games in pre or post phase
   const newphaseHold = gamelist.reduce((acc, cur) => (acc && cur.phase !== 'mid'), true);
   // If yes, do one more calc then hold;
@@ -76,7 +76,7 @@ async function calculateLeaderboard() {
 
   // Pull latest price info for all contests
   // Build one big price map
-  const priceMap = await get.hkeyall(projpriceHash());
+  const priceMap = await client.HGETALL(projpriceHash());
   if (!priceMap) return;
   // console.log(priceMap);
 
@@ -111,7 +111,7 @@ async function calculateLeaderboard() {
   contests.forEach((c) => {
     const cleader = contestSplit[c];
     cleader.sort((a, b) => ((a.total < b.total) ? 1 : -1));
-    set.key(leaderHash(c), JSON.stringify(cleader));
+    client.SET(leaderHash(c), JSON.stringify(cleader));
   });
 
   // Announce new results

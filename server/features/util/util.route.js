@@ -3,7 +3,7 @@
 // and return the results
 // If there's an error, return the specified status and error message.
 
-const { get, set } = require('../../db/redis');
+const { client } = require('../../db/redis');
 
 function routeHandler(service, cacheExpiry) {
   return async function routeHandlerInner(req, res) {
@@ -11,7 +11,7 @@ function routeHandler(service, cacheExpiry) {
       // If a get request should be cached
       if (cacheExpiry && req.method === 'GET') {
         // Check if it's been cached already
-        const cacheout = await get.key(req.originalUrl);
+        const cacheout = await client.GET(req.originalUrl);
         if (cacheout) {
           return res.send(cacheout);
         }
@@ -19,7 +19,7 @@ function routeHandler(service, cacheExpiry) {
       const out = await service(stripReq(req));
       if (cacheExpiry && req.method === 'GET') {
         // Cache results
-        await set.key(req.originalUrl, JSON.stringify(out), 'EX', cacheExpiry);
+        await client.SET(req.originalUrl, JSON.stringify(out), { EX: cacheExpiry });
       }
       return res.json(out);
     } catch (err) {

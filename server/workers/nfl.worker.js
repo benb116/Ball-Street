@@ -1,6 +1,6 @@
 const axios = require('axios');
 const getNFLPlayers = require('../features/nflplayer/services/getNFLPlayers.service');
-const { rediskeys, set } = require('../db/redis');
+const { rediskeys, client } = require('../db/redis');
 
 const dict = require('./nfl/dict.nfl');
 const state = require('./nfl/state.nfl');
@@ -134,11 +134,11 @@ function EstimateProjection(playerid, statpoints) {
 // Set values in redis and publish an update
 function SetValues(playerVals) {
   const statvals = playerVals.reduce((acc, cur) => {
-    acc.push(cur[0], cur[1]);
+    acc.push(cur[0].toString(), cur[1].toString());
     return acc;
   }, []);
   const projvals = playerVals.reduce((acc, cur) => {
-    acc.push(cur[0], cur[2]);
+    acc.push(cur[0].toString(), cur[2].toString());
     return acc;
   }, []);
 
@@ -152,6 +152,6 @@ function SetValues(playerVals) {
   }, {});
 
   if (playerVals.length) statUpdate.pub(outobj);
-  if (statvals.length) set.hkey([rediskeys.statpriceHash(), ...statvals]);
-  if (projvals.length) set.hkey([rediskeys.projpriceHash(), ...projvals]);
+  if (statvals.length) client.HSET(rediskeys.statpriceHash(), statvals);
+  if (projvals.length) client.HSET(rediskeys.projpriceHash(), projvals);
 }

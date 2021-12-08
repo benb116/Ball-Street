@@ -3,6 +3,6 @@ const { client, subscriber } = require('../db/redis');
 
 module.exports = async () => {
   sequelize.close();
-  client.quit();
-  subscriber.quit();
+  await client.quit();
+  await subscriber.quit();
 };

@@ -1,6 +1,16 @@
 const session = require('express-session');
 const connect = require('connect-redis');
-const { client } = require('../db/redis');
+
+const { createClient } = require('redis');
+const { REDIS_PORT, REDIS_HOST } = require('../db/redis');
+
+const connObj = {
+  url: `redis://${REDIS_HOST}:${REDIS_PORT}`,
+  socket: { connectTimeout: 10000 },
+  legacyMode: true,
+};
+const client = createClient(connObj);
+client.connect();
 
 const RedisStore = connect(session);
 

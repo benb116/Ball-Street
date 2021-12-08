@@ -3,7 +3,7 @@ const Joi = require('joi');
 
 const u = require('../../util/util');
 const { validators } = require('../../util/util.schema');
-const { set, rediskeys } = require('../../../db/redis');
+const { client, rediskeys } = require('../../../db/redis');
 const config = require('../../../config');
 
 const schema = Joi.object({
@@ -14,7 +14,7 @@ async function genVerify(req) {
   const { email } = u.validate(req, schema);
   try {
     const rand = cryptoRandomString({ length: config.verificationTokenLength, type: 'url-safe' });
-    await set.key(rediskeys.emailVer(rand), email, 'EX', config.verificationTimeout * 60);
+    await client.SET(rediskeys.emailVer(rand), email, { EX: config.verificationTimeout * 60 });
     return sendVerificationEmail(email, rand);
   } catch (err) {
     return u.Error('genVerify Error', 406);
