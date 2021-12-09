@@ -2,7 +2,7 @@
 # Used to build all Node workers
 # Different entrypoints defined in docker compose
 FROM node:16-alpine3.13
-
+RUN npm install -g nodemon
 # Use non-privileged user and make new folder for files
 USER node 
 RUN mkdir -p /home/node/app/ && chown -R node:node /home/node
@@ -10,9 +10,10 @@ RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 WORKDIR /home/node/app
 
 ENV PATH /home/node/app/node_modules/.bin:$PATH
+RUN npm install typescript
 COPY --chown=node:node ./server/package.json ./
 COPY --chown=node:node ./server/package-lock.json ./
-RUN npm install
+RUN npm install --production
 
 COPY --chown=node:node ./server ./
 
