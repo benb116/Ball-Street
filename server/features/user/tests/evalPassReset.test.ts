@@ -1,7 +1,7 @@
 import cryptoRandomString from 'crypto-random-string';
 import { client, rediskeys } from '../../../db/redis';
 import service from '../services/evalPassReset.service';
-import { ErrorTest } from '../../util/util';
+import { ErrorTest, UError } from '../../util/util';
 import { verificationTimeout, verificationTokenLength } from '../../../config';
 
 describe('evalPassReset service', () => {
@@ -40,11 +40,12 @@ describe('evalPassReset service', () => {
       // eslint-disable-next-line no-console
       console.log(o);
       throw new Error('Unexpected pass');
-    } catch (err) {
+    } catch (err: any) {
+      const uerr: UError = err;
       // eslint-disable-next-line no-console
-      if (!err.status) { console.log(err); }
-      expect(err.message).toEqual('Password must be at least 8 characters long');
-      expect(err.status).toEqual(400);
+      if (!uerr.status) { console.log(uerr); }
+      expect(uerr.message).toEqual('Password must be at least 8 characters long');
+      expect(uerr.status).toEqual(400);
     }
   });
 
@@ -66,11 +67,12 @@ describe('evalPassReset service', () => {
       // eslint-disable-next-line no-console
       console.log(o);
       throw new Error('Unexpected pass');
-    } catch (err) {
+    } catch (err: any) {
+      const uerr: UError = err;
       // eslint-disable-next-line no-console
-      if (!err.status) { console.log(err); }
-      expect(err.message).toEqual('Passwords do not match');
-      expect(err.status).toEqual(403);
+      if (!uerr.status) { console.log(uerr); }
+      expect(uerr.message).toEqual('Passwords do not match');
+      expect(uerr.status).toEqual(403);
     }
   });
 

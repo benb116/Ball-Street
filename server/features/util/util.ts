@@ -59,11 +59,15 @@ export const tobj = function tobj(t: Transaction) {
   };
 };
 
+export interface UError extends Error {
+  status: number,
+}
+
 // Custom error function that returns a msg and http status
 export const uError = function uError(msg: string, status = 500) {
   const err = new Error(msg);
-  err.status = status;
-  throw err;
+  const uerr: UError = { ...err, status };
+  throw uerr;
 };
 
 // Console.log passthrough for promises
@@ -109,11 +113,12 @@ export const ErrorTest = function ErrorTest(service, req, statusNumber: number, 
       // eslint-disable-next-line no-console
       console.log(o);
       throw new Error('Unexpected pass');
-    } catch (err) {
-      // eslint-disable-next-line no-console
+    } catch (err: any) {
       if (!err.status) { console.log(err); }
-      expect(err.message).toEqual(message);
-      expect(err.status).toEqual(statusNumber);
+      const uerr: UError = err;
+      // eslint-disable-next-line no-console
+      expect(uerr.message).toEqual(message);
+      expect(uerr.status).toEqual(statusNumber);
     }
   };
 };

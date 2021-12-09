@@ -11,10 +11,11 @@ import evalVerify from './services/evalVerify.service';
 
 import genPassReset from './services/genPassReset.service';
 import evalPassReset from './services/evalPassReset.service';
+import { UError } from '../util/util';
 
 const router = express.Router();
 
-function userErrorHandler(res: Response, err) {
+function userErrorHandler(res: Response, err: UError) {
   if (!err) {
     logger.error(err);
     return res.status(500).json({ error: 'Unexpected error' });
@@ -31,8 +32,9 @@ router.post('/login', async (req, res) => {
     const user = await login(inp);
     if (!user.needsVerification) req.session.user = { id: user.id }; // add to session
     return res.json(user);
-  } catch (err) {
-    return userErrorHandler(res, err);
+  } catch (err: any) {
+    const uerr: UError = err;
+    return userErrorHandler(res, uerr);
   }
 });
 
@@ -47,8 +49,9 @@ router.post('/signup', async (req, res) => {
     const user = await signup(inp);
     if (!user.needsVerification) req.session.user = { id: user.id }; // add to session
     return res.json(user);
-  } catch (err) {
-    return userErrorHandler(res, err);
+  } catch (err: any) {
+    const uerr: UError = err;
+    return userErrorHandler(res, uerr);
   }
 });
 
@@ -59,8 +62,9 @@ router.get('/verify', async (req, res) => {
     const user = await evalVerify(inp);
     req.session.user = { id: user.id }; // add to session
     return res.redirect('/verified');
-  } catch (err) {
-    return userErrorHandler(res, err);
+  } catch (err: any) {
+    const uerr: UError = err;
+    return userErrorHandler(res, uerr);
   }
 });
 
@@ -71,8 +75,9 @@ router.post('/forgot', async (req, res) => {
   try {
     const done = await genPassReset(inp);
     return res.json({ resetLinkSent: done });
-  } catch (err) {
-    return userErrorHandler(res, err);
+  } catch (err: any) {
+    const uerr: UError = err;
+    return userErrorHandler(res, uerr);
   }
 });
 
@@ -88,8 +93,9 @@ router.post('/resetPasswordToken', async (req, res) => {
       res.redirect('/login');
     });
     return true;
-  } catch (err) {
-    return userErrorHandler(res, err);
+  } catch (err: any) {
+    const uerr: UError = err;
+    return userErrorHandler(res, uerr);
   }
 });
 

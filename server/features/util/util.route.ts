@@ -5,7 +5,8 @@
 
 import { Request, Response } from 'express';
 import { client } from '../../db/redis';
-import { ServiceInput, ServiceType } from './util.service';
+import { UError } from './util';
+import { ServiceType } from './util.service';
 
 function routeHandler(service: ServiceType, cacheExpiry = 0) {
   return async function routeHandlerInner(req: Request, res: Response) {
@@ -24,8 +25,9 @@ function routeHandler(service: ServiceType, cacheExpiry = 0) {
         await client.SET(req.originalUrl, JSON.stringify(out), { EX: cacheExpiry });
       }
       return res.json(out);
-    } catch (err) {
-      return res.status((err?.status || 500)).json({ error: err?.message || 'Unexpected error' });
+    } catch (err: any) {
+      const uerr: UError = err;
+      return res.status((uerr.status || 500)).json({ error: uerr.message || 'Unexpected error' });
     }
   };
 }
@@ -36,7 +38,7 @@ function stripReq(inp: Request) {
     user: inp.session?.user?.id || 0,
     params: inp.params,
     body: inp.body,
-  } as ServiceInput;
+  };
 }
 
 export default routeHandler;
