@@ -42,7 +42,7 @@ interface ReorderRosterInput extends ServiceInput {
 }
 
 async function reorderRoster(req: ReorderRosterInput) {
-  const value = validate(req, schema);
+  const value: ReorderRosterInput = validate(req, schema);
 
   return sequelize.transaction(isoOption, async (t) => {
     const postype1 = Roster[value.body.pos1];

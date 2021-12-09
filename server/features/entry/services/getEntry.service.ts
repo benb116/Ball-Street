@@ -23,7 +23,7 @@ interface GetEntryInput extends ServiceInput {
 
 // Get info for a specific contest
 async function getEntry(req: GetEntryInput) {
-  const value = validate(req, schema);
+  const value: GetEntryInput = validate(req, schema);
   const theentry = await Entry.findOne({
     where: {
       UserId: value.user,

@@ -18,7 +18,8 @@ interface LoginInput {
 }
 
 async function login(req: LoginInput) {
-  const { email, password } = validate(req, schema);
+  const value: LoginInput = validate(req, schema);
+  const { email, password } = value;
 
   const theuser = await User.scope('withPassword').findOne({ where: { email } });
   if (!theuser) { uError('Wrong username or password', 401); }

@@ -27,7 +27,7 @@ interface GetNFLPlayerNumAddsInput extends ServiceInput {
 }
 
 function getNFLPlayerNumAdds(req: GetNFLPlayerNumAddsInput) {
-  const value = validate(req, schema);
+  const value: GetNFLPlayerNumAddsInput = validate(req, schema);
 
   return Entry.count({
     where: {

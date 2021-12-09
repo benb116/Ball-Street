@@ -26,9 +26,10 @@ interface SignupInput {
 }
 
 async function signup(req: SignupInput) {
+  const value: SignupInput = validate(req, schema);
   const {
     name, email, password, skipVerification,
-  } = validate(req, schema);
+  } = value;
   try {
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);

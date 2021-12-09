@@ -22,7 +22,7 @@ interface GetUserTradesInput extends ServiceInput {
 }
 
 async function getUserTrades(req: GetUserTradesInput) {
-  const value = validate(req, schema);
+  const value: GetUserTradesInput = validate(req, schema);
 
   const allbids = await Trade.findAll({
     include: [{

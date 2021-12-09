@@ -22,7 +22,7 @@ interface GetUserOffersInput extends ServiceInput {
 }
 
 function getUserOffers(req: GetUserOffersInput) {
-  const value = validate(req, schema);
+  const value: GetUserOffersInput = validate(req, schema);
   return Offer.findAll({
     where: {
       UserId: value.user,

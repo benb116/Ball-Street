@@ -24,7 +24,7 @@ interface GetNFLPlayerTradeVolumeInput extends ServiceInput {
 }
 
 function getNFLPlayerTradeVolume(req: GetNFLPlayerTradeVolumeInput) {
-  const value = validate(req, schema);
+  const value: GetNFLPlayerTradeVolumeInput = validate(req, schema);
 
   return Offer.count({
     where: {

@@ -25,7 +25,7 @@ interface GetEntryRankInput extends ServiceInput {
 
 // Get an entry's rank within a contest
 async function getEntryRank(req: GetEntryRankInput) {
-  const value = validate(req, schema);
+  const value: GetEntryRankInput = validate(req, schema);
   // Requires authorization or looking at a public league
   const theentry = await getEntry(value);
 

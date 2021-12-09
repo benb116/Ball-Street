@@ -23,7 +23,7 @@ interface CreateEntryInput extends ServiceInput {
 
 // Get info for a specific contest
 async function createEntry(req: CreateEntryInput) {
-  const value = validate(req, schema);
+  const value: CreateEntryInput = validate(req, schema);
 
   const thecontest = await Contest.findByPk(value.params.contestID).then(dv);
   if (!thecontest) { uError('No contest found', 404); }

@@ -18,7 +18,7 @@ interface GetAccountInput extends ServiceInput {
 }
 
 async function getAccount(req: GetAccountInput) {
-  const value = validate(req, schema);
+  const value: GetAccountInput = validate(req, schema);
   const theuser = await User.findByPk(value.user).then(dv);
   if (!theuser) { uError('User not found', 404); }
   return theuser;

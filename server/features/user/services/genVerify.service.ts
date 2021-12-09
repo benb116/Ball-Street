@@ -15,7 +15,8 @@ interface EvalVerifyInput {
 }
 
 async function genVerify(req: EvalVerifyInput) {
-  const { email } = validate(req, schema);
+  const value: EvalVerifyInput = validate(req, schema);
+  const { email } = value;
   try {
     const rand = cryptoRandomString({ length: verificationTokenLength, type: 'url-safe' });
     await client.SET(rediskeys.emailVer(rand), email, { EX: verificationTimeout * 60 });

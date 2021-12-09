@@ -63,7 +63,7 @@ interface CreateOfferInput extends ServiceInput {
 }
 
 async function createOffer(req: CreateOfferInput) {
-  const value = validate(req, schema);
+  const value: CreateOfferInput = validate(req, schema);
 
   const obj = value.body.offerobj;
   obj.userID = value.user;

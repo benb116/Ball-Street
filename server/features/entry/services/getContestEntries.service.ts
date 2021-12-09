@@ -23,7 +23,7 @@ interface GetContestEntriesInput extends ServiceInput {
 
 // Get info for a specific contest
 function getContestEntries(req: GetContestEntriesInput) {
-  const value = validate(req, schema);
+  const value: GetContestEntriesInput = validate(req, schema);
 
   return Entry.findAll({ where: { ContestId: value.params.contestID } })
     .catch(errorHandler({

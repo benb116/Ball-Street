@@ -22,7 +22,7 @@ interface GetNFLPlayerInput extends ServiceInput {
 }
 
 async function getNFLPlayer(req: GetNFLPlayerInput) {
-  const value = validate(req, schema);
+  const value: GetNFLPlayerInput = validate(req, schema);
 
   const theplayer = await NFLPlayer.findOne({
     where: {

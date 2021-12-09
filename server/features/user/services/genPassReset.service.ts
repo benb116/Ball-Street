@@ -15,7 +15,8 @@ interface GenPassResetInput {
 }
 
 async function genPassReset(req: GenPassResetInput) {
-  const { email } = validate(req, schema);
+  const value: GenPassResetInput = validate(req, schema);
+  const { email } = value;
   try {
     const rand = cryptoRandomString({ length: verificationTokenLength, type: 'url-safe' });
     await client.SET(rediskeys.passReset(rand), email, { EX: verificationTimeout * 60 });

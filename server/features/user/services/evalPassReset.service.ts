@@ -24,7 +24,8 @@ interface EvalPassResetInput {
 }
 
 async function evalPassReset(req: EvalPassResetInput) {
-  const { token, password, confirmPassword } = validate(req, schema);
+  const value: EvalPassResetInput = validate(req, schema);
+  const { token, password, confirmPassword } = value;
   if (OnCompare(password, confirmPassword)) uError('Passwords do not match', 403);
   const email = await client.GET(rediskeys.passReset(token));
   if (!email) uError('Reset key could not be found, please try again', 404);

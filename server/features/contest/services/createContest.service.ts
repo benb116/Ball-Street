@@ -34,7 +34,7 @@ interface CreateContestInput extends ServiceInput {
 
 // Get info for a specific contest
 async function createContest(req: CreateContestInput) {
-  const value = validate(req, schema);
+  const value: CreateContestInput = validate(req, schema);
   return Contest.create({
     name: value.body.name,
     nflweek: Number(process.env.WEEK),

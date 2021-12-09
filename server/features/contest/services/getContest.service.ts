@@ -23,7 +23,7 @@ interface GetContestInput extends ServiceInput {
 }
 // Get info for a specific contest
 async function getContest(req: GetContestInput) {
-  const value = validate(req, schema);
+  const value: GetContestInput = validate(req, schema);
   const thecontest = await Contest.findByPk(value.params.contestID).then(dv);
   if (!thecontest) { uError('No contest found', 404); }
   const theentry = await getEntryRank(value).catch(() => ({

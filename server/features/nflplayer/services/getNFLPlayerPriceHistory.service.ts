@@ -25,7 +25,7 @@ interface GetNFLPlayerPriceHistoryInput extends ServiceInput {
 }
 
 function getNFLPlayerPriceHistory(req: GetNFLPlayerPriceHistoryInput) {
-  const value = validate(req, schema);
+  const value: GetNFLPlayerPriceHistoryInput = validate(req, schema);
 
   return sequelize.query(`
       SELECT time_bucket('1 minute', "createdAt") as "bucket",

@@ -36,7 +36,7 @@ interface TradeDropInput extends ServiceInput {
 }
 
 async function tradeDrop(req: TradeDropInput, t: Transaction) {
-  const value = validate(req, schema);
+  const value: TradeDropInput = validate(req, schema);
 
   const theplayer = value.body.nflplayerID;
 

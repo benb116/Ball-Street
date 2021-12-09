@@ -41,7 +41,7 @@ interface TradeAddInput extends ServiceInput {
 
 // Add a player within a transaction, but don't commit
 async function tradeAdd(req: TradeAddInput, t: Transaction) {
-  const value = validate(req, schema);
+  const value: TradeAddInput = validate(req, schema);
 
   const theplayer = value.body.nflplayerID;
   // Get user entry

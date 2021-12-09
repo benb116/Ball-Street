@@ -40,7 +40,7 @@ interface CancelOfferInput extends ServiceInput {
 }
 
 async function cancelOffer(req: CancelOfferInput) {
-  const value = validate(req, schema);
+  const value: CancelOfferInput = validate(req, schema);
 
   // Cancel offer, but if it's filled, let user know
   return sequelize.transaction(isoOption, async (t) => {

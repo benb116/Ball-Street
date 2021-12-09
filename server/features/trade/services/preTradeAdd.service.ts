@@ -41,7 +41,7 @@ interface PreTradeAddInput extends ServiceInput {
 
 // Try to add within a transaction, errors will rollback
 async function preTradeAdd(req: PreTradeAddInput) {
-  const value = validate(req, schema);
+  const value: PreTradeAddInput = validate(req, schema);
 
   return sequelize.transaction(isoOption, async (t) => tradeAdd(value, t))
     .catch(errorHandler({

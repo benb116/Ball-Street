@@ -24,7 +24,7 @@ interface GetNFLPlayerOffersInput extends ServiceInput {
 }
 
 function getNFLPlayerOfferSummary(req: GetNFLPlayerOffersInput) {
-  const value = validate(req, schema);
+  const value: GetNFLPlayerOffersInput = validate(req, schema);
 
   const bids = Offer.count({
     group: 'price',
