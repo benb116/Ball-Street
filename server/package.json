@@ -31,14 +31,6 @@
   "scripts": {
     "test": "jest"
   },
-  "jest": {
-    "globalSetup": "./jest/jestGlobalSetup.js",
-    "globalTeardown": "./jest/jestGlobalTeardown.js",
-    "setupFilesAfterEnv": [
-      "./jest/afterAll.js"
-    ],
-    "testEnvironment": "node"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/benb116/Ball-Street.git"
@@ -74,7 +66,7 @@
     "eslint-plugin-react": "^7.23.2",
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-security": "^1.4.0",
-    "jest": "^27.3.1",
+    "jest": "^27.4.3",
     "nodemon": "^2.0.15",
     "typescript": "^4.5.2"
   }
