@@ -1,6 +1,6 @@
-import { DataTypes } from 'sequelize';
+import { Sequelize, DataTypes } from 'sequelize';
 
-export default function model(sequelize) {
+export default function model(sequelize: Sequelize) {
   return sequelize.define('NFLPosition', {
     id: {
       type: DataTypes.INTEGER,
@@ -15,5 +15,5 @@ export default function model(sequelize) {
       allowNull: false,
       defaultValue: false,
     },
-  }, { sequelize });
+  });
 }

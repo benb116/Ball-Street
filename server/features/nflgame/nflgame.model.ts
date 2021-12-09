@@ -1,6 +1,6 @@
-import { DataTypes } from 'sequelize';
+import { Sequelize, DataTypes } from 'sequelize';
 
-export default function out(sequelize) {
+export default function out(sequelize: Sequelize) {
   return sequelize.define('NFLGame', {
     week: {
       type: DataTypes.INTEGER,
@@ -30,5 +30,5 @@ export default function out(sequelize) {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-  }, { sequelize });
+  });
 }

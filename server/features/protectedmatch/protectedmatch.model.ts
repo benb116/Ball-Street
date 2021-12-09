@@ -1,6 +1,6 @@
-import { DataTypes } from 'sequelize';
+import { DataTypes, Sequelize } from 'sequelize';
 
-export default function model(sequelize) {
+export default function model(sequelize: Sequelize) {
   return sequelize.define('ProtectedMatch', {
     existingId: {
       type: DataTypes.UUID,
@@ -12,5 +12,5 @@ export default function model(sequelize) {
       references: { model: 'Offers' },
       primaryKey: true,
     },
-  }, { sequelize });
+  });
 }

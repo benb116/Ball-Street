@@ -1,7 +1,7 @@
-import Sequelize, { DataTypes } from 'sequelize';
+import Sequelize, { DataTypes, Sequelize as Seq } from 'sequelize';
 import { DefaultProtected } from '../../config';
 
-export default function model(sequelize) {
+export default function model(sequelize: Seq) {
   return sequelize.define('Offer', {
     id: {
       type: DataTypes.UUID,
@@ -48,7 +48,6 @@ export default function model(sequelize) {
     },
 
   }, {
-    sequelize,
     indexes: [
       { // Make it faster to search for offers that aren't filled or cancelled
         name: 'IX_Offer-Active',

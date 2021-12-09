@@ -1,6 +1,6 @@
-import { DataTypes } from 'sequelize';
+import { DataTypes, Sequelize } from 'sequelize';
 
-export default function model(sequelize) {
+export default function model(sequelize: Sequelize) {
   return sequelize.define('Trade', {
     price: { // What was the actual price that was traded at
       type: DataTypes.INTEGER,
@@ -18,5 +18,5 @@ export default function model(sequelize) {
       allowNull: false,
       primaryKey: true,
     },
-  }, { sequelize });
+  });
 }

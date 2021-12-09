@@ -1,6 +1,6 @@
-import { DataTypes } from 'sequelize';
+import { DataTypes, Sequelize } from 'sequelize';
 
-export default function model(sequelize) {
+export default function model(sequelize: Sequelize) {
   return sequelize.define('PriceHistory', {
     lastTradePrice: { // What was the actual price that was traded at
       type: DataTypes.INTEGER,
@@ -15,5 +15,5 @@ export default function model(sequelize) {
       references: { model: 'NFLPlayers' },
       allowNull: false,
     },
-  }, { sequelize });
+  });
 }

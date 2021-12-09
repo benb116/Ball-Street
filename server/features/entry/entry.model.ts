@@ -1,4 +1,5 @@
-import { DataTypes } from 'sequelize';
+import { Sequelize, DataTypes } from 'sequelize';
+
 import { Roster } from '../../config';
 
 // The model has common columns (UserId, ContestId, pointtotal)
@@ -45,6 +46,6 @@ function model() {
   return { ...modelobj, ...rosterobj };
 }
 
-export default function out(sequelize) {
-  return sequelize.define('Entry', model(), { sequelize });
+export default function out(sequelize: Sequelize) {
+  return sequelize.define('Entry', model());
 }

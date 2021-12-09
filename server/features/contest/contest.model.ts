@@ -1,6 +1,6 @@
-import { DataTypes } from 'sequelize';
+import { Sequelize, DataTypes } from 'sequelize';
 
-export default function model(sequelize) {
+export default function model(sequelize: Sequelize) {
   return sequelize.define('Contest', {
     name: {
       type: DataTypes.STRING,
@@ -14,5 +14,5 @@ export default function model(sequelize) {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-  }, { sequelize });
+  });
 }
