@@ -5,6 +5,8 @@ import { rediskeys, client } from '../../db/redis';
 import { Offer, ProtectedMatch } from '../../models';
 import logger from '../../utilities/logger';
 import priceUpdate from '../live/channels/priceUpdate.channel';
+import { OfferType } from '../../features/offer/offer.model';
+import { ProtectedMatchType } from '../../features/protectedmatch/protectedmatch.model';
 
 // Access the correct book or make one if necessary
 export function getBook(
@@ -44,7 +46,7 @@ export function getBook(
 async function initializeBook(playerBook: Book) {
   const { contestID, nflplayerID } = playerBook;
   // Should be sorted oldest first since Maps maintain order
-  const sortedOffers = await Offer.findAll({
+  const sortedOffers: OfferType[] = await Offer.findAll({
     where: {
       ContestId: contestID,
       NFLPlayerId: nflplayerID,
@@ -57,7 +59,7 @@ async function initializeBook(playerBook: Book) {
   }).then(dv);
   sortedOffers.forEach((o) => playerBook.add(o));
   // Also add protected matches that have been previously created
-  const protMatches = await ProtectedMatch.findAll({
+  const protMatches: ProtectedMatchType[] = await ProtectedMatch.findAll({
     include: {
       model: Offer,
       as: 'existing',

@@ -1,9 +1,11 @@
 import { dv } from '../../util/util';
 
 import { NFLPlayer } from '../../../models';
+import { NFLPlayerType } from '../nflplayer.model';
 
-function getNFLPlayers() {
-  return NFLPlayer.findAll({ where: { active: true } }).then(dv);
+async function getNFLPlayers() {
+  const allplayers: NFLPlayerType[] = await NFLPlayer.findAll({ where: { active: true } }).then(dv);
+  return allplayers;
 }
 
 export default getNFLPlayers;

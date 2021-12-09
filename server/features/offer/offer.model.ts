@@ -1,6 +1,20 @@
 import Sequelize, { DataTypes, Sequelize as Seq } from 'sequelize';
 import { DefaultProtected } from '../../config';
 
+export interface OfferType {
+  id: string,
+  isbid: boolean,
+  price: number,
+  protected: boolean,
+  filled: boolean,
+  cancelled: boolean,
+  UserId: number,
+  ContestId: number,
+  NFLPlayerId: number,
+  createdAt: string,
+  updatedAt: string,
+}
+
 export default function model(sequelize: Seq) {
   return sequelize.define('Offer', {
     id: {

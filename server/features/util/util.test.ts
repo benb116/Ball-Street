@@ -10,7 +10,7 @@ describe('util testing', () => {
 
   test('isPlayerOnRoster', () => {
     const theentry = {
-      UserId: 3, ContestId: 2, pointtotal: 500, RB1: 31885, K1: 30266,
+      UserId: 3, ContestId: 2, pointtotal: 500, RB1: 31885, K1: 30266, createdAt: 'date', updatedAt: 'date',
     };
     expect(isPlayerOnRoster(theentry, 30266)).toBe('K1');
     expect(isPlayerOnRoster(theentry, 12345)).toBe('');
@@ -18,7 +18,7 @@ describe('util testing', () => {
 
   test('isOpenRoster', () => {
     const theentry = {
-      UserId: 3, ContestId: 2, pointtotal: 500, QB1: null, RB1: 31885, RB2: null, K1: 30266,
+      UserId: 3, ContestId: 2, pointtotal: 500, QB1: null, RB1: 31885, RB2: null, K1: 30266, createdAt: 'date', updatedAt: 'date',
     };
     expect(isOpenRoster(theentry, 5)).toBe(false);
     expect(isOpenRoster(theentry, 1)).toBe('QB1');

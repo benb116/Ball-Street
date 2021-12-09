@@ -2,18 +2,13 @@
 // Find the match with the highest priority that can be made
 // Returns false for no matches
 
+import { OfferType } from '../../features/offer/offer.model';
 import logger from '../../utilities/logger';
-import Book, { OfferItem } from './book.class';
-
-export interface MatchItem {
-  id: string,
-  data: OfferItem,
-  protected: boolean,
-}
+import Book from './book.class';
 
 interface MatchPair {
-  bid: MatchItem,
-  ask: MatchItem
+  bid: OfferType,
+  ask: OfferType
 }
 
 // Returns with a bid and ask object detailing the offers
@@ -94,8 +89,8 @@ function findMatchForBestBid(book: Book) {
         logger.verbose('found bid + ask');
         bestaskOffer = book.ask[book.bestask].entries().next().value;
         return {
-          bid: { id: bestbidOffer[0], data: bestbidOffer[1], protected: false },
-          ask: { id: bestaskOffer[0], data: bestaskOffer[1], protected: false },
+          bid: { ...bestbidOffer[1], protected: false },
+          ask: { ...bestaskOffer[1], protected: false },
         } as MatchPair;
       }
 
@@ -109,8 +104,8 @@ function findMatchForBestBid(book: Book) {
         if (bestpaskOffer && evalbid >= bestpaskOffer[1].price) {
           logger.verbose('found bid + pask');
           return {
-            bid: { id: bestbidOffer[0], data: bestbidOffer[1], protected: false },
-            ask: { id: bestpaskOffer[0], data: bestpaskOffer[1], protected: true },
+            bid: { ...bestbidOffer[1], protected: false },
+            ask: { ...bestpaskOffer[1], protected: true },
           } as MatchPair;
         }
         // If we've gotten to this point with no matches,
@@ -179,8 +174,8 @@ function findMatchForBestPBid(book: Book) {
         if (bestaskOffer[1] && evalpbid >= bestaskOffer[1].price) {
           logger.verbose('found pbid + ask');
           return {
-            bid: { id: bestpbidOffer[0], data: bestpbidOffer[1], protected: true },
-            ask: { id: bestaskOffer[0], data: bestaskOffer[1], protected: false },
+            bid: { ...bestpbidOffer[1], protected: true },
+            ask: { ...bestaskOffer[1], protected: false },
           } as MatchPair;
         }
       }
@@ -193,8 +188,8 @@ function findMatchForBestPBid(book: Book) {
         if (bestpaskOffer && evalpbid >= bestpaskOffer[1].price) {
           logger.verbose('found pbid + pask');
           return {
-            bid: { id: bestpbidOffer[0], data: bestpbidOffer[1], protected: true },
-            ask: { id: bestpaskOffer[0], data: bestpaskOffer[1], protected: true },
+            bid: { ...bestpbidOffer[1], protected: true },
+            ask: { ...bestpaskOffer[1], protected: true },
           } as MatchPair;
         }
         // If we've gotten to this point with no matches,

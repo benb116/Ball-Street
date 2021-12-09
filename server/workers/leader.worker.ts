@@ -65,16 +65,26 @@ async function calculateLeaderboard() {
 
   // Get all entries across all contests
   const weekentries = await getWeekEntries();
+
+  interface EntryWithTotal {
+    balance: number,
+    roster: number[],
+    contest: number,
+    username: string,
+    userID: number,
+    total: number,
+  }
   // Normalize as objects with balance, roster array, contests and user name
-  const normalizedEntries = weekentries.map((e) => ({
+  const normalizedEntries: EntryWithTotal[] = weekentries.map((e) => ({
     balance: e.pointtotal,
-    roster: rosterPositions.reduce((acc, cur: string) => {
+    roster: rosterPositions.reduce((acc: number[], cur: string) => {
       if (e[cur]) { acc.push(e[cur]); }
       return acc;
     }, []),
     contest: e.ContestId,
     username: e.User.name,
     userID: e.User.id,
+    total: 0,
   }));
   // console.log(normalizedEntries);
 
@@ -88,8 +98,8 @@ async function calculateLeaderboard() {
   // console.log(priceMap);
 
   // Sum each entry based on the price map
-  const projTotals = normalizedEntries.map((e) => {
-    e.total = e.roster.reduce((acc: number, cur: number) => {
+  const projTotals: EntryWithTotal[] = normalizedEntries.map((e) => {
+    const total = e.roster.reduce((acc: number, cur: number) => {
       const playerPhase = gamePhase[playerMap[cur].team];
       switch (playerPhase) {
         case 'pre': // preprice
@@ -102,7 +112,7 @@ async function calculateLeaderboard() {
           return acc;
       }
     }, e.balance);
-    return e;
+    return { ...e, total };
   });
   // console.log(projTotals);
 

@@ -1,25 +1,10 @@
 /* eslint-disable @typescript-eslint/lines-between-class-members */
+import { OfferType } from '../../features/offer/offer.model';
 import { ProtectedMatch } from '../../models';
 import logger from '../../utilities/logger';
 import evaluateFn from './evaluate';
 
-export interface OfferItem {
-  createdAt: number,
-  UserId: number,
-  price: number,
-}
-export interface OfferType {
-  createdAt: string,
-  UserId: number,
-  price: number,
-  id: string,
-  isbid: boolean,
-  protected: boolean,
-  cancelled: boolean,
-  ContestId: number,
-  NFLPlayerId: number,
-}
-type LimitMap = Map<string, OfferItem>;
+type LimitMap = Map<string, OfferType>;
 type LimitTree = Record<string, LimitMap>;
 
 interface MatcherType {
@@ -105,11 +90,7 @@ class Book {
     if (!thetree[price]) {
       thetree[price] = new Map();
     }
-    thetree[price].set(offer.id, {
-      createdAt: Date.parse(offer.createdAt),
-      UserId: offer.UserId,
-      price,
-    });
+    thetree[price].set(offer.id, offer);
   }
 
   // Remove and offer from the book
@@ -206,7 +187,7 @@ class Book {
         return added;
       }, [])
     // only offers submitted after protected
-      .filter((e) => e[1].createdAt > Date.parse(offer.createdAt))
+      .filter((e) => Date.parse(e[1].createdAt) > Date.parse(offer.createdAt))
       .map((e) => e[0]);
     return [...allMatchingOffers, ...allMatchingPOffers];
   }

@@ -15,6 +15,9 @@ import logger from '../../utilities/logger';
 import state from './state.nfl';
 import { SumPoints } from './dict.nfl';
 import phaseChange from '../live/channels/phaseChange.channel';
+import { EntryType } from '../../features/entry/entry.model';
+import { NFLPlayerType } from '../../features/nflplayer/nflplayer.model';
+import { ContestType } from '../../features/contest/contest.model';
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
@@ -58,7 +61,7 @@ async function setPhase(teamID: number, newphase: string) {
 
 // Convert all players on a team in all entries to points
 async function convertTeamPlayers(teamID: number) {
-  const teamPlayers = await NFLPlayer.findAll({
+  const teamPlayers: NFLPlayerType[] = await NFLPlayer.findAll({
     where: {
       NFLTeamId: teamID,
       active: true,
@@ -70,9 +73,8 @@ async function convertTeamPlayers(teamID: number) {
   await NFLPlayer.bulkCreate(statplayerObjs, { updateOnDuplicate: ['postprice'] });
 
   // Build statmap for use in conversion
-  const statmap = statplayerObjs.reduce((acc, cur) => {
-    const { id, postprice } = cur;
-    acc[id] = postprice;
+  const statmap = statplayerObjs.reduce((acc: Record<string, number>, cur) => {
+    if (cur.postprice) acc[cur.id] = cur.postprice;
     return acc;
   }, {});
 
@@ -80,8 +82,8 @@ async function convertTeamPlayers(teamID: number) {
   const weekcontests = await Contest.findAll({
     where: { nflweek: Number(process.env.WEEK) },
   }).then(dv)
-    .then((contests) => contests.map((c) => c.id));
-  const allEntries = await Entry.findAll({
+    .then((contests: ContestType[]) => contests.map((c) => c.id));
+  const allEntries: EntryType[] = await Entry.findAll({
     where: { ContestId: { [Op.or]: weekcontests } },
   }).then(dv);
 
@@ -97,7 +99,7 @@ async function convertTeamPlayers(teamID: number) {
 }
 
 // Set a player's postprice based on statlines
-function setPostPrice(p) {
+function setPostPrice(p: NFLPlayerType) {
   const playerid = p.id;
   const stats = state.statObj[playerid];
   const statpoints = (stats ? SumPoints(stats) : 0);
@@ -107,7 +109,9 @@ function setPostPrice(p) {
 }
 
 // Convert any team players in an entry to points
-async function convertEntry(e, players, statmap: Record<string, number>) {
+async function convertEntry(
+  e: EntryType, players: NFLPlayerType[], statmap: Record<string, number>,
+) {
   return sequelize.transaction(isoOption, async (t) => {
     const theentry = await Entry.findOne({
       where: {

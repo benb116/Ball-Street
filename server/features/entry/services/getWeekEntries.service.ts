@@ -3,31 +3,29 @@ import { Op } from 'sequelize';
 import { dv } from '../../util/util';
 
 import { Entry, Contest, User } from '../../../models';
-
-interface ContestObj {
-  id: number,
-}
+import { EntryIncludeUser } from '../entry.model';
+import { ContestType } from '../../contest/contest.model';
 
 async function getWeekEntries() {
-  const weekcontests = await Contest.findAll({
+  const weekcontests: ContestType[] = await Contest.findAll({
     where: {
       nflweek: Number(process.env.WEEK),
     },
-  })
-    .then(dv)
-    .then((contests: ContestObj[]) => contests.map((c) => c.id));
+  }).then(dv);
+  const weekcontestIDs = weekcontests.map((c) => c.id);
 
-  return Entry.findAll({
+  const weekEntries: EntryIncludeUser[] = await Entry.findAll({
     where: {
       ContestId: {
-        [Op.or]: weekcontests,
+        [Op.or]: weekcontestIDs,
       },
     },
     include: {
       model: User,
     },
-  })
-    .then(dv);
+  }).then(dv);
+
+  return weekEntries;
 }
 
 export default getWeekEntries;

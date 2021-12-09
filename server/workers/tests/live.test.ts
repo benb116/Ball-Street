@@ -2,7 +2,7 @@
 import WebSocket from 'ws';
 import axios from 'axios';
 import { ProtectionDelay } from '../../config';
-import { OfferType } from '../offer/book.class';
+import { OfferType } from '../../features/offer/offer.model';
 
 const contestID = 2;
 

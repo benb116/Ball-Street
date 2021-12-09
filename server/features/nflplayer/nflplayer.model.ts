@@ -2,6 +2,20 @@ import { Sequelize, DataTypes } from 'sequelize';
 
 import { FlexNFLPositionId } from '../../config';
 
+export interface NFLPlayerType {
+  id: number,
+  name: string,
+  jersey?: number | null,
+  preprice: number | null,
+  postprice: number | null,
+  NFLPositionId: number,
+  NFLTeamId: number,
+  active: boolean,
+  injuryStatus: string | null,
+  createdAt: string,
+  updatedAt: string,
+}
+
 export default function out(sequelize: Sequelize) {
   return sequelize.define('NFLPlayer', {
     id: {

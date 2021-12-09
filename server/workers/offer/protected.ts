@@ -1,3 +1,4 @@
+import { OfferType } from '../../features/offer/offer.model';
 import { dv } from '../../features/util/util';
 import { Offer } from '../../models';
 import logger from '../../utilities/logger';
@@ -7,7 +8,7 @@ import fillOffers from './trader';
 
 // Try to fill a protected match
 async function evalProtected(playerBook: Book, proffer: string, neoffer: string) {
-  const poffer = await Offer.findByPk(proffer).then(dv);
+  const poffer: OfferType = await Offer.findByPk(proffer).then(dv);
   if (!poffer || poffer.cancelled || poffer.filled) {
     logger.info(`Matchee unavailable ${poffer.id}`);
     await playerBook.unmatch(poffer);
@@ -30,7 +31,7 @@ async function evalProtected(playerBook: Book, proffer: string, neoffer: string)
 }
 
 // Find possible matches for a protected offer
-async function runMatches(poffer, playerBook: Book) {
+async function runMatches(poffer: OfferType, playerBook: Book) {
   const ispbid = poffer.isbid;
   // Find all offers that could be matched
   let matchingOfferIDs = playerBook.findProtectedMatches(poffer);
@@ -46,7 +47,7 @@ async function runMatches(poffer, playerBook: Book) {
     // eslint-disable-next-line no-await-in-loop
     const result = await fillOffers(bidoffer, askoffer);
 
-    if (result.bid.filled || result.bid.cancelled || result.bid.error) {
+    if (result.bid.filled || result.bid.cancelled) {
       playerBook.cancel(result.bid);
       if (ispbid) {
         matchingOfferIDs = [];
@@ -54,7 +55,7 @@ async function runMatches(poffer, playerBook: Book) {
         matchingOfferIDs.splice(randomInd, 1);
       }
     }
-    if (result.ask.filled || result.ask.cancelled || result.bid.error) {
+    if (result.ask.filled || result.ask.cancelled) {
       playerBook.cancel(result.ask);
       if (!ispbid) {
         matchingOfferIDs = [];

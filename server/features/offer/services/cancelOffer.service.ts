@@ -10,6 +10,7 @@ import { queueOptions } from '../../../db/redis';
 import sequelize from '../../../db';
 import { Offer } from '../../../models';
 import { ServiceInput } from '../../util/util.service';
+import { OfferType } from '../offer.model';
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
@@ -46,10 +47,11 @@ async function cancelOffer(req: CancelOfferInput) {
   return sequelize.transaction(isoOption, async (t) => {
     const o = await Offer.findByPk(value.body.offerID, tobj(t));
     if (!o) { return uError('No offer found', 404); }
-    if (o.UserId !== value.user) { uError('Unauthorized', 403); }
-    if (o.filled) { uError('Offer already filled', 406); }
-    if (o.cancelled) { uError('Offer already cancelled', 406); }
-    o.cancelled = true;
+    const oValue: OfferType = dv(o);
+    if (oValue.UserId !== value.user) { uError('Unauthorized', 403); }
+    if (oValue.filled) { uError('Offer already filled', 406); }
+    if (oValue.cancelled) { uError('Offer already cancelled', 406); }
+    o.set({ cancelled: true });
     await o.save({ transaction: t });
     return o;
   }).then(dv).then((offer) => {

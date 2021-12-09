@@ -12,8 +12,8 @@ import { getBook, updateBest } from './offer/offer.util';
 import evalProtected from './offer/protected';
 import logger from '../utilities/logger';
 import protectedMatch from './live/channels/protectedMatch.channel';
-import Book, { OfferType } from './offer/book.class';
-import { MatchItem } from './offer/evaluate';
+import Book from './offer/book.class';
+import { OfferType } from '../features/offer/offer.model';
 
 const offerQueue = new Queue('offer-queue', queueOptions);
 const protectedQueue = new Queue('protected-queue', queueOptions);
@@ -76,7 +76,7 @@ async function evaluateBook(playerBook: Book) {
   let match = playerBook.evaluate();
   while (match) {
     logger.info(`match ${match.bid.id} ${match.ask.id}`);
-    const isBidOld = (match.bid.data.createdAt < match.ask.data.createdAt);
+    const isBidOld = (Date.parse(match.bid.createdAt) < Date.parse(match.ask.createdAt));
     const oldOffer = (isBidOld ? match.bid : match.ask);
     const newOffer = (!isBidOld ? match.bid : match.ask);
 
@@ -90,11 +90,11 @@ async function evaluateBook(playerBook: Book) {
       // eslint-disable-next-line no-await-in-loop
       const result = await fillOffers(match.bid.id, match.ask.id);
       // Remove filled or errored orders from the book
-      if (result.bid.filled || result.bid.cancelled || result.bid.error) {
-        playerBook.cancel(result.bid);
+      if (result.bid.filled || result.bid.cancelled) {
+        playerBook.cancel(result.bid || match.bid);
       }
-      if (result.ask.filled || result.ask.cancelled || result.bid.error) {
-        playerBook.cancel(result.ask);
+      if (result.ask.filled || result.ask.cancelled) {
+        playerBook.cancel(result.ask || match.ask);
       }
     }
 
@@ -107,7 +107,7 @@ async function evaluateBook(playerBook: Book) {
 
 // Add a protMatch to the queue and send a ping
 function addToProtectedMatchQueue(
-  eOffer: MatchItem, nOffer: MatchItem, ContestId: number, NFLPlayerId: number,
+  eOffer: OfferType, nOffer: OfferType, ContestId: number, NFLPlayerId: number,
 ) {
   protectedQueue.add({
     existingOffer: eOffer.id,
@@ -117,7 +117,7 @@ function addToProtectedMatchQueue(
   } as ProtMatchType, { delay: ProtectionDelay * 1000 });
   // Send ping to user
   protectedMatch.pub({
-    userID: eOffer.data.UserId,
+    userID: eOffer.UserId,
     offerID: eOffer.id,
     expire: Date.now() + ProtectionDelay * 1000,
   });

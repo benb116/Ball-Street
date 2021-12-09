@@ -1,5 +1,17 @@
 import { DataTypes, Sequelize } from 'sequelize';
 
+export interface UserType {
+  id: number,
+  email: string,
+  verified: boolean,
+  name: string,
+  createdAt: string,
+  updatedAt: string,
+}
+export interface UserTypePWHash extends UserType {
+  pwHash: string,
+}
+
 export default function out(sequelize: Sequelize) {
   return sequelize.define('User', {
     id: {

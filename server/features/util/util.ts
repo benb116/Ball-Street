@@ -1,16 +1,18 @@
 import { Schema } from 'joi';
-import { Transaction } from 'sequelize';
+import { Model, Transaction } from 'sequelize';
+
 import { FlexNFLPositionId, NFLPosTypes, Roster } from '../../config';
 import logger from '../../utilities/logger';
+import { EntryType } from '../entry/entry.model';
 import { ServiceType } from './util.service';
 
 const rpos = Object.keys(Roster);
 
 // Clean up the raw response from the database
-export const dv = function dv(input: any) {
+export const dv = function dv(input: Model | Model[] | null) : any | any[] | null {
   if (input === null) { return input; }
+  if (input instanceof Model) { return input.toJSON(); }
   if (input.length) { return input.map(dv); }
-  if (input.toJSON) { return input.toJSON(); }
   return input;
 };
 
@@ -31,7 +33,9 @@ export const isInvalidSpot = function isInvalidSpot(playerType: number, rosterPo
 };
 
 // Is a player on the entry's roster
-export const isPlayerOnRoster = function isPlayerOnRoster(entry, playerID: number): string {
+export const isPlayerOnRoster = function isPlayerOnRoster(
+  entry: EntryType, playerID: number,
+): string {
   let res = '';
   for (let i = 0; i < rpos.length; i++) {
     if (entry[rpos[i]] === playerID) {
@@ -44,7 +48,7 @@ export const isPlayerOnRoster = function isPlayerOnRoster(entry, playerID: numbe
 
 // Could a player type be put into a spot on the roster
 // Is the spot open AND is the player type valid
-export const isOpenRoster = function isOpenRoster(theentry, playerType: number) {
+export const isOpenRoster = function isOpenRoster(theentry: EntryType, playerType: number) {
   for (let i = 0; i < rpos.length; i++) {
     if (theentry[rpos[i]] === null && !(isInvalidSpot(playerType, rpos[i]))) {
       return rpos[i];

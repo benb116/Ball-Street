@@ -10,6 +10,7 @@ import { PullAllStats, UpdateStats } from './nfl/stats.nfl';
 import scrape from '../db/playerscraper';
 import statUpdate from './live/channels/statUpdate.channel';
 import PullLatestInjuries from './nfl/injury.nfl';
+import { NFLPlayerType } from '../features/nflplayer/nflplayer.model';
 
 const checkInterval = 10000;
 
@@ -73,14 +74,16 @@ function createPTMap() {
 
 // Populate the preProjMap
 function pullPreProj() {
-  return getNFLPlayers().then((data) => data.reduce((acc: Record<string, number>, p) => {
-    acc[p.id] = p.preprice;
-    const teamID = p.NFLTeamId;
-    if (!state.teamPlayerMap[teamID]) state.teamPlayerMap[teamID] = [];
-    state.teamPlayerMap[teamID].push(p.id);
-    state.playerTeamMap[p.id] = teamID;
-    return acc;
-  }, {}));
+  return getNFLPlayers().then((data) => data.reduce(
+    (acc: Record<string, number>, p: NFLPlayerType) => {
+      if (p.preprice) acc[p.id] = p.preprice;
+      const teamID = p.NFLTeamId;
+      if (!state.teamPlayerMap[teamID]) state.teamPlayerMap[teamID] = [];
+      state.teamPlayerMap[teamID].push(p.id);
+      state.playerTeamMap[p.id] = teamID.toString();
+      return acc;
+    }, {},
+  ));
 }
 
 // Find stat changes since last time

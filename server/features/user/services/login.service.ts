@@ -1,11 +1,12 @@
 import bcrypt from 'bcrypt';
 import Joi from 'joi';
 
-import { validate, uError } from '../../util/util';
+import { validate, uError, dv } from '../../util/util';
 import validators from '../../util/util.schema';
 
 import { User } from '../../../models';
 import genVerify from './genVerify.service';
+import { UserTypePWHash } from '../user.model';
 
 const schema = Joi.object({
   email: validators.email,
@@ -21,7 +22,7 @@ async function login(req: LoginInput) {
   const value: LoginInput = validate(req, schema);
   const { email, password } = value;
 
-  const theuser = await User.scope('withPassword').findOne({ where: { email } });
+  const theuser: UserTypePWHash = await User.scope('withPassword').findOne({ where: { email } }).then(dv);
   if (!theuser) { return uError('Wrong username or password', 401); }
   const match = await bcrypt.compare(password, theuser.pwHash);
   if (!match) { uError('Wrong username or password', 401); }

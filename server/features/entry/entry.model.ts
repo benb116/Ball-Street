@@ -1,6 +1,7 @@
 import { Sequelize, DataTypes } from 'sequelize';
 
 import { Roster } from '../../config';
+import { UserType } from '../user/user.model';
 
 // The model has common columns (UserId, ContestId, pointtotal)
 // This script also generates columns based on the set roster in config
@@ -14,6 +15,7 @@ interface RPosType {
   },
   allowNull: boolean,
 }
+
 // Add position columns as defined by config
 const rpos = Object.keys(Roster);
 const rosterobj = rpos.reduce((acc, p) => {
@@ -24,6 +26,19 @@ const rosterobj = rpos.reduce((acc, p) => {
   };
   return acc;
 }, {} as Record<string, RPosType>);
+
+export interface EntryType {
+  pointtotal: number,
+  UserId: number,
+  ContestId: number,
+  createdAt: string,
+  updatedAt: string,
+  [key: string]: any,
+}
+
+export interface EntryIncludeUser extends EntryType {
+  User: UserType
+}
 
 function model() {
   const modelobj = {
