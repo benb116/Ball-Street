@@ -31,7 +31,8 @@ const server = http.createServer(app);
 const wss = new WebSocket.Server({ noServer: true });
 
 server.on('upgrade', (request: Request, socket, head) => {
-  session(request, socket, () => {
+  // @ts-expect-error Second arg is unnecessary, just give empty obj
+  session(request, {}, () => {
     if (!request.session.user) {
       socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
       socket.destroy();
@@ -45,6 +46,10 @@ server.on('upgrade', (request: Request, socket, head) => {
 
 // New ws connection
 wss.on('connection', async (ws, request: Request) => {
+  if (!request.session.user) {
+    ws.send('No user found');
+    return;
+  }
   // Add to connection map (ws <-> user)
   const userId = request.session.user.id;
   liveState.connmap.set(userId, ws);

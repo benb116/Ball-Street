@@ -35,14 +35,11 @@ function evaluateFn(book: Book) {
   if (book.bestask === Infinity) { book.bestask = null; }
   if (book.bestpask === Infinity) { book.bestpask = null; }
 
-  logger.verbose(`${book.contestID}-${book.nflplayerID} Evaluated prices: ${[book.bestbid, book.bestask, book.bestpbid, book.bestpask]
-    .map((p) => p || 0).join(' ')}`);
-
-  // Best offer of each type that is ready to match
-  let bestbidOffer;
-  let bestaskOffer;
-  let bestpbidOffer;
-  let bestpaskOffer;
+  logger.verbose(
+    `${book.contestID}-${book.nflplayerID} Evaluated prices: ${
+      [book.bestbid, book.bestask, book.bestpbid, book.bestpask].map((p) => p || 0).join(' ')
+    }`,
+  );
 
   // Priority is given to unprotected offers
   // Try to match bid with ask
@@ -51,17 +48,34 @@ function evaluateFn(book: Book) {
   // and last protbid with protask
 
   // Try to match the best bid first
+  if (book.bestbid) {
+    const match = findMatchForBestBid(book);
+    if (match) return match;
+  }
+  if (book.bestpbid) {
+    const match = findMatchForBestPBid(book);
+    if (match) return match;
+  }
+
+  // if nothing, return false;
+  return false;
+}
+
+function findMatchForBestBid(book: Book) {
+  const bidPrices = Object.keys(book.bid).map(Number);
+  // Best offer of each type that is ready to match
+  let bestbidOffer;
+  let bestaskOffer;
+  let bestpaskOffer;
+
   let evalbid = Number(book.bestbid);
   let done = false; // flag, done looking at unprot bids, check prot bids next
   // Each map has an iterator that will spit out entries oldest first
   // Keep track of the iterator of the current best price for bids
-  let bidIterator;
-  if (!evalbid) { done = true; } else {
-    logger.verbose('Try to match the best bid');
-    bidIterator = book.bid[evalbid].entries();
-  }
+  let bidIterator = book.bid[evalbid].entries();
+
   // Iterate through the map(s) to find the best offer
-  while (evalbid) {
+  while (!done) {
     bestbidOffer = bidIterator.next().value;
     // If none, we've exhausted a specific price level
     // Move to the next best price and try again
@@ -105,20 +119,25 @@ function evaluateFn(book: Book) {
         done = true;
         logger.verbose('exhausted bids');
       }
-
       // At this point, it's possible that the next best bid could match a protask
       // if it hasn't done so already. Cycle through and check again
     }
   }
+  return false;
+}
+
+function findMatchForBestPBid(book: Book) {
+  const pbidPrices = Object.keys(book.pbid).map(Number);
+  // Best offer of each type that is ready to match
+  let bestaskOffer;
+  let bestpbidOffer;
+  let bestpaskOffer;
 
   // Try to match the best pbid next
   let evalpbid = Number(book.bestpbid);
-  done = false; // done looking at prot bid
-  let pbidIterator;
-  if (!evalpbid) { done = true; } else {
-    logger.verbose('Try to match the best pbid');
-    pbidIterator = book.pbid[evalpbid].entries();
-  }
+  let done = false; // done looking at prot bid
+  let pbidIterator = book.pbid[evalpbid].entries();
+
   // Iterate through the map(s) to find the best offer
   while (!done) {
     bestpbidOffer = pbidIterator.next().value;
@@ -185,7 +204,6 @@ function evaluateFn(book: Book) {
       }
     }
   }
-  // if nothing, return false;
   return false;
 }
 

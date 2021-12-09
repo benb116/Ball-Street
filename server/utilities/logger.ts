@@ -28,6 +28,7 @@ logger.add(new transports.Console({
   level: 'verbose',
 }));
 
+// @ts-expect-error Ok to add custom shortcut function
 logger.verbose = function verb(msg) {
   logger.log('verbose', msg);
 };

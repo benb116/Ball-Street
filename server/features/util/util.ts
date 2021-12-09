@@ -1,11 +1,13 @@
+import { Schema } from 'joi';
 import { Transaction } from 'sequelize';
 import { FlexNFLPositionId, NFLPosTypes, Roster } from '../../config';
 import logger from '../../utilities/logger';
+import { ServiceInput, ServiceType } from './util.service';
 
 const rpos = Object.keys(Roster);
 
 // Clean up the raw response from the database
-export const dv = function dv(input) {
+export const dv = function dv(input: any) {
   if (input === null) { return input; }
   if (input.length) { return input.map(dv); }
   if (input.toJSON) { return input.toJSON(); }
@@ -78,7 +80,7 @@ export const cl = function cl(input: any) {
 };
 
 // Validate an object based on a Joi schema
-export const validate = function validate(input, schema) {
+export const validate = function validate(input: Record<string, any>, schema: Schema) {
   const { value, error } = schema.validate(input);
   if (error) { uError(error.details[0].message, 400); }
   return value;
@@ -86,14 +88,16 @@ export const validate = function validate(input, schema) {
 
 // Functions used in Jest testing
 // Ensures that a service call returns an object with specific properties
-export const ObjectTest = function ObjectTest(service, req, contains: any) {
+export const ObjectTest = function ObjectTest(
+  service: ServiceType, req: any, contains: any,
+) {
   return async () => service(req).then((resp: any) => {
     expect(resp).toEqual(expect.objectContaining(contains));
   });
 };
 
 // Ensures that a service call returns an array with specific elements
-export const ArrayTest = function ArrayTest(service, req, items: any[]) {
+export const ArrayTest = function ArrayTest(service: ServiceType, req: any, items: any[]) {
   return async () => service(req).then((resp: any) => {
     items.forEach((e) => {
       let check = e;
@@ -106,7 +110,9 @@ export const ArrayTest = function ArrayTest(service, req, items: any[]) {
 };
 
 // Ensures that a service call throws an error with specific status number and message
-export const ErrorTest = function ErrorTest(service, req, statusNumber: number, message: string) {
+export const ErrorTest = function ErrorTest(
+  service: ServiceType, req: any, statusNumber: number, message: string,
+) {
   return async function errortest() {
     try {
       const o = await service(req);

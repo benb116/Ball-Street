@@ -78,7 +78,7 @@ export function GameState() {
 
       // Add games to DB (phases changed later)
       await NFLGame.bulkCreate(gameobjs)
-        .catch((err) => {
+        .catch((err: any) => {
           // If game already exists, ignore an error
           // options.ignoreDuplicates?
           if (err?.parent?.constraint !== 'NFLGames_pkey') {
