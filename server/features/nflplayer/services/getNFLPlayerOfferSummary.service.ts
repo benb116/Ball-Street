@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-import { dv, validate } from '../../util/util';
+import { validate } from '../../util/util';
 
 import { Offer } from '../../../models';
 import validators from '../../util/util.schema';
@@ -49,7 +49,7 @@ function getNFLPlayerOfferSummary(req: GetNFLPlayerOffersInput) {
     attributes: ['price'],
   });
 
-  return Promise.all([bids, asks]).then(dv);
+  return Promise.all([bids, asks]);
 }
 
 export default getNFLPlayerOfferSummary;

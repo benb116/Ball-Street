@@ -66,7 +66,7 @@ async function initializeBook(playerBook: Book) {
         NFLPlayerId: nflplayerID,
       },
     },
-  });
+  }).then(dv);
   protMatches.forEach((m) => {
     // eslint-disable-next-line no-param-reassign
     playerBook.protMatchMap[m.existingId] = m.newId;

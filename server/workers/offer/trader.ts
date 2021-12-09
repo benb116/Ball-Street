@@ -89,13 +89,15 @@ async function attemptFill(t: Transaction, bidid: string, askid: string, tprice:
     .catch((err) => {
       logger.warn(`Offer could not be filled: ${boffer.id} - ${err.message}`);
       return Offer.destroy({ where: { id: boffer.id } }, { transaction: t })
-        .then(() => offerCancelled.pub(boffer.UserId, boffer.id)).finally(() => false);
+        .then(() => offerCancelled.pub(boffer.UserId, boffer.id))
+        .finally(() => false);
     });
   const askProm = tradeDrop(askreq, t)
     .catch((err) => {
       logger.warn(`Offer could not be filled: ${aoffer.id} - ${err.message}`);
       return Offer.destroy({ where: { id: aoffer.id } }, { transaction: t })
-        .then(() => offerCancelled.pub(aoffer.UserId, aoffer.id)).finally(() => false);
+        .then(() => offerCancelled.pub(aoffer.UserId, aoffer.id))
+        .finally(() => false);
     });
 
   // Check the response
@@ -108,8 +110,11 @@ async function attemptFill(t: Transaction, bidid: string, askid: string, tprice:
     return resp;
   }
   // If both good, commit transaction
-  bidoffer.filled = true;
-  askoffer.filled = true;
+  bidoffer.set({ filled: true });
+  askoffer.set({ filled: true });
+
+  boffer.filled = true;
+  aoffer.filled = true;
 
   await Promise.all([
     bidoffer.save({ transaction: t }),

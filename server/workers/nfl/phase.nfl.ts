@@ -88,7 +88,7 @@ async function convertTeamPlayers(teamID: number) {
   // Filter for all entries with a player on this team
   const teamEntries = allEntries
     .filter((e) => teamPlayers
-      .reduce((acc, cur) => (acc || (isPlayerOnRoster(e, cur.id) !== '')), false));
+      .reduce((acc: boolean, cur) => (acc || (isPlayerOnRoster(e, cur.id) !== '')), false));
   // Run in series to reduce DB load
   for (let i = 0; i < teamEntries.length; i++) {
     // eslint-disable-next-line no-await-in-loop
@@ -117,10 +117,13 @@ async function convertEntry(e, players, statmap: Record<string, number>) {
     }, tobj(t));
 
     players.forEach((p) => {
-      const pos = isPlayerOnRoster(theentry, p.id);
+      const pos = isPlayerOnRoster(dv(theentry), p.id);
       if (pos) {
-        theentry[pos] = null;
-        theentry.pointtotal += (statmap[p.id] || 0);
+        const newSet: Record<string, number | null> = {
+          pointtotal: dv(theentry).pointtotal += (statmap[p.id] || 0),
+        };
+        newSet[pos] = null;
+        theentry.set(newSet);
       }
     });
 

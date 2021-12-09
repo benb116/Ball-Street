@@ -38,7 +38,7 @@ async function getEntryRank(req: GetEntryRankInput) {
         [Op.gt]: theentry.pointtotal,
       },
     },
-  }).then(dv).catch(() => -1);
+  }).catch(() => -1);
   theentry.rank = greaterEntries + 1;
   return theentry;
 }

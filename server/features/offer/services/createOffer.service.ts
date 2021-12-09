@@ -82,19 +82,19 @@ async function createOffer(req: CreateOfferInput) {
     if (!playerdata || !playerdata.active) { uError('Player not found', 404); }
 
     // Player should be in entry for ask, not for bid
-    const isOnTeam = isPlayerOnRoster(theentry, value.body.offerobj.nflplayerID);
+    const isOnTeam = isPlayerOnRoster(dv(theentry), value.body.offerobj.nflplayerID);
     if (!value.body.offerobj.isbid) {
       if (!isOnTeam) { uError('Player is not on roster', 404); }
     } else {
       if (isOnTeam) { uError('Player is on roster already', 409); }
 
-      const pts = theentry.dataValues.pointtotal;
+      const pts = dv(theentry).pointtotal;
       if (value.body.offerobj.price > pts) {
         uError("User doesn't have enough points to offer", 402);
       }
       // Only allow offer if there's currently room on the roster
       // TODO make linked offers? I.e. sell player at market price to make room for other player
-      if (!isOpenRoster(theentry, playerdata.NFLPositionId)) {
+      if (!isOpenRoster(dv(theentry), playerdata.NFLPositionId)) {
         uError('There are no spots this player could fit into', 409);
       }
     }

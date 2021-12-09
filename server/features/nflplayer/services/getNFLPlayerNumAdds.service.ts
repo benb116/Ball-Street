@@ -1,7 +1,7 @@
 import { Op } from 'sequelize';
 import Joi from 'joi';
 
-import { dv, validate } from '../../util/util';
+import { validate } from '../../util/util';
 import { Roster } from '../../../config';
 
 import validators from '../../util/util.schema';
@@ -34,7 +34,7 @@ function getNFLPlayerNumAdds(req: GetNFLPlayerNumAddsInput) {
       ContestId: value.params.contestID,
       [Op.or]: gen(value.params.nflplayerID),
     },
-  }).then(dv);
+  });
 
   function gen(_player: number) {
     const rpos = Object.keys(Roster);

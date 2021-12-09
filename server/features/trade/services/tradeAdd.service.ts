@@ -54,12 +54,12 @@ async function tradeAdd(req: TradeAddInput, t: Transaction) {
     lock: t.LOCK.UPDATE,
   });
 
-  if (!theentry) { uError('No entry found', 404); }
+  if (!theentry) { return uError('No entry found', 404); }
   // Determine if user already has player on roster
-  const isOnTeam = isPlayerOnRoster(theentry, theplayer);
+  const isOnTeam = isPlayerOnRoster(dv(theentry), theplayer);
   if (isOnTeam) { uError('Player is on roster', 406); }
 
-  const pts = theentry.dataValues.pointtotal;
+  const pts = dv(theentry).pointtotal;
   // console.log("POINTS", pts);
 
   // Get player price and position
@@ -72,17 +72,21 @@ async function tradeAdd(req: TradeAddInput, t: Transaction) {
     const isinvalid = isInvalidSpot(playerType, value.body.rosterposition);
     if (isinvalid) { uError(isinvalid, 406); }
     // Is it an empty one?
-    if (theentry[value.body.rosterposition] !== null) {
+    if (dv(theentry)[value.body.rosterposition] !== null) {
       uError('There is a player in that spot', 406);
     }
-    theentry[value.body.rosterposition] = theplayer;
+    const newSet: Record<string, number> = {};
+    newSet[value.body.rosterposition] = theplayer;
+    theentry.set(newSet);
   } else {
     // Find an open spot
-    const isOpen = isOpenRoster(theentry, playerType);
+    const isOpen = isOpenRoster(dv(theentry), playerType);
     if (!isOpen) {
       uError('There are no open spots', 406);
     } else {
-      theentry[isOpen] = theplayer;
+      const newSet: Record<string, number> = {};
+      newSet[isOpen] = theplayer;
+      theentry.set(newSet);
     }
   }
 
@@ -109,7 +113,9 @@ async function tradeAdd(req: TradeAddInput, t: Transaction) {
   if (tradeprice > pts) { uError("User doesn't have enough points", 402); }
 
   // Deduct cost from points
-  theentry.pointtotal -= tradeprice;
+  theentry.set({
+    pointtotal: dv(theentry).pointtotal -= tradeprice,
+  });
 
   await theentry.save({ transaction: t });
 

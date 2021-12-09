@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-import { dv, validate } from '../../util/util';
+import { validate } from '../../util/util';
 
 import { Offer } from '../../../models';
 import validators from '../../util/util.schema';
@@ -31,7 +31,7 @@ function getNFLPlayerTradeVolume(req: GetNFLPlayerTradeVolumeInput) {
       ContestId: value.params.contestID,
       NFLPlayerId: value.params.nflplayerID,
     },
-  }).then(dv).then((out: number) => out / 2);
+  }).then((out) => out / 2);
 }
 
 export default getNFLPlayerTradeVolume;

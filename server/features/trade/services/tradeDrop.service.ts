@@ -49,11 +49,13 @@ async function tradeDrop(req: TradeDropInput, t: Transaction) {
     transaction: t,
     lock: t.LOCK.UPDATE,
   });
-  if (!theentry) { uError('No entry found', 404); }
+  if (!theentry) { return uError('No entry found', 404); }
 
-  const isOnTeam = isPlayerOnRoster(theentry, theplayer);
+  const isOnTeam = isPlayerOnRoster(dv(theentry), theplayer);
   if (!isOnTeam) { uError('Player is not on roster', 406); }
-  theentry[isOnTeam] = null;
+  const newSet: Record<string, null> = {};
+  newSet[isOnTeam] = null;
+  theentry.set(newSet);
 
   // How much to add to point total
   const playerdata = await NFLPlayer.findByPk(theplayer, { transaction: t }).then(dv);
@@ -72,12 +74,16 @@ async function tradeDrop(req: TradeDropInput, t: Transaction) {
     if (gamedata.phase !== 'mid') {
       uError("Can't trade before or after games", 406);
     }
-    theentry.pointtotal += value.body.price;
+    theentry.set({
+      pointtotal: dv(theentry).pointtotal += value.body.price,
+    });
   } else {
     if (gamedata.phase !== 'pre') {
       uError("Can't drop during or after games", 406);
     }
-    theentry.pointtotal += playerdata.preprice;
+    theentry.set({
+      pointtotal: dv(theentry).pointtotal += playerdata.preprice,
+    });
   }
 
   await theentry.save({ transaction: t });

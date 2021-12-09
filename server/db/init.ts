@@ -1,5 +1,6 @@
 // Set up the database with proper tables and NFL data
 
+import { Sequelize } from 'sequelize';
 import { RosterPosTypes } from '../config';
 import {
   NFLPosition,
@@ -10,7 +11,7 @@ import teams from '../nflinfo';
 import logger from '../utilities/logger';
 import scrape from './playerscraper';
 
-async function InitDB(sequelize) {
+async function InitDB(sequelize: Sequelize) {
   logger.info('Initializing the database');
   await sequelize.sync({ force: true });
 

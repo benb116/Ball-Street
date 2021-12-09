@@ -74,7 +74,6 @@ export const uError = function uError(msg: string, status = 500) {
 
 // Console.log passthrough for promises
 export const cl = function cl(input: any) {
-  // eslint-disable-next-line no-console
   logger.info(input);
   return input;
 };

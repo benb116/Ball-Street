@@ -110,7 +110,6 @@ class Book {
       UserId: offer.UserId,
       price,
     });
-    return false;
   }
 
   // Remove and offer from the book
@@ -118,13 +117,12 @@ class Book {
     const { isbid, price } = offer;
     const thetree = this.whichTree(isbid, offer.protected);
 
-    if (!thetree[price]) return null;
+    if (!thetree[price]) return;
     thetree[price].delete(offer.id);
     // If the limit price is now empty, delete it
     if (!thetree[price].size) {
       delete thetree[price];
     }
-    return false;
   }
 
   // Mark that a protected offer has been matched
