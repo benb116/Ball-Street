@@ -26,7 +26,7 @@ async function evalVerify(req: EvalVerifyInput) {
   const user = await User.update({ verified: true }, {
     where: { email }, returning: true,
   });
-  const theuser = dv(user[1]);
+  const theuser = dv(user[1])[0];
   return { id: theuser.id, email: theuser.email, name: theuser.name };
 }
 

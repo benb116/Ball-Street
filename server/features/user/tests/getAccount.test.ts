@@ -13,7 +13,7 @@ describe('getAccount service', () => {
   ));
 
   test('Missing user returns error 400', ErrorTest(
-    service, { user: 0, params: {}, body: {} },
+    service, { params: {}, body: {} },
     400, 'You must be logged in',
   ));
 });

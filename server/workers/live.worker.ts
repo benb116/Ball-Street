@@ -64,7 +64,7 @@ wss.on('connection', async (ws, request: Request) => {
   ws.send(JSON.stringify({ event: 'priceUpdate', pricedata: await sendLatest(contestID) }));
   ws.send(JSON.stringify({
     event: 'leaderboard',
-    leaderboard: JSON.parse(await client.GET(rediskeys.leaderHash(contestID)) || '{}'),
+    leaderboard: JSON.parse(await client.GET(rediskeys.leaderHash(contestID)) || '[]'),
   }));
 
   ws.on('close', () => {

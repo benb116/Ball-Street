@@ -52,7 +52,7 @@ async function sendreq(price: boolean, pagenum = 0, posget = 'O') {
       const [name, nameout] = idout.split('</a> <span class="Fz-xxs">');
       const [team, teamout] = nameout.split(' - ');
       const [pos, posout] = teamout.split('</span> </div>\n        </div>\n        <div class=\"Grid-bind-end\">');
-      const posid = (RosterPosTypes[pos].id || RosterPosTypes[pos.split(',')[0]].id || 0); // Could be WR,RB
+      const posid = (RosterPosTypes[pos]?.id || RosterPosTypes[pos.split(',')[0]].id || 0); // Could be WR,RB
       const preprice = Math.round(Number(posout.split('span class=\"Fw-b\">')[1].split('</span>')[0]) * 100);
       const injout = posout.split('abbr class="F-injury"');
       let injuryStatus = null;

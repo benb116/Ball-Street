@@ -66,13 +66,14 @@ export const tobj = function tobj(t: Transaction) {
 };
 
 export interface UError extends Error {
+  message: string,
+  name: string,
   status: number,
 }
 
 // Custom error function that returns a msg and http status
 export const uError = function uError(msg: string, status = 500) {
-  const err = new Error(msg);
-  const uerr: UError = { ...err, status };
+  const uerr: UError = { name: msg, message: msg, status };
   throw uerr;
 };
 

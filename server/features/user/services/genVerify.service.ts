@@ -7,30 +7,32 @@ import { client, rediskeys } from '../../../db/redis';
 import { CallbackURL, verificationTimeout, verificationTokenLength } from '../../../config';
 
 const schema = Joi.object({
+  id: validators.user,
   email: validators.email,
 });
 
 interface EvalVerifyInput {
+  id: number,
   email: string,
 }
 
 async function genVerify(req: EvalVerifyInput) {
   const value: EvalVerifyInput = validate(req, schema);
-  const { email } = value;
+  const { email, id } = value;
   try {
     const rand = cryptoRandomString({ length: verificationTokenLength, type: 'url-safe' });
     await client.SET(rediskeys.emailVer(rand), email, { EX: verificationTimeout * 60 });
-    return await sendVerificationEmail(email, rand);
+    return await sendVerificationEmail(id, email, rand);
   } catch (err) {
     return uError('genVerify Error', 406);
   }
 }
 
-async function sendVerificationEmail(email: string, rand: string) {
+async function sendVerificationEmail(id: number, email: string, rand: string) {
   const link = `${CallbackURL}/app/auth/verify?token=${rand}`;
   const msg = `Please click this link to verify your Ball Street account:\n${link}`;
   SendEmail(email, 'Verify your Ball Street Account', msg);
-  return Promise.resolve({ needsVerification: true, id: 0 });
+  return Promise.resolve({ needsVerification: true, id });
 }
 
 function SendEmail(to: string, subject: string, msg: string) {

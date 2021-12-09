@@ -6,8 +6,8 @@ import { verificationTokenLength } from '../../../config';
 
 describe('genVerify service', () => {
   test('Valid request returns confirmation and redis key', async () => {
-    const output = await service({ email: 'abc123@gmail.com' });
-    expect(output).toStrictEqual({ needsVerification: true });
+    const output = await service({ id: 6, email: 'abc123@gmail.com' });
+    expect(output).toStrictEqual({ id: 6, needsVerification: true });
 
     // Check to make sure the redis key was set
     const redisOutput = await client.KEYS('emailVer:*');
@@ -19,6 +19,6 @@ describe('genVerify service', () => {
   });
 
   test('Invalid email returns validation error', ErrorTest(
-    service, { email: 'abc123' }, 400, 'Email is invalid',
+    service, { id: 6, email: 'abc123' }, 400, 'Email is invalid',
   ));
 });

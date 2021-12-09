@@ -27,7 +27,7 @@ async function login(req: LoginInput) {
   const match = await bcrypt.compare(password, theuser.pwHash);
   if (!match) { uError('Wrong username or password', 401); }
   if (!theuser.verified) {
-    return genVerify({ email });
+    return genVerify({ id: theuser.id, email });
   }
   return {
     needsVerification: false, id: theuser.id, email: theuser.email, name: theuser.name,

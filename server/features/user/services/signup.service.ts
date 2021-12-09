@@ -37,7 +37,7 @@ async function signup(req: SignupInput) {
       name, email, pwHash: hash, verified: skipVerification,
     }).then(dv);
     if (!theuser) { uError('User could not be created', 500); }
-    if (!skipVerification) return await genVerify({ email: theuser.email });
+    if (!skipVerification) return await genVerify({ id: theuser.id, email: theuser.email });
     return {
       needsVerification: false, id: theuser.id, email: theuser.email, name: theuser.name,
     };
