@@ -24,7 +24,7 @@ async function evalVerify(req: EvalVerifyInput) {
   if (!email) uError('Email could not be verified', 404);
   client.DEL(rediskeys.emailVer(token));
   const user = await User.update({ verified: true }, {
-    where: { email }, returning: true, plain: true,
+    where: { email }, returning: true,
   });
   const theuser = dv(user[1]);
   return { id: theuser.id, email: theuser.email, name: theuser.name };

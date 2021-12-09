@@ -51,7 +51,7 @@ async function attemptFill(t: Transaction, bidid: string, askid: string, tprice:
   if (!aoffer || aoffer.filled || aoffer.cancelled || aoffer.isbid) {
     resp.ask.closed = true;
   }
-  if (resp.bid.closed || resp.ask.closed) {
+  if (resp.bid.closed || resp.ask.closed || !bidoffer || !askoffer) {
     logger.info(`Offer began closed: ${JSON.stringify(resp)}`);
     return resp;
   }

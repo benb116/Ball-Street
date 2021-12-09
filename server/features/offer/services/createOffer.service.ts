@@ -65,33 +65,31 @@ interface CreateOfferInput extends ServiceInput {
 async function createOffer(req: CreateOfferInput) {
   const value: CreateOfferInput = validate(req, schema);
 
-  const obj = value.body.offerobj;
-  obj.userID = value.user;
   return sequelize.transaction(isoOption, async (t) => {
     // Find user's entry
     const theentry = await Entry.findOne({
       where: {
-        UserId: obj.userID,
+        UserId: value.user,
         ContestId: value.params.contestID,
       },
     }, tobj(t));
     if (!theentry) { uError('No entry found', 404); }
 
-    const playerdata = await NFLPlayer.findByPk(obj.nflplayerID, {
+    const playerdata = await NFLPlayer.findByPk(value.body.offerobj.nflplayerID, {
       attributes: ['NFLPositionId', 'NFLTeamId', 'active'],
       transaction: t,
     }).then(dv);
     if (!playerdata || !playerdata.active) { uError('Player not found', 404); }
 
     // Player should be in entry for ask, not for bid
-    const isOnTeam = isPlayerOnRoster(theentry, obj.nflplayerID);
-    if (!obj.isbid) {
+    const isOnTeam = isPlayerOnRoster(theentry, value.body.offerobj.nflplayerID);
+    if (!value.body.offerobj.isbid) {
       if (!isOnTeam) { uError('Player is not on roster', 404); }
     } else {
       if (isOnTeam) { uError('Player is on roster already', 409); }
 
       const pts = theentry.dataValues.pointtotal;
-      if (obj.price > pts) {
+      if (value.body.offerobj.price > pts) {
         uError("User doesn't have enough points to offer", 402);
       }
       // Only allow offer if there's currently room on the roster
@@ -114,12 +112,12 @@ async function createOffer(req: CreateOfferInput) {
     }
 
     return Offer.create({
-      UserId: obj.userID,
+      UserId: value.user,
       ContestId: value.params.contestID,
-      NFLPlayerId: obj.nflplayerID,
-      isbid: obj.isbid,
-      price: obj.price,
-      protected: obj.protected || DefaultProtected,
+      NFLPlayerId: value.body.offerobj.nflplayerID,
+      isbid: value.body.offerobj.isbid,
+      price: value.body.offerobj.price,
+      protected: value.body.offerobj.protected || DefaultProtected,
     }, {
       transaction: t,
       lock: t.LOCK.UPDATE,

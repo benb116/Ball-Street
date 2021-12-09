@@ -20,14 +20,16 @@ const schema = Joi.object({
     contestID: validators.contestID,
   }).required(),
   body: Joi.object().keys({
-    pos1: Joi.string().trim().required().messages({
-      'string.base': 'First position is invalid',
-      'any.required': 'Please specify a first position',
-    }),
-    pos2: Joi.string().trim().required().messages({
-      'string.base': 'Second position is invalid',
-      'any.required': 'Please specify a second position',
-    }),
+    pos1: Joi.string().trim().valid(...Object.keys(Roster)).required()
+      .messages({
+        'string.base': 'First position is invalid',
+        'any.required': 'Please specify a first position',
+      }),
+    pos2: Joi.string().trim().valid(...Object.keys(Roster)).required()
+      .messages({
+        'string.base': 'Second position is invalid',
+        'any.required': 'Please specify a second position',
+      }),
   }).required(),
 });
 

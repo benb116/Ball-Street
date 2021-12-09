@@ -33,7 +33,7 @@ export default function out(sequelize: Sequelize) {
     },
     scopes: {
       withPassword: {
-        attributes: { },
+        attributes: { exclude: [] },
       },
     },
   });
