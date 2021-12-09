@@ -14,7 +14,7 @@ import {
 } from '../../../models';
 import { queueOptions } from '../../../db/redis';
 
-import { errorHandler } from '../../util/util.service';
+import errorHandler, { ServiceInput } from '../../util/util.service';
 
 const offerQueue = new Queue('offer-queue', queueOptions);
 
@@ -48,7 +48,21 @@ const schema = Joi.object({
   }).required(),
 });
 
-async function createOffer(req) {
+interface CreateOfferInput extends ServiceInput {
+  params: {
+    contestID: number,
+  },
+  body: {
+    offerobj: {
+      nflplayerID: number,
+      isbid: boolean,
+      price: number,
+      protected?: boolean
+    }
+  }
+}
+
+async function createOffer(req: CreateOfferInput) {
   const value = validate(req, schema);
 
   const obj = value.body.offerobj;

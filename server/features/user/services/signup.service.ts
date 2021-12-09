@@ -6,7 +6,7 @@ import validators from '../../util/util.schema';
 
 import { User } from '../../../models';
 import genVerify from './genVerify.service';
-import { errorHandler } from '../../util/util.service';
+import errorHandler from '../../util/util.service';
 
 const schema = Joi.object({
   name: Joi.string().required().messages({
@@ -18,7 +18,14 @@ const schema = Joi.object({
   skipVerification: Joi.boolean().default(false),
 });
 
-async function signup(req) {
+interface SignupInput {
+  name: string,
+  email: string,
+  password: string,
+  skipVerification: boolean,
+}
+
+async function signup(req: SignupInput) {
   const {
     name, email, password, skipVerification,
   } = validate(req, schema);

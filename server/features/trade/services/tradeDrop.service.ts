@@ -1,12 +1,13 @@
 import Joi from 'joi';
 
-import { Op } from 'sequelize';
+import { Op, Transaction } from 'sequelize';
 import {
   dv, validate, uError, isPlayerOnRoster,
 } from '../../util/util';
 import validators from '../../util/util.schema';
 
 import { Entry, NFLPlayer, NFLGame } from '../../../models';
+import { ServiceInput } from '../../util/util.service';
 
 const schema = Joi.object({
   user: validators.user,
@@ -24,7 +25,17 @@ const schema = Joi.object({
   }).required(),
 });
 
-async function tradeDrop(req, t) {
+interface TradeDropInput extends ServiceInput {
+  params: {
+    contestID: number,
+  },
+  body: {
+    nflplayerID: number,
+    price?: number,
+  }
+}
+
+async function tradeDrop(req: TradeDropInput, t: Transaction) {
   const value = validate(req, schema);
 
   const theplayer = value.body.nflplayerID;

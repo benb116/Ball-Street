@@ -5,6 +5,7 @@ import { validate } from '../../util/util';
 
 import sequelize from '../../../db';
 import validators from '../../util/util.schema';
+import { ServiceInput } from '../../util/util.service';
 
 const schema = Joi.object({
   user: validators.user,
@@ -15,7 +16,15 @@ const schema = Joi.object({
   body: validators.noObj,
 });
 
-function getNFLPlayerPriceHistory(req) {
+interface GetNFLPlayerPriceHistoryInput extends ServiceInput {
+  params: {
+    contestID: number,
+    nflplayerID: number,
+  },
+  body: Record<string, never>
+}
+
+function getNFLPlayerPriceHistory(req: GetNFLPlayerPriceHistoryInput) {
   const value = validate(req, schema);
 
   return sequelize.query(`

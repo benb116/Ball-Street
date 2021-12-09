@@ -9,6 +9,7 @@ import { queueOptions } from '../../../db/redis';
 
 import sequelize from '../../../db';
 import { Offer } from '../../../models';
+import { ServiceInput } from '../../util/util.service';
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
@@ -29,7 +30,16 @@ const schema = Joi.object({
   }).required(),
 });
 
-async function cancelOffer(req) {
+interface CancelOfferInput extends ServiceInput {
+  params: {
+    contestID: number,
+  },
+  body: {
+    offerID: string,
+  }
+}
+
+async function cancelOffer(req: CancelOfferInput) {
   const value = validate(req, schema);
 
   // Cancel offer, but if it's filled, let user know

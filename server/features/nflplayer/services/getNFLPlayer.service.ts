@@ -4,6 +4,7 @@ import { dv, validate, uError } from '../../util/util';
 import validators from '../../util/util.schema';
 
 import { NFLPlayer } from '../../../models';
+import { ServiceInput } from '../../util/util.service';
 
 const schema = Joi.object({
   user: validators.user,
@@ -13,7 +14,14 @@ const schema = Joi.object({
   body: validators.noObj,
 });
 
-async function getNFLPlayer(req) {
+interface GetNFLPlayerInput extends ServiceInput {
+  params: {
+    nflplayerID: number,
+  },
+  body: Record<string, never>
+}
+
+async function getNFLPlayer(req: GetNFLPlayerInput) {
   const value = validate(req, schema);
 
   const theplayer = await NFLPlayer.findOne({

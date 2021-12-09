@@ -4,6 +4,7 @@ import { dv, validate } from '../../util/util';
 
 import { Offer } from '../../../models';
 import validators from '../../util/util.schema';
+import { ServiceInput } from '../../util/util.service';
 
 const schema = Joi.object({
   user: validators.user,
@@ -14,7 +15,15 @@ const schema = Joi.object({
   body: validators.noObj,
 });
 
-function getNFLPlayerTradeVolume(req) {
+interface GetNFLPlayerTradeVolumeInput extends ServiceInput {
+  params: {
+    contestID: number,
+    nflplayerID: number,
+  },
+  body: Record<string, never>
+}
+
+function getNFLPlayerTradeVolume(req: GetNFLPlayerTradeVolumeInput) {
   const value = validate(req, schema);
 
   return Offer.count({

@@ -14,7 +14,7 @@ import evalPassReset from './services/evalPassReset.service';
 
 const router = express.Router();
 
-function errorHandler(res: Response, err) {
+function userErrorHandler(res: Response, err) {
   if (!err) {
     logger.error(err);
     return res.status(500).json({ error: 'Unexpected error' });
@@ -32,7 +32,7 @@ router.post('/login', async (req, res) => {
     if (!user.needsVerification) req.session.user = { id: user.id }; // add to session
     return res.json(user);
   } catch (err) {
-    return errorHandler(res, err);
+    return userErrorHandler(res, err);
   }
 });
 
@@ -48,18 +48,19 @@ router.post('/signup', async (req, res) => {
     if (!user.needsVerification) req.session.user = { id: user.id }; // add to session
     return res.json(user);
   } catch (err) {
-    return errorHandler(res, err);
+    return userErrorHandler(res, err);
   }
 });
 
 router.get('/verify', async (req, res) => {
-  const inp = { token: req.query.token };
+  const token: string = req.query.token as string;
+  const inp = { token };
   try {
     const user = await evalVerify(inp);
     req.session.user = { id: user.id }; // add to session
     return res.redirect('/verified');
   } catch (err) {
-    return errorHandler(res, err);
+    return userErrorHandler(res, err);
   }
 });
 
@@ -71,7 +72,7 @@ router.post('/forgot', async (req, res) => {
     const done = await genPassReset(inp);
     return res.json({ resetLinkSent: done });
   } catch (err) {
-    return errorHandler(res, err);
+    return userErrorHandler(res, err);
   }
 });
 
@@ -88,7 +89,7 @@ router.post('/resetPasswordToken', async (req, res) => {
     });
     return true;
   } catch (err) {
-    return errorHandler(res, err);
+    return userErrorHandler(res, err);
   }
 });
 

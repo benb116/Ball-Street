@@ -10,7 +10,11 @@ const schema = Joi.object({
   email: validators.email,
 });
 
-async function genPassReset(req) {
+interface GenPassResetInput {
+  email: string,
+}
+
+async function genPassReset(req: GenPassResetInput) {
   const { email } = validate(req, schema);
   try {
     const rand = cryptoRandomString({ length: verificationTokenLength, type: 'url-safe' });

@@ -2,7 +2,7 @@ import Joi from 'joi';
 
 import { validate } from '../../util/util';
 
-import { errorHandler } from '../../util/util.service';
+import errorHandler, { ServiceInput } from '../../util/util.service';
 import { Contest } from '../../../models';
 import validators from '../../util/util.schema';
 
@@ -24,8 +24,16 @@ const schema = Joi.object({
   }).required(),
 });
 
+interface CreateContestInput extends ServiceInput {
+  params: Record<string, never>,
+  body: {
+    name: string,
+    budget: number,
+  }
+}
+
 // Get info for a specific contest
-async function createContest(req) {
+async function createContest(req: CreateContestInput) {
   const value = validate(req, schema);
   return Contest.create({
     name: value.body.name,

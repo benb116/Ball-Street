@@ -17,7 +17,13 @@ const schema = Joi.object({
   confirmPassword: validators.password,
 });
 
-async function evalPassReset(req) {
+interface EvalPassResetInput {
+  token: string,
+  password: string,
+  confirmPassword: string,
+}
+
+async function evalPassReset(req: EvalPassResetInput) {
   const { token, password, confirmPassword } = validate(req, schema);
   if (OnCompare(password, confirmPassword)) uError('Passwords do not match', 403);
   const email = await client.GET(rediskeys.passReset(token));

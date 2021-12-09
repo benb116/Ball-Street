@@ -5,8 +5,9 @@
 
 import { Request, Response } from 'express';
 import { client } from '../../db/redis';
+import { ServiceInput, ServiceType } from './util.service';
 
-function routeHandler(service, cacheExpiry = 0) {
+function routeHandler(service: ServiceType, cacheExpiry = 0) {
   return async function routeHandlerInner(req: Request, res: Response) {
     try {
       // If a get request should be cached
@@ -35,7 +36,7 @@ function stripReq(inp: Request) {
     user: inp.session?.user?.id || 0,
     params: inp.params,
     body: inp.body,
-  };
+  } as ServiceInput;
 }
 
 export default routeHandler;

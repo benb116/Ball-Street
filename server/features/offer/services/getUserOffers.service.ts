@@ -4,7 +4,7 @@ import { dv, validate } from '../../util/util';
 import validators from '../../util/util.schema';
 
 import { Offer } from '../../../models';
-import { errorHandler } from '../../util/util.service';
+import errorHandler, { ServiceInput } from '../../util/util.service';
 
 const schema = Joi.object({
   user: validators.user,
@@ -14,7 +14,14 @@ const schema = Joi.object({
   body: validators.noObj,
 });
 
-function getUserOffers(req) {
+interface GetUserOffersInput extends ServiceInput {
+  params: {
+    contestID: number,
+  },
+  body: Record<string, never>
+}
+
+function getUserOffers(req: GetUserOffersInput) {
   const value = validate(req, schema);
   return Offer.findAll({
     where: {

@@ -12,7 +12,12 @@ const schema = Joi.object({
   password: validators.password,
 });
 
-async function login(req) {
+interface LoginInput {
+  email: string,
+  password: string,
+}
+
+async function login(req: LoginInput) {
   const { email, password } = validate(req, schema);
 
   const theuser = await User.scope('withPassword').findOne({ where: { email } });

@@ -7,7 +7,7 @@ import { FlexNFLPositionId, NFLPosTypes, Roster } from '../../../config';
 
 import sequelize from '../../../db';
 import { Entry, NFLPlayer } from '../../../models';
-import { errorHandler } from '../../util/util.service';
+import errorHandler, { ServiceInput } from '../../util/util.service';
 import validators from '../../util/util.schema';
 
 const isoOption = {
@@ -31,7 +31,17 @@ const schema = Joi.object({
   }).required(),
 });
 
-async function reorderRoster(req) {
+interface ReorderRosterInput extends ServiceInput {
+  params: {
+    contestID: number,
+  },
+  body: {
+    pos1: string,
+    pos2: string,
+  }
+}
+
+async function reorderRoster(req: ReorderRosterInput) {
   const value = validate(req, schema);
 
   return sequelize.transaction(isoOption, async (t) => {

@@ -13,7 +13,11 @@ const schema = Joi.object({
   }),
 });
 
-async function evalVerify(req) {
+interface EvalVerifyInput {
+  token: string,
+}
+
+async function evalVerify(req: EvalVerifyInput) {
   const { token } = validate(req, schema);
   const email = await client.GET(rediskeys.emailVer(token));
   if (!email) uError('Email could not be verified', 404);

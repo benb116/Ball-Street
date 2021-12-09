@@ -7,6 +7,7 @@ import { Roster } from '../../../config';
 import validators from '../../util/util.schema';
 
 import { Entry } from '../../../models';
+import { ServiceInput } from '../../util/util.service';
 
 const schema = Joi.object({
   user: validators.user,
@@ -17,7 +18,15 @@ const schema = Joi.object({
   body: validators.noObj,
 });
 
-function getNFLPlayerNumAdds(req) {
+interface GetNFLPlayerNumAddsInput extends ServiceInput {
+  params: {
+    contestID: number,
+    nflplayerID: number,
+  },
+  body: Record<string, never>
+}
+
+function getNFLPlayerNumAdds(req: GetNFLPlayerNumAddsInput) {
   const value = validate(req, schema);
 
   return Entry.count({

@@ -6,7 +6,7 @@ import validators from '../../util/util.schema';
 import sequelize from '../../../db';
 
 import tradeDrop from './tradeDrop.service';
-import { errorHandler } from '../../util/util.service';
+import errorHandler, { ServiceInput } from '../../util/util.service';
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
@@ -25,8 +25,18 @@ const schema = Joi.object({
   }).required(),
 });
 
+interface PreTradeDropInput extends ServiceInput {
+  params: {
+    contestID: number,
+  },
+  body: {
+    nflplayerID: number,
+    price: never,
+  }
+}
+
 // Try to add within a transaction, errors will rollback
-async function preTradeDrop(req) {
+async function preTradeDrop(req: PreTradeDropInput) {
   const value = validate(req, schema);
 
   return sequelize.transaction(isoOption, async (t) => tradeDrop(value, t))

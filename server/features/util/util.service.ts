@@ -5,7 +5,16 @@ interface ErrorRespType {
   status: number,
   message: string,
 }
-export function errorHandler(responseMap: Record<string, ErrorRespType>) {
+
+export interface ServiceInput {
+  user: number,
+  params: Record<string, any>,
+  body: Record<string, any>,
+}
+
+export type ServiceType = (inp: any) => Promise<any>;
+
+export default function errorHandler(responseMap: Record<string, ErrorRespType>) {
   return function errorHandlerInner(err) {
     const outmess = (responseMap.default || 'Unexpected error');
     if (!err) return uError(outmess.message, (outmess.status || 500));

@@ -4,7 +4,7 @@ import sequelize from '../../../db';
 
 import { validate } from '../../util/util';
 import validators from '../../util/util.schema';
-import { errorHandler } from '../../util/util.service';
+import errorHandler, { ServiceInput } from '../../util/util.service';
 
 import tradeAdd from './tradeAdd.service';
 
@@ -28,8 +28,19 @@ const schema = Joi.object({
   }).required(),
 });
 
+interface PreTradeAddInput extends ServiceInput {
+  params: {
+    contestID: number,
+  },
+  body: {
+    nflplayerID: number,
+    rosterposition?: string,
+    price: never,
+  }
+}
+
 // Try to add within a transaction, errors will rollback
-async function preTradeAdd(req) {
+async function preTradeAdd(req: PreTradeAddInput) {
   const value = validate(req, schema);
 
   return sequelize.transaction(isoOption, async (t) => tradeAdd(value, t))

@@ -1,12 +1,13 @@
 import Joi from 'joi';
 
-import { Op } from 'sequelize';
+import { Op, Transaction } from 'sequelize';
 import {
   dv, validate, uError, isPlayerOnRoster, isOpenRoster, isInvalidSpot,
 } from '../../util/util';
 import validators from '../../util/util.schema';
 
 import { Entry, NFLPlayer, NFLGame } from '../../../models';
+import { ServiceInput } from '../../util/util.service';
 
 const schema = Joi.object({
   user: validators.user,
@@ -27,8 +28,19 @@ const schema = Joi.object({
   }).required(),
 });
 
+interface TradeAddInput extends ServiceInput {
+  params: {
+    contestID: number,
+  },
+  body: {
+    nflplayerID: number,
+    rosterposition?: string,
+    price?: number,
+  }
+}
+
 // Add a player within a transaction, but don't commit
-async function tradeAdd(req, t) {
+async function tradeAdd(req: TradeAddInput, t: Transaction) {
   const value = validate(req, schema);
 
   const theplayer = value.body.nflplayerID;

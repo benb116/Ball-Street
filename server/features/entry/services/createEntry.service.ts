@@ -3,7 +3,7 @@ import Joi from 'joi';
 import { dv, validate, uError } from '../../util/util';
 
 import { Entry, Contest } from '../../../models';
-import { errorHandler } from '../../util/util.service';
+import errorHandler, { ServiceInput } from '../../util/util.service';
 import validators from '../../util/util.schema';
 
 const schema = Joi.object({
@@ -14,8 +14,15 @@ const schema = Joi.object({
   body: validators.noObj,
 });
 
+interface CreateEntryInput extends ServiceInput {
+  params: {
+    contestID: number,
+  },
+  body: Record<string, never>
+}
+
 // Get info for a specific contest
-async function createEntry(req) {
+async function createEntry(req: CreateEntryInput) {
   const value = validate(req, schema);
 
   const thecontest = await Contest.findByPk(value.params.contestID).then(dv);

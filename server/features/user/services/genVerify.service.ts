@@ -10,7 +10,11 @@ const schema = Joi.object({
   email: validators.email,
 });
 
-async function genVerify(req) {
+interface EvalVerifyInput {
+  email: string,
+}
+
+async function genVerify(req: EvalVerifyInput) {
   const { email } = validate(req, schema);
   try {
     const rand = cryptoRandomString({ length: verificationTokenLength, type: 'url-safe' });

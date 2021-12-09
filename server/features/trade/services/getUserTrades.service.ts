@@ -4,6 +4,7 @@ import { dv, validate } from '../../util/util';
 import validators from '../../util/util.schema';
 
 import { Offer, Trade } from '../../../models';
+import { ServiceInput } from '../../util/util.service';
 
 const schema = Joi.object({
   user: validators.user,
@@ -13,7 +14,14 @@ const schema = Joi.object({
   body: validators.noObj,
 });
 
-async function getUserTrades(req) {
+interface GetUserTradesInput extends ServiceInput {
+  params: {
+    contestID: number,
+  },
+  body: Record<string, never>
+}
+
+async function getUserTrades(req: GetUserTradesInput) {
   const value = validate(req, schema);
 
   const allbids = await Trade.findAll({

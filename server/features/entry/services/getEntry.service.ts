@@ -4,6 +4,7 @@ import { dv, validate, uError } from '../../util/util';
 
 import { Entry } from '../../../models';
 import validators from '../../util/util.schema';
+import { ServiceInput } from '../../util/util.service';
 
 const schema = Joi.object({
   user: validators.user,
@@ -13,8 +14,15 @@ const schema = Joi.object({
   body: validators.noObj,
 });
 
+interface GetEntryInput extends ServiceInput {
+  params: {
+    contestID: number,
+  },
+  body: Record<string, never>
+}
+
 // Get info for a specific contest
-async function getEntry(req) {
+async function getEntry(req: GetEntryInput) {
   const value = validate(req, schema);
   const theentry = await Entry.findOne({
     where: {

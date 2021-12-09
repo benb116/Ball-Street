@@ -6,6 +6,7 @@ import { dv, validate } from '../../util/util';
 import getEntry from './getEntry.service';
 import validators from '../../util/util.schema';
 import { Entry } from '../../../models';
+import { ServiceInput } from '../../util/util.service';
 
 const schema = Joi.object({
   user: validators.user,
@@ -15,8 +16,15 @@ const schema = Joi.object({
   body: validators.noObj,
 });
 
+interface GetEntryRankInput extends ServiceInput {
+  params: {
+    contestID: number,
+  },
+  body: Record<string, never>
+}
+
 // Get an entry's rank within a contest
-async function getEntryRank(req) {
+async function getEntryRank(req: GetEntryRankInput) {
   const value = validate(req, schema);
   // Requires authorization or looking at a public league
   const theentry = await getEntry(value);
