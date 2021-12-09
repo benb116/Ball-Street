@@ -1,4 +1,3 @@
-import { DataTypes } from 'sequelize';
 import sequelize from './db';
 
 import mcontest from './features/contest/contest.model';
@@ -13,17 +12,17 @@ import mpricehistory from './features/pricehistory/pricehistory.model';
 import mtrade from './features/trade/trade.model';
 import muser from './features/user/user.model';
 
-export const Contest = mcontest(sequelize, DataTypes);
-export const Entry = mentry(sequelize, DataTypes);
-export const NFLPlayer = mnflplayer(sequelize, DataTypes);
-export const NFLPosition = mnflposition(sequelize, DataTypes);
-export const NFLTeam = mnflteam(sequelize, DataTypes);
-export const NFLGame = mnflgame(sequelize, DataTypes);
-export const Offer = moffer(sequelize, DataTypes);
-export const ProtectedMatch = mprotectedmatch(sequelize, DataTypes);
-export const PriceHistory = mpricehistory(sequelize, DataTypes);
-export const Trade = mtrade(sequelize, DataTypes);
-export const User = muser(sequelize, DataTypes);
+export const Contest = mcontest(sequelize);
+export const Entry = mentry(sequelize);
+export const NFLPlayer = mnflplayer(sequelize);
+export const NFLPosition = mnflposition(sequelize);
+export const NFLTeam = mnflteam(sequelize);
+export const NFLGame = mnflgame(sequelize);
+export const Offer = moffer(sequelize);
+export const ProtectedMatch = mprotectedmatch(sequelize);
+export const PriceHistory = mpricehistory(sequelize);
+export const Trade = mtrade(sequelize);
+export const User = muser(sequelize);
 
 Contest.hasMany(Entry);
 Entry.belongsTo(Contest);

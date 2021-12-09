@@ -1,4 +1,6 @@
-export default function model(sequelize, DataTypes) {
+import { DataTypes } from 'sequelize';
+
+export default function model(sequelize) {
   return sequelize.define('NFLTeam', {
     id: {
       type: DataTypes.INTEGER,

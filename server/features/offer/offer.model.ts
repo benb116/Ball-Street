@@ -1,7 +1,7 @@
-import Sequelize from 'sequelize';
+import Sequelize, { DataTypes } from 'sequelize';
 import { DefaultProtected } from '../../config';
 
-export default function model(sequelize, DataTypes) {
+export default function model(sequelize) {
   return sequelize.define('Offer', {
     id: {
       type: DataTypes.UUID,

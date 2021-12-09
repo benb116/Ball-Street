@@ -1,6 +1,7 @@
+import { DataTypes } from 'sequelize';
 import { FlexNFLPositionId } from '../../config';
 
-export default function out(sequelize, DataTypes) {
+export default function out(sequelize) {
   return sequelize.define('NFLPlayer', {
     id: {
       type: DataTypes.INTEGER,

@@ -1,6 +1,6 @@
-// TODO add more here
+import { DataTypes } from 'sequelize';
 
-export default function out(sequelize, DataTypes) {
+export default function out(sequelize) {
   return sequelize.define('User', {
     id: {
       type: DataTypes.INTEGER,
