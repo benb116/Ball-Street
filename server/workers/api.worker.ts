@@ -2,7 +2,6 @@ import express from 'express';
 import cors from 'cors';
 
 import session from '../middleware/session';
-import limiter from '../middleware/limiter';
 import logger from '../utilities/logger';
 
 import userRoute from '../features/user/user.route';
@@ -20,9 +19,6 @@ app.use(express.json());
 app.use(session);
 app.use(helmet());
 app.enable('trust proxy'); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
-if (isProduction) {
-  app.use(limiter);
-}
 
 // React proxy appends /app to the domain
 const routePrefix = (isProduction ? '' : '/app');
