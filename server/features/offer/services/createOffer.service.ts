@@ -72,7 +72,8 @@ async function createOffer(req: CreateOfferInput) {
         UserId: value.user,
         ContestId: value.params.contestID,
       },
-    }, tobj(t));
+      ...tobj(t),
+    });
     if (!theentry) { uError('No entry found', 404); }
 
     const playerdata = await NFLPlayer.findByPk(value.body.offerobj.nflplayerID, {
@@ -105,7 +106,8 @@ async function createOffer(req: CreateOfferInput) {
         [Op.or]: [{ HomeId: playerdata.NFLTeamId }, { AwayId: playerdata.NFLTeamId }],
         week: Number(process.env.WEEK),
       },
-    }, { transaction: t }).then(dv);
+      transaction: t,
+    }).then(dv);
     if (!gamedata) uError('Could not find game data for this player', 404);
     if (gamedata.phase !== 'mid') {
       uError("Can't make an offer before or after games", 406);
@@ -120,7 +122,6 @@ async function createOffer(req: CreateOfferInput) {
       protected: value.body.offerobj.protected || DefaultProtected,
     }, {
       transaction: t,
-      lock: t.LOCK.UPDATE,
     });
   })
     .then(dv).then((offer) => {

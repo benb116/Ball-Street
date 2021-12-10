@@ -67,7 +67,8 @@ async function tradeDrop(req: TradeDropInput, t: Transaction) {
       [Op.or]: [{ HomeId: playerdata.NFLTeamId }, { AwayId: playerdata.NFLTeamId }],
       week: Number(process.env.WEEK),
     },
-  }, { transaction: t }).then(dv);
+    transaction: t,
+  }).then(dv);
   if (!gamedata) uError('Could not find game data for this player', 404);
 
   if (value.body.price) {

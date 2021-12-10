@@ -74,8 +74,9 @@ async function reorderRoster(req: ReorderRosterInput) {
         UserId: value.user,
         ContestId: value.params.contestID,
       },
-    }, tobj(t));
-    if (!theentry) { uError('No entry found', 404); }
+      ...tobj(t),
+    });
+    if (!theentry) { return uError('No entry found', 404); }
 
     const entryVal: EntryType = dv(theentry);
     const playerIDin1 = entryVal[value.body.pos1];

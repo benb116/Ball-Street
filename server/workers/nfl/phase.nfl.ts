@@ -118,8 +118,9 @@ async function convertEntry(
         UserId: e.UserId,
         ContestId: e.ContestId,
       },
-    }, tobj(t));
-
+      ...tobj(t),
+    });
+    if (!theentry) return null;
     players.forEach((p) => {
       const pos = isPlayerOnRoster(dv(theentry), p.id);
       if (pos) {
@@ -132,6 +133,7 @@ async function convertEntry(
     });
 
     await theentry.save({ transaction: t });
+    return theentry;
   });
 }
 

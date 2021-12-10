@@ -1,6 +1,6 @@
 import { Sequelize, DataTypes } from 'sequelize';
 
-import { FlexNFLPositionId } from '../../config';
+import { NFLPosTypes } from '../../config';
 
 export interface NFLPlayerType {
   id: number,
@@ -15,6 +15,8 @@ export interface NFLPlayerType {
   createdAt: string,
   updatedAt: string,
 }
+
+const NFLPosIDs = Object.keys(NFLPosTypes);
 
 export default function out(sequelize: Sequelize) {
   return sequelize.define('NFLPlayer', {
@@ -43,9 +45,7 @@ export default function out(sequelize: Sequelize) {
       references: { model: 'NFLPositions' },
       allowNull: false,
       validate: {
-        isNotFlex(value: number) { // Make sure we never list a player as a true flex
-          if (value === FlexNFLPositionId) { throw new Error('Cannot have a NFLPlayer as a flex'); }
-        },
+        isIn: [NFLPosIDs],
       },
     },
     NFLTeamId: {
