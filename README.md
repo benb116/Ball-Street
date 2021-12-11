@@ -8,9 +8,9 @@ Join a contest with other users and create your entry. Before the week's games b
 
 ## How it works
 
-Ball Street is built using React on the frontend and Node.js on the backend. React and Redux make handling the Dashboard data straightforward, while Node excels at handling I/O heavy server tasks. Docker is used to containerize the various processes (see [docker-compose](https://github.com/benb116/Ball-Street/blob/master/docker-compose.yml)). Client-server communication takes place using REST api calls and websockets.
+Ball Street is built using React on the frontend and Node.js on the backend. React and Redux make handling the Dashboard data straightforward, while Node excels at handling I/O heavy server tasks. Docker is used to containerize the various processes (see [docker-compose](docker-compose.yml)). Client-server communication takes place using REST api calls and websockets.
 
-See [client](https://github.com/benb116/Ball-Street/blob/master/client) and [server](https://github.com/benb116/Ball-Street/blob/master/server) code
+See [client](client) and [server](server) code
 
 ## Tech stack
 
@@ -22,6 +22,7 @@ See [client](https://github.com/benb116/Ball-Street/blob/master/client) and [ser
 
 ### Backend
 * Node.js
+* Typescript
 * Express
 * Bull queues
 * Sequelize

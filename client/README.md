@@ -6,11 +6,9 @@
 * Account Verification
 * Login
 * Forgot Password
-
 * Account page
 * Contests
 * Contest 
-
 * Dashboard
   * Entry
   * Player List
