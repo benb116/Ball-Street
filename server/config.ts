@@ -45,7 +45,7 @@ export const Roster: Record<string, number> = {
 };
 export const FlexNFLPositionId = 99;
 Roster.FLEX1 = FlexNFLPositionId;
-Roster.FLEX1 = FlexNFLPositionId;
+Roster.FLEX2 = FlexNFLPositionId;
 RosterPosTypes.FLEX.id = FlexNFLPositionId;
 
 export const rposList = Object.keys(Roster);

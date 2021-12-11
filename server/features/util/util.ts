@@ -50,7 +50,7 @@ export const isPlayerOnRoster = function isPlayerOnRoster(
 // Is the spot open AND is the player type valid
 export const isOpenRoster = function isOpenRoster(theentry: EntryType, playerType: number) {
   for (let i = 0; i < rpos.length; i++) {
-    if (theentry[rpos[i]] === null && !(isInvalidSpot(playerType, rpos[i]))) {
+    if (theentry[rpos[i]] === null && !isInvalidSpot(playerType, rpos[i])) {
       return rpos[i];
     }
   }
@@ -124,9 +124,9 @@ export const ErrorTest = function ErrorTest(
       console.log(o);
       throw new Error('Unexpected pass');
     } catch (err: any) {
+      // eslint-disable-next-line no-console
       if (!err.status) { console.log(err); }
       const uerr: UError = err;
-      // eslint-disable-next-line no-console
       expect(uerr.message).toEqual(message);
       expect(uerr.status).toEqual(statusNumber);
     }

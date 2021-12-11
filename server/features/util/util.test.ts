@@ -23,5 +23,23 @@ describe('util testing', () => {
     expect(isOpenRoster(theentry, 5)).toBe(false);
     expect(isOpenRoster(theentry, 1)).toBe('QB1');
     expect(isOpenRoster(theentry, 2)).toBe('RB2');
+    const theentry2 = {
+      pointtotal: 4500,
+      UserId: 2,
+      ContestId: 1,
+      QB1: 30123,
+      RB1: 33138,
+      RB2: 30180,
+      WR1: null,
+      WR2: null,
+      TE1: null,
+      FLEX1: 32736,
+      FLEX2: null,
+      K1: null,
+      DEF1: 33,
+      createdAt: '2021-12-11T23:11:00.568Z',
+      updatedAt: '2021-12-11T23:16:06.276Z',
+    };
+    expect(isOpenRoster(theentry2, 2)).toBe('FLEX2');
   });
 });
