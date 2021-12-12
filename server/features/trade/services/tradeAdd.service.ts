@@ -45,7 +45,6 @@ interface TradeAddInput extends ServiceInput {
 async function tradeAdd(req: TradeAddInput, t: Transaction) {
   const value: TradeAddInput = validate(req, schema);
 
-  const theplayer = value.body.nflplayerID;
   // Get user entry
   const theentry = await Entry.findOne({
     where: {
@@ -55,18 +54,19 @@ async function tradeAdd(req: TradeAddInput, t: Transaction) {
     transaction: t,
     lock: t.LOCK.UPDATE,
   });
-
   if (!theentry) { return uError('No entry found', 404); }
-  const entryVal: EntryType = dv(theentry);
+  const entryValues: EntryType = dv(theentry);
+
   // Determine if user already has player on roster
-  const isOnTeam = isPlayerOnRoster(entryVal, theplayer);
+  const theplayer = value.body.nflplayerID;
+  const isOnTeam = isPlayerOnRoster(entryValues, theplayer);
   if (isOnTeam) { uError('Player is on roster', 406); }
 
-  const pts = entryVal.pointtotal;
+  const pts = entryValues.pointtotal;
   // console.log("POINTS", pts);
 
   // Get player price and position
-  const playerdata: NFLPlayerType = await NFLPlayer.findByPk(theplayer, { transaction: t }).then(dv);
+  const playerdata: NFLPlayerType = await NFLPlayer.findByPk(theplayer).then(dv);
   if (!playerdata || !playerdata.active) { uError('Player not found', 404); }
 
   const playerType = playerdata.NFLPositionId;
@@ -75,7 +75,7 @@ async function tradeAdd(req: TradeAddInput, t: Transaction) {
     const isinvalid = isInvalidSpot(playerType, value.body.rosterposition);
     if (isinvalid) { uError(isinvalid, 406); }
     // Is it an empty one?
-    if (entryVal[value.body.rosterposition] !== null) {
+    if (entryValues[value.body.rosterposition] !== null) {
       uError('There is a player in that spot', 406);
     }
     const newSet: Record<string, number> = {};
@@ -83,7 +83,7 @@ async function tradeAdd(req: TradeAddInput, t: Transaction) {
     theentry.set(newSet);
   } else {
     // Find an open spot
-    const isOpen = isOpenRoster(entryVal, playerType);
+    const isOpen = isOpenRoster(entryValues, playerType);
     if (!isOpen) {
       uError('There are no open spots', 406);
     } else {
@@ -99,26 +99,26 @@ async function tradeAdd(req: TradeAddInput, t: Transaction) {
       [Op.or]: [{ HomeId: playerdata.NFLTeamId }, { AwayId: playerdata.NFLTeamId }],
       week: Number(process.env.WEEK),
     },
-    transaction: t,
   }).then(dv);
   if (!gamedata) uError('Could not find game data for this player', 404);
 
+  // Determine price at which to trade
+  let tradeprice: number;
   if (!value.body.price) {
-    if (gamedata.phase !== 'pre') {
-      uError("Can't add during or after games", 406);
-    }
+    if (gamedata.phase !== 'pre') uError("Can't add during or after games", 406);
+    if (!playerdata.preprice) return uError('Player has no preprice', 500);
+    tradeprice = playerdata.preprice;
   } else if (gamedata.phase !== 'mid') {
-    uError("Can't trade before or after games", 406);
+    return uError("Can't trade before or after games", 406);
+  } else {
+    tradeprice = value.body.price;
   }
 
-  const tradeprice = value.body.price || playerdata.preprice;
-  // Checks
-  if (!tradeprice) { uError('Player has no preprice', 500); }
   if (tradeprice > pts) { uError("User doesn't have enough points", 402); }
 
   // Deduct cost from points
   theentry.set({
-    pointtotal: entryVal.pointtotal -= tradeprice,
+    pointtotal: entryValues.pointtotal -= tradeprice,
   });
 
   await theentry.save({ transaction: t });

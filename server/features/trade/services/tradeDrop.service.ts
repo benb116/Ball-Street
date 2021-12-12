@@ -40,8 +40,6 @@ interface TradeDropInput extends ServiceInput {
 async function tradeDrop(req: TradeDropInput, t: Transaction) {
   const value: TradeDropInput = validate(req, schema);
 
-  const theplayer = value.body.nflplayerID;
-
   // Remove from roster
   const theentry = await Entry.findOne({
     where: {
@@ -52,16 +50,17 @@ async function tradeDrop(req: TradeDropInput, t: Transaction) {
     lock: t.LOCK.UPDATE,
   });
   if (!theentry) { return uError('No entry found', 404); }
-  const entryVal: EntryType = dv(theentry);
+  const entryValues: EntryType = dv(theentry);
 
-  const isOnTeam = isPlayerOnRoster(entryVal, theplayer);
-  if (!isOnTeam) { uError('Player is not on roster', 406); }
+  const theplayer = value.body.nflplayerID;
+  const isOnTeam = isPlayerOnRoster(entryValues, theplayer);
+  if (!isOnTeam) { return uError('Player is not on roster', 406); }
   const newSet: Record<string, null> = {};
   newSet[isOnTeam] = null;
   theentry.set(newSet);
 
   // How much to add to point total
-  const playerdata: NFLPlayerType = await NFLPlayer.findByPk(theplayer, { transaction: t }).then(dv);
+  const playerdata: NFLPlayerType = await NFLPlayer.findByPk(theplayer).then(dv);
   if (!playerdata || !playerdata.active) { uError('Player not found', 404); }
 
   // Get player price and position
@@ -70,26 +69,23 @@ async function tradeDrop(req: TradeDropInput, t: Transaction) {
       [Op.or]: [{ HomeId: playerdata.NFLTeamId }, { AwayId: playerdata.NFLTeamId }],
       week: Number(process.env.WEEK),
     },
-    transaction: t,
   }).then(dv);
   if (!gamedata) uError('Could not find game data for this player', 404);
 
+  // Determine price at which to trade
+  let tradeprice: number;
   if (value.body.price) {
-    if (gamedata.phase !== 'mid') {
-      uError("Can't trade before or after games", 406);
-    }
-    theentry.set({
-      pointtotal: entryVal.pointtotal += value.body.price,
-    });
+    if (gamedata.phase !== 'mid') return uError("Can't trade before or after games", 406);
+    tradeprice = value.body.price;
   } else {
-    if (gamedata.phase !== 'pre') {
-      uError("Can't drop during or after games", 406);
-    }
-    theentry.set({
-      pointtotal: entryVal.pointtotal += playerdata.preprice,
-    });
+    if (gamedata.phase !== 'pre') return uError("Can't drop during or after games", 406);
+    if (!playerdata.preprice) return uError('Player has no preprice', 500);
+    tradeprice = playerdata.preprice;
   }
 
+  theentry.set({
+    pointtotal: entryValues.pointtotal += tradeprice,
+  });
   await theentry.save({ transaction: t });
 
   return theentry;

@@ -7,7 +7,7 @@ export const REDIS_PORT = (Number(process.env.REDIS_PORT) || 6379);
 
 const connObj = {
   url: `redis://${REDIS_HOST}:${REDIS_PORT}`,
-  socket: { connectTimeout: 10000 },
+  socket: { connectTimeout: 15000 },
 };
 export const client = createClient(connObj);
 client.connect();

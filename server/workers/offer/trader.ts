@@ -23,14 +23,14 @@ const isoOption = {
 const { offerFilled, priceUpdate, offerCancelled } = channels;
 
 // Try to fill the offers or return which one is done
-async function fillOffers(bidid: string, askid: string, price = false) {
+async function fillOffers(bidid: string, askid: string) {
   logger.info(`begin trade: ${bidid} ${askid}`);
   const out = sequelize.transaction(isoOption,
-    async (t) => attemptFill(t, bidid, askid, price));
+    async (t) => attemptFill(t, bidid, askid));
   return out;
 }
 
-async function attemptFill(t: Transaction, bidid: string, askid: string, tprice: boolean) {
+async function attemptFill(t: Transaction, bidid: string, askid: string) {
   let isBidClosed = false;
   let isAskClosed = false;
   // Check that both offers are valid
@@ -63,15 +63,14 @@ async function attemptFill(t: Transaction, bidid: string, askid: string, tprice:
   }
 
   if (aoffer.price > boffer.price) throw new Error('Price mismatch');
+  if (aoffer.ContestId !== boffer.ContestId) throw new Error('Contest mismatch');
+  if (aoffer.NFLPlayerId !== boffer.NFLPlayerId) throw new Error('Player mismatch');
 
   const biduser = boffer.UserId;
   const askuser = aoffer.UserId;
   const nflplayerID = boffer.NFLPlayerId;
 
-  let price = Number(tprice);
-  if (!tprice) {
-    price = (boffer.createdAt < aoffer.createdAt ? boffer.price : aoffer.price);
-  }
+  const price = (boffer.createdAt < aoffer.createdAt ? boffer.price : aoffer.price);
 
   const bidreq = {
     user: biduser,

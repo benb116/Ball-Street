@@ -5,7 +5,7 @@ import { dv, validate, uError } from '../../util/util';
 import errorHandler, { ServiceInput } from '../../util/util.service';
 import validators from '../../util/util.schema';
 import Contest from '../../contest/contest.model';
-import Entry from '../entry.model';
+import Entry, { EntryCreateType } from '../entry.model';
 
 const schema = Joi.object({
   user: validators.user,
@@ -31,7 +31,7 @@ async function createEntry(req: CreateEntryInput) {
   const theweek = Number(process.env.WEEK);
   if (theweek !== thecontest.nflweek) uError('Incorrect week', 406);
 
-  const obj = {
+  const obj: EntryCreateType = {
     UserId: value.user,
     ContestId: value.params.contestID,
     pointtotal: thecontest.budget,

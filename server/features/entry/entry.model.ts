@@ -35,12 +35,11 @@ export interface EntryType {
   ContestId: number,
   [key: string]: any,
 }
-
 export interface EntryIncludeUser extends EntryType {
   User: UserType
 }
 
-type EntryCreateType = Optional<EntryType, 'id'>;
+export type EntryCreateType = Optional<EntryType, 'id'>;
 
 const Entry: ModelDefined<EntryType, EntryCreateType> = sequelize.define('Entry', model());
 

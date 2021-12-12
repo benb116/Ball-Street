@@ -43,7 +43,9 @@ async function init() {
   // Calculate latest point values and push
   logger.info('Calculating point values');
   SetValues(CalcValues(newlines, gamesChanged));
-
+  // Pull injury information and send updates
+  logger.info('Pull Injury info');
+  await PullLatestInjuries();
   logger.info('NFL worker initialized');
 }
 

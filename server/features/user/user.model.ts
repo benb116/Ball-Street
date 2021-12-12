@@ -11,7 +11,7 @@ export interface UserType {
 
 export type UserTypePWHash = Required<UserType>;
 
-type UserCreateType = Optional<UserTypePWHash, 'id'>;
+export type UserCreateType = Optional<UserTypePWHash, 'id'>;
 
 const User: ModelDefined<UserType, UserCreateType> = sequelize.define('User', {
   id: {
