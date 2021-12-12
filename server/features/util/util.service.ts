@@ -12,8 +12,6 @@ export interface ServiceInput {
   body: Record<string, any>,
 }
 
-export type ServiceType = (inp: any) => Promise<any>;
-
 export default function errorHandler(responseMap: Record<string, ErrorRespType>) {
   return function errorHandlerInner(err: any) {
     const outmess = (responseMap.default || 'Unexpected error');

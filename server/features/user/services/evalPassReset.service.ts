@@ -4,8 +4,8 @@ import Joi from 'joi';
 import { validate, uError, OnCompare } from '../../util/util';
 import { rediskeys, client } from '../../../db/redis';
 import { verificationTokenLength } from '../../../config';
-import { User } from '../../../models';
 import validators from '../../util/util.schema';
+import User from '../user.model';
 
 const schema = Joi.object({
   token: Joi.string().length(verificationTokenLength).required().messages({

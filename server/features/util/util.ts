@@ -4,7 +4,6 @@ import { Model, Transaction } from 'sequelize';
 import { FlexNFLPositionId, NFLPosTypes, Roster } from '../../config';
 import logger from '../../utilities/logger';
 import { EntryType } from '../entry/entry.model';
-import { ServiceType } from './util.service';
 
 const rpos = Object.keys(Roster);
 
@@ -89,6 +88,8 @@ export const validate = function validate(input: Record<string, any>, schema: Sc
   if (error) { uError(error.details[0].message, 400); }
   return value;
 };
+
+export type ServiceType = (inp: any) => Promise<any>;
 
 // Functions used in Jest testing
 // Ensures that a service call returns an object with specific properties

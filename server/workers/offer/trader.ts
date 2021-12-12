@@ -6,14 +6,15 @@ import { Transaction } from 'sequelize';
 import { dv, tobj } from '../../features/util/util';
 
 import sequelize from '../../db';
-import { Offer, Trade, PriceHistory } from '../../models';
 import { rediskeys, client } from '../../db/redis';
 
 import logger from '../../utilities/logger';
 import channels from '../live/channels.live';
 import tradeAdd from '../../features/trade/services/tradeAdd.service';
 import tradeDrop from '../../features/trade/services/tradeDrop.service';
-import { OfferType } from '../../features/offer/offer.model';
+import Offer, { OfferType } from '../../features/offer/offer.model';
+import Trade from '../../features/trade/trade.model';
+import PriceHistory from '../../features/pricehistory/pricehistory.model';
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ

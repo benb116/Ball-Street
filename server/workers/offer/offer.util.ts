@@ -2,11 +2,10 @@ import { dv } from '../../features/util/util';
 import Book from './book.class';
 import { rediskeys, client } from '../../db/redis';
 
-import { Offer, ProtectedMatch } from '../../models';
 import logger from '../../utilities/logger';
 import priceUpdate from '../live/channels/priceUpdate.channel';
-import { OfferType } from '../../features/offer/offer.model';
-import { ProtectedMatchType } from '../../features/protectedmatch/protectedmatch.model';
+import Offer, { OfferType } from '../../features/offer/offer.model';
+import ProtectedMatch, { ProtectedMatchType } from '../../features/protectedmatch/protectedmatch.model';
 
 // Access the correct book or make one if necessary
 export function getBook(

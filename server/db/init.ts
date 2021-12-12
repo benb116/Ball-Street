@@ -2,11 +2,10 @@
 
 import { Sequelize } from 'sequelize';
 import { RosterPosTypes } from '../config';
-import {
-  NFLPosition,
-  NFLTeam,
-  NFLPlayer,
-} from '../models';
+import NFLPlayer from '../features/nflplayer/nflplayer.model';
+import NFLPosition from '../features/nflposition/nflposition.model';
+import NFLTeam from '../features/nflteam/nflteam.model';
+
 import teams from '../nflinfo';
 import logger from '../utilities/logger';
 import scrape from './playerscraper';

@@ -1,13 +1,11 @@
 // Set up example DB records for use in testing
 
-import {
-  Contest,
-  User,
-  Entry,
-  Offer,
-  Trade,
-  NFLGame,
-} from '../models';
+import Contest from '../features/contest/contest.model';
+import Entry from '../features/entry/entry.model';
+import NFLGame from '../features/nflgame/nflgame.model';
+import Offer from '../features/offer/offer.model';
+import Trade from '../features/trade/trade.model';
+import User from '../features/user/user.model';
 import logger from '../utilities/logger';
 
 async function PopulateDB() {

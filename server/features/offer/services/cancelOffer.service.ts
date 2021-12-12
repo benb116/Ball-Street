@@ -8,9 +8,8 @@ import validators from '../../util/util.schema';
 import { queueOptions } from '../../../db/redis';
 
 import sequelize from '../../../db';
-import { Offer } from '../../../models';
 import { ServiceInput } from '../../util/util.service';
-import { OfferType } from '../offer.model';
+import Offer, { OfferType } from '../offer.model';
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ

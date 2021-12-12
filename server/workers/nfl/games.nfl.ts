@@ -2,8 +2,8 @@ import axios from 'axios';
 import logger from '../../utilities/logger';
 import setPhase from './phase.nfl';
 import state from './state.nfl';
-import { NFLGame } from '../../models';
 import teams from '../../nflinfo';
+import NFLGame from '../../features/nflgame/nflgame.model';
 
 const teamIDs = Object.values(teams).map((t) => t.id, [] as number[]);
 

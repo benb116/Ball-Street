@@ -7,8 +7,8 @@ import { dv, onlyUnique } from '../features/util/util';
 import { rediskeys, client } from '../db/redis';
 import getNFLPlayers from '../features/nflplayer/services/getNFLPlayers.service';
 import getWeekEntries from '../features/entry/services/getWeekEntries.service';
-import { NFLGame } from '../models';
 import leaderUpdate from './live/channels/leaderUpdate.channel';
+import NFLGame, { NFLGameType } from '../features/nflgame/nflgame.model';
 
 const { projpriceHash, leaderHash } = rediskeys;
 const rosterPositions = Object.keys(Roster);
@@ -41,7 +41,7 @@ let phaseHold = false;
 
 async function calculateLeaderboard() {
   // Get current game phases (used to determine which point value to use)
-  const gamelist = await NFLGame.findAll({ where: { week: Number(process.env.WEEK) } }).then(dv);
+  const gamelist: NFLGameType[] = await NFLGame.findAll({ where: { week: Number(process.env.WEEK) } }).then(dv);
   // Are all games in pre or post phase
   interface GameItem {
     phase: string,
@@ -54,7 +54,7 @@ async function calculateLeaderboard() {
   phaseHold = newphaseHold;
 
   interface PhaseMap {
-    [key: number]: string,
+    [key: string]: string,
   }
   // Which phase is a given team in
   gamePhase = gamelist.reduce((acc: PhaseMap, cur: GameItem) => {

@@ -5,8 +5,7 @@
 
 import { Request, Response } from 'express';
 import { client } from '../../db/redis';
-import { UError } from './util';
-import { ServiceType } from './util.service';
+import { ServiceType, UError } from './util';
 
 function routeHandler(service: ServiceType, cacheExpiry = 0) {
   return async function routeHandlerInner(req: Request, res: Response) {

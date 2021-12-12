@@ -2,9 +2,9 @@ import { Op } from 'sequelize';
 
 import { dv } from '../../util/util';
 
-import { Entry, Contest, User } from '../../../models';
-import { EntryIncludeUser } from '../entry.model';
-import { ContestType } from '../../contest/contest.model';
+import Entry, { EntryIncludeUser } from '../entry.model';
+import Contest, { ContestType } from '../../contest/contest.model';
+import User from '../../user/user.model';
 
 async function getWeekEntries() {
   const weekcontests: ContestType[] = await Contest.findAll({

@@ -3,8 +3,8 @@ import Joi from 'joi';
 import { dv, validate, uError } from '../../util/util';
 import validators from '../../util/util.schema';
 
-import { NFLPlayer } from '../../../models';
 import { ServiceInput } from '../../util/util.service';
+import NFLPlayer, { NFLPlayerType } from '../nflplayer.model';
 
 const schema = Joi.object({
   user: validators.user,
@@ -24,7 +24,7 @@ interface GetNFLPlayerInput extends ServiceInput {
 async function getNFLPlayer(req: GetNFLPlayerInput) {
   const value: GetNFLPlayerInput = validate(req, schema);
 
-  const theplayer = await NFLPlayer.findOne({
+  const theplayer: NFLPlayerType = await NFLPlayer.findOne({
     where: {
       id: value.params.nflplayerID,
       active: true,

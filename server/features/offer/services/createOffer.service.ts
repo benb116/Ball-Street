@@ -9,12 +9,13 @@ import {
 import validators from '../../util/util.schema';
 
 import sequelize from '../../../db';
-import {
-  Offer, Entry, NFLPlayer, NFLGame,
-} from '../../../models';
 import { queueOptions } from '../../../db/redis';
 
 import errorHandler, { ServiceInput } from '../../util/util.service';
+import Entry, { EntryType } from '../../entry/entry.model';
+import NFLPlayer, { NFLPlayerType } from '../../nflplayer/nflplayer.model';
+import NFLGame, { NFLGameType } from '../../nflgame/nflgame.model';
+import Offer from '../offer.model';
 
 const offerQueue = new Queue('offer-queue', queueOptions);
 
@@ -75,33 +76,34 @@ async function createOffer(req: CreateOfferInput) {
       ...tobj(t),
     });
     if (!theentry) { uError('No entry found', 404); }
+    const entryData: EntryType = dv(theentry);
 
-    const playerdata = await NFLPlayer.findByPk(value.body.offerobj.nflplayerID, {
+    const playerdata: NFLPlayerType = await NFLPlayer.findByPk(value.body.offerobj.nflplayerID, {
       attributes: ['NFLPositionId', 'NFLTeamId', 'active'],
       transaction: t,
     }).then(dv);
     if (!playerdata || !playerdata.active) { uError('Player not found', 404); }
 
     // Player should be in entry for ask, not for bid
-    const isOnTeam = isPlayerOnRoster(dv(theentry), value.body.offerobj.nflplayerID);
+    const isOnTeam = isPlayerOnRoster(entryData, value.body.offerobj.nflplayerID);
     if (!value.body.offerobj.isbid) {
       if (!isOnTeam) { uError('Player is not on roster', 404); }
     } else {
       if (isOnTeam) { uError('Player is on roster already', 409); }
 
-      const pts = dv(theentry).pointtotal;
+      const pts = entryData.pointtotal;
       if (value.body.offerobj.price > pts) {
         uError("User doesn't have enough points to offer", 402);
       }
       // Only allow offer if there's currently room on the roster
       // TODO make linked offers? I.e. sell player at market price to make room for other player
-      if (!isOpenRoster(dv(theentry), playerdata.NFLPositionId)) {
+      if (!isOpenRoster(entryData, playerdata.NFLPositionId)) {
         uError('There are no spots this player could fit into', 409);
       }
     }
 
     // Get player price and position
-    const gamedata = await NFLGame.findOne({
+    const gamedata: NFLGameType = await NFLGame.findOne({
       where: {
         [Op.or]: [{ HomeId: playerdata.NFLTeamId }, { AwayId: playerdata.NFLTeamId }],
         week: Number(process.env.WEEK),

@@ -2,9 +2,10 @@ import Joi from 'joi';
 
 import { dv, validate, uError } from '../../util/util';
 
-import { Entry, Contest } from '../../../models';
 import errorHandler, { ServiceInput } from '../../util/util.service';
 import validators from '../../util/util.schema';
+import Contest from '../../contest/contest.model';
+import Entry from '../entry.model';
 
 const schema = Joi.object({
   user: validators.user,

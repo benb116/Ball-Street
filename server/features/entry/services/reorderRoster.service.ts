@@ -6,10 +6,10 @@ import {
 import { FlexNFLPositionId, NFLPosTypes, Roster } from '../../../config';
 
 import sequelize from '../../../db';
-import { Entry, NFLPlayer } from '../../../models';
 import errorHandler, { ServiceInput } from '../../util/util.service';
 import validators from '../../util/util.schema';
-import { EntryType } from '../entry.model';
+import Entry, { EntryType } from '../entry.model';
+import NFLPlayer, { NFLPlayerType } from '../../nflplayer/nflplayer.model';
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
@@ -88,7 +88,8 @@ async function reorderRoster(req: ReorderRosterInput) {
     }
 
     if (playerIDin1) {
-      const player1 = await NFLPlayer.findByPk(playerIDin1).then(dv);
+      const player1: NFLPlayerType = await NFLPlayer.findByPk(playerIDin1).then(dv);
+      if (!player1) return uError('No player found', 404);
       if (player1.NFLPositionId !== postype2) {
         if (postype2 !== FlexNFLPositionId || !NFLPosTypes[player1.NFLPositionId].canflex) {
           uError('Cannot put that player in that position', 406);
@@ -96,7 +97,8 @@ async function reorderRoster(req: ReorderRosterInput) {
       }
     }
     if (playerIDin2) {
-      const player2 = await NFLPlayer.findByPk(playerIDin2).then(dv);
+      const player2: NFLPlayerType = await NFLPlayer.findByPk(playerIDin2).then(dv);
+      if (!player2) return uError('No player found', 404);
       if (player2.NFLPositionId !== postype1) {
         if (postype1 !== FlexNFLPositionId || !NFLPosTypes[player2.NFLPositionId].canflex) {
           uError('Cannot put that player in that position', 406);

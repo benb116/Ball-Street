@@ -2,7 +2,7 @@
 // Find changes and send out updates
 
 import axios from 'axios';
-import { NFLPlayer } from '../../models';
+import NFLPlayer from '../../features/nflplayer/nflplayer.model';
 import injuryUpdate, { InjuryUpdateType } from '../live/channels/injuryUpdate.channel';
 import state from './state.nfl';
 

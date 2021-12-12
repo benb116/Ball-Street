@@ -1,11 +1,8 @@
 import { dv } from '../../util/util';
-
-import { Contest } from '../../../models';
-import { ContestType } from '../contest.model';
+import Contest from '../contest.model';
 
 async function getContests() {
-  const allcontests: ContestType[] = await Contest.findAll().then(dv);
-  return allcontests;
+  return Contest.findAll().then(dv);
 }
 
 export default getContests;

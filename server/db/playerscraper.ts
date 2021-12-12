@@ -4,7 +4,7 @@
 // Pull player data from an API
 import axios from 'axios';
 import { RosterPosTypes } from '../config';
-import { NFLPlayer } from '../models';
+import NFLPlayer, { NFLPlayerCreateType } from '../features/nflplayer/nflplayer.model';
 import teams from '../nflinfo';
 import secret from '../secret';
 
@@ -62,7 +62,7 @@ async function sendreq(price: boolean, pagenum = 0, posget = 'O') {
         if (['P', 'Q', 'D'].indexOf(injuryStatus) === -1) injuryStatus = 'O';
       }
       // Player object that will be added to DB
-      return {
+      const outobj: NFLPlayerCreateType = {
         id: (posget === 'DEF' ? teams[team.toUpperCase()].id : Number(id)),
         name,
         NFLTeamId: teams[team.toUpperCase()].id,
@@ -72,9 +72,10 @@ async function sendreq(price: boolean, pagenum = 0, posget = 'O') {
         active: true,
         injuryStatus,
       };
+      return outobj;
     }))
     // If player exists in DB, overwrite certain properties
-    .then((objs) => NFLPlayer.bulkCreate(objs, { updateOnDuplicate: ['preprice', 'postprice', 'NFLTeamId', 'active', 'injuryStatus'] }));
+    .then((objs: NFLPlayerCreateType[]) => NFLPlayer.bulkCreate(objs, { updateOnDuplicate: ['preprice', 'postprice', 'NFLTeamId', 'active', 'injuryStatus'] }));
 }
 
 export default scrape;

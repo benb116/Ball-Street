@@ -1,12 +1,14 @@
 import Joi from 'joi';
 
 import { Op, Transaction } from 'sequelize';
+import Entry, { EntryType } from '../../entry/entry.model';
+import NFLGame, { NFLGameType } from '../../nflgame/nflgame.model';
+import NFLPlayer, { NFLPlayerType } from '../../nflplayer/nflplayer.model';
 import {
   dv, validate, uError, isPlayerOnRoster, isOpenRoster, isInvalidSpot,
 } from '../../util/util';
 import validators from '../../util/util.schema';
 
-import { Entry, NFLPlayer, NFLGame } from '../../../models';
 import { ServiceInput } from '../../util/util.service';
 
 const schema = Joi.object({
@@ -55,15 +57,16 @@ async function tradeAdd(req: TradeAddInput, t: Transaction) {
   });
 
   if (!theentry) { return uError('No entry found', 404); }
+  const entryVal: EntryType = dv(theentry);
   // Determine if user already has player on roster
-  const isOnTeam = isPlayerOnRoster(dv(theentry), theplayer);
+  const isOnTeam = isPlayerOnRoster(entryVal, theplayer);
   if (isOnTeam) { uError('Player is on roster', 406); }
 
-  const pts = dv(theentry).pointtotal;
+  const pts = entryVal.pointtotal;
   // console.log("POINTS", pts);
 
   // Get player price and position
-  const playerdata = await NFLPlayer.findByPk(theplayer, { transaction: t }).then(dv);
+  const playerdata: NFLPlayerType = await NFLPlayer.findByPk(theplayer, { transaction: t }).then(dv);
   if (!playerdata || !playerdata.active) { uError('Player not found', 404); }
 
   const playerType = playerdata.NFLPositionId;
@@ -72,7 +75,7 @@ async function tradeAdd(req: TradeAddInput, t: Transaction) {
     const isinvalid = isInvalidSpot(playerType, value.body.rosterposition);
     if (isinvalid) { uError(isinvalid, 406); }
     // Is it an empty one?
-    if (dv(theentry)[value.body.rosterposition] !== null) {
+    if (entryVal[value.body.rosterposition] !== null) {
       uError('There is a player in that spot', 406);
     }
     const newSet: Record<string, number> = {};
@@ -80,7 +83,7 @@ async function tradeAdd(req: TradeAddInput, t: Transaction) {
     theentry.set(newSet);
   } else {
     // Find an open spot
-    const isOpen = isOpenRoster(dv(theentry), playerType);
+    const isOpen = isOpenRoster(entryVal, playerType);
     if (!isOpen) {
       uError('There are no open spots', 406);
     } else {
@@ -91,7 +94,7 @@ async function tradeAdd(req: TradeAddInput, t: Transaction) {
   }
 
   // Get player price and position
-  const gamedata = await NFLGame.findOne({
+  const gamedata: NFLGameType = await NFLGame.findOne({
     where: {
       [Op.or]: [{ HomeId: playerdata.NFLTeamId }, { AwayId: playerdata.NFLTeamId }],
       week: Number(process.env.WEEK),
@@ -115,7 +118,7 @@ async function tradeAdd(req: TradeAddInput, t: Transaction) {
 
   // Deduct cost from points
   theentry.set({
-    pointtotal: dv(theentry).pointtotal -= tradeprice,
+    pointtotal: entryVal.pointtotal -= tradeprice,
   });
 
   await theentry.save({ transaction: t });

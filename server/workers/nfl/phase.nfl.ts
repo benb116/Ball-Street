@@ -6,18 +6,16 @@ import {
   dv, tobj, validate, isPlayerOnRoster,
 } from '../../features/util/util';
 import { client } from '../../db/redis';
-import {
-  NFLPlayer, Entry, NFLGame, Contest,
-} from '../../models';
 
 import sequelize from '../../db';
 import logger from '../../utilities/logger';
 import state from './state.nfl';
 import { SumPoints } from './dict.nfl';
 import phaseChange from '../live/channels/phaseChange.channel';
-import { EntryType } from '../../features/entry/entry.model';
-import { NFLPlayerType } from '../../features/nflplayer/nflplayer.model';
-import { ContestType } from '../../features/contest/contest.model';
+import Entry, { EntryType } from '../../features/entry/entry.model';
+import NFLPlayer, { NFLPlayerType } from '../../features/nflplayer/nflplayer.model';
+import Contest, { ContestType } from '../../features/contest/contest.model';
+import NFLGame from '../../features/nflgame/nflgame.model';
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
@@ -83,6 +81,7 @@ async function convertTeamPlayers(teamID: number) {
     where: { nflweek: Number(process.env.WEEK) },
   }).then(dv)
     .then((contests: ContestType[]) => contests.map((c) => c.id));
+
   const allEntries: EntryType[] = await Entry.findAll({
     where: { ContestId: { [Op.or]: weekcontests } },
   }).then(dv);

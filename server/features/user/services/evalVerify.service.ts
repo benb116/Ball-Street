@@ -3,7 +3,7 @@ import Joi from 'joi';
 import { dv, validate, uError } from '../../util/util';
 import { rediskeys, client } from '../../../db/redis';
 import { verificationTokenLength } from '../../../config';
-import { User } from '../../../models';
+import User from '../user.model';
 
 const schema = Joi.object({
   token: Joi.string().length(verificationTokenLength).required().messages({

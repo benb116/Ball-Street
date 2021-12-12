@@ -1,6 +1,5 @@
-import { OfferType } from '../../features/offer/offer.model';
+import Offer, { OfferType } from '../../features/offer/offer.model';
 import { dv } from '../../features/util/util';
-import { Offer } from '../../models';
 import logger from '../../utilities/logger';
 import Book from './book.class';
 import { updateBest } from './offer.util';
@@ -18,7 +17,7 @@ async function evalProtected(playerBook: Book, proffer: string, neoffer: string)
   // Matching offer must not have been cancelled
   // Otherwise users could trigger and immediately cancel
   // to make every protOffer always ready to execute
-  const noffer = await Offer.findByPk(neoffer).then(dv);
+  const noffer: OfferType = await Offer.findByPk(neoffer).then(dv);
   if (!noffer || noffer.cancelled) {
     logger.info(`Matcher unavailable ${noffer.id}`);
     await playerBook.unmatch(poffer);

@@ -1,7 +1,9 @@
-import { Sequelize, DataTypes } from 'sequelize';
+import { DataTypes, ModelDefined, Optional } from 'sequelize';
+import sequelize from '../../db';
 
 import { Roster } from '../../config';
-import { UserType } from '../user/user.model';
+import User, { UserType } from '../user/user.model';
+import Contest from '../contest/contest.model';
 
 // The model has common columns (UserId, ContestId, pointtotal)
 // This script also generates columns based on the set roster in config
@@ -31,14 +33,16 @@ export interface EntryType {
   pointtotal: number,
   UserId: number,
   ContestId: number,
-  createdAt: string,
-  updatedAt: string,
   [key: string]: any,
 }
 
 export interface EntryIncludeUser extends EntryType {
   User: UserType
 }
+
+type EntryCreateType = Optional<EntryType, 'id'>;
+
+const Entry: ModelDefined<EntryType, EntryCreateType> = sequelize.define('Entry', model());
 
 function model() {
   const modelobj = {
@@ -48,12 +52,12 @@ function model() {
     },
     UserId: {
       type: DataTypes.INTEGER,
-      references: { model: 'Users' },
+      references: { model: User },
       primaryKey: true,
     },
     ContestId: {
       type: DataTypes.INTEGER,
-      references: { model: 'Contests' },
+      references: { model: Contest },
       primaryKey: true,
     },
   };
@@ -61,6 +65,7 @@ function model() {
   return { ...modelobj, ...rosterobj };
 }
 
-export default function out(sequelize: Sequelize) {
-  return sequelize.define('Entry', model());
-}
+Entry.belongsTo(User);
+Entry.belongsTo(Contest);
+
+export default Entry;

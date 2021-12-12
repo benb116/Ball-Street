@@ -1,10 +1,11 @@
 import Joi from 'joi';
+import Offer from '../../offer/offer.model';
 
 import { dv, validate } from '../../util/util';
 import validators from '../../util/util.schema';
 
-import { Offer, Trade } from '../../../models';
 import { ServiceInput } from '../../util/util.service';
+import Trade from '../trade.model';
 
 const schema = Joi.object({
   user: validators.user,
