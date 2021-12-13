@@ -11,32 +11,42 @@ services:
             - ./client:/home/node/app
 
     api:
-        command: nodemon dist/workers/api.worker.js
+        command: nodemon --inspect=0.0.0.0:9229 dist/workers/api.worker.js
         restart: unless-stopped
+        ports:
+            - 9229:9229
         volumes:
             - ./server/dist:/home/node/app/dist
     
     leader:
-        command: nodemon dist/workers/leader.worker.js
+        command: nodemon --inspect=0.0.0.0:9230 dist/workers/leader.worker.js
         restart: unless-stopped
+        ports:
+            - 9230:9230
         volumes:
             - ./server/dist:/home/node/app/dist
 
     offer:
-        command: nodemon dist/workers/offer.worker.js
+        command: nodemon --inspect=0.0.0.0:9231 dist/workers/offer.worker.js
         restart: unless-stopped
+        ports:
+            - 9231:9231
         volumes:
             - ./server/dist:/home/node/app/dist
 
     live:
-        command: nodemon dist/workers/live.worker.js
+        command: nodemon --inspect=0.0.0.0:9232 dist/workers/live.worker.js
         restart: unless-stopped
+        ports:
+            - 9232:9232
         volumes:
             - ./server/dist:/home/node/app/dist
 
     nfl:
-        command: nodemon dist/workers/nfl.worker.js
+        command: nodemon --inspect=0.0.0.0:9233 dist/workers/nfl.worker.js
         restart: unless-stopped
+        ports:
+            - 9233:9233
         volumes:
             - ./server/dist:/home/node/app/dist
 
