@@ -12,8 +12,7 @@ function routeHandler(service: ServiceType, cacheExpiry = 0) {
     try {
       // If a get request should be cached
       if (cacheExpiry && req.method === 'GET') {
-        // Check if it's been cached already
-        const cacheout = await client.GET(req.originalUrl);
+        const cacheout = await client.GET(cachekey(req.originalUrl));
         if (cacheout) {
           return res.send(cacheout);
         }
@@ -21,7 +20,7 @@ function routeHandler(service: ServiceType, cacheExpiry = 0) {
       const out = await service(stripReq(req));
       if (cacheExpiry && req.method === 'GET') {
         // Cache results
-        await client.SET(req.originalUrl, JSON.stringify(out), { EX: cacheExpiry });
+        client.SET(cachekey(req.originalUrl), JSON.stringify(out), { EX: cacheExpiry });
       }
       return res.json(out);
     } catch (err: any) {
@@ -29,6 +28,13 @@ function routeHandler(service: ServiceType, cacheExpiry = 0) {
       return res.status((uerr.status || 500)).json({ error: uerr.message || 'Unexpected error' });
     }
   };
+}
+
+function cachekey(url: string) {
+  let key = url;
+  if (url.slice(0, 4) === '/app') key = url.slice(4);
+  if (key.slice(0, 4) === '/api') key = key.slice(4);
+  return key;
 }
 
 // Strip extraneous info from input

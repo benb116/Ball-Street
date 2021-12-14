@@ -54,7 +54,7 @@ async function setPhase(teamID: number, newphase: string) {
     .then(() => {
       phaseChange.pub(teamID, newphase);
     })
-    .then(() => client.DEL('/app/auth/nfldata/games')); // Force a refresh of game data
+    .then(() => client.DEL('/nfldata/games')); // Force a refresh of game data
 }
 
 // Convert all players on a team in all entries to points

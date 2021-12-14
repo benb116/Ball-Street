@@ -11,7 +11,7 @@ const router = express.Router({ mergeParams: true });
 router.get('/', routeHandler(getNFLPlayers, 10));
 
 // Get all games
-router.get('/games', routeHandler(getNFLGames));
+router.get('/games', routeHandler(getNFLGames, 10));
 
 // Get a player's info
 router.get('/:nflplayerID', routeHandler(getNFLPlayer, 10));
