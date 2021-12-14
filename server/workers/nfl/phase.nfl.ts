@@ -31,7 +31,7 @@ const schema = Joi.object({
       'number.less': 'Team ID is invalid',
       'any.required': 'You must be specify a team',
     }),
-  newphase: Joi.any().valid('pre', 'mid', 'post').required(),
+  newphase: Joi.string().valid('pre', 'mid', 'post').required(),
 });
 
 // Mark a team's phase in the DB, then publish a change to clients
@@ -42,11 +42,8 @@ async function setPhase(teamID: number, newphase: string) {
 
   logger.info(`Team ${teamID} phase set to ${newphase}`);
 
-  return NFLGame.update({ phase: newphase }, {
-    where: {
-      [Op.or]: [{ HomeId: teamID }, { AwayId: teamID }],
-    },
-  })
+  return NFLGame.update({ phase: newphase },
+    { where: { [Op.or]: [{ HomeId: teamID }, { AwayId: teamID }] } })
     .then(() => {
       if (newphase === 'post') return convertTeamPlayers(teamID);
       return Promise.resolve();
@@ -68,7 +65,7 @@ async function convertTeamPlayers(teamID: number) {
 
   // Set postprice in database
   const statplayerObjs = teamPlayers.map(setPostPrice);
-  await NFLPlayer.bulkCreate(statplayerObjs, { updateOnDuplicate: ['postprice'] });
+  NFLPlayer.bulkCreate(statplayerObjs, { updateOnDuplicate: ['postprice'] });
 
   // Build statmap for use in conversion
   const statmap = statplayerObjs.reduce((acc: Record<string, number>, cur) => {
@@ -77,19 +74,18 @@ async function convertTeamPlayers(teamID: number) {
   }, {});
 
   // Find all of this weeks entries across contests
-  const weekcontests = await Contest.findAll({
-    where: { nflweek: Number(process.env.WEEK) },
-  }).then(dv)
+  const weekcontests = await Contest.findAll({ where: { nflweek: Number(process.env.WEEK) } }).then(dv)
     .then((contests: ContestType[]) => contests.map((c) => c.id));
 
-  const allEntries: EntryType[] = await Entry.findAll({
-    where: { ContestId: { [Op.or]: weekcontests } },
-  }).then(dv);
+  const allEntries: EntryType[] = await Entry.findAll({ where: { ContestId: { [Op.or]: weekcontests } } }).then(dv);
 
   // Filter for all entries with a player on this team
-  const teamEntries = allEntries
-    .filter((e) => teamPlayers
-      .reduce((acc: boolean, cur) => (acc || (isPlayerOnRoster(e, cur.id) !== '')), false));
+  const teamEntries = allEntries.filter(
+    (e) => teamPlayers.reduce(
+      (acc: boolean, cur) => (acc || (isPlayerOnRoster(e, cur.id) !== '')),
+      false,
+    ),
+  );
   // Run in series to reduce DB load
   for (let i = 0; i < teamEntries.length; i++) {
     // eslint-disable-next-line no-await-in-loop

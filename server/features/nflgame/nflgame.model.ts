@@ -10,7 +10,7 @@ export interface NFLGameType {
   startTime: number,
 }
 
-type NFLGameCreateType = Optional<NFLGameType, 'phase'>;
+export type NFLGameCreateType = Optional<NFLGameType, 'phase'>;
 
 const NFLGame: ModelDefined<NFLGameType, NFLGameCreateType> = sequelize.define('NFLGame', {
   week: {

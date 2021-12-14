@@ -2,7 +2,7 @@ import { client } from '../../../db/redis';
 import { sendToAll } from '../socket.live';
 
 export interface InjuryUpdateType {
-  [key: number]: string
+  [key: string]: string
 }
 
 const injuryUpdate = {
