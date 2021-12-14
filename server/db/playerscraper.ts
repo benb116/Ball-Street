@@ -8,6 +8,7 @@ import NFLPlayer, { NFLPlayerCreateType } from '../features/nflplayer/nflplayer.
 import teams from '../nflinfo';
 import secret from '../secret';
 
+// eslint-disable-next-line max-len
 const baseurl = (posget: string, weeknum: number) => `https://football.fantasysports.yahoo.com/f1/316236/players?status=ALL&pos=${posget}&cut_type=9&stat1=S_PW_${weeknum}&myteam=1&sort=PTS&sdir=1&count=`;
 const cookie = secret.yahooCookie;
 let currentweek = 3;
@@ -47,7 +48,8 @@ async function sendreq(price: boolean, pagenum = 0, posget = 'O') {
     .then((out) => out.map((playerline: string) => {
       // Pull out info
       const term = (posget === 'DEF' ? 'teams' : 'players');
-      const trimfront = playerline.split(`<a class="Nowrap name F-link" href="https://sports.yahoo.com/nfl/${term}/`)[1];
+      const trimfront = playerline
+        .split(`<a class="Nowrap name F-link" href="https://sports.yahoo.com/nfl/${term}/`)[1];
       const [id, idout] = trimfront.split('" target="_blank">');
       const [name, nameout] = idout.split('</a> <span class="Fz-xxs">');
       const [team, teamout] = nameout.split(' - ');
@@ -75,7 +77,8 @@ async function sendreq(price: boolean, pagenum = 0, posget = 'O') {
       return outobj;
     }))
     // If player exists in DB, overwrite certain properties
-    .then((objs: NFLPlayerCreateType[]) => NFLPlayer.bulkCreate(objs, { updateOnDuplicate: ['preprice', 'postprice', 'NFLTeamId', 'active', 'injuryStatus'] }));
+    .then((objs: NFLPlayerCreateType[]) => NFLPlayer
+      .bulkCreate(objs, { updateOnDuplicate: ['preprice', 'postprice', 'NFLTeamId', 'active', 'injuryStatus'] }));
 }
 
 export default scrape;

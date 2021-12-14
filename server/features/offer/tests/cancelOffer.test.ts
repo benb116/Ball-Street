@@ -5,7 +5,15 @@ describe('cancelOffer service', () => {
   test('Valid request returns cancelled offer', ObjectTest(
     service, { user: 1, params: { contestID: 1 }, body: { offerID: '16c94b61-3c76-4078-8fbc-67fac7ed26c2' } },
     {
-      ContestId: 1, NFLPlayerId: 31885, UserId: 1, cancelled: true, filled: false, id: '16c94b61-3c76-4078-8fbc-67fac7ed26c2', isbid: false, price: 8000, protected: false,
+      ContestId: 1,
+      NFLPlayerId: 31885,
+      UserId: 1,
+      cancelled: true,
+      filled: false,
+      id: '16c94b61-3c76-4078-8fbc-67fac7ed26c2',
+      isbid: false,
+      price: 8000,
+      protected: false,
     },
   ));
   test('Already cancelled returns error 406', ErrorTest(
