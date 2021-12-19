@@ -22,9 +22,6 @@ async function init() {
     logger.info('Scraping player data');
     await scrape().catch(logger.error);
   }
-  // Pull injury information and send updates
-  logger.info('Pull Injury info');
-  PullLatestInjuries();
   // What was a player's pre-game projection
   logger.info('Creating preProjMap');
   state.preProjObj = await pullPreProj();
@@ -40,13 +37,14 @@ async function init() {
     logger.info('Calculating point values');
     SetValues(CalcValues(newout, gameout));
   });
+  // Pull injury information and send updates
+  logger.info('Pull Injury info');
+  PullLatestInjuries();
   // logger.info('NFL worker initialized');
 }
 
 async function repeat() {
   state.playerTeamMap = await createPTMap().catch(() => state.playerTeamMap || {});
-  // Pull injury information and send updates
-  PullLatestInjuries();
   const gamesChanged = PullAllGames();
   // What are the latest stats?
   const newlines = PullAllStats();
@@ -54,6 +52,8 @@ async function repeat() {
   Promise.all([newlines, gamesChanged]).then(([newout, gameout]) => {
     SetValues(CalcValues(newout, gameout));
   });
+  // Pull injury information and send updates
+  PullLatestInjuries();
 }
 
 // Populate the playerTeamMap

@@ -3,6 +3,7 @@
 
 import axios from 'axios';
 import NFLPlayer from '../../features/nflplayer/nflplayer.model';
+import logger from '../../utilities/logger';
 import injuryUpdate, { InjuryUpdateType } from '../live/channels/injuryUpdate.channel';
 import state from './state.nfl';
 
@@ -32,7 +33,8 @@ export default async function PullLatestInjuries() {
       objs.map((o) => NFLPlayer.update({ injuryStatus: o.status }, {
         where: { id: o.nflplayerID },
       })),
-    ));
+    ))
+    .catch(logger.error);
 }
 
 interface InjuryDataType {

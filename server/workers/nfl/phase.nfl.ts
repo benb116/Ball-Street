@@ -42,20 +42,19 @@ async function setPhase(teamID: number, newphase: string) {
 
   logger.info(`Team ${teamID} phase set to ${newphase}`);
 
-  return NFLGame.update({ phase: newphase },
-    { where: { [Op.or]: [{ HomeId: teamID }, { AwayId: teamID }] } })
+  return NFLGame.update({ phase: newphase }, { where: { [Op.or]: [{ HomeId: teamID }, { AwayId: teamID }] } })
     .then(() => {
       if (newphase === 'post') return convertTeamPlayers(teamID);
       return Promise.resolve();
     })
-    .then(() => {
-      phaseChange.pub(teamID, newphase);
-    })
-    .then(() => client.DEL('/nfldata/games')); // Force a refresh of game data
+    .then(() => { phaseChange.pub(teamID, newphase); })
+    .then(() => client.DEL('/nfldata/games')) // Force a refresh of game data
+    .catch(logger.error);
 }
 
 // Convert all players on a team in all entries to points
 async function convertTeamPlayers(teamID: number) {
+  logger.info(`Converting players on team ${teamID}`);
   const teamPlayers: NFLPlayerType[] = await NFLPlayer.findAll({
     where: {
       NFLTeamId: teamID,
@@ -88,8 +87,7 @@ async function convertTeamPlayers(teamID: number) {
   );
   // Run in series to reduce DB load
   for (let i = 0; i < teamEntries.length; i++) {
-    // eslint-disable-next-line no-await-in-loop
-    await convertEntry(teamEntries[i], teamPlayers, statmap);
+    convertEntry(teamEntries[i], teamPlayers, statmap);
   }
 }
 
