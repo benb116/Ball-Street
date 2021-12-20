@@ -13,6 +13,8 @@ import getWeekEntries from '../features/entry/services/getWeekEntries.service';
 import leaderUpdate from './live/channels/leaderUpdate.channel';
 
 import NFLGame, { NFLGameType } from '../features/nflgame/nflgame.model';
+import { UserType } from '../features/user/user.model';
+import { EntryType } from '../features/entry/entry.model';
 
 const { projpriceHash, leaderHash } = rediskeys;
 const rosterPositions = Object.keys(Roster);
@@ -78,16 +80,20 @@ async function calculateLeaderboard() {
     userID: number,
     total: number,
   }
+  interface EntryWithUser extends EntryType {
+    User: UserType
+  }
   // Normalize as objects with balance, roster array, contests and user name
-  const normalizedEntries: EntryWithTotal[] = weekentries.map((e) => ({
+  const normalizedEntries: EntryWithTotal[] = weekentries.map((e: EntryWithUser) => ({
     balance: e.pointtotal,
     roster: rosterPositions.reduce((acc: number[], cur: string) => {
-      if (e[cur]) { acc.push(e[cur]); }
+      const thePlayer = e[cur];
+      if (typeof thePlayer === 'number') { acc.push(thePlayer); }
       return acc;
     }, []),
     contest: e.ContestId,
-    username: e.User.name,
-    userID: e.User.id,
+    username: (e.User ? e.User.name : ''),
+    userID: (e.User ? e.User.id : 0),
     total: 0,
   }));
   // console.log(normalizedEntries);

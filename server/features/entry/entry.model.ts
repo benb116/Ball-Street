@@ -1,3 +1,5 @@
+// A users entry into a contest
+// Stores number of points and which players are on the roster
 import { DataTypes, ModelDefined, Optional } from 'sequelize';
 import sequelize from '../../db';
 
@@ -34,10 +36,7 @@ export interface EntryType {
   pointtotal: number,
   UserId: number,
   ContestId: number,
-  [key: string]: any,
-}
-export interface EntryIncludeUser extends EntryType {
-  User: UserType
+  [key: string]: number | null | UserType,
 }
 
 export type EntryCreateType = Optional<EntryType, 'id'>;

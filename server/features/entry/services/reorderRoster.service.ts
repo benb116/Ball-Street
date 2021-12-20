@@ -85,31 +85,35 @@ async function reorderRoster(req: ReorderRosterInput) {
 
     // If both are empty, don't do anything
     if (!playerIDin1 && !playerIDin2) {
-      uError('No players found', 404);
+      return uError('No players found', 404);
     }
 
-    if (playerIDin1) {
+    // Can we move players into the other positions?
+    if (typeof playerIDin1 === 'number') {
       const player1: NFLPlayerType = await NFLPlayer.findByPk(playerIDin1).then(dv);
       if (!player1) return uError('No player found', 404);
       if (player1.NFLPositionId !== postype2) {
         if (postype2 !== FlexNFLPositionId || !NFLPosTypes[player1.NFLPositionId].canflex) {
-          uError('Cannot put that player in that position', 406);
+          return uError('Cannot put that player in that position', 406);
         }
       }
     }
-    if (playerIDin2) {
+    if (typeof playerIDin2 === 'number') {
       const player2: NFLPlayerType = await NFLPlayer.findByPk(playerIDin2).then(dv);
       if (!player2) return uError('No player found', 404);
       if (player2.NFLPositionId !== postype1) {
         if (postype1 !== FlexNFLPositionId || !NFLPosTypes[player2.NFLPositionId].canflex) {
-          uError('Cannot put that player in that position', 406);
+          return uError('Cannot put that player in that position', 406);
         }
       }
     }
+    const newSet: Record<string, number | null> = {};
+    if ((typeof playerIDin1 === 'number' || playerIDin1 === null)
+     && (typeof playerIDin2 === 'number' || playerIDin2 === null)) {
+      newSet[value.body.pos2] = playerIDin1;
+      newSet[value.body.pos1] = playerIDin2;
+    }
 
-    const newSet: Record<string, number> = {};
-    newSet[value.body.pos1] = playerIDin2;
-    newSet[value.body.pos2] = playerIDin1;
     theentry.set(newSet);
 
     await theentry.save({ transaction: t });

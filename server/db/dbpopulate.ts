@@ -53,11 +53,11 @@ async function PopulateDB() {
     UserId: i + 1, ContestId: 1, pointtotal: 10000, RB1: 31885,
   }));
   const entrs2 = [{
-    UserId: 1, ContestId: 2, pointtotal: 10000, RB1: 31885, K1: 30266, DEF1: 21,
+    UserId: 1, ContestId: 2, pointtotal: 10000, RB1: 31885, WR1: null, WR2: null, K1: 30266, DEF1: 21,
   }, {
-    UserId: 2, ContestId: 2, pointtotal: 1500, RB1: 31885, WR1: 32398, WR2: 28026, K1: 30266,
+    UserId: 2, ContestId: 2, pointtotal: 1500, RB1: 31885, WR1: 32398, WR2: 28026, K1: 30266, DEF1: null,
   }, {
-    UserId: 3, ContestId: 2, pointtotal: 500, RB1: 31885, K1: 30266,
+    UserId: 3, ContestId: 2, pointtotal: 500, RB1: 31885, WR1: null, WR2: null, K1: 30266, DEF1: null,
   }];
   await Entry.bulkCreate(entrs);
   await Entry.bulkCreate(entrs2);

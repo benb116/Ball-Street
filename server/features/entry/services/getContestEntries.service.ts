@@ -41,7 +41,8 @@ function getContestEntries(req: GetContestEntriesInput) {
         // For each roster position, see if theres a proj value and add it
         const projTotal = RosterPositions.reduce((acc, curPos) => {
           let newTotal = acc;
-          if (e[curPos]) newTotal += Number(projMap[e[curPos]]) || 0;
+          const thisPlayer = e[curPos];
+          if (typeof thisPlayer === 'number') newTotal += Number(projMap[thisPlayer]) || 0;
           return newTotal;
         }, e.pointtotal);
         return { ...e, projTotal };
