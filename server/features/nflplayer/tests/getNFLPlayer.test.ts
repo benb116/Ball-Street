@@ -12,6 +12,7 @@ describe('getNFLPlayer service', () => {
       postprice: 700,
       preprice: 1100,
       active: true,
+      injuryStatus: null,
     },
   ));
 
@@ -26,6 +27,7 @@ describe('getNFLPlayer service', () => {
       postprice: 700,
       preprice: 1100,
       active: true,
+      injuryStatus: null,
     },
   ));
 

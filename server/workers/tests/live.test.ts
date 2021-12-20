@@ -14,7 +14,10 @@ function getSessionID(email: string) {
       email,
       password: 'password1',
     },
-  }).then((resp) => resp.headers['set-cookie'][0].split(';')[0])
+  }).then((resp) => {
+    if (!resp.headers['set-cookie']) throw Error('No cookie');
+    return resp.headers['set-cookie'][0].split(';')[0];
+  })
     .catch((err) => {
       console.log(err);
       throw new Error('Could not init session');

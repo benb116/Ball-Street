@@ -38,7 +38,7 @@ async function scrape(price = false) {
 // Pull one page of players
 async function sendreq(price: boolean, pagenum = 0, posget = 'O') {
   // Send request
-  return axios.get(baseurl(posget, currentweek) + pagenum * 25, { headers: { cookie } })
+  return axios.get(baseurl(posget, currentweek) + pagenum * 25, { headers: { cookie: cookie || '' } })
   // Clean up HTML response
     .then((res) => res.data.split('<tbody>')[1])
     .then((res) => res.split('</tbody>')[0])
