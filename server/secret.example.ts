@@ -6,8 +6,6 @@ const secret = {
     port: 1234,
     name: 'dbName',
   },
-  cookieSecret: 'cookiesecret',
-  sportsdataio: 'apikey',
 };
 
 export default secret;

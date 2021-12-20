@@ -4,8 +4,6 @@ import connect from 'connect-redis';
 import { createClient } from 'redis';
 import { REDIS_PORT, REDIS_HOST } from '../db/redis';
 
-import secret from '../secret';
-
 const connObj = {
   url: `redis://${REDIS_HOST}:${REDIS_PORT}`,
   socket: { connectTimeout: 10000 },
@@ -23,7 +21,7 @@ declare module 'express-session' {
 }
 
 export default session({
-  secret: (process.env.COOKIE_SECRET || secret.cookieSecret),
+  secret: process.env.COOKIE_SECRET || 'defaultSecret',
   name: '_ballstreet',
   resave: false,
   saveUninitialized: true,

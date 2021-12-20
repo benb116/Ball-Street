@@ -6,11 +6,10 @@ import axios from 'axios';
 import { RosterPosTypes } from '../config';
 import NFLPlayer, { NFLPlayerCreateType } from '../features/nflplayer/nflplayer.model';
 import teams from '../nflinfo';
-import secret from '../secret';
 
 // eslint-disable-next-line max-len
 const baseurl = (posget: string, weeknum: number) => `https://football.fantasysports.yahoo.com/f1/316236/players?status=ALL&pos=${posget}&cut_type=9&stat1=S_PW_${weeknum}&myteam=1&sort=PTS&sdir=1&count=`;
-const cookie = secret.yahooCookie;
+const cookie = process.env.YAHOO_COOKIE;
 let currentweek = 3;
 
 // Pull player info

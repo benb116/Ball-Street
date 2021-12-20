@@ -2,6 +2,7 @@ node_modules/
 secret.*
 server/node_modules/
 server/secret.js
+server/secret.ts
 server/stats.js
 server/db/sim1.json
 server/.env
