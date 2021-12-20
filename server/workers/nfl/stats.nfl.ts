@@ -73,7 +73,7 @@ function EstimateProjection(playerid: number, statpoints: number) {
   const teamID = (state.playerTeamMap[playerid] || playerid);
   // Find time remaining
   const timefrac = (state.timeObj[teamID] || 0);
-  const timeleft = (timefrac === 0 ? 0 : (1 - timefrac));
+  const timeleft = (1 - timefrac);
   // is Defense
   const isDefense = (playerid < 40);
   const dbid = (playerid || 0);

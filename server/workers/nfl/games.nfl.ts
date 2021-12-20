@@ -112,7 +112,7 @@ async function setGamePhases(phasemap: Record<string, string | number>) {
         setPhase(teamID, 'mid');
       }, (Number(phase) * 1000 - Date.now()));
     } else if (phase === 'post') {
-      state.timeObj[teamID] = 0;
+      state.timeObj[teamID] = 1;
     }
   });
 }
@@ -139,14 +139,14 @@ function ParseGameFileUpdate(data: string) {
     const team2 = Number(terms[3]);
 
     // We've already marked this game as done, so end
-    if (state.timeObj[team1] === 0) {
+    if (state.timeObj[team1] === 1) {
       return;
     }
     // If a game has finished, change the phase
     const gameState = terms[4]; // F finished, P playing, S not started yet
     if (gameState === 'F') {
-      state.timeObj[team1] = 0;
-      state.timeObj[team2] = 0;
+      state.timeObj[team1] = 1;
+      state.timeObj[team2] = 1;
       setPhase(team1, 'post');
       setPhase(team2, 'post');
       return;
