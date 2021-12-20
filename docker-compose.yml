@@ -28,11 +28,6 @@ services:
             dockerfile: ./server/Dockerfile
         container_name: api
         env_file: .env
-        environment:
-            - DB_HOST=db
-            - DB_PORT=5432
-            - REDIS_HOST=redis
-            - REDIS_PORT=6379
         networks:
             - app-network
         depends_on:
@@ -50,11 +45,6 @@ services:
             dockerfile: ./server/Dockerfile
         container_name: leader
         env_file: .env
-        environment:
-            - DB_HOST=db
-            - DB_PORT=5432
-            - REDIS_HOST=redis
-            - REDIS_PORT=6379
         networks:
             - app-network
         depends_on:
@@ -73,11 +63,6 @@ services:
             dockerfile: ./server/Dockerfile
         container_name: offer
         env_file: .env
-        environment:
-            - DB_HOST=db
-            - DB_PORT=5432
-            - REDIS_HOST=redis
-            - REDIS_PORT=6379
         networks:
             - app-network
         depends_on:
@@ -96,12 +81,6 @@ services:
             dockerfile: ./server/Dockerfile
         container_name: live
         env_file: .env
-        environment:
-            - DB_HOST=db
-            - DB_PORT=5432
-            - REDIS_HOST=redis
-            - REDIS_PORT=6379
-            - PORT=8080
         networks:
             - app-network
         depends_on:
@@ -120,11 +99,6 @@ services:
             dockerfile: ./server/Dockerfile
         container_name: nfl
         env_file: .env
-        environment:
-            - DB_HOST=db
-            - DB_PORT=5432
-            - REDIS_HOST=redis
-            - REDIS_PORT=6379
         networks:
             - app-network
         depends_on:
