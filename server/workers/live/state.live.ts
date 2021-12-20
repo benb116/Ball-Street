@@ -10,6 +10,7 @@ interface PriceCItem {
 interface PriceMapType {
   [key: string]: PriceCItem,
 }
+
 const out = {
   connmap: new Map(), // Which ws connection corresponds to which user
   contestmap: new Map(), // Which ws connection corresponds to which contest

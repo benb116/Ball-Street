@@ -5,6 +5,7 @@ import { validate, uError, dv } from '../../util/util';
 import validators from '../../util/util.schema';
 
 import genVerify from './genVerify.service';
+
 import User, { UserTypePWHash } from '../user.model';
 
 const schema = Joi.object({

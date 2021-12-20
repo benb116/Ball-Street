@@ -1,9 +1,11 @@
-import Offer, { OfferType } from '../../features/offer/offer.model';
 import { dv } from '../../features/util/util';
 import logger from '../../utilities/logger';
+
 import Book from './book.class';
 import { updateBest } from './offer.util';
 import fillOffers from './trader';
+
+import Offer, { OfferType } from '../../features/offer/offer.model';
 
 // Try to fill a protected match
 async function evalProtected(playerBook: Book, proffer: string, neoffer: string) {

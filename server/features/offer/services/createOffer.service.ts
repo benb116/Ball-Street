@@ -1,17 +1,17 @@
 import Queue from 'bull';
 import Joi from 'joi';
-
 import { Op } from 'sequelize';
+
 import { DefaultProtected } from '../../../config';
 import {
   dv, tobj, validate, uError, isPlayerOnRoster, isOpenRoster,
 } from '../../util/util';
 import validators from '../../util/util.schema';
+import errorHandler, { ServiceInput } from '../../util/util.service';
 
 import sequelize from '../../../db';
 import { queueOptions } from '../../../db/redis';
 
-import errorHandler, { ServiceInput } from '../../util/util.service';
 import Entry, { EntryType } from '../../entry/entry.model';
 import NFLPlayer, { NFLPlayerType } from '../../nflplayer/nflplayer.model';
 import NFLGame, { NFLGameType } from '../../nflgame/nflgame.model';

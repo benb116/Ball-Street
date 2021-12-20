@@ -1,10 +1,13 @@
 import bcrypt from 'bcrypt';
 import Joi from 'joi';
 
-import { validate, uError, OnCompare } from '../../util/util';
-import { rediskeys, client } from '../../../db/redis';
 import { verificationTokenLength } from '../../../config';
+
+import { validate, uError, OnCompare } from '../../util/util';
 import validators from '../../util/util.schema';
+
+import { rediskeys, client } from '../../../db/redis';
+
 import User from '../user.model';
 
 const schema = Joi.object({

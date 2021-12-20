@@ -2,8 +2,8 @@ import Joi from 'joi';
 
 import { dv, validate, uError } from '../../util/util';
 import validators from '../../util/util.schema';
-
 import { ServiceInput } from '../../util/util.service';
+
 import User from '../user.model';
 
 const schema = Joi.object({

@@ -1,5 +1,6 @@
 import { DataTypes, ModelDefined } from 'sequelize';
 import sequelize from '../../db';
+
 import Offer from '../offer/offer.model';
 
 export interface ProtectedMatchType {

@@ -1,17 +1,22 @@
 // Change the game phase (pre, mid, post)
 import Joi from 'joi';
-
 import { Op } from 'sequelize';
+
+import teams from '../../nflinfo';
+
 import {
   dv, tobj, validate, isPlayerOnRoster,
 } from '../../features/util/util';
-import { client } from '../../db/redis';
-
-import sequelize from '../../db';
 import logger from '../../utilities/logger';
-import state from './state.nfl';
 import { SumPoints } from './dict.nfl';
+
+import state from './state.nfl';
+
 import phaseChange from '../live/channels/phaseChange.channel';
+
+import { client } from '../../db/redis';
+import sequelize from '../../db';
+
 import Entry, { EntryType } from '../../features/entry/entry.model';
 import NFLPlayer, { NFLPlayerType } from '../../features/nflplayer/nflplayer.model';
 import Contest, { ContestType } from '../../features/contest/contest.model';
@@ -21,8 +26,9 @@ const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
 };
 
+const teamIDs = Object.keys(teams).map((teamAbr) => teams[teamAbr].id);
 const schema = Joi.object({
-  teamID: Joi.number().integer().greater(0).less(35)
+  teamID: Joi.valid(...teamIDs)
     .required()
     .messages({
       'number.base': 'Team ID is invalid',

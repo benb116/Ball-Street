@@ -1,9 +1,12 @@
+import logger from '../../utilities/logger';
 import { dv } from '../../features/util/util';
-import Book from './book.class';
+
 import { rediskeys, client } from '../../db/redis';
 
-import logger from '../../utilities/logger';
 import priceUpdate from '../live/channels/priceUpdate.channel';
+
+import Book from './book.class';
+
 import Offer, { OfferType } from '../../features/offer/offer.model';
 import ProtectedMatch, { ProtectedMatchType } from '../../features/protectedmatch/protectedmatch.model';
 

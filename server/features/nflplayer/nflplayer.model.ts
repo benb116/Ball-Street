@@ -2,6 +2,7 @@ import { DataTypes, ModelDefined, Optional } from 'sequelize';
 import sequelize from '../../db';
 
 import { NFLPosTypes } from '../../config';
+
 import NFLTeam from '../nflteam/nflteam.model';
 import NFLPosition from '../nflposition/nflposition.model';
 

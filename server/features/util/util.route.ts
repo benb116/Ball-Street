@@ -4,8 +4,10 @@
 // If there's an error, return the specified status and error message.
 
 import { Request, Response } from 'express';
-import { client } from '../../db/redis';
+
 import { ServiceType, UError } from './util';
+
+import { client } from '../../db/redis';
 
 function routeHandler(service: ServiceType, cacheExpiry = 0) {
   return async function routeHandlerInner(req: Request, res: Response) {

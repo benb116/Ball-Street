@@ -1,6 +1,9 @@
 import Sequelize, { DataTypes, ModelDefined, Optional } from 'sequelize';
-import sequelize from '../../db';
+
 import { DefaultProtected } from '../../config';
+
+import sequelize from '../../db';
+
 import User from '../user/user.model';
 import Contest from '../contest/contest.model';
 import NFLPlayer from '../nflplayer/nflplayer.model';

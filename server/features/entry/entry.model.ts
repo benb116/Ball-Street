@@ -2,6 +2,7 @@ import { DataTypes, ModelDefined, Optional } from 'sequelize';
 import sequelize from '../../db';
 
 import { Roster } from '../../config';
+
 import User, { UserType } from '../user/user.model';
 import Contest from '../contest/contest.model';
 

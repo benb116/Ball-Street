@@ -1,13 +1,14 @@
 import Joi from 'joi';
 
+import { FlexNFLPositionId, NFLPosTypes, Roster } from '../../../config';
+
 import {
   dv, tobj, validate, uError,
 } from '../../util/util';
-import { FlexNFLPositionId, NFLPosTypes, Roster } from '../../../config';
-
-import sequelize from '../../../db';
 import errorHandler, { ServiceInput } from '../../util/util.service';
 import validators from '../../util/util.schema';
+
+import sequelize from '../../../db';
 import Entry, { EntryType } from '../entry.model';
 import NFLPlayer, { NFLPlayerType } from '../../nflplayer/nflplayer.model';
 

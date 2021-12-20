@@ -2,9 +2,11 @@
 // Find the match with the highest priority that can be made
 // Returns false for no matches
 
-import { OfferType } from '../../features/offer/offer.model';
 import logger from '../../utilities/logger';
+
 import Book from './book.class';
+
+import { OfferType } from '../../features/offer/offer.model';
 
 interface MatchPair {
   bid: OfferType,

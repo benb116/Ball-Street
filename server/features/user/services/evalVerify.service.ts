@@ -1,8 +1,11 @@
 import Joi from 'joi';
 
-import { dv, validate, uError } from '../../util/util';
-import { rediskeys, client } from '../../../db/redis';
 import { verificationTokenLength } from '../../../config';
+
+import { dv, validate, uError } from '../../util/util';
+
+import { rediskeys, client } from '../../../db/redis';
+
 import User from '../user.model';
 
 const schema = Joi.object({

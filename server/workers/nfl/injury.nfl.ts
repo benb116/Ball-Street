@@ -2,10 +2,14 @@
 // Find changes and send out updates
 
 import axios from 'axios';
-import NFLPlayer from '../../features/nflplayer/nflplayer.model';
+
 import logger from '../../utilities/logger';
-import injuryUpdate, { InjuryUpdateType } from '../live/channels/injuryUpdate.channel';
+
 import state from './state.nfl';
+
+import injuryUpdate, { InjuryUpdateType } from '../live/channels/injuryUpdate.channel';
+
+import NFLPlayer from '../../features/nflplayer/nflplayer.model';
 
 export default async function PullLatestInjuries() {
   return axios.get('https://football.fantasysports.yahoo.com/f1/injuries')

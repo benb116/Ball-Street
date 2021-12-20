@@ -1,5 +1,6 @@
-import { client } from '../../../db/redis';
 import { sendToUser } from '../socket.live';
+
+import { client } from '../../../db/redis';
 
 const offerCancelled = {
   pub: function pub(userID: number, offerID: string) {

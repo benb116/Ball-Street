@@ -2,8 +2,8 @@ import Joi from 'joi';
 
 import { dv, validate } from '../../util/util';
 import validators from '../../util/util.schema';
-
 import errorHandler, { ServiceInput } from '../../util/util.service';
+
 import Offer from '../offer.model';
 
 const schema = Joi.object({

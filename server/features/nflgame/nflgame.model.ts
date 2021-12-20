@@ -1,5 +1,6 @@
 import { DataTypes, ModelDefined, Optional } from 'sequelize';
 import sequelize from '../../db';
+
 import NFLTeam from '../nflteam/nflteam.model';
 
 export interface NFLGameType {

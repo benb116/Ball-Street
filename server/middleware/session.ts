@@ -1,7 +1,9 @@
 import session from 'express-session';
 import connect from 'connect-redis';
+
 import { createClient } from 'redis';
 import { REDIS_PORT, REDIS_HOST } from '../db/redis';
+
 import secret from '../secret';
 
 const connObj = {

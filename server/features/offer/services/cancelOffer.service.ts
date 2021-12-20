@@ -5,10 +5,11 @@ import {
   dv, tobj, validate, uError,
 } from '../../util/util';
 import validators from '../../util/util.schema';
-import { queueOptions } from '../../../db/redis';
+import { ServiceInput } from '../../util/util.service';
 
 import sequelize from '../../../db';
-import { ServiceInput } from '../../util/util.service';
+import { queueOptions } from '../../../db/redis';
+
 import Offer, { OfferType } from '../offer.model';
 
 const isoOption = {

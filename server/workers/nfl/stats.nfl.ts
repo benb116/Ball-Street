@@ -1,9 +1,13 @@
 import axios from 'axios';
-import { client, rediskeys } from '../../db/redis';
+
 import logger from '../../utilities/logger';
-import statUpdate from '../live/channels/statUpdate.channel';
 import { SumPoints, validStatLetters } from './dict.nfl';
+
 import state from './state.nfl';
+
+import statUpdate from '../live/channels/statUpdate.channel';
+
+import { client, rediskeys } from '../../db/redis';
 
 // Get all latest statlines and filter out ones we don't care about
 export function PullAllStats() {

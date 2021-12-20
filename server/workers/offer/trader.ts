@@ -3,15 +3,18 @@
 // Try to fill a pair of offers
 
 import { Transaction } from 'sequelize';
+
 import { dv, tobj } from '../../features/util/util';
+import logger from '../../utilities/logger';
 
 import sequelize from '../../db';
 import { rediskeys, client } from '../../db/redis';
 
-import logger from '../../utilities/logger';
 import channels from '../live/channels.live';
+
 import tradeAdd from '../../features/trade/services/tradeAdd.service';
 import tradeDrop from '../../features/trade/services/tradeDrop.service';
+
 import Offer, { OfferType } from '../../features/offer/offer.model';
 import Trade from '../../features/trade/trade.model';
 import PriceHistory from '../../features/pricehistory/pricehistory.model';

@@ -2,12 +2,16 @@
 // Calculates live leaderboards
 
 import { Roster } from '../config';
+
 import { dv, onlyUnique } from '../features/util/util';
 
 import { rediskeys, client } from '../db/redis';
+
 import getNFLPlayers from '../features/nflplayer/services/getNFLPlayers.service';
 import getWeekEntries from '../features/entry/services/getWeekEntries.service';
+
 import leaderUpdate from './live/channels/leaderUpdate.channel';
+
 import NFLGame, { NFLGameType } from '../features/nflgame/nflgame.model';
 
 const { projpriceHash, leaderHash } = rediskeys;

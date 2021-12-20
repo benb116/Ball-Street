@@ -2,6 +2,7 @@
 // Can set app-wide DB settings
 
 import { Sequelize, Transaction } from 'sequelize';
+
 import logger from '../utilities/logger';
 import sec from '../secret';
 

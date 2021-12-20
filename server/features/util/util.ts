@@ -2,7 +2,9 @@ import { Schema } from 'joi';
 import { Model, Transaction } from 'sequelize';
 
 import { FlexNFLPositionId, NFLPosTypes, Roster } from '../../config';
+
 import logger from '../../utilities/logger';
+
 import { EntryType } from '../entry/entry.model';
 
 const rpos = Object.keys(Roster);

@@ -1,17 +1,17 @@
 import express, { Response } from 'express';
 
-import authenticate from '../../middleware/authenticate';
+import { UError } from '../util/util';
 import routeHandler from '../util/util.route';
 import logger from '../../utilities/logger';
+
+import authenticate from '../../middleware/authenticate';
 
 import signup from './services/signup.service';
 import login from './services/login.service';
 import getAccount from './services/getAccount.service';
 import evalVerify from './services/evalVerify.service';
-
 import genPassReset from './services/genPassReset.service';
 import evalPassReset from './services/evalPassReset.service';
-import { UError } from '../util/util';
 
 const router = express.Router();
 

@@ -1,15 +1,15 @@
 import Joi from 'joi';
-
 import { Op, Transaction } from 'sequelize';
-import Entry, { EntryType } from '../../entry/entry.model';
-import NFLGame, { NFLGameType } from '../../nflgame/nflgame.model';
-import NFLPlayer, { NFLPlayerType } from '../../nflplayer/nflplayer.model';
+
 import {
   dv, validate, uError, isPlayerOnRoster,
 } from '../../util/util';
 import validators from '../../util/util.schema';
-
 import { ServiceInput } from '../../util/util.service';
+
+import Entry, { EntryType } from '../../entry/entry.model';
+import NFLGame, { NFLGameType } from '../../nflgame/nflgame.model';
+import NFLPlayer, { NFLPlayerType } from '../../nflplayer/nflplayer.model';
 
 const schema = Joi.object({
   user: validators.user,

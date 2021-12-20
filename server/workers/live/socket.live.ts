@@ -13,6 +13,7 @@ export function sendToUser(userID: number, msg: MessageType) {
   if (!thews) { liveState.connmap.delete(userID); return; }
   thews.send(JSON.stringify(msg));
 }
+
 export function sendToContests(msgMap: MessageMapType) {
   liveState.contestmap.forEach((cID: number, thews) => {
     if (!msgMap[cID]) { return; }

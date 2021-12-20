@@ -5,13 +5,15 @@ import WebSocket from 'ws';
 import http from 'http';
 import express, { Request } from 'express';
 
-import { client, subscriber, rediskeys } from '../db/redis';
 import session from '../middleware/session';
-import liveState from './live/state.live'; // Data stored in memory
 import logger from '../utilities/logger';
 
-// All channels that may be used
+import liveState from './live/state.live'; // Data stored in memory
 import channelMap from './live/channels.live';
+
+import { client, subscriber, rediskeys } from '../db/redis';
+
+// All channels that may be used
 
 // Set up redis subscribers
 (async () => {

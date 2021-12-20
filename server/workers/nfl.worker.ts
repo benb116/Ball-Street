@@ -1,12 +1,15 @@
 import axios from 'axios';
-import getNFLPlayers from '../features/nflplayer/services/getNFLPlayers.service';
+
+import logger from '../utilities/logger';
 
 import state from './nfl/state.nfl';
-import logger from '../utilities/logger';
 import { InitGameState, PullAllGames } from './nfl/games.nfl';
 import { CalcValues, PullAllStats, SetValues } from './nfl/stats.nfl';
 import scrape from '../db/playerscraper';
 import PullLatestInjuries from './nfl/injury.nfl';
+
+import getNFLPlayers from '../features/nflplayer/services/getNFLPlayers.service';
+
 import { NFLPlayerType } from '../features/nflplayer/nflplayer.model';
 
 const checkInterval = 10000;

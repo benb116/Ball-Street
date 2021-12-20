@@ -1,9 +1,9 @@
 import Joi from 'joi';
 
 import { dv, validate, uError } from '../../util/util';
-
-import errorHandler, { ServiceInput } from '../../util/util.service';
 import validators from '../../util/util.schema';
+import errorHandler, { ServiceInput } from '../../util/util.service';
+
 import Contest from '../../contest/contest.model';
 import Entry, { EntryCreateType } from '../entry.model';
 

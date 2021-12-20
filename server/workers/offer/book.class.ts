@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/lines-between-class-members */
+import logger from '../../utilities/logger';
+
+import evaluateFn from './evaluate';
+
 import { OfferType } from '../../features/offer/offer.model';
 import ProtectedMatch from '../../features/protectedmatch/protectedmatch.model';
-import logger from '../../utilities/logger';
-import evaluateFn from './evaluate';
 
 type LimitMap = Map<string, OfferType>;
 type LimitTree = Record<string, LimitMap>;
