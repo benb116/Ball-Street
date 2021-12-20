@@ -97,6 +97,9 @@ function ParseGameFileInit(data: string) {
   return { phasemap, gameobjs };
 }
 
+// Set game phases for each game
+// Schedule phase changes
+// and update the timeObj
 async function setGamePhases(phasemap: Record<string, string | number>) {
   const phaseTeams = Object.keys(phasemap);
   // Record phase info in DB

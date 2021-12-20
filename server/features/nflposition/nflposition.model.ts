@@ -1,3 +1,4 @@
+// Model for an NFL Position (e.g. WR, DEF, not WR1, DEF1)
 import { DataTypes, ModelDefined, Optional } from 'sequelize';
 import sequelize from '../../db';
 

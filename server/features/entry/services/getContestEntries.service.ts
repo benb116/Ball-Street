@@ -25,11 +25,12 @@ interface GetContestEntriesInput extends ServiceInput {
 
 const RosterPositions = Object.keys(Roster);
 
-// Get info for a specific contest
+// Get all entries in a contest
 function getContestEntries(req: GetContestEntriesInput) {
   const value: GetContestEntriesInput = validate(req, schema);
 
   return Entry.findAll({ where: { ContestId: value.params.contestID } }).then(dv)
+    // We want to show the projected totals for each entry, not just current balance.
     // Determine how many points to add to balance based on projections
     .then(async (out: EntryType[]) => {
       // Get all player proj values

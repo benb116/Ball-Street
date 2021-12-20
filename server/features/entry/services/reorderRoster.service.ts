@@ -45,10 +45,12 @@ interface ReorderRosterInput extends ServiceInput {
   }
 }
 
+// Swap players in positions of an entry
 async function reorderRoster(req: ReorderRosterInput) {
   const value: ReorderRosterInput = validate(req, schema);
 
   return sequelize.transaction(isoOption, async (t) => {
+    // Get position types
     const postype1 = Roster[value.body.pos1];
     const postype2 = Roster[value.body.pos2];
 

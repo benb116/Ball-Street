@@ -26,6 +26,8 @@ interface GetNFLPlayerNumAddsInput extends ServiceInput {
   body: Record<string, never>
 }
 
+// How many entries have added this player
+// Search across all position columns
 function getNFLPlayerNumAdds(req: GetNFLPlayerNumAddsInput) {
   const value: GetNFLPlayerNumAddsInput = validate(req, schema);
 

@@ -21,6 +21,7 @@ interface GetNFLPlayerInput extends ServiceInput {
   body: Record<string, never>
 }
 
+// Get info about an NFLPlayer
 async function getNFLPlayer(req: GetNFLPlayerInput) {
   const value: GetNFLPlayerInput = validate(req, schema);
 

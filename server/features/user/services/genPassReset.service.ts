@@ -16,6 +16,7 @@ interface GenPassResetInput {
   email: string,
 }
 
+// Create and send a password reset email
 async function genPassReset(req: GenPassResetInput) {
   const value: GenPassResetInput = validate(req, schema);
   const { email } = value;

@@ -1,3 +1,4 @@
+// Model for an NFL Player (e.g. Tom Brady)
 import { DataTypes, ModelDefined, Optional } from 'sequelize';
 import sequelize from '../../db';
 

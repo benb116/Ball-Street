@@ -21,9 +21,10 @@ interface GetEntryInput extends ServiceInput {
   body: Record<string, never>
 }
 
-// Get info for a specific contest
+// Get info for a specific entry
 async function getEntry(req: GetEntryInput) {
   const value: GetEntryInput = validate(req, schema);
+
   const theentry = await Entry.findOne({
     where: {
       UserId: value.user,

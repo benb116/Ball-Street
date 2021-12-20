@@ -1,3 +1,5 @@
+// All channels for redis pub/sub
+
 import priceUpdate from './channels/priceUpdate.channel';
 import statUpdate from './channels/statUpdate.channel';
 import leaderUpdate from './channels/leaderUpdate.channel';

@@ -1,3 +1,4 @@
+// Model for an NFL Team
 import { DataTypes, ModelDefined, Optional } from 'sequelize';
 import sequelize from '../../db';
 

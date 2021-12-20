@@ -22,10 +22,11 @@ interface CreateEntryInput extends ServiceInput {
   body: Record<string, never>
 }
 
-// Get info for a specific contest
+// Create an entry in a contest
 async function createEntry(req: CreateEntryInput) {
   const value: CreateEntryInput = validate(req, schema);
 
+  // Confirm contest is valid and for the current week
   const thecontest = await Contest.findByPk(value.params.contestID).then(dv);
   if (!thecontest) { uError('No contest found', 404); }
   const theweek = Number(process.env.WEEK);

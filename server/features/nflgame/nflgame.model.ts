@@ -1,3 +1,6 @@
+// Info about an NFL Game
+// Home team, away team, week #, and start timestamp
+// Also includes a phase to determine whether players can be traded
 import { DataTypes, ModelDefined, Optional } from 'sequelize';
 import sequelize from '../../db';
 

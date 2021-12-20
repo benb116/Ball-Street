@@ -32,7 +32,7 @@ interface CreateContestInput extends ServiceInput {
   }
 }
 
-// Get info for a specific contest
+// Create a new contest (to be used by admin)
 async function createContest(req: CreateContestInput) {
   const value: CreateContestInput = validate(req, schema);
   const contestObj: ContestCreateType = {

@@ -40,6 +40,7 @@ interface CancelOfferInput extends ServiceInput {
   }
 }
 
+// Cancel an existing offer
 async function cancelOffer(req: CancelOfferInput) {
   const value: CancelOfferInput = validate(req, schema);
 

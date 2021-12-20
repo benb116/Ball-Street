@@ -60,6 +60,7 @@ async function sendreq(price: boolean, pagenum = 0, posget = 'O') {
       if (injout.length === 2) {
         // eslint-disable-next-line prefer-destructuring
         injuryStatus = injout[1].split('>')[1].split('<')[0];
+        // Make any weird statuses (like NA, or COVID-19) into a simple out
         if (['P', 'Q', 'D'].indexOf(injuryStatus) === -1) injuryStatus = 'O';
       }
       // Player object that will be added to DB

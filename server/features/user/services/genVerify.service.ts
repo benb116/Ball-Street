@@ -18,6 +18,7 @@ interface EvalVerifyInput {
   email: string,
 }
 
+// Create and send an email verification link
 async function genVerify(req: EvalVerifyInput) {
   const value: EvalVerifyInput = validate(req, schema);
   const { email, id } = value;

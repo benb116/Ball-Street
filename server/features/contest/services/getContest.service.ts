@@ -27,6 +27,8 @@ async function getContest(req: GetContestInput) {
   const value: GetContestInput = validate(req, schema);
   const thecontest: ContestType = await Contest.findByPk(value.params.contestID).then(dv);
   if (!thecontest) { uError('No contest found', 404); }
+
+  // Also pull a user's entry rank in this contest (if it exists)
   const theentry = await getEntryRank(value).catch(() => ({
     rank: null,
     pointtotal: null,

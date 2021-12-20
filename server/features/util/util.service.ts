@@ -12,6 +12,9 @@ export interface ServiceInput {
   body: Record<string, any>,
 }
 
+// Handle errors in services
+// Takes a map that determines message and status based on error
+// Passes UErrors through directly.
 export default function errorHandler(responseMap: Record<string, ErrorRespType>) {
   return function errorHandlerInner(err: any) {
     const outmess = (responseMap.default || 'Unexpected error');

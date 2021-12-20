@@ -1,3 +1,7 @@
+// A contest is the collection of entries within which users can trade players
+// Each contest runs over the cource of one NFL Week
+// Players start with a budget of points to spend
+
 import { DataTypes, ModelDefined, Optional } from 'sequelize';
 import sequelize from '../../db';
 
@@ -6,8 +10,6 @@ export interface ContestType {
   name: string,
   nflweek: number,
   budget: number,
-  // createdAt: string,
-  // updatedAt: string,
 }
 
 export type ContestCreateType = Optional<ContestType, 'id'>;

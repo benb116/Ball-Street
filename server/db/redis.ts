@@ -11,8 +11,10 @@ const connObj = {
 };
 export const client = createClient(connObj);
 client.connect();
+// Subscriber has to be a separate client
 export const subscriber = client.duplicate();
 
+// Connection options for bull queues
 export const queueOptions = { redis: { port: REDIS_PORT, host: REDIS_HOST } };
 
 // Define redis keys for various entries
@@ -40,14 +42,6 @@ function projpriceHash() {
   return 'proj';
 }
 
-function gamePhase() {
-  return 'gamePhase';
-}
-
-function currentWeek() {
-  return 'currentWeek';
-}
-
 function emailVer(rand: string) {
   return `emailVer:${rand}`;
 }
@@ -63,8 +57,6 @@ export const rediskeys = {
   statpriceHash,
   projpriceHash,
   leaderHash,
-  gamePhase,
-  currentWeek,
   emailVer,
   passReset,
 };

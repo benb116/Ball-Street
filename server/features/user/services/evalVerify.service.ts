@@ -20,6 +20,7 @@ interface EvalVerifyInput {
   token: string,
 }
 
+// Check that a verification link is valid
 async function evalVerify(req: EvalVerifyInput) {
   const value: EvalVerifyInput = validate(req, schema);
   const { token } = value;

@@ -26,6 +26,7 @@ interface EvalPassResetInput {
   confirmPassword: string,
 }
 
+// Change a user's password
 async function evalPassReset(req: EvalPassResetInput) {
   const value: EvalPassResetInput = validate(req, schema);
   const { token, password, confirmPassword } = value;

@@ -22,6 +22,8 @@ interface GetNFLPlayerOffersInput extends ServiceInput {
   body: Record<string, never>
 }
 
+// Get current book summary for a player
+// How many offers at each price point?
 function getNFLPlayerOfferSummary(req: GetNFLPlayerOffersInput) {
   const value: GetNFLPlayerOffersInput = validate(req, schema);
 

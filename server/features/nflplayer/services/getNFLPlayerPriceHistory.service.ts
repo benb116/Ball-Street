@@ -24,6 +24,7 @@ interface GetNFLPlayerPriceHistoryInput extends ServiceInput {
   body: Record<string, never>
 }
 
+// Get price history of a player's trades
 function getNFLPlayerPriceHistory(req: GetNFLPlayerPriceHistoryInput) {
   const value: GetNFLPlayerPriceHistoryInput = validate(req, schema);
 
