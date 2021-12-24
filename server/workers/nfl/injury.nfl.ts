@@ -9,44 +9,51 @@ import state from './state.nfl';
 
 import injuryUpdate, { InjuryUpdateType } from '../live/channels/injuryUpdate.channel';
 
-import NFLPlayer from '../../features/nflplayer/nflplayer.model';
+import NFLPlayer, { NFLPlayerCreateType } from '../../features/nflplayer/nflplayer.model';
+
+
+let injuryInited = false;
 
 export default async function PullLatestInjuries() {
   return axios.get('https://football.fantasysports.yahoo.com/f1/injuries')
     .then(Format)
     .then((arr) => arr.filter((e) => {
       // Update injobj and return players that changed
-      if (!e) return false;
-      const oldstatus = state.injObj[e.nflplayerID];
-      state.injObj[e.nflplayerID] = e.status;
-      return oldstatus !== e.status;
+      if (!e || !e.id) return false;
+      const oldstatus = state.injObj[e.id];
+      state.injObj[e.id] = e.injuryStatus;
+      return oldstatus !== e.injuryStatus;
     }))
-    .then((objs: InjuryType[]) => {
+    .then((objs) => {
       // Pushout updates for each
-      if (!objs.length) return objs;
-      const outObj = objs.reduce((acc, cur) => {
-        acc[cur.nflplayerID] = cur.status;
-        return acc;
-      }, {} as InjuryUpdateType);
+      if (objs.length) {
+        const outObj = objs.reduce((acc, cur) => {
+          if (cur && cur.id) acc[cur.id] = cur.injuryStatus;
+          return acc;
+        }, {} as InjuryUpdateType);
 
-      injuryUpdate.pub(outObj);
+        injuryUpdate.pub(outObj);
+      }
       return objs;
     })
-    .then((objs) => Promise.all(
-      // Update DB records
-      objs.map((o) => NFLPlayer.update({ injuryStatus: o.status }, {
-        where: { id: o.nflplayerID },
-      })),
-    ))
+    .then(async (objs) => {
+      if (!injuryInited) {
+        injuryInited = true;
+        await NFLPlayer.bulkCreate(objs, { updateOnDuplicate: ['injuryStatus'] });
+        return NFLPlayer.destroy({ where: { name: 'injury' } });
+      }
+      return Promise.all(
+        // Update DB records
+        objs.map((o) => NFLPlayer.update({ injuryStatus: o.injuryStatus }, {
+          where: { id: o.id },
+        })),
+      );
+    })
     .catch(logger.error);
 }
 
 interface InjuryDataType {
   data: string,
-}
-interface InjuryType {
-  nflplayerID: number,
-  status: string,
 }
 
 function Format(raw: InjuryDataType) {
@@ -54,15 +61,26 @@ function Format(raw: InjuryDataType) {
 
   const units = main.split('</tr>');
 
-  return units.filter((u: string) => u.length).map((u) => {
+  return units.reduce((acc, u) => {
+    if (!u) return acc;
     const start = u.split('data-ys-playerid="')[1];
     const [playerid, pidout] = start.split('" data-ys-playernote');
+    if (!playerid) return acc;
     const statusout = pidout.split('</abbr>')[0];
     let status = statusout[statusout.length - 1];
     if (['P', 'Q', 'D'].indexOf(status) === -1) status = 'O';
-    return {
-      nflplayerID: Number(playerid),
-      status,
-    } as InjuryType;
-  });
+    const pObj = {
+      id: Number(playerid),
+      injuryStatus: status,
+      name: 'injury',
+      NFLPositionId: 1,
+      NFLTeamId: 1,
+      active: false,
+      preprice: null,
+      postprice: null,
+      jersey: 0,
+    };
+    acc.push(pObj);
+    return acc;
+  }, [] as Required<NFLPlayerCreateType>[]);
 }

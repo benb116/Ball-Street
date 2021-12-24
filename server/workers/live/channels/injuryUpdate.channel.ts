@@ -3,7 +3,7 @@ import { sendToAll } from '../socket.live';
 import { client } from '../../../db/redis';
 
 export interface InjuryUpdateType {
-  [key: string]: string
+  [key: string]: string | null
 }
 
 const injuryUpdate = {
