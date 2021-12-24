@@ -80,7 +80,7 @@ function EntryItem({ entrydata }) {
       {' '}
       -
       {' '}
-      {RenderPrice(entrydata.projTotal)}
+      {RenderPrice(entrydata.projTotal || entrydata.pointtotal)}
     </li>
   );
 }
