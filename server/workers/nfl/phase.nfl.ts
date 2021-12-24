@@ -19,8 +19,9 @@ import sequelize from '../../db';
 
 import Entry, { EntryType } from '../../features/entry/entry.model';
 import NFLPlayer, { NFLPlayerType } from '../../features/nflplayer/nflplayer.model';
-import Contest, { ContestType } from '../../features/contest/contest.model';
+// import Contest, { ContestType } from '../../features/contest/contest.model';
 import NFLGame from '../../features/nflgame/nflgame.model';
+import getWeekEntries from '../../features/entry/services/getWeekEntries.service';
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
@@ -84,10 +85,7 @@ async function convertTeamPlayers(teamID: number) {
   }, {});
 
   // Find all of this weeks entries across contests
-  const weekcontests = await Contest.findAll({ where: { nflweek: Number(process.env.WEEK) } }).then(dv)
-    .then((contests: ContestType[]) => contests.map((c) => c.id));
-
-  const allEntries: EntryType[] = await Entry.findAll({ where: { ContestId: { [Op.or]: weekcontests } } }).then(dv);
+  const allEntries: EntryType[] = await getWeekEntries();
 
   // Filter for all entries with a player on this team
   const teamEntries = allEntries.filter(
