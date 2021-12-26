@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // Set up the database with proper tables and NFL data
 
 import { Sequelize } from 'sequelize';
@@ -7,13 +8,29 @@ import teams from '../nflinfo';
 import logger from '../utilities/logger';
 import scrape from './playerscraper';
 
+import Contest from '../features/contest/contest.model';
+import Entry from '../features/entry/entry.model';
+import NFLGame from '../features/nflgame/nflgame.model';
 import NFLPlayer from '../features/nflplayer/nflplayer.model';
 import NFLPosition from '../features/nflposition/nflposition.model';
 import NFLTeam from '../features/nflteam/nflteam.model';
+import Offer from '../features/offer/offer.model';
+import PriceHistory from '../features/pricehistory/pricehistory.model';
+import Trade from '../features/trade/trade.model';
+import User from '../features/user/user.model';
 
-async function InitDB(sequelize: Sequelize) {
+async function InitDB() {
   logger.info('Initializing the database');
-  await sequelize.sync({ force: true });
+  await User.sync({ force: true });
+  await Contest.sync({ force: true });
+  await NFLTeam.sync({ force: true });
+  await NFLGame.sync({ force: true });
+  await NFLPosition.sync({ force: true });
+  await NFLPlayer.sync({ force: true });
+  await Entry.sync({ force: true });
+  await Offer.sync({ force: true });
+  await PriceHistory.sync({ force: true });
+  await Trade.sync({ force: true });
 
   // Create nfl position DB records
   const nflposrecords = Object.keys(RosterPosTypes).map((p) => ({ ...RosterPosTypes[p], name: p }));

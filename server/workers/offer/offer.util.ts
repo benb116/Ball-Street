@@ -56,7 +56,7 @@ async function initializeBook(playerBook: Book) {
       cancelled: false,
     },
     order: [
-      ['updatedAt', 'ASC'],
+      ['createdAt', 'ASC'],
     ],
   }).then(dv);
   sortedOffers.forEach((o) => playerBook.add(o));

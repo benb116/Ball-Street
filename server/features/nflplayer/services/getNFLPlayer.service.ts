@@ -25,13 +25,8 @@ interface GetNFLPlayerInput extends ServiceInput {
 async function getNFLPlayer(req: GetNFLPlayerInput) {
   const value: GetNFLPlayerInput = validate(req, schema);
 
-  const theplayer: NFLPlayerType = await NFLPlayer.findOne({
-    where: {
-      id: value.params.nflplayerID,
-      active: true,
-    },
-  }).then(dv);
-  if (!theplayer) { uError('No player found', 404); }
+  const theplayer: NFLPlayerType = await NFLPlayer.findByPk(value.params.nflplayerID).then(dv);
+  if (!theplayer || !theplayer.active) { uError('No player found', 404); }
   return theplayer;
 }
 

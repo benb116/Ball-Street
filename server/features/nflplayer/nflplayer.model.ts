@@ -69,6 +69,16 @@ const NFLPlayer: ModelDefined<NFLPlayerType, NFLPlayerCreateType> = sequelize.de
       isIn: [[null, 'P', 'Q', 'D', 'O']],
     },
   },
+}, {
+  indexes: [
+    { // Make it faster to search for offers that aren't filled or cancelled
+      name: 'IX_NFLPlayer_Active',
+      fields: ['active', 'NFLTeamId'],
+      where: {
+        active: true,
+      },
+    },
+  ],
 });
 
 NFLPlayer.belongsTo(NFLTeam);

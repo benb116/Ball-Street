@@ -48,6 +48,12 @@ const User: ModelDefined<UserType, UserCreateType> = sequelize.define('User', {
       attributes: { exclude: [] },
     },
   },
+  indexes: [
+    {
+      name: 'IX_Users',
+      fields: ['email'],
+    },
+  ],
 });
 
 export default User;

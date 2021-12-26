@@ -72,7 +72,10 @@ const Offer: ModelDefined<OfferType, OfferCreateType> = sequelize.define('Offer'
   indexes: [
     { // Make it faster to search for offers that aren't filled or cancelled
       name: 'IX_Offer-Active',
-      fields: ['id'],
+      fields: ['ContestId', 'UserId', 'NFLPlayerId', {
+        name: 'createdAt',
+        order: 'ASC',
+      }],
       where: {
         filled: false,
         cancelled: false,
@@ -81,7 +84,7 @@ const Offer: ModelDefined<OfferType, OfferCreateType> = sequelize.define('Offer'
     { // Can only have one offer per user per contest per player that's active
       name: 'IX_Offer-OneActive',
       unique: true,
-      fields: ['UserId', 'ContestId', 'NFLPlayerId'],
+      fields: ['ContestId', 'UserId', 'NFLPlayerId'],
       where: {
         filled: false,
         cancelled: false,

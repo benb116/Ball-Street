@@ -48,7 +48,12 @@ async function setPhase(teamID: number, newphase: string) {
 
   logger.info(`Team ${teamID} phase set to ${newphase}`);
 
-  return NFLGame.update({ phase: newphase }, { where: { [Op.or]: [{ HomeId: teamID }, { AwayId: teamID }] } })
+  return NFLGame.update({ phase: newphase }, {
+    where: {
+      [Op.or]: [{ HomeId: teamID }, { AwayId: teamID }],
+      week: Number(process.env.WEEK),
+    },
+  })
     .then(() => {
       if (newphase === 'post') return convertTeamPlayers(teamID);
       return Promise.resolve();
