@@ -5,7 +5,7 @@ import { rediskeys, client } from '../../db/redis';
 
 import priceUpdate from '../live/channels/priceUpdate.channel';
 
-import Book from './book.class';
+import Book from './book.offer';
 
 import Offer, { OfferType } from '../../features/offer/offer.model';
 import ProtectedMatch, { ProtectedMatchType } from '../../features/protectedmatch/protectedmatch.model';

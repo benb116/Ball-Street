@@ -12,10 +12,10 @@ import { queueOptions } from '../db/redis';
 
 import protectedMatch from './live/channels/protectedMatch.channel';
 
-import fillOffers from './offer/trader';
-import { getBook, updateBest } from './offer/offer.util';
-import evalProtected from './offer/protected';
-import Book from './offer/book.class';
+import fillOffers from './offer/trader.offer';
+import { getBook, updateBest } from './offer/util.offer';
+import evalProtected from './offer/protected.offer';
+import Book from './offer/book.offer';
 
 import { OfferType } from '../features/offer/offer.model';
 

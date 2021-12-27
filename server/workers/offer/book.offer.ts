@@ -4,7 +4,7 @@
 
 import logger from '../../utilities/logger';
 
-import evaluateFn from './evaluate';
+import evaluateFn from './evaluate.offer';
 
 import { OfferType } from '../../features/offer/offer.model';
 import ProtectedMatch from '../../features/protectedmatch/protectedmatch.model';

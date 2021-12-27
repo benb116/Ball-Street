@@ -1,9 +1,9 @@
 import { dv } from '../../features/util/util';
 import logger from '../../utilities/logger';
 
-import Book from './book.class';
-import { updateBest } from './offer.util';
-import fillOffers from './trader';
+import Book from './book.offer';
+import { updateBest } from './util.offer';
+import fillOffers from './trader.offer';
 
 import Offer, { OfferType } from '../../features/offer/offer.model';
 

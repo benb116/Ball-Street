@@ -4,7 +4,7 @@
 
 import logger from '../../utilities/logger';
 
-import Book from './book.class';
+import Book from './book.offer';
 
 import { OfferType } from '../../features/offer/offer.model';
 
