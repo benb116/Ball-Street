@@ -1,5 +1,5 @@
 import service from '../services/createContest.service';
-import { ErrorTest, ObjectTest } from '../../util/util';
+import { ErrorTest, ObjectTest } from '../../util/util.tests';
 
 describe('createContest service', () => {
   test('Valid request returns data', ObjectTest(
@@ -7,6 +7,7 @@ describe('createContest service', () => {
     {
       name: 'New Contest', budget: 10000, nflweek: Number(process.env.WEEK),
     },
+    'DELETE from "Contests" WHERE "name"=\'New Contest\';',
   ));
 
   test('Missing name returns error 400', ErrorTest(

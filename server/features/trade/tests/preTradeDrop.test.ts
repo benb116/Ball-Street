@@ -1,5 +1,5 @@
 import service from '../services/preTradeDrop.service';
-import { ErrorTest, ObjectTest } from '../../util/util';
+import { ErrorTest, ObjectTest } from '../../util/util.tests';
 
 describe('preTradeDrop service', () => {
   test('Valid request returns data', ObjectTest(
@@ -25,6 +25,7 @@ describe('preTradeDrop service', () => {
       WR2: 28026,
       pointtotal: 2600,
     },
+    'UPDATE "Entries" SET "WR1"=32398, "pointtotal"=1500 WHERE "ContestId"=2 AND "UserId"=2;',
   ));
 
   test('Duplicate drop returns error 406', ErrorTest(

@@ -1,5 +1,5 @@
 import service from '../services/createOffer.service';
-import { ErrorTest, ObjectTest } from '../../util/util';
+import { ErrorTest, ObjectTest } from '../../util/util.tests';
 
 describe('createOffer service', () => {
   test('Valid request returns data', ObjectTest(
@@ -24,6 +24,7 @@ describe('createOffer service', () => {
       price: 2000,
       protected: false,
     },
+    'DELETE from "Offers" WHERE "ContestId"=2 AND "UserId"=1 AND "NFLPlayerId"=31885;',
   ));
 
   test('Duplicate offer returns error 406', ErrorTest(
@@ -109,7 +110,7 @@ describe('createOffer service', () => {
         offerobj: {
           nflplayerID: 28378,
           isbid: true,
-          price: 2000,
+          price: 200,
         },
       },
     },

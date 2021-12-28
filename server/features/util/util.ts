@@ -91,51 +91,6 @@ export const validate = function validate(input: Record<string, any>, schema: Sc
   return value;
 };
 
-export type ServiceType = (inp: any) => Promise<any>;
-
-// Functions used in Jest testing
-// Ensures that a service call returns an object with specific properties
-export const ObjectTest = function ObjectTest(
-  service: ServiceType, req: any, contains: any,
-) {
-  return async () => service(req).then((resp: any) => {
-    expect(resp).toEqual(expect.objectContaining(contains));
-  });
-};
-
-// Ensures that a service call returns an array with specific elements
-export const ArrayTest = function ArrayTest(service: ServiceType, req: any, items: any[]) {
-  return async () => service(req).then((resp: any) => {
-    items.forEach((e) => {
-      let check = e;
-      if (typeof check === 'object' && check !== null) {
-        check = expect.objectContaining(e);
-      }
-      expect(resp).toContainEqual(check);
-    });
-  });
-};
-
-// Ensures that a service call throws an error with specific status number and message
-export const ErrorTest = function ErrorTest(
-  service: ServiceType, req: any, statusNumber: number, message: string,
-) {
-  return async function errortest() {
-    try {
-      const o = await service(req);
-      // eslint-disable-next-line no-console
-      console.log(o);
-      throw new Error('Unexpected pass');
-    } catch (err: any) {
-      // eslint-disable-next-line no-console
-      if (!err.status) { console.log(err); }
-      const uerr: UError = err;
-      expect(uerr.message).toEqual(message);
-      expect(uerr.status).toEqual(statusNumber);
-    }
-  };
-};
-
 // Compare strings in constant time
 // https://snyk.io/blog/node-js-timing-attack-ccc-ctf/
 export const OnCompare = function OnCompare(a: string, b: string) {
@@ -150,3 +105,5 @@ export const OnCompare = function OnCompare(a: string, b: string) {
 export const onlyUnique = function onlyUnique(value: any, index: number, self: any[]) {
   return self.indexOf(value) === index;
 };
+
+export type ServiceType = (inp: any) => Promise<any>;

@@ -1,5 +1,5 @@
 import service from '../services/genVerify.service';
-import { ErrorTest } from '../../util/util';
+import { ErrorTest } from '../../util/util.tests';
 
 import { client } from '../../../db/redis';
 import { verificationTokenLength } from '../../../config';

@@ -1,5 +1,5 @@
 import service from '../services/getUserTrades.service';
-import { ErrorTest, ArrayTest } from '../../util/util';
+import { ErrorTest, ArrayTest } from '../../util/util.tests';
 
 describe('getUserTrades service', () => {
   test('Valid request returns data', ArrayTest(

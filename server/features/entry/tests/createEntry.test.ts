@@ -1,5 +1,5 @@
 import service from '../services/createEntry.service';
-import { ErrorTest, ObjectTest } from '../../util/util';
+import { ErrorTest, ObjectTest } from '../../util/util.tests';
 
 describe('createEntry service', () => {
   test('Valid request returns data', ObjectTest(
@@ -19,6 +19,7 @@ describe('createEntry service', () => {
       WR2: null,
       pointtotal: 10000,
     },
+    'DELETE from "Entries" WHERE "ContestId"=3 AND "UserId"=1;',
   ));
 
   test('Duplicate entry returns error 406', ErrorTest(
