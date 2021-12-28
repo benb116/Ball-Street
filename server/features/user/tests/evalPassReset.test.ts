@@ -1,8 +1,9 @@
 import cryptoRandomString from 'crypto-random-string';
 import { client, rediskeys } from '../../../db/redis';
 import service from '../services/evalPassReset.service';
-import { ErrorTest, UError } from '../../util/util';
+import { UError } from '../../util/util';
 import { verificationTimeout, verificationTokenLength } from '../../../config';
+import { ErrorTest } from '../../util/util.tests';
 
 describe('evalPassReset service', () => {
   test('Valid request returns confirmation and redis key', async () => {

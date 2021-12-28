@@ -1,18 +1,17 @@
 import service from '../services/getUserOffers.service';
-import { ErrorTest, ArrayTest } from '../../util/util';
+import { ErrorTest, ArrayTest } from '../../util/util.tests';
 
 describe('getUserOffers service', () => {
   test('Valid request returns data', ArrayTest(
-    service, { user: 2, params: { contestID: 2 }, body: {} },
+    service, { user: 3, params: { contestID: 1 }, body: {} },
     [{
-      ContestId: 2,
+      id: '16c94b61-3c76-4078-8fbc-67fac7ed26c7',
+      UserId: 3,
+      ContestId: 1,
       NFLPlayerId: 31885,
-      UserId: 2,
-      cancelled: false,
+      isbid: true,
+      price: 800,
       filled: false,
-      isbid: false,
-      price: 8000,
-      protected: false,
     }],
   ));
 

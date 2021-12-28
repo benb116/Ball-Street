@@ -88,6 +88,15 @@ async function PopulateDB() {
     price: 8000,
     filled: true,
   },
+  {
+    id: '16c94b61-3c76-4078-8fbc-67fac7ed26c7',
+    UserId: 3,
+    ContestId: 1,
+    NFLPlayerId: 31885,
+    isbid: true,
+    price: 800,
+    filled: false,
+  },
 
   {
     id: '16c94b61-3c76-4078-8fbc-67fac7ed26c6',

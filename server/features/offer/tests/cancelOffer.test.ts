@@ -1,5 +1,5 @@
 import service from '../services/cancelOffer.service';
-import { ErrorTest, ObjectTest } from '../../util/util';
+import { ErrorTest, ObjectTest } from '../../util/util.tests';
 
 describe('cancelOffer service', () => {
   test('Valid request returns cancelled offer', ObjectTest(
@@ -15,6 +15,7 @@ describe('cancelOffer service', () => {
       price: 8000,
       protected: false,
     },
+    'UPDATE "Offers" SET "cancelled"=false WHERE "ContestId"=1 AND "UserId"=1;',
   ));
   test('Already cancelled returns error 406', ErrorTest(
     service, { user: 2, params: { contestID: 1 }, body: { offerID: '16c94b61-3c76-4078-8fbc-67fac7ed26c3' } },

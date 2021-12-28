@@ -1,7 +1,7 @@
 import cryptoRandomString from 'crypto-random-string';
 import { client, rediskeys } from '../../../db/redis';
 import service from '../services/evalVerify.service';
-import { ErrorTest } from '../../util/util';
+import { ErrorTest } from '../../util/util.tests';
 import { verificationTimeout, verificationTokenLength } from '../../../config';
 
 describe('evalVerify service', () => {

@@ -1,5 +1,5 @@
 import service from '../services/signup.service';
-import { ErrorTest, ObjectTest } from '../../util/util';
+import { ErrorTest, ObjectTest } from '../../util/util.tests';
 
 describe('signup service', () => {
   test('Valid request returns data', ObjectTest(
@@ -9,6 +9,7 @@ describe('signup service', () => {
     {
       needsVerification: false, email: '123@gmail.com', id: 7, name: 'Ben',
     },
+    'DELETE from "Users" WHERE "id"=7',
   ));
 
   test('Valid request returns data', ObjectTest(
@@ -16,6 +17,7 @@ describe('signup service', () => {
       name: 'Ben', email: '1234@gmail.com', password: 'password1', skipVerification: false,
     },
     { needsVerification: true },
+    'DELETE from "Users" WHERE "id"=8',
   ));
 
   test('Existing email returns 406', ErrorTest(

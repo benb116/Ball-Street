@@ -1,5 +1,5 @@
 import service from '../services/preTradeAdd.service';
-import { ErrorTest, ObjectTest } from '../../util/util';
+import { ErrorTest, ObjectTest } from '../../util/util.tests';
 
 describe('preTradeAdd service', () => {
   test('Valid request returns data', ObjectTest(
@@ -26,6 +26,7 @@ describe('preTradeAdd service', () => {
       WR2: null,
       pointtotal: 8900,
     },
+    'UPDATE "Entries" SET "TE1"=null, "pointtotal"=10000 WHERE "ContestId"=2 AND "UserId"=1;',
   ));
 
   test('Duplicate add returns error 406', ErrorTest(
