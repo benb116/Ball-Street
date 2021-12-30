@@ -76,7 +76,7 @@ wss.on('connection', async (ws, request: Request) => {
 });
 
 server.listen(process.env.LIVE_PORT, () => {
-  logger.info(`Live server listening on port ${process.env.PORT}`);
+  logger.info(`Live server listening on port ${process.env.LIVE_PORT}`);
 });
 
 // Send latest points and stat info

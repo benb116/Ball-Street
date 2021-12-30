@@ -15,8 +15,7 @@ let {
 } = process.env;
 
 const dbOptions = {
-  // eslint-disable-next-line no-console
-  logging: (process.env.NODE_ENV === 'development' ? logger.verbose : false),
+  logging: (process.env.NODE_ENV !== 'test' ? logger.verbose : false),
   isolationLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED,
   // We can used Read Committed here because of how the DB is set up
   // Prevent nonrepeatable reads by using select for update (row-level lock)

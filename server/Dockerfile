@@ -7,6 +7,7 @@ RUN npm install -g nodemon typescript
 USER node 
 RUN mkdir -p /home/node/app/ && chown -R node:node /home/node
 RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
+RUN mkdir -p /home/node/app/logs && chown -R node:node /home/node/app
 WORKDIR /home/node/app
 
 ENV PATH /home/node/app/node_modules/.bin:$PATH
