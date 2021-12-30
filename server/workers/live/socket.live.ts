@@ -31,7 +31,7 @@ export function sendToContests(msgMap: MessageMapType) {
 
 // Send message to all users
 export function sendToAll(msg: MessageType) {
-  liveState.contestmap.forEach(async (thecontestID: number, thews) => {
+  liveState.contestmap.forEach(async (_thecontestID: number, thews) => {
     if (!thews) { liveState.contestmap.delete(thews); return; }
     if (thews.readyState === 1) thews.send(JSON.stringify(msg));
   });

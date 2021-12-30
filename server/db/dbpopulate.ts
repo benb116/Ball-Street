@@ -49,7 +49,7 @@ async function PopulateDB() {
   await Contest.bulkCreate([con, con2, con3]);
 
   const pubusrs = usrs.slice(0, 3);
-  const entrs = pubusrs.map((e, i) => ({
+  const entrs = pubusrs.map((_e, i) => ({
     UserId: i + 1, ContestId: 1, pointtotal: 10000, RB1: 31885,
   }));
   const entrs2 = [{

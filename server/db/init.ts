@@ -1,7 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 // Set up the database with proper tables and NFL data
-
-import { Sequelize } from 'sequelize';
 
 import { RosterPosTypes } from '../config';
 import teams from '../nflinfo';

@@ -11,7 +11,6 @@ import injuryUpdate, { InjuryUpdateType } from '../live/channels/injuryUpdate.ch
 
 import NFLPlayer, { NFLPlayerCreateType } from '../../features/nflplayer/nflplayer.model';
 
-
 let injuryInited = false;
 
 export default async function PullLatestInjuries() {

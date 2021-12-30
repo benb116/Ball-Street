@@ -30,7 +30,7 @@ async function genPassReset(req: GenPassResetInput) {
 }
 
 async function sendPassResetEmail(email: string, rand: string) {
-  const link = `${CallbackURL}/resetPassword/${rand}`;
+  const link = `mailto:${email} ${CallbackURL}/resetPassword/${rand}`;
   return link;
 }
 
