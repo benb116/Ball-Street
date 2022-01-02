@@ -20,9 +20,11 @@ const Contest = () => {
   const { handleSubmit } = useForm();
   const { contestID } = useParams(); // Get contestID from URL params
 
-  const sortedEntries = [...thiscontestentries].sort((a, b) => b.pointtotal - a.pointtotal);
   const thiscontest = useSelector(contestSelector); // Get info about this contest
   const thiscontestentries = useSelector(entriesSelector); // Get the entries in this contest
+  const sortedEntries = [...thiscontestentries].sort((a, b) => { // Sort by total points
+    return (b.projTotal || b.pointtotal) - (a.projTotal || a.pointtotal)
+  });
   const thiscontestmyentry = useSelector(myEntrySelector);
 
   // Pull data
