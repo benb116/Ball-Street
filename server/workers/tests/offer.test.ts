@@ -90,6 +90,7 @@ async function run() {
   const ws1 = initWS(session1);
 
   let cancelOffer = '';
+  let ignoreFirst = true;
 
   ws1.on('message', async (text: string) => {
     const msg = JSON.parse(text.toString());
@@ -114,6 +115,10 @@ async function run() {
         break;
       case 'priceUpdate':
         if (Object.keys(msg.pricedata).length > 5) {
+          return;
+        }
+        if (ignoreFirst) {
+          ignoreFirst = false;
           return;
         }
         if (!pMap.offer1.done) {
