@@ -60,26 +60,25 @@ function RosterItem({ playerid, position }) {
         pos2: position,
       }));
       dispatch(selectRPos([0, '']));
-    } else if (thisplayer.NFLPositionId) {
+    } else if (thisplayer?.NFLPositionId) {
       dispatch(selectRPos([thisplayer.NFLPositionId, position]));
     } else {
-      dispatch(selectRPos([rosterkey[position].type, position]));
+      dispatch(selectRPos([rosterkey[position], position]));
     }
   };
 
+  // Should a pos label be highlighted (If a clicked player could be moved there)
   const shouldHighlight = () => {
     const selectedType = rposSelected[0];
     if (selectedType === 0) return false; // If flag is not set, then don't
     const thisType = rosterkey[position];
-    if (selectedType !== thisType) {
-      if (selectedType === flexID || thisType === flexID) {
-        if (selectedType === flexID && !NFLPosTypes[position].canflex) return false;
-        if (thisType === flexID && !NFLPosTypes[selectedType].canflex) return false;
-        return true;
-      }
-      return false;
+    if (selectedType === thisType) return true; // If same pos type, can def do it
+    if (selectedType === flexID || thisType === flexID) { // If either is a flex position
+      if (selectedType === flexID && !NFLPosTypes[thisType].canflex) return false; // Can't if non-flex type can't flex
+      if (thisType === flexID && !NFLPosTypes[selectedType].canflex) return false;
+      return true;
     }
-    return true;
+    return false;
   };
 
   // If no player, show an empty row
