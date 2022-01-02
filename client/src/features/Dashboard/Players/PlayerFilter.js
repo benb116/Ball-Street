@@ -50,9 +50,12 @@ const PlayerFilter = () => {
 
       <select style={{ cursor: 'pointer' }} onChange={handleChange} name="teamAbr" value={filters.team}>
         <option value="">Team</option>
-        {Object.keys(theteams).map((tid) => (theteams[tid].phase !== 'post' ? (
-          <option key={theteams[tid].id} value={theteams[tid].abr}>{theteams[tid].abr}</option>
-        ) : null))}
+        {Object.keys(theteams)
+          .sort((a,b) => theteams[a].abr > theteams[b].abr ? 1 : -1)
+          .map((tid) => {
+            if (theteams[tid].phase === 'post') return null;
+            return <option key={theteams[tid].id} value={theteams[tid].abr}>{theteams[tid].abr}</option>
+          })}
       </select>
 
       <select style={{ cursor: 'pointer' }} onChange={handleChange} name="game" value={filters.game}>
