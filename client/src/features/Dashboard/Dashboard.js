@@ -16,6 +16,7 @@ const Dashboard = () => {
   useEffect(() => {
     initWS(contestID);
   }, [contestID]);
+  // Init the WS for a specific contest
 
   return (
     <div

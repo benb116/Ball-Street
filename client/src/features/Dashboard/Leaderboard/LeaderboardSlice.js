@@ -13,9 +13,7 @@ export const leaderboardSlice = createSlice({
       state.leaders = (payload || []);
     },
   },
-  extraReducers: {
-
-  },
+  extraReducers: {},
 });
 
 export const { updateLeaders } = leaderboardSlice.actions;

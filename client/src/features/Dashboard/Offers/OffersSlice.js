@@ -18,11 +18,14 @@ export const offersSlice = createSlice({
   name: 'offers',
   initialState: defaultState,
   reducers: {
+    // Clear an offer from the list
+    // Don't know if it's bid or ask so check both
     removeOffer: (state, { payload }) => {
       state.remove.push(payload);
       state.bids = state.bids.filter((o) => o.id !== payload);
       state.asks = state.asks.filter((o) => o.id !== payload);
     },
+    // When a protected match comes in, update the offer's expiration
     alertProtMatch: (state, { payload }) => {
       state.bids.forEach((o) => {
         if (o.id === payload.offerID) { o.expire = payload.expire; }
@@ -43,6 +46,9 @@ export const offersSlice = createSlice({
       if (payload) { toast.error(payload); }
     },
     [createOffer.fulfilled]: (state, { payload }) => {
+      // If an offer is filled immediately,
+      // It may be marked as filled before the "create offer" has resolved.
+      // So check to make sure it hasn't already been added to the "remove" list
       if (state.remove.indexOf(payload.id) === -1) {
         if (payload.isbid) {
           state.bids.push(payload);

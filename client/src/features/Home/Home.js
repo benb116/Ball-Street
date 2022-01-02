@@ -10,7 +10,7 @@ const Home = () => {
   const history = useHistory();
 
   const { email } = useSelector(userSelector);
-  const isLoggedIn = useSelector(isLoggedInSelector);
+  const isLoggedIn = useSelector(isLoggedInSelector); // Use localstorage to know if logged in
 
   useEffect(() => {
     if (isLoggedIn) {

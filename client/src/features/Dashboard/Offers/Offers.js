@@ -6,6 +6,7 @@ import { allTeamsSelector, playerSelector } from '../Players/PlayersSlice';
 
 import { cancelOffer, getOffers, offersSelector } from './OffersSlice';
 
+// Show offers for different players
 const Offers = () => {
   const dispatch = useDispatch();
   const { contestID } = useParams();
@@ -28,21 +29,11 @@ const Offers = () => {
       }}
     >
       <h3>Offers</h3>
-      <h4 style={{
-        margin: 0,
-      }}
-      >
-        Bids
-      </h4>
+      <h4 style={{ margin: 0 }}>Bids</h4>
       <div>
         {offers.bids.map((offer) => <OfferItem key={offer.id} offerdata={offer} />)}
       </div>
-      <h4 style={{
-        margin: 0,
-      }}
-      >
-        Asks
-      </h4>
+      <h4 style={{ margin: 0 }}>Asks</h4>
       <div>
         {offers.asks.map((offer) => <OfferItem key={offer.id} offerdata={offer} />)}
       </div>
@@ -51,6 +42,9 @@ const Offers = () => {
 };
 
 function OfferItem({ offerdata }) {
+  // Used for protected offer times
+  // Value says whether a countdown has started
+  // Count is a dummy variable that is updated to cause a rerender
   const [value, setValue] = useState(true); // integer state
   const [, setCount] = useState(0); // integer state
 

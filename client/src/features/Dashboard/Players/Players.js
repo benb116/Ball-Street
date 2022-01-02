@@ -16,6 +16,7 @@ import {
 import PlayerFilter from './PlayerFilter';
 import PlayerItem from './PlayerItem';
 
+// Show list of all active players
 const Players = () => {
   const dispatch = useDispatch();
 
@@ -25,12 +26,14 @@ const Players = () => {
   const filters = useSelector(filterSelector);
   const sorts = useSelector(sortSelector);
 
+  // If we're filtering by a game
   const thegamefilter = filters.game;
   let thegame = null;
   if (thegamefilter !== '') {
     thegame = thegames[Number(thegamefilter)];
   }
 
+  // Run through filters then sorting
   const filtersortplayers = theplayers
     .filter((p) => {
       // Name filter
@@ -62,35 +65,30 @@ const Players = () => {
       const aPhase = theteams[a.NFLTeamId]?.phase;
       const bPhase = theteams[b.NFLTeamId]?.phase;
 
-      const sortBy = sorts.sortProp;
-      let [item1, item2] = [a[sorts.sortProp], b[sorts.sortProp]];
+      const sortBy = sorts.sortProp; // What are we sorting by?
+      let [item1, item2] = [a[sortBy], b[sortBy]]; // Get that property
       if (sortBy === 'preprice') {
-        if (aPhase !== 'pre') {
-          item1 = a.projPrice;
-        }
-        if (bPhase !== 'pre') {
-          item2 = b.projPrice;
-        }
+        if (aPhase !== 'pre') { item1 = a.projPrice; }
+        if (bPhase !== 'pre') { item2 = b.projPrice; }
       }
       if (sortBy === 'postprice') {
-        if (aPhase !== 'pre') {
-          item1 = a.statPrice;
-        }
-        if (bPhase !== 'pre') {
-          item2 = b.statPrice;
-        }
+        if (aPhase !== 'pre') { item1 = a.statPrice; }
+        if (bPhase !== 'pre') { item2 = b.statPrice; }
       }
       if (sortBy === 'teamAbr') {
         item1 = theteams[a.NFLTeamId].abr;
         item2 = theteams[b.NFLTeamId].abr;
       }
+
+      // Should flip order?
       let flip = 1;
-      if (['name', 'posName', 'teamAbr'].indexOf(sorts.sortProp) === -1) {
+      if (['name', 'posName', 'teamAbr'].indexOf(sortBy) === -1) {
+        // Make numerical comparisons and switch order
         item1 = Number(item1);
         item2 = Number(item2);
         flip = -1;
       }
-      const out = (item1 || 0) > (item2 || 0);
+      const out = (item1 || 0) > (item2 || 0); // Compare as boolean
       return (out ? 1 : -1) * (sorts.sortDesc ? 1 : -1) * flip;
     });
 
@@ -142,9 +140,11 @@ const Players = () => {
   );
 };
 
+// Header row for player list with clickable column titles
 function ListHeader() {
   const dispatch = useDispatch();
 
+  // Change sort
   function handleClick(evt) {
     dispatch(setSort(evt.target.getAttribute('value')));
   }

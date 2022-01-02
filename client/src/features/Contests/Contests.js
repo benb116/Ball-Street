@@ -5,12 +5,14 @@ import { Link } from 'react-router-dom';
 
 import { contestsSelector, getContests } from './ContestsSlice';
 
+// Show info about all contests available
 const Contests = () => {
   const dispatch = useDispatch();
 
   const allcontests = useSelector(contestsSelector);
   const sortedContests = [...allcontests].sort((a, b) => b.nflweek - a.nflweek);
 
+  // Pull data
   const pullContests = () => {
     dispatch(getContests());
   };

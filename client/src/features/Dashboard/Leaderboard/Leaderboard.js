@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { leadersSelector } from './LeaderboardSlice';
 import RenderPrice from '../../../helpers/util';
 
+// Show leaderboard of entries in the contest
 const Leaderboards = () => {
   const leaders = useSelector(leadersSelector);
 

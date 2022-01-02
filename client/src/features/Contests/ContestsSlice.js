@@ -26,9 +26,7 @@ export const createEntry = createAsyncThunk('contests/createEntry', createentryf
 export const contestsSlice = createSlice({
   name: 'contests',
   initialState: defaultState,
-  reducers: {
-
-  },
+  reducers: {},
   extraReducers: {
     [getContests.fulfilled]: (state, { payload }) => {
       state.allcontests = payload;

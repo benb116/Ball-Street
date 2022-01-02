@@ -5,6 +5,7 @@ import { offerFilled, updateRoster } from './Entry/EntrySlice';
 import { updateLeaders } from './Leaderboard/LeaderboardSlice';
 import { updateTrades } from './Trades/TradesSlice';
 
+// Init WS connection and dispatch actions based on events
 const initWS = (contestID) => {
   const { host } = window.location;
   let url = `ws://localhost/ballstreetlive/contest/${contestID}`;
@@ -17,7 +18,6 @@ const initWS = (contestID) => {
   socket.addEventListener('message', (event) => {
     // console.log('Message from server ', event.data);
     const msg = JSON.parse(event.data);
-    // let msgs;
     if (Array.isArray(msg)) {
       msg.filter((u) => u).forEach(markPrice);
     } else {

@@ -9,6 +9,7 @@ import { cancelOffer, offersSelector } from '../Offers/OffersSlice';
 import { allTeamsSelector, priceMapSelector } from './PlayersSlice';
 import RenderPrice from '../../../helpers/util';
 
+// Show a player's row in the list
 function PlayerItem({ playerdata }) {
   const dispatch = useDispatch();
   const { contestID } = useParams();
@@ -18,12 +19,18 @@ function PlayerItem({ playerdata }) {
   const showDrop = useSelector(isOnRosterSelector(playerdata.id));
   const priceMap = useSelector(priceMapSelector(playerdata.id));
 
+  // Player's team info
   const thephase = theteams[playerdata.NFLTeamId].phase;
   const teamAbr = theteams[playerdata.NFLTeamId].abr;
 
+  // Show correct price info
   const dispProj = thephase === 'pre' ? playerdata.preprice : (priceMap.projPrice || 0);
   const dispStat = thephase === 'pre' ? playerdata.postprice : (priceMap.statPrice || 0);
+  const dispLast = priceMap?.lastprice ? Math.round(priceMap.lastprice / 100) : '';
+  const dispBid = priceMap?.bestbid ? Math.round(priceMap.bestbid / 100) : '';
+  const dispAsk = priceMap?.bestask ? Math.round(priceMap.bestask / 100) : '';
 
+  // Player actions
   const onpredrop = () => {
     dispatch(preDrop({ contestID, nflplayerID: playerdata.id }));
   };
@@ -59,6 +66,8 @@ function PlayerItem({ playerdata }) {
     dispatch(cancelOffer({ contestID, offerID: oid }));
   };
 
+  // Determine correct action for the player
+  // based on whether they're on the roster, game phase, and offer status
   let oclick = (showDrop ? onpredrop : onpreadd);
   let text = (showDrop ? '–' : '+');
   if (thephase === 'mid') {
@@ -85,15 +94,16 @@ function PlayerItem({ playerdata }) {
       <td style={{ width: '2.2rem' }}>{teamAbr}</td>
       <td style={{ width: '2rem', textAlign: 'right' }}>{RenderPrice(dispProj)}</td>
       <td style={{ width: '2rem', textAlign: 'right' }}>{RenderPrice(dispStat)}</td>
-      <td style={{ width: '2rem', textAlign: 'right' }}>{(priceMap && Number(priceMap.lastprice)) ? Math.round(priceMap.lastprice / 100) : ''}</td>
-      <td style={{ width: '2rem', textAlign: 'right' }}>{(priceMap && Number(priceMap.bestbid)) ? Math.round(priceMap.bestbid / 100) : ''}</td>
-      <td style={{ width: '2rem', textAlign: 'right' }}>{(priceMap && Number(priceMap.bestask)) ? Math.round(priceMap.bestask / 100) : ''}</td>
+      <td style={{ width: '2rem', textAlign: 'right' }}>{dispLast}</td>
+      <td style={{ width: '2rem', textAlign: 'right' }}>{dispBid}</td>
+      <td style={{ width: '2rem', textAlign: 'right' }}>{dispAsk}</td>
 
       <ActionButton thephase={thephase} oclick={oclick} text={text} />
     </tr>
   );
 }
 
+// Show correct action button
 function ActionButton({ thephase, oclick, text }) {
   if (thephase !== 'pre' && thephase !== 'mid') {
     return (<td />);

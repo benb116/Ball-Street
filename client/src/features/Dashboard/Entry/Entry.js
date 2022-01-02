@@ -8,14 +8,16 @@ import { getEntry, entrySelector, rosterUpdateSelector } from './EntrySlice';
 
 import RosterItem from './RosterItem';
 
+// Display the user's current entry (balance + players)
 const Entry = () => {
   const dispatch = useDispatch();
   const { contestID } = useParams();
 
   const thisentry = useSelector(entrySelector);
-  const rUpdate = useSelector(rosterUpdateSelector);
-  const rpos = Object.keys(thisentry.roster);
+  const rUpdate = useSelector(rosterUpdateSelector); // Flag set if the entry should be updated
+  const rpos = Object.keys(thisentry.roster); // All roster positions
 
+  // Initial data pull
   useEffect(() => {
     dispatch(getEntry({ contestID }));
   }, [contestID, dispatch]);
@@ -45,7 +47,7 @@ const Entry = () => {
       <table>
         <RosterHeader />
         <tbody>
-          {rpos.map((pos) => (
+          {rpos.map((pos) => ( // Create a roster item for each position
             <RosterItem
               key={pos}
               position={pos}
@@ -59,6 +61,7 @@ const Entry = () => {
   );
 };
 
+// Table header for the roster
 function RosterHeader() {
   return (
     <thead>
@@ -77,15 +80,17 @@ function RosterHeader() {
   );
 }
 
+// Table footer showing calculated point totals
 function PointTotals() {
   const thisentry = useSelector(entrySelector);
   const rpos = Object.keys(thisentry.roster);
 
-  const rosterPlayerIDs = Object.values(thisentry.roster).filter((p) => p !== null);
-  const players = useSelector(playersSelector(rosterPlayerIDs));
-  const priceMaps = useSelector(pricesMapSelector(rosterPlayerIDs));
-  const theteams = useSelector(allTeamsSelector);
+  const rosterPlayerIDs = Object.values(thisentry.roster).filter((p) => p !== null); // All playerIDs
+  const players = useSelector(playersSelector(rosterPlayerIDs)); // Player DB info
+  const priceMaps = useSelector(pricesMapSelector(rosterPlayerIDs)); // Player proj and statprice info
+  const theteams = useSelector(allTeamsSelector); // Are teams in pre or mid? Show different price as a result
 
+  // Sum the stat totals and the projected totals
   const sum = rpos.reduce((acc, pos) => {
     const out = acc;
     const thisplayerID = thisentry.roster[pos];

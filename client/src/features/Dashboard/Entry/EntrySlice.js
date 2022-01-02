@@ -14,8 +14,8 @@ export const reorderRoster = createAsyncThunk('entry/reorderRoster', reorderrost
 const defaultState = {
   balance: 0,
   roster: {},
-  rposSelected: [0, ''],
-  rosterUpdate: false,
+  rposSelected: [0, ''], // Used for reordering roster. [NFLPositionID, RosterPosName]
+  rosterUpdate: false, // Flag telling the entry to refresh
 };
 
 export const entrySlice = createSlice({
@@ -33,9 +33,12 @@ export const entrySlice = createSlice({
       state.rosterUpdate = true;
     },
     selectRPos: (state, { payload }) => {
+      // If current state is 0, nothing is currently selected.
+      // This is the first click, so set the state
       if (state.rposSelected[0] === 0) {
         state.rposSelected = payload;
       } else {
+        // A different position has previously been picked, so reset state
         state.rposSelected = [0, ''];
       }
     },

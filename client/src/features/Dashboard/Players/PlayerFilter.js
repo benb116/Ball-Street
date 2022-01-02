@@ -17,6 +17,8 @@ function debounce(func, wait) {
   };
 }
 
+// Player list filter
+// Name, Position, Team, Game, Game phase
 const PlayerFilter = () => {
   const dispatch = useDispatch();
   const filters = useSelector(filterSelector);
@@ -34,6 +36,7 @@ const PlayerFilter = () => {
   return (
     <form>
       <input style={{ cursor: 'pointer' }} onChange={handleChangeDebounce} name="name" />
+
       <select style={{ cursor: 'pointer' }} onChange={handleChange} name="posName" value={filters.posName}>
         <option value="">Pos</option>
         <option value="QB">QB</option>
@@ -44,16 +47,18 @@ const PlayerFilter = () => {
         <option value="K">K</option>
         <option value="DEF">DEF</option>
       </select>
+
       <select style={{ cursor: 'pointer' }} onChange={handleChange} name="teamAbr" value={filters.team}>
         <option value="">Team</option>
         {Object.keys(theteams).map((tid) => (theteams[tid].phase !== 'post' ? (
           <option key={theteams[tid].id} value={theteams[tid].abr}>{theteams[tid].abr}</option>
         ) : null))}
       </select>
+
       <select style={{ cursor: 'pointer' }} onChange={handleChange} name="game" value={filters.game}>
         <option value="">Game</option>
         {thegames.map((g, i) => {
-          if (g.phase !== 'post') {
+          if (g.phase !== 'post') { // Hide games in post
             return (
               <option key={g.HomeId} value={i}>
                 {g.away.abr}
@@ -67,6 +72,7 @@ const PlayerFilter = () => {
           return null;
         })}
       </select>
+
       <select style={{ cursor: 'pointer' }} onChange={handleChange} name="phase" value={filters.phase}>
         <option value="">Phase</option>
         <option value="pre">Pregame</option>

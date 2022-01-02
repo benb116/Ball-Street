@@ -43,6 +43,7 @@ const Trades = () => {
 };
 
 function TradeItem({ tradedata }) {
+  // Pull some info about the nfl player
   const playerData = (useSelector(playerSelector(tradedata.NFLPlayerId)) || {});
   return (
     <div>

@@ -14,22 +14,25 @@ import {
 } from './ContestsSlice';
 import RenderPrice from '../../helpers/util';
 
+// Show info about a specific contest and its entries
 const Contest = () => {
   const dispatch = useDispatch();
   const { handleSubmit } = useForm();
-  const { contestID } = useParams();
+  const { contestID } = useParams(); // Get contestID from URL params
 
-  const thiscontest = useSelector(contestSelector);
-  const thiscontestentries = useSelector(entriesSelector);
   const sortedEntries = [...thiscontestentries].sort((a, b) => b.pointtotal - a.pointtotal);
+  const thiscontest = useSelector(contestSelector); // Get info about this contest
+  const thiscontestentries = useSelector(entriesSelector); // Get the entries in this contest
   const thiscontestmyentry = useSelector(myEntrySelector);
 
+  // Pull data
   useEffect(() => {
     dispatch(getContest({ contestID }));
     dispatch(getEntries({ contestID }));
     dispatch(getMyEntry({ contestID }));
   }, [contestID, dispatch]);
 
+  // User wants to create an entry in this contest
   const onCreateEntry = () => {
     dispatch(createEntry({ contestID }));
   };
@@ -55,7 +58,7 @@ const Contest = () => {
 
       <br />
       <br />
-      {!(Object.keys(thiscontestmyentry).length)
+      {!(Object.keys(thiscontestmyentry).length) // If the user doesn't have an entry in this contest
         ? (
           <form className="space-y-6" onSubmit={handleSubmit(onCreateEntry)} method="POST">
             <div>
