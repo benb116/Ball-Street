@@ -173,11 +173,12 @@ class Book {
     // Get offers
     const allMatchingOffers = allMatchingPrices
       .map((p) => thetree[p]) // get limit trees
-      .map((l) => [...l.keys()]) // get offers
+      .map((l) => [...l.entries()]) // get offers
       .reduce((acc, cur) => { // concat all
         const added = [...acc, ...cur];
         return added;
-      }, []);
+      }, [])
+      .map((e) => e[1]);
 
     // Search protected opposite offers that are newer than this offer
     const theptree = this.whichTree(!isbid, true);
@@ -193,7 +194,7 @@ class Book {
       }, [])
     // only offers submitted after protected
       .filter((e) => Date.parse(e[1].createdAt) > Date.parse(offer.createdAt))
-      .map((e) => e[0]);
+      .map((e) => e[1]);
     return [...allMatchingOffers, ...allMatchingPOffers];
   }
 }

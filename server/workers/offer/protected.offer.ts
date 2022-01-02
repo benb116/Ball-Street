@@ -42,25 +42,27 @@ async function runMatches(poffer: OfferType, playerBook: Book) {
     const randomInd = Math.floor(Math.random() * matchingOfferIDs.length);
     const randomOffer = matchingOfferIDs[randomInd];
     logger.verbose(`Try to fill ${randomOffer}`);
-    const bidoffer = (ispbid ? poffer.id : randomOffer);
-    const askoffer = (!ispbid ? poffer.id : randomOffer);
+    const bidoffer = (ispbid ? poffer.id : randomOffer.id);
+    const askoffer = (!ispbid ? poffer.id : randomOffer.id);
 
     // eslint-disable-next-line no-await-in-loop
     const result = await fillOffers(bidoffer, askoffer);
 
-    if (result.bid.filled || result.bid.cancelled) {
-      playerBook.cancel(result.bid);
+    if (!result.bid || result.bid.filled || result.bid.cancelled) {
       if (ispbid) {
+        playerBook.cancel(poffer);
         matchingOfferIDs = [];
       } else {
+        playerBook.cancel(randomOffer);
         matchingOfferIDs.splice(randomInd, 1);
       }
     }
-    if (result.ask.filled || result.ask.cancelled) {
-      playerBook.cancel(result.ask);
+    if (!result.ask || result.ask.filled || result.ask.cancelled) {
       if (!ispbid) {
+        playerBook.cancel(poffer);
         matchingOfferIDs = [];
       } else {
+        playerBook.cancel(randomOffer);
         matchingOfferIDs.splice(randomInd, 1);
       }
     }

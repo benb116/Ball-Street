@@ -42,14 +42,15 @@ async function attemptFill(t: Transaction, bidid: string, askid: string) {
     Offer.findByPk(askid, tobj(t)),
   ]);
 
-  const boffer: OfferType = dv(bidoffer);
-  const aoffer: OfferType = dv(askoffer);
+  const boffer: OfferType | null = dv(bidoffer);
+  const aoffer: OfferType | null = dv(askoffer);
 
-  if (!boffer || boffer.filled || boffer.cancelled || !boffer.isbid) {
-    isBidClosed = true;
-  }
-  if (!aoffer || aoffer.filled || aoffer.cancelled || aoffer.isbid) {
-    isAskClosed = true;
+  if (!boffer || !aoffer) {
+    logger.info(`Offer not found: ${(!boffer ? bidid : askid)}`);
+    return {
+      bid: boffer,
+      ask: aoffer,
+    };
   }
 
   const resp = {
@@ -57,12 +58,15 @@ async function attemptFill(t: Transaction, bidid: string, askid: string) {
     ask: aoffer,
   };
 
+  if (boffer.filled || boffer.cancelled || !boffer.isbid) {
+    isBidClosed = true;
+  }
+  if (aoffer.filled || aoffer.cancelled || aoffer.isbid) {
+    isAskClosed = true;
+  }
   if (isBidClosed || isAskClosed || !bidoffer || !askoffer) {
     logger.info(`Offer began closed: ${JSON.stringify(resp)}`);
-    return {
-      bid: (boffer || null),
-      ask: (aoffer || null),
-    };
+    return resp;
   }
 
   if (aoffer.price > boffer.price) throw new Error('Price mismatch');
@@ -115,6 +119,8 @@ async function attemptFill(t: Transaction, bidid: string, askid: string) {
   const out = await Promise.all([bidProm, askProm]);
   isBidClosed = !out[0];
   isAskClosed = !out[1];
+  resp.bid.cancelled = isBidClosed;
+  resp.ask.cancelled = isAskClosed;
 
   if (isBidClosed || isAskClosed) {
     logger.info(`Offer ended closed: ${JSON.stringify(resp)}`);

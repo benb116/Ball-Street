@@ -94,10 +94,10 @@ async function evaluateBook(playerBook: Book) {
       // eslint-disable-next-line no-await-in-loop
       const result = await fillOffers(match.bid.id, match.ask.id);
       // Remove filled or errored orders from the book
-      if (result.bid.filled || result.bid.cancelled) {
+      if (!result.bid || result.bid.filled || result.bid.cancelled) {
         playerBook.cancel(result.bid || match.bid);
       }
-      if (result.ask.filled || result.ask.cancelled) {
+      if (!result.ask || result.ask.filled || result.ask.cancelled) {
         playerBook.cancel(result.ask || match.ask);
       }
     }
