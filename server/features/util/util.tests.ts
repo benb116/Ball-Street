@@ -1,5 +1,6 @@
 import sequelize from '../../db';
 import { ServiceType, UError } from './util';
+import { ServiceType, isUError } from './util';
 
 // Functions used in Jest testing
 // Ensures that a service call returns an object with specific properties
@@ -31,12 +32,13 @@ export const ErrorTest = function ErrorTest(
       // eslint-disable-next-line no-console
       console.log(o);
       throw new Error('Unexpected pass');
-    } catch (err: any) {
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      if (!isUError(err)) { console.log(err); return; }
       // eslint-disable-next-line no-console
       if (!err.status) { console.log(err); }
-      const uerr: UError = err;
-      expect(uerr.message).toEqual(message);
-      expect(uerr.status).toEqual(statusNumber);
+      expect(err.message).toEqual(message);
+      expect(err.status).toEqual(statusNumber);
     }
   };
 };

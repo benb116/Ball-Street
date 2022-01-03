@@ -1,6 +1,6 @@
 import express, { Response } from 'express';
 
-import { UError } from '../util/util';
+import { isUError, uError, UError } from '../util/util';
 import routeHandler from '../util/util.route';
 import logger from '../../utilities/logger';
 
@@ -32,9 +32,12 @@ router.post('/login', async (req, res) => {
     const user = await login(inp);
     if (!user.needsVerification) req.session.user = { id: user.id }; // add to session
     return res.json(user);
-  } catch (err: any) {
-    const uerr: UError = err;
-    return userErrorHandler(res, uerr);
+  } catch (err) {
+    if (!isUError(err)) {
+      if (err instanceof Error) return userErrorHandler(res, uError(err.message));
+      return userErrorHandler(res, uError('Unknown error'));
+    }
+    return userErrorHandler(res, err);
   }
 });
 
@@ -49,9 +52,12 @@ router.post('/signup', async (req, res) => {
     const user = await signup(inp);
     if (!user.needsVerification) req.session.user = { id: user.id }; // add to session
     return res.json(user);
-  } catch (err: any) {
-    const uerr: UError = err;
-    return userErrorHandler(res, uerr);
+  } catch (err) {
+    if (!isUError(err)) {
+      if (err instanceof Error) return userErrorHandler(res, uError(err.message));
+      return userErrorHandler(res, uError('Unknown error'));
+    }
+    return userErrorHandler(res, err);
   }
 });
 
@@ -62,9 +68,12 @@ router.get('/verify', async (req, res) => {
     const user = await evalVerify(inp);
     req.session.user = { id: user.id }; // add to session
     return res.redirect('/verified');
-  } catch (err: any) {
-    const uerr: UError = err;
-    return userErrorHandler(res, uerr);
+  } catch (err) {
+    if (!isUError(err)) {
+      if (err instanceof Error) return userErrorHandler(res, uError(err.message));
+      return userErrorHandler(res, uError('Unknown error'));
+    }
+    return userErrorHandler(res, err);
   }
 });
 
@@ -75,9 +84,12 @@ router.post('/forgot', async (req, res) => {
   try {
     const done = await genPassReset(inp);
     return res.json({ resetLinkSent: done });
-  } catch (err: any) {
-    const uerr: UError = err;
-    return userErrorHandler(res, uerr);
+  } catch (err) {
+    if (!isUError(err)) {
+      if (err instanceof Error) return userErrorHandler(res, uError(err.message));
+      return userErrorHandler(res, uError('Unknown error'));
+    }
+    return userErrorHandler(res, err);
   }
 });
 
@@ -93,9 +105,12 @@ router.post('/resetPasswordToken', async (req, res) => {
       res.redirect('/login');
     });
     return true;
-  } catch (err: any) {
-    const uerr: UError = err;
-    return userErrorHandler(res, uerr);
+  } catch (err) {
+    if (!isUError(err)) {
+      if (err instanceof Error) return userErrorHandler(res, uError(err.message));
+      return userErrorHandler(res, uError('Unknown error'));
+    }
+    return userErrorHandler(res, err);
   }
 });
 
