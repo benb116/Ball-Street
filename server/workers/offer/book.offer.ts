@@ -19,7 +19,7 @@ interface MatcherType {
 class Book {
   contestID: number;
   nflplayerID: number;
-  queue: Promise<void>;
+  queue: Promise<unknown>;
   init: boolean;
   bid: LimitTree;
   pbid: LimitTree;
@@ -80,7 +80,7 @@ class Book {
   }
 
   // Add a function to the book's serial queue
-  enqueue(fn: (inp: any) => any) {
+  enqueue(fn: (inp: unknown) => unknown) {
     this.queue = this.queue.then(fn).catch((err) => {
       logger.error(`Book error: Contest:${this.contestID} Player:${this.nflplayerID}`, err);
     });

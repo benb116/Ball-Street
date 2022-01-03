@@ -11,7 +11,7 @@ import injuryUpdate from './channels/injuryUpdate.channel';
 
 interface LiveChannel {
   sub(message: string): void,
-  pub(...args: any[]): void,
+  pub(...args: unknown[]): void,
 }
 
 const channelMap: Record<string, LiveChannel> = {

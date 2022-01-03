@@ -3,8 +3,6 @@ import { Model, Transaction } from 'sequelize';
 
 import { FlexNFLPositionId, NFLPosTypes, Roster } from '../../config';
 
-import logger from '../../utilities/logger';
-
 import { EntryType } from '../entry/entry.model';
 
 const rpos = Object.keys(Roster);
@@ -78,14 +76,10 @@ export const uError = function uError(msg: string, status = 500) {
   throw uerr;
 };
 
-// Console.log passthrough for promises
-export const cl = function cl(input: any) {
-  logger.info(input);
-  return input;
-};
+export const isUError = (item: unknown): item is UError => !!(item as UError)?.status;
 
 // Validate an object based on a Joi schema
-export const validate = function validate(input: Record<string, any>, schema: Schema) {
+export const validate = function validate(input: unknown, schema: Schema) {
   const { value, error } = schema.validate(input);
   if (error) { uError(error.details[0].message, 400); }
   return value;
@@ -102,7 +96,7 @@ export const OnCompare = function OnCompare(a: string, b: string) {
   return mismatch;
 };
 // Filter out duplicates
-export const onlyUnique = function onlyUnique(value: any, index: number, self: any[]) {
+export const onlyUnique = function onlyUnique(value: unknown, index: number, self: unknown[]) {
   return self.indexOf(value) === index;
 };
 

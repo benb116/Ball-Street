@@ -1,19 +1,22 @@
 import sequelize from '../../db';
 import { ServiceType, UError } from './util';
 import { ServiceType, isUError } from './util';
+type ObjectType = Record<string, unknown>;
 
 // Functions used in Jest testing
 // Ensures that a service call returns an object with specific properties
-export const ObjectTest = function ObjectTest(service: ServiceType, req: any, contains: any, resetQuery = '') {
-  return async () => service(req).then(async (resp: any) => {
+export const ObjectTest = function ObjectTest(
+  service: ServiceType, req: unknown, contains: ObjectType, resetQuery = '',
+) {
+  return async () => service(req).then(async (resp: unknown) => {
     expect(resp).toMatchObject(contains);
     if (resetQuery) await sequelize.query(resetQuery);
   });
 };
 
 // Ensures that a service call returns an array with specific elements
-export const ArrayTest = function ArrayTest(service: ServiceType, req: any, items: any[]) {
-  return async () => service(req).then((resp: any) => {
+export const ArrayTest = function ArrayTest(service: ServiceType, req: unknown, items: unknown[]) {
+  return async () => service(req).then((resp: unknown) => {
     if (typeof items[0] === 'object') {
       expect(resp).toMatchObject(items);
     } else {
@@ -24,7 +27,7 @@ export const ArrayTest = function ArrayTest(service: ServiceType, req: any, item
 
 // Ensures that a service call throws an error with specific status number and message
 export const ErrorTest = function ErrorTest(
-  service: ServiceType, req: any, statusNumber: number, message: string,
+  service: ServiceType, req: unknown, statusNumber: number, message: string,
 ) {
   return async function errortest() {
     try {
@@ -46,7 +49,7 @@ export const ErrorTest = function ErrorTest(
 export const TestPromiseMap = function TestPromiseMap(labelArray: string[]) {
   interface PromiseMap {
     [key: string]: {
-      prom: Promise<any>
+      prom: Promise<unknown>
       res: (value: unknown) => void,
       rej: (value: unknown) => void,
       done: boolean

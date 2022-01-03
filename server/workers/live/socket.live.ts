@@ -4,7 +4,7 @@ import liveState from './state.live'; // WS server
 
 export interface MessageType {
   event: string,
-  [key: string]: any,
+  [key: string]: unknown,
 }
 export interface MessageMapType {
   [key: string]: MessageType,
