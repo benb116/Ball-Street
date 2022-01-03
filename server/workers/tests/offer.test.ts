@@ -10,6 +10,7 @@ import { TestPromiseMap } from '../../features/util/util.tests';
 const contestID = 2;
 
 const tests = [
+  'init',
   'offer1',
   'nonMatch',
   'match',
@@ -123,7 +124,6 @@ async function run() {
         break;
     }
   });
-  console.log('ready');
   await createOffer(reqBody()).catch(console.log);
 }
 
@@ -150,11 +150,16 @@ async function run2() {
         break;
     }
   });
+  pMap.init.res(true);
 }
 
 beforeAll(() => { run().then(run2); });
 
 describe('Offer matching tests', () => {
+  test('Initialization', () => pMap.init.prom.then((data) => {
+    expect(data).toEqual(true);
+  }));
+
   test('Price update on offer', () => pMap.offer1.prom.then((data) => {
     expect(data.pricedata).toEqual(expect.objectContaining({
       21: { bestask: 500, bestbid: 0, nflplayerID: 21 },

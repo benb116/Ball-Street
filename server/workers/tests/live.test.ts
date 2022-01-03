@@ -69,7 +69,7 @@ async function cancelOffer(cookie: string) {
   });
 }
 
-const tests = ['open1', 'leader', 'initPrice', 'offerPrice', 'cancelPrice', 'protMatch', 'fillOffer'];
+const tests = ['init', 'open1', 'leader', 'initPrice', 'offerPrice', 'cancelPrice', 'protMatch', 'fillOffer'];
 const pMap = TestPromiseMap(tests);
 
 async function initUsers() {
@@ -121,12 +121,16 @@ async function initUsers() {
   await cancelOffer(session1);
   await createOffer(session1, true, 100, false);
 
-  console.log('ready');
+  pMap.init.res(true);
 }
 
 beforeAll(() => initUsers().catch(console.error));
 
 describe('Live server tests', () => {
+  test('Initialization', () => pMap.init.prom.then((data) => {
+    expect(data).toEqual(true);
+  }));
+
   test('Open WS connection', () => pMap.open1.prom.then((data) => {
     expect(data).toBe(true);
   }));
