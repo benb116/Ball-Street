@@ -40,3 +40,25 @@ export const ErrorTest = function ErrorTest(
     }
   };
 };
+
+export const TestPromiseMap = function TestPromiseMap(labelArray: string[]) {
+  interface PromiseMap {
+    [key: string]: {
+      prom: Promise<any>
+      res: (value: unknown) => void,
+      rej: (value: unknown) => void,
+      done: boolean
+    }
+  }
+  return labelArray.reduce((acc, cur) => {
+    let pRes: (value: unknown) => void = () => {};
+    let pRej: (value: unknown) => void = () => {};
+    acc[cur] = {
+      prom: new Promise((res, rej) => { pRes = res; pRej = rej; }),
+      res: pRes,
+      rej: pRej,
+      done: false,
+    };
+    return acc;
+  }, {} as PromiseMap);
+};

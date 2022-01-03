@@ -5,6 +5,7 @@ import axios from 'axios';
 import createOffer from '../../features/offer/services/createOffer.service';
 import { rediskeys, client } from '../../db/redis';
 import { ProtectionDelay, RefreshTime } from '../../config';
+import { TestPromiseMap } from '../../features/util/util.tests';
 
 const contestID = 2;
 
@@ -19,26 +20,7 @@ const tests = [
   'better',
   'matchbetter',
 ];
-
-interface PromiseMap {
-  [key: string]: {
-    prom: Promise<any>
-    res: (value: unknown) => void,
-    rej: (value: unknown) => void,
-    done: boolean
-  }
-}
-const pMap = tests.reduce((acc, cur) => {
-  let pRes: (value: unknown) => void = () => {};
-  let pRej: (value: unknown) => void = () => {};
-  acc[cur] = {
-    prom: new Promise((res, rej) => { pRes = res; pRej = rej; }),
-    res: pRes,
-    rej: pRej,
-    done: false,
-  };
-  return acc;
-}, {} as PromiseMap);
+const pMap = TestPromiseMap(tests);
 
 function reqBody(user = 1, nflplayerID = 21, isbid = false, price = 500, isProtected = false) {
   return {
