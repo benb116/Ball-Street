@@ -38,3 +38,5 @@ export default function errorHandler(responseMap: Record<string, ErrorRespType>)
     return uError(outmess.message, (outmess.status || 500));
   };
 }
+
+export type ServiceType = (inp: any) => Promise<any>;

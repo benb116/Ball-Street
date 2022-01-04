@@ -6,6 +6,7 @@
 import { Request, Response } from 'express';
 
 import { uError, isUError } from './util';
+import { ServiceType } from './util.service';
 
 import { client } from '../../db/redis';
 

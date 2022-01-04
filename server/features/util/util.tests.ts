@@ -1,6 +1,7 @@
 import sequelize from '../../db';
-import { ServiceType, UError } from './util';
-import { ServiceType, isUError } from './util';
+import { isUError } from './util';
+import { ServiceType } from './util.service';
+
 type ObjectType = Record<string, unknown>;
 
 // Functions used in Jest testing
@@ -49,15 +50,15 @@ export const ErrorTest = function ErrorTest(
 export const TestPromiseMap = function TestPromiseMap(labelArray: string[]) {
   interface PromiseMap {
     [key: string]: {
-      prom: Promise<unknown>
-      res: (value: unknown) => void,
-      rej: (value: unknown) => void,
+      prom: Promise<any>
+      res: (value: any) => void,
+      rej: (value: any) => void,
       done: boolean
     }
   }
   return labelArray.reduce((acc, cur) => {
-    let pRes: (value: unknown) => void = () => {};
-    let pRej: (value: unknown) => void = () => {};
+    let pRes: (value: any) => void = () => {};
+    let pRej: (value: any) => void = () => {};
     acc[cur] = {
       prom: new Promise((res, rej) => { pRes = res; pRej = rej; }),
       res: pRes,

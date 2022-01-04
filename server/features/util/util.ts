@@ -99,5 +99,3 @@ export const OnCompare = function OnCompare(a: string, b: string) {
 export const onlyUnique = function onlyUnique(value: unknown, index: number, self: unknown[]) {
   return self.indexOf(value) === index;
 };
-
-export type ServiceType = (inp: any) => Promise<any>;
