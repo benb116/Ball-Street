@@ -1,14 +1,14 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppSelector, useAppDispatch } from '../../app/hooks'
 import { forgotUser, userSelector } from './UserSlice';
 
 const Signup = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { register, handleSubmit } = useForm();
   const history = useHistory();
-  const { id } = useSelector(userSelector);
+  const { id } = useAppSelector(userSelector);
 
   const onSubmit = (data) => {
     dispatch(forgotUser(data));
@@ -39,7 +39,6 @@ const Signup = () => {
                 <div className="mt-1">
                   <input
                     id="email"
-                    name="email"
                     type="email"
                     autoComplete="email"
                     {...register('email')}

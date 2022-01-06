@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useSelector, useDispatch } from 'react-redux';
+import { useAppSelector, useAppDispatch } from '../../../app/hooks'
 import { useParams } from 'react-router-dom';
 import { allTeamsSelector, playerSelector } from '../Players/PlayersSlice';
 
@@ -8,14 +8,14 @@ import { cancelOffer, getOffers, offersSelector } from './OffersSlice';
 
 // Show offers for different players
 const Offers = () => {
-  const dispatch = useDispatch();
-  const { contestID } = useParams();
+  const dispatch = useAppDispatch();
+  const { contestID } = useParams<{ contestID: string }>();
 
   useEffect(() => {
     dispatch(getOffers({ contestID }));
   }, [contestID, dispatch]);
 
-  const offers = useSelector(offersSelector);
+  const offers = useAppSelector(offersSelector);
 
   return (
     <div
@@ -48,17 +48,17 @@ function OfferItem({ offerdata }) {
   const [value, setValue] = useState(true); // integer state
   const [, setCount] = useState(0); // integer state
 
-  const dispatch = useDispatch();
-  const { contestID } = useParams();
+  const dispatch = useAppDispatch();
+  const { contestID } = useParams<{ contestID: string }>();
 
-  const playerdata = useSelector(playerSelector(offerdata.NFLPlayerId));
-  const teamdata = useSelector(allTeamsSelector);
+  const playerdata = useAppSelector(playerSelector(offerdata.NFLPlayerId));
+  const teamdata = useAppSelector(allTeamsSelector);
   const thephase = teamdata[playerdata?.NFLTeamId]?.phase;
   if (!playerdata || thephase !== 'mid') {
     return (<span />);
   }
 
-  const oncancelOffer = (oid) => {
+  const oncancelOffer = (oid: string) => {
     dispatch(cancelOffer({ contestID, offerID: oid }));
   };
 

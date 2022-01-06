@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useAppSelector, useAppDispatch } from '../../../app/hooks'
 import {
   allGamesSelector, allTeamsSelector, filterSelector, setFilter,
 } from './PlayersSlice';
@@ -20,10 +20,10 @@ function debounce(func, wait) {
 // Player list filter
 // Name, Position, Team, Game, Game phase
 const PlayerFilter = () => {
-  const dispatch = useDispatch();
-  const filters = useSelector(filterSelector);
-  const thegames = useSelector(allGamesSelector);
-  const theteams = useSelector(allTeamsSelector);
+  const dispatch = useAppDispatch();
+  const filters = useAppSelector(filterSelector);
+  const thegames = useAppSelector(allGamesSelector);
+  const theteams = useAppSelector(allTeamsSelector);
 
   function handleChange(evt) {
     const { name } = evt.target;

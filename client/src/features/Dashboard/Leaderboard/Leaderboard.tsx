@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../../../app/hooks'
 
 import { leadersSelector } from './LeaderboardSlice';
 import RenderPrice from '../../../helpers/util';
 
 // Show leaderboard of entries in the contest
 const Leaderboards = () => {
-  const leaders = useSelector(leadersSelector);
+  const leaders = useAppSelector(leadersSelector);
 
   return (
     <div

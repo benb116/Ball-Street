@@ -1,7 +1,17 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
+import { RootState } from '../../../app/store';
 
-const defaultState = {
+interface ModelState {
+  modalIsOpen: boolean,
+  info: {
+    nflplayerID: number,
+    isbid: boolean,
+    price: number,
+    protected: boolean,
+  },
+}
+const defaultState: ModelState = {
   modalIsOpen: false,
   info: {
     nflplayerID: 0,
@@ -38,5 +48,5 @@ export const {
   setModal, openModal, closeModal, toggleModal,
 } = modalSlice.actions;
 
-export const modalStatusSelector = (state) => state.modal.modalIsOpen;
-export const modalSelector = (state) => state.modal.info;
+export const modalStatusSelector = (state: RootState) => state.modal.modalIsOpen;
+export const modalSelector = (state: RootState) => state.modal.info;

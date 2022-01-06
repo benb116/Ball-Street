@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
+import { RootState } from '../../app/store';
 
 import {
   getcontestsfunc,
@@ -10,11 +11,26 @@ import {
   getmyentryfunc,
 } from './Contests.api';
 
-const defaultState = {
+interface ContestItem {
+  id: number,
+  nflweek: number,
+  name: string
+}
+interface EntryItem {
+    UserId: number,
+    pointtotal: number,
+}
+interface ContestsState {
+  allcontests: ContestItem[],
+  thiscontest: ContestItem | null,
+  thiscontestentries: EntryItem[],
+  thiscontestmyentry: EntryItem | null,
+}
+const defaultState: ContestsState = {
   allcontests: [],
-  thiscontest: {},
+  thiscontest: null,
   thiscontestentries: [],
-  thiscontestmyentry: {},
+  thiscontestmyentry: null,
 };
 
 export const getContests = createAsyncThunk('contests/getContests', getcontestsfunc);
@@ -26,40 +42,42 @@ export const createEntry = createAsyncThunk('contests/createEntry', createentryf
 export const contestsSlice = createSlice({
   name: 'contests',
   initialState: defaultState,
-  reducers: {},
-  extraReducers: {
-    [getContests.fulfilled]: (state, { payload }) => {
+  reducers: {
+
+  },
+  extraReducers: (builder) => {
+    builder.addCase(getContests.fulfilled, (state, { payload }) => {
       state.allcontests = payload;
-    },
-    [getContests.rejected]: (state, { payload }) => {
+    });
+    builder.addCase(getContests.rejected, (state, { payload }) => {
       if (payload) { toast.error(payload); }
-    },
-    [getContest.fulfilled]: (state, { payload }) => {
+    });
+    builder.addCase(getContest.fulfilled, (state, { payload }) => {
       state.thiscontest = payload;
-    },
-    [getContest.rejected]: (state, { payload }) => {
+    });
+    builder.addCase(getContest.rejected,(state, { payload }) => {
       if (payload) { toast.error(payload); }
-    },
-    [getEntries.fulfilled]: (state, { payload }) => {
+    });
+    builder.addCase(getEntries.fulfilled, (state, { payload }) => {
       state.thiscontestentries = payload;
-    },
-    [getEntries.rejected]: (state, { payload }) => {
+    });
+    builder.addCase(getEntries.rejected,(state, { payload }) => {
       if (payload) { toast.error(payload); }
-    },
-    [getMyEntry.fulfilled]: (state, { payload }) => {
+    });
+    builder.addCase(getMyEntry.fulfilled, (state, { payload }) => {
       state.thiscontestmyentry = payload;
-    },
-    [createEntry.fulfilled]: (state, { payload }) => {
+    });
+    builder.addCase(createEntry.fulfilled, (state, { payload }) => {
       state.thiscontestentries.push(payload);
       state.thiscontestmyentry = payload;
-    },
-    [createEntry.rejected]: (state, { payload }) => {
+    });
+    builder.addCase(createEntry.rejected, (state, { payload }) => {
       if (payload) { toast.error(payload); }
-    },
+    });
   },
 });
 
-export const contestsSelector = (state) => state.contests.allcontests;
-export const contestSelector = (state) => state.contests.thiscontest;
-export const entriesSelector = (state) => state.contests.thiscontestentries;
-export const myEntrySelector = (state) => state.contests.thiscontestmyentry;
+export const contestsSelector = (state: RootState) => state.contests.allcontests;
+export const contestSelector = (state: RootState) => state.contests.thiscontest;
+export const entriesSelector = (state: RootState) => state.contests.thiscontestentries;
+export const myEntrySelector = (state: RootState) => state.contests.thiscontestmyentry;

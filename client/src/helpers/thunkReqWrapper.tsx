@@ -1,12 +1,11 @@
-const thunkReq = async function tr(thunkAPI, type, uri, body) {
+const thunkReq = async function tr(thunkAPI, type: string, uri: string, body: Record<string, any> | null = null) {
   try {
-    const fetchOpts = {
+    const response = await fetch(uri, {
       method: type,
       headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
       credentials: 'same-origin',
-    };
-    if (body) { fetchOpts.body = body; }
-    const response = await fetch(uri, fetchOpts);
+      body: JSON.stringify(body)
+    });
     const data = await response.json();
 
     if (response.status === 200) {

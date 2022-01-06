@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
+import { RootState } from '../../../app/store';
 
 import {
   getentryfunc, preaddfunc, predropfunc, reorderrosterfunc,
@@ -11,7 +12,14 @@ export const preAdd = createAsyncThunk('entry/preAdd', preaddfunc);
 export const preDrop = createAsyncThunk('entry/preDrop', predropfunc);
 export const reorderRoster = createAsyncThunk('entry/reorderRoster', reorderrosterfunc);
 
-const defaultState = {
+interface EntryState {
+  balance: number,
+  roster: Record<string, number>,
+  rposSelected: [number, string],
+  rosterUpdate: boolean,
+}
+
+const defaultState: EntryState = {
   balance: 0,
   roster: {},
   rposSelected: [0, ''], // Used for reordering roster. [NFLPositionID, RosterPosName]
@@ -43,33 +51,33 @@ export const entrySlice = createSlice({
       }
     },
   },
-  extraReducers: {
-    [getEntry.fulfilled]: (state, { payload }) => {
+  extraReducers: (builder) => {
+    builder.addCase(getEntry.fulfilled, (state, { payload }) => {
       setEntry(state, payload);
       state.rosterUpdate = false;
-    },
-    [preAdd.fulfilled]: (state, { payload }) => {
+    });
+    builder.addCase(preAdd.fulfilled, (state, { payload }) => {
       setEntry(state, payload);
-    },
-    [preAdd.rejected]: (state, { payload }) => {
+    });
+    builder.addCase(preAdd.rejected, (state, { payload }) => {
       if (payload) { toast.error(payload); }
-    },
-    [preDrop.fulfilled]: (state, { payload }) => {
+    });
+    builder.addCase(preDrop.fulfilled, (state, { payload }) => {
       setEntry(state, payload);
-    },
-    [preDrop.rejected]: (state, { payload }) => {
+    });
+    builder.addCase(preDrop.rejected, (state, { payload }) => {
       if (payload) { toast.error(payload); }
-    },
-    [reorderRoster.fulfilled]: (state, { payload }) => {
+    });
+    builder.addCase(reorderRoster.fulfilled, (state, { payload }) => {
       setEntry(state, payload);
-    },
-    [reorderRoster.rejected]: (state, { payload }) => {
+    });
+    builder.addCase(reorderRoster.rejected, (state, { payload }) => {
       if (payload) { toast.error(payload); }
-    },
+    });
   },
 });
 
-function setEntry(state, payload) {
+function setEntry(state: EntryState, payload) {
   state.balance = payload.pointtotal;
   const rost = { ...payload };
   delete rost.pointtotal;
@@ -83,9 +91,9 @@ function setEntry(state, payload) {
 
 export const { offerFilled, updateRoster, selectRPos } = entrySlice.actions;
 
-export const entrySelector = (state) => state.entry;
-export const rosterUpdateSelector = (state) => state.entry.rosterUpdate;
-export const isOnRosterSelector = (playerID) => (state) => (
+export const entrySelector = (state: RootState) => state.entry;
+export const rosterUpdateSelector = (state: RootState) => state.entry.rosterUpdate;
+export const isOnRosterSelector = (playerID: number) => (state: RootState) => (
   Object.values(state.entry.roster).indexOf(playerID) >= 0
 );
-export const rposSelector = (state) => state.entry.rposSelected;
+export const rposSelector = (state: RootState) => state.entry.rposSelected;

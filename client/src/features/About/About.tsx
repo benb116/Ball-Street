@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useAppSelector, useAppDispatch } from '../../app/hooks'
 import Loader from 'react-loader-spinner';
 import { useHistory } from 'react-router-dom';
 import { userSelector, clearState } from '../User/UserSlice';
@@ -7,27 +7,17 @@ import { userSelector, clearState } from '../User/UserSlice';
 const About = () => {
   const history = useHistory();
 
-  const dispatch = useDispatch();
-  const { isFetching, isError } = useSelector(userSelector);
+  const dispatch = useAppDispatch();
 
-  const { email } = useSelector(userSelector);
-
-  useEffect(() => {
-    if (isError) {
-      dispatch(clearState());
-      history.push('/login');
-    }
-  }, [dispatch, history, isError]);
+  const { email } = useAppSelector(userSelector);
 
   const onLogOut = () => {
+    dispatch(clearState());
     history.push('/login');
   };
 
   return (
     <div className="container mx-auto">
-      {isFetching ? (
-        <Loader type="Puff" color="#00BFFF" height={100} width={100} />
-      ) : (
         <>
           <div className="container mx-auto">
             Welcome back
@@ -43,7 +33,6 @@ const About = () => {
             Log Out
           </button>
         </>
-      )}
     </div>
   );
 };

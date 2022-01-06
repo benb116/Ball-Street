@@ -5,7 +5,7 @@ const Home = () => {
   const history = useHistory();
 
   useEffect(() => {
-    localStorage.setItem('isLoggedIn', true);
+    localStorage.setItem('isLoggedIn', 'true');
     history.push('/');
   }, [history]);
 

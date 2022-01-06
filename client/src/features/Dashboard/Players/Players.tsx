@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useAppSelector, useAppDispatch } from '../../../app/hooks'
 
 import {
   getPlayers,
@@ -18,13 +18,13 @@ import PlayerItem from './PlayerItem';
 
 // Show list of all active players
 const Players = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const theplayers = useSelector(allPlayersSelector);
-  const theteams = useSelector(allTeamsSelector);
-  const thegames = useSelector(allGamesSelector);
-  const filters = useSelector(filterSelector);
-  const sorts = useSelector(sortSelector);
+  const theplayers = useAppSelector(allPlayersSelector);
+  const theteams = useAppSelector(allTeamsSelector);
+  const thegames = useAppSelector(allGamesSelector);
+  const filters = useAppSelector(filterSelector);
+  const sorts = useAppSelector(sortSelector);
 
   // If we're filtering by a game
   const thegamefilter = filters.game;
@@ -142,13 +142,13 @@ const Players = () => {
 
 // Header row for player list with clickable column titles
 function ListHeader() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   // Change sort
   function handleClick(evt) {
     dispatch(setSort(evt.target.getAttribute('value')));
   }
-  const sorts = useSelector(sortSelector);
+  const sorts = useAppSelector(sortSelector);
   const { sortProp, sortDesc } = sorts;
 
   return (

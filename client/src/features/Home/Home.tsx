@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useAppSelector, useAppDispatch } from '../../app/hooks'
 import {
   getAccount, isLoggedInSelector, logoutUser, userSelector,
 } from '../User/UserSlice';
 
 const Home = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const history = useHistory();
 
-  const { email } = useSelector(userSelector);
-  const isLoggedIn = useSelector(isLoggedInSelector); // Use localstorage to know if logged in
+  const { email } = useAppSelector(userSelector);
+  const isLoggedIn = useAppSelector(isLoggedInSelector); // Use localstorage to know if logged in
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -19,7 +19,7 @@ const Home = () => {
   }, [dispatch, isLoggedIn]);
 
   const loginRed = () => {
-    localStorage.setItem('isLoggedIn', false);
+    localStorage.setItem('isLoggedIn', 'false');
     history.push('/login');
     // In theory people can see this webpage as a landing if they aren't logged in
   };

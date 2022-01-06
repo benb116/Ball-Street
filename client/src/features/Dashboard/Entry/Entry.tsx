@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useAppSelector, useAppDispatch } from '../../../app/hooks'
 import { useParams } from 'react-router-dom';
 import { allTeamsSelector, playersSelector, pricesMapSelector } from '../Players/PlayersSlice';
 import RenderPrice from '../../../helpers/util';
@@ -10,11 +10,11 @@ import RosterItem from './RosterItem';
 
 // Display the user's current entry (balance + players)
 const Entry = () => {
-  const dispatch = useDispatch();
-  const { contestID } = useParams();
+  const dispatch = useAppDispatch();
+  const { contestID } = useParams<{ contestID: string }>();
 
-  const thisentry = useSelector(entrySelector);
-  const rUpdate = useSelector(rosterUpdateSelector); // Flag set if the entry should be updated
+  const thisentry = useAppSelector(entrySelector);
+  const rUpdate = useAppSelector(rosterUpdateSelector); // Flag set if the entry should be updated
   const rpos = Object.keys(thisentry.roster); // All roster positions
 
   // Initial data pull
@@ -82,13 +82,13 @@ function RosterHeader() {
 
 // Table footer showing calculated point totals
 function PointTotals() {
-  const thisentry = useSelector(entrySelector);
+  const thisentry = useAppSelector(entrySelector);
   const rpos = Object.keys(thisentry.roster);
 
   const rosterPlayerIDs = Object.values(thisentry.roster).filter((p) => p !== null); // All playerIDs
-  const players = useSelector(playersSelector(rosterPlayerIDs)); // Player DB info
-  const priceMaps = useSelector(pricesMapSelector(rosterPlayerIDs)); // Player proj and statprice info
-  const theteams = useSelector(allTeamsSelector); // Are teams in pre or mid? Show different price as a result
+  const players = useAppSelector(playersSelector(rosterPlayerIDs)); // Player DB info
+  const priceMaps = useAppSelector(pricesMapSelector(rosterPlayerIDs)); // Player proj and statprice info
+  const theteams = useAppSelector(allTeamsSelector); // Are teams in pre or mid? Show different price as a result
 
   // Sum the stat totals and the projected totals
   const sum = rpos.reduce((acc, pos) => {

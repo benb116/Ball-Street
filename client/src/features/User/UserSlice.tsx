@@ -1,12 +1,21 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
+import type { RootState } from '../../app/store'
 
 import {
   signupfunc, loginfunc, logoutfunc, accountfunc, forgotfunc, resetfunc,
 } from './User.api';
 
-const defaultState = {
+interface UserState {
+  info: {
+    id: number | null,
+    email: string,
+    name: string,
+  },
+  redirect: string,
+}
+const defaultState: UserState = {
   info: {
     id: null,
     email: '',
@@ -30,73 +39,69 @@ export const userSlice = createSlice({
       state = { ...state, ...payload };
     },
     clearState: (state) => {
-      // eslint-disable-next-line no-unused-vars
       state = defaultState;
     },
-    clearStatus: (state) => {
-      state.status = defaultState.status;
-    },
   },
-  extraReducers: {
-    [signupUser.fulfilled]: (state, { payload }) => {
+  extraReducers: (builder) => {
+    builder.addCase(signupUser.fulfilled, (state, { payload }) => {
       if (payload.needsVerification) {
         toast.success('Account created. Please check your email to verify your account.');
       } else {
         state.info = { ...state.info, ...payload };
-        localStorage.setItem('isLoggedIn', true);
+        localStorage.setItem('isLoggedIn', 'true');
       }
-    },
-    [signupUser.rejected]: (state, { payload }) => {
+    });
+    builder.addCase(signupUser.rejected, (state, { payload }) => {
       toast.error(payload);
-    },
+    });
 
-    [forgotUser.fulfilled]: () => {
+    builder.addCase(forgotUser.fulfilled, () => {
       toast.success('An email was sent to this address');
-    },
-    [forgotUser.rejected]: (state, { payload }) => {
+    });
+    builder.addCase(forgotUser.rejected, (state, { payload }) => {
       toast.error(payload);
-    },
+    });
 
-    [resetUser.fulfilled]: () => {
+    builder.addCase(resetUser.fulfilled, () => {
       toast.success('Password reset successfully');
-    },
-    [resetUser.rejected]: (state, { payload }) => {
+    });
+    builder.addCase(resetUser.rejected, (state, { payload }) => {
       toast.error(payload);
-    },
+    });
 
-    [loginUser.fulfilled]: (state, { payload }) => {
+    builder.addCase(loginUser.fulfilled, (state, { payload }) => {
       if (payload.needsVerification) {
         toast.success('Please check your email to verify your account.');
       } else {
         state.info = { ...state.info, ...payload };
-        localStorage.setItem('isLoggedIn', true);
+        localStorage.setItem('isLoggedIn', 'true');
       }
-    },
-    [loginUser.rejected]: (state, { payload }) => {
+    });
+    builder.addCase(loginUser.rejected, (state, { payload }) => {
       toast.error(payload);
-    },
+    });
 
-    [logoutUser.fulfilled]: (state) => {
+    builder.addCase(logoutUser.fulfilled, (state) => {
       state.info = defaultState.info;
-      localStorage.setItem('isLoggedIn', false);
-    },
-    [logoutUser.rejected]: (state, { payload }) => {
+      localStorage.setItem('isLoggedIn', 'false');
+    });
+    builder.addCase(logoutUser.rejected, (state, { payload }) => {
       toast.error(payload);
-    },
+    });
 
-    [getAccount.fulfilled]: (state, { payload }) => {
+    builder.addCase(getAccount.fulfilled, (state, { payload }) => {
       if (!payload) {
-        localStorage.setItem('isLoggedIn', false);
+        localStorage.setItem('isLoggedIn', 'false');
       } else {
         state.info = { ...state.info, ...payload };
       }
-    },
-    [getAccount.rejected]: () => {
-      localStorage.setItem('isLoggedIn', false);
-    },
+    });
+    builder.addCase(getAccount.rejected, () => {
+      localStorage.setItem('isLoggedIn', 'false');
+    });
   },
 });
 
-export const { set, clearStatus, clearState } = userSlice.actions;
-export const userSelector = (state) => state.user.info;
+export const { set, clearState } = userSlice.actions;
+export const userSelector = (state: RootState) => state.user.info;
 export const isLoggedInSelector = () => (localStorage.getItem('isLoggedIn') === 'true');

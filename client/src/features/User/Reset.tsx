@@ -1,15 +1,15 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppSelector, useAppDispatch } from '../../app/hooks'
 import { resetUser, userSelector } from './UserSlice';
 
 const Signup = () => {
-  const dispatch = useDispatch();
-  const { token } = useParams();
+  const dispatch = useAppDispatch();
+  const { token } = useParams<{token: string}>();
   const { register, handleSubmit } = useForm();
   const history = useHistory();
-  const { id } = useSelector(userSelector);
+  const { id } = useAppSelector(userSelector);
 
   const onSubmit = (data) => {
     dispatch(resetUser(data));
@@ -39,7 +39,6 @@ const Signup = () => {
                 <div className="mt-1">
                   <input
                     id="password"
-                    name="password"
                     type="password"
                     {...register('password')}
                     required
@@ -54,7 +53,6 @@ const Signup = () => {
                 <div className="mt-1">
                   <input
                     id="confirmPassword"
-                    name="confirmPassword"
                     type="password"
                     {...register('confirmPassword')}
                     required
@@ -66,7 +64,6 @@ const Signup = () => {
                 <div className="mt-1">
                   <input
                     id="token"
-                    name="token"
                     type="token"
                     {...register('token')}
                     value={token}

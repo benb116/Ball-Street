@@ -9,7 +9,7 @@ import { contestsSlice } from '../features/Contests/ContestsSlice';
 import { modalSlice } from '../features/Dashboard/Modal/ModalSlice';
 import { tradesSlice } from '../features/Dashboard/Trades/TradesSlice';
 
-export default configureStore({
+export const store = configureStore({
   reducer: {
     user: userSlice.reducer,
     contests: contestsSlice.reducer,
@@ -23,3 +23,8 @@ export default configureStore({
     // }
   },
 });
+
+// Infer the `RootState` and `AppDispatch` types from the store itself
+export type RootState = ReturnType<typeof store.getState>
+// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
+export type AppDispatch = typeof store.dispatch

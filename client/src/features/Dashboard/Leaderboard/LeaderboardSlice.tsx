@@ -1,7 +1,11 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
+import { RootState } from '../../../app/store';
 
-const defaultState = {
+interface LeaderState {
+  leaders: Record<string, any>[]
+}
+const defaultState: LeaderState = {
   leaders: [],
 };
 
@@ -18,4 +22,4 @@ export const leaderboardSlice = createSlice({
 
 export const { updateLeaders } = leaderboardSlice.actions;
 
-export const leadersSelector = (state) => state.leaderboard.leaders;
+export const leadersSelector = (state: RootState) => state.leaderboard.leaders;

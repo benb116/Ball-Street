@@ -1,6 +1,6 @@
 import Modal from 'react-modal';
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useAppSelector, useAppDispatch } from '../../../app/hooks'
 import { useForm } from 'react-hook-form';
 
 import { useParams } from 'react-router';
@@ -21,12 +21,12 @@ const customStyles = {
 Modal.setAppElement('#root');
 
 const OfferModal = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { register, handleSubmit } = useForm();
   const { contestID } = useParams();
 
-  const modalIsOpen = useSelector(modalStatusSelector);
-  const modalInfo = useSelector(modalSelector);
+  const modalIsOpen = useAppSelector(modalStatusSelector);
+  const modalInfo = useAppSelector(modalSelector);
 
   function afterOpenModal() {
     // references are now sync'd and can be accessed.

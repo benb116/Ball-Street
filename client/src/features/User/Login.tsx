@@ -1,14 +1,15 @@
 import React, { useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppSelector, useAppDispatch } from '../../app/hooks'
+
 import { loginUser, userSelector } from './UserSlice';
 
 const Login = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { register, handleSubmit } = useForm();
   const history = useHistory();
-  const { id } = useSelector(userSelector);
+  const { id } = useAppSelector(userSelector);
 
   const onSubmit = (data) => {
     dispatch(loginUser(data));

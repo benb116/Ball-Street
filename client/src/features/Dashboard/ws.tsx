@@ -1,4 +1,4 @@
-import store from '../../app/store';
+import { store } from '../../app/store';
 import { setPhase, updatePrices, setInjury } from './Players/PlayersSlice';
 import { removeOffer, alertProtMatch } from './Offers/OffersSlice';
 import { offerFilled, updateRoster } from './Entry/EntrySlice';
@@ -6,7 +6,7 @@ import { updateLeaders } from './Leaderboard/LeaderboardSlice';
 import { updateTrades } from './Trades/TradesSlice';
 
 // Init WS connection and dispatch actions based on events
-const initWS = (contestID) => {
+const initWS = (contestID: string) => {
   const { host } = window.location;
   let url = `ws://localhost/ballstreetlive/contest/${contestID}`;
   if (!host.includes('localhost')) {
@@ -78,11 +78,11 @@ function markInjury(info) {
   store.dispatch(setInjury(info));
 }
 
-function delOffer(oid) {
+function delOffer(oid: string) {
   store.dispatch(removeOffer(oid));
 }
 
-function fillOffer(oid) {
+function fillOffer(oid: string) {
   store.dispatch(offerFilled(oid));
 }
 

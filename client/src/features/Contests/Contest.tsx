@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useSelector, useDispatch } from 'react-redux';
+import { useAppSelector, useAppDispatch } from '../../app/hooks'
 import { useForm } from 'react-hook-form';
 import { Link, useParams } from 'react-router-dom';
 import {
@@ -16,16 +16,16 @@ import RenderPrice from '../../helpers/util';
 
 // Show info about a specific contest and its entries
 const Contest = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { handleSubmit } = useForm();
-  const { contestID } = useParams(); // Get contestID from URL params
+  const { contestID } = useParams<{ contestID: string }>(); // Get contestID from URL params
 
-  const thiscontest = useSelector(contestSelector); // Get info about this contest
-  const thiscontestentries = useSelector(entriesSelector); // Get the entries in this contest
+  const thiscontest = useAppSelector(contestSelector); // Get info about this contest
+  const thiscontestentries = useAppSelector(entriesSelector); // Get the entries in this contest
   const sortedEntries = [...thiscontestentries].sort((a, b) => { // Sort by total points
     return (b.projTotal || b.pointtotal) - (a.projTotal || a.pointtotal)
   });
-  const thiscontestmyentry = useSelector(myEntrySelector);
+  const thiscontestmyentry = useAppSelector(myEntrySelector);
 
   // Pull data
   useEffect(() => {
@@ -53,14 +53,13 @@ const Contest = () => {
           <EntryItem
             key={entry.UserId}
             entrydata={entry}
-            contestID={contestID}
           />
         ))}
       </ul>
 
       <br />
       <br />
-      {!(Object.keys(thiscontestmyentry).length) // If the user doesn't have an entry in this contest
+      {!thiscontestmyentry // If the user doesn't have an entry in this contest
         ? (
           <form className="space-y-6" onSubmit={handleSubmit(onCreateEntry)} method="POST">
             <div>

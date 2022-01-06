@@ -1,7 +1,7 @@
 /* eslint-disable no-nested-ternary */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useSelector, useDispatch } from 'react-redux';
+import { useAppSelector, useAppDispatch } from '../../../app/hooks'
 import { useParams } from 'react-router-dom';
 import { isOnRosterSelector, preAdd, preDrop } from '../Entry/EntrySlice';
 import { setModal } from '../Modal/ModalSlice';
@@ -11,13 +11,13 @@ import RenderPrice from '../../../helpers/util';
 
 // Show a player's row in the list
 function PlayerItem({ playerdata }) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { contestID } = useParams();
-  const offers = useSelector(offersSelector);
-  const theteams = useSelector(allTeamsSelector);
+  const offers = useAppSelector(offersSelector);
+  const theteams = useAppSelector(allTeamsSelector);
 
-  const showDrop = useSelector(isOnRosterSelector(playerdata.id));
-  const priceMap = useSelector(priceMapSelector(playerdata.id));
+  const showDrop = useAppSelector(isOnRosterSelector(playerdata.id));
+  const priceMap = useAppSelector(priceMapSelector(playerdata.id));
 
   // Player's team info
   const thephase = theteams[playerdata.NFLTeamId].phase;

@@ -1,12 +1,17 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
+import { RootState } from '../../../app/store';
 
 import gettradesfunc from './Trades.api';
 
 export const getTrades = createAsyncThunk('trades/getTrades', gettradesfunc);
 
-const defaultState = {
+interface TradesState {
+  trades: Record<string, any>[],
+  tradeUpdate: boolean,
+}
+const defaultState: TradesState = {
   trades: [],
   tradeUpdate: false,
 };
@@ -19,8 +24,8 @@ export const tradesSlice = createSlice({
       state.tradeUpdate = true; // Set a flag after an offer is filled
     },
   },
-  extraReducers: {
-    [getTrades.fulfilled]: (state, { payload }) => {
+  extraReducers: (builder) => {
+    builder.addCase(getTrades.fulfilled, (state, { payload }) => {
       state.trades = payload.map((t) => {
         const data = (t.bid || t.ask);
         const out = {};
@@ -33,14 +38,14 @@ export const tradesSlice = createSlice({
         return out;
       }).sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
       state.tradeUpdate = false; // reset a flag
-    },
-    [getTrades.rejected]: (state, { payload }) => {
+    });
+    builder.addCase(getTrades.rejected, (state, { payload }) => {
       if (payload) { toast.error(payload); }
-    },
+    });
   },
 });
 
 export const { updateTrades } = tradesSlice.actions;
 
-export const tradesSelector = (state) => state.trades.trades;
-export const tradeUpdateSelector = (state) => state.trades.tradeUpdate;
+export const tradesSelector = (state: RootState) => state.trades.trades;
+export const tradeUpdateSelector = (state: RootState) => state.trades.tradeUpdate;

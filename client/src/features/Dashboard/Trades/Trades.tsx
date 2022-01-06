@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useSelector, useDispatch } from 'react-redux';
+import { useAppSelector, useAppDispatch } from '../../../app/hooks'
 import { useParams } from 'react-router-dom';
 import { playerSelector } from '../Players/PlayersSlice';
 
 import { getTrades, tradesSelector, tradeUpdateSelector } from './TradesSlice';
 
 const Trades = () => {
-  const dispatch = useDispatch();
-  const { contestID } = useParams();
-  const tUpdate = useSelector(tradeUpdateSelector);
+  const dispatch = useAppDispatch();
+  const { contestID } = useParams<{ contestID: string }>();
+  const tUpdate = useAppSelector(tradeUpdateSelector);
 
   useEffect(() => {
     dispatch(getTrades({ contestID }));
@@ -21,7 +21,7 @@ const Trades = () => {
     }
   }, [contestID, dispatch, tUpdate]);
 
-  const trades = useSelector(tradesSelector);
+  const trades = useAppSelector(tradesSelector);
   return (
     <div
       className="container mx-auto"
@@ -44,7 +44,7 @@ const Trades = () => {
 
 function TradeItem({ tradedata }) {
   // Pull some info about the nfl player
-  const playerData = (useSelector(playerSelector(tradedata.NFLPlayerId)) || {});
+  const playerData = (useAppSelector(playerSelector(tradedata.NFLPlayerId)) || {});
   return (
     <div>
       {(tradedata.isbid ? 'Added' : 'Dropped')}

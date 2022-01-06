@@ -3,7 +3,7 @@
 /* eslint-disable no-nested-ternary */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useSelector, useDispatch } from 'react-redux';
+import { useAppSelector, useAppDispatch } from '../../../app/hooks'
 import { useParams } from 'react-router-dom';
 import { allTeamsSelector, playerSelector, priceMapSelector } from '../Players/PlayersSlice';
 
@@ -35,20 +35,21 @@ const NFLPosTypes = {
   4: { name: 'TE', canflex: true },
   5: { name: 'K', canflex: false },
   6: { name: 'DEF', canflex: false },
+  99: {},
 };
 NFLPosTypes[flexID] = { name: 'FLEX', canflex: true };
 
 // Show a specific row in the roster table
 function RosterItem({ playerid, position }) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const { contestID } = useParams();
-  const thisplayer = useSelector(playerSelector(playerid)); // Pull player info from state
-  const theteams = useSelector(allTeamsSelector); // Pull team from state
-  const rposSelected = useSelector(rposSelector); // Get current reordering flags
+  const { contestID } = useParams<{ contestID: string }>();
+  const thisplayer = useAppSelector(playerSelector(playerid)); // Pull player info from state
+  const theteams = useAppSelector(allTeamsSelector); // Pull team from state
+  const rposSelected = useAppSelector(rposSelector); // Get current reordering flags
 
-  const offers = useSelector(offersSelector); // Does this player have an active offer?
-  const priceMap = useSelector(priceMapSelector(playerid)); // Player's stat and proj prices
+  const offers = useAppSelector(offersSelector); // Does this player have an active offer?
+  const priceMap = useAppSelector(priceMapSelector(playerid)); // Player's stat and proj prices
 
   // When the pos label is clicked, trying to reorder roster
   const reorderClick = () => {
@@ -163,7 +164,7 @@ function RosterItem({ playerid, position }) {
 }
 
 // Get the name of a position type from it's number
-function posName(posNum) {
+function posName(posNum: number) {
   if (!posNum) return '';
   return `(${NFLPosTypes[posNum].name})`;
 }

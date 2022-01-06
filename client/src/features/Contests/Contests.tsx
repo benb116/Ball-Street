@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useSelector, useDispatch } from 'react-redux';
+import { useAppSelector, useAppDispatch } from '../../app/hooks'
 import { Link } from 'react-router-dom';
 
 import { contestsSelector, getContests } from './ContestsSlice';
 
 // Show info about all contests available
 const Contests = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const allcontests = useSelector(contestsSelector);
+  const allcontests = useAppSelector(contestsSelector);
   const sortedContests = [...allcontests].sort((a, b) => b.nflweek - a.nflweek);
 
   // Pull data

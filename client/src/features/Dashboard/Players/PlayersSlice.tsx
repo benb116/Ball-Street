@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
+import { RootState } from '../../../app/store';
 
 import { getgamesfunc, getplayersfunc } from './Players.api';
 
@@ -16,7 +17,23 @@ const NFLPosTypes = {
   6: { name: 'DEF', canflex: false },
 };
 
-const defaultState = {
+interface PlayerState {
+  playerlist: Record<string, any>[],
+  gamelist: Record<string, any>[],
+  teamMap: Record<string, any>,
+  priceMap: Record<string, any>,
+  filter: {
+    name: string,
+    posName: string,
+    teamAbr: string,
+    game: string,
+    phase: string,
+  },
+  sortProp: string,
+  sortDesc: boolean,
+}
+
+const defaultState: PlayerState = {
   playerlist: [],
   gamelist: [],
   teamMap: {},
@@ -75,18 +92,18 @@ export const playersSlice = createSlice({
       });
     },
   },
-  extraReducers: {
-    [getPlayers.fulfilled]: (state, { payload }) => {
+  extraReducers: (builder) => {
+    builder.addCase(getPlayers.fulfilled, (state, { payload }) => {
       const np = payload.map((p) => {
         p.posName = NFLPosTypes[p.NFLPositionId].name;
         return p;
       });
       state.playerlist = np;
-    },
-    [getPlayers.rejected]: (state, { payload }) => {
+    });
+    builder.addCase(getPlayers.rejected, (state, { payload }) => {
       if (payload) { toast.error(payload); }
-    },
-    [getGames.fulfilled]: (state, { payload }) => {
+    });
+    builder.addCase(getGames.fulfilled, (state, { payload }) => {
       state.gamelist = [...payload].sort((a, b) => a.startTime - b.startTime);
       state.teamMap = payload.reduce((acc, cur) => { // team and game phase info
         acc[cur.away.id] = cur.away;
@@ -95,10 +112,10 @@ export const playersSlice = createSlice({
         acc[cur.home.id].phase = cur.phase;
         return acc;
       }, {});
-    },
-    [getGames.rejected]: (state, { payload }) => {
+    });
+    builder.addCase(getGames.rejected, (state, { payload }) => {
       if (payload) { toast.error(payload); }
-    },
+    });
   },
 });
 
@@ -106,20 +123,20 @@ export const {
   clear, setFilter, setSort, updatePrices, setPhase, setInjury,
 } = playersSlice.actions;
 
-export const allPlayersSelector = (state) => (
+export const allPlayersSelector = (state: RootState) => (
   state.players.playerlist.map((p) => ({ ...p, ...state.players.priceMap[p.id] }))
 );
-export const allGamesSelector = (state) => (state.players.gamelist || []);
-export const allTeamsSelector = (state) => (state.players.teamMap || {});
-export const playerSelector = (playerID) => (state) => (
+export const allGamesSelector = (state: RootState) => (state.players.gamelist || []);
+export const allTeamsSelector = (state: RootState) => (state.players.teamMap || {});
+export const playerSelector = (playerID: number) => (state: RootState) => (
   state.players.playerlist.find((p) => p.id === playerID)
 );
-export const playersSelector = (playerIDs) => (state) => (
+export const playersSelector = (playerIDs: number[]) => (state: RootState) => (
   state.players.playerlist.filter((p) => playerIDs.indexOf(p.id) > -1)
 );
-export const priceMapSelector = (playerID) => (state) => (state.players.priceMap[playerID] || {});
+export const priceMapSelector = (playerID: number) => (state: RootState) => (state.players.priceMap[playerID] || {});
 
-export const pricesMapSelector = (playerIDs) => (state) => (
+export const pricesMapSelector = (playerIDs: number[]) => (state: RootState) => (
   playerIDs.reduce((acc, cur) => {
     const out = acc;
     out[cur] = (state.players.priceMap[cur] || {});
@@ -127,8 +144,8 @@ export const pricesMapSelector = (playerIDs) => (state) => (
   }, {})
 );
 
-export const filterSelector = (state) => state.players.filter;
-export const sortSelector = (state) => {
+export const filterSelector = (state: RootState) => state.players.filter;
+export const sortSelector = (state: RootState) => {
   const { sortProp } = state.players;
   const { sortDesc } = state.players;
   return { sortProp, sortDesc };

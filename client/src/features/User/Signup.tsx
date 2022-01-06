@@ -1,14 +1,14 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppSelector, useAppDispatch } from '../../app/hooks'
 import { signupUser, userSelector } from './UserSlice';
 
 const Signup = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { register, handleSubmit } = useForm();
   const history = useHistory();
-  const { id } = useSelector(userSelector);
+  const { id } = useAppSelector(userSelector);
 
   const onSubmit = (data) => {
     dispatch(signupUser(data));
@@ -38,7 +38,6 @@ const Signup = () => {
                 <div className="mt-1">
                   <input
                     id="name"
-                    name="name"
                     type="text"
                     autoComplete="name"
                     {...register('name')}
@@ -54,7 +53,6 @@ const Signup = () => {
                 <div className="mt-1">
                   <input
                     id="email"
-                    name="email"
                     type="email"
                     autoComplete="email"
                     {...register('email')}
@@ -70,7 +68,6 @@ const Signup = () => {
                 <div className="mt-1">
                   <input
                     id="password"
-                    name="password"
                     type="password"
                     autoComplete="current-password"
                     {...register('password')}
@@ -86,7 +83,6 @@ const Signup = () => {
                 <div className="mt-1">
                   <input
                     id="skipVerification"
-                    name="skipVerification"
                     type="checkbox"
                     {...register('skipVerification')}
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"

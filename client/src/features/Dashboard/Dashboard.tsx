@@ -11,7 +11,7 @@ import initWS from './ws';
 import OfferModal from './Modal/Modal';
 
 const Dashboard = () => {
-  const { contestID } = useParams();
+  const { contestID } = useParams<{ contestID: string }>();
 
   useEffect(() => {
     initWS(contestID);

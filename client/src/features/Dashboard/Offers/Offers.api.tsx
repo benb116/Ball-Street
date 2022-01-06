@@ -1,16 +1,22 @@
 import thunkReq from '../../../helpers/thunkReqWrapper';
 
 // Get my offers in a contest
-function getoffersfunc({ contestID }, thunkAPI) {
-  return thunkReq(thunkAPI, 'GET', `/app/api/contests/${contestID}/offers`);
+function getoffersfunc(input: { contestID: string }, thunkAPI) {
+  return thunkReq(thunkAPI, 'GET', `/app/api/contests/${input.contestID}/offers`);
+}
+interface OfferObj {
+  nflplayerID: number,
+  isbid: boolean,
+  price: number,
+  protected: boolean,
 }
 // Create an offer
-function createofferfunc({ contestID, offerobj }, thunkAPI) {
-  return thunkReq(thunkAPI, 'POST', `/app/api/contests/${contestID}/offer`, JSON.stringify({ offerobj }));
+function createofferfunc(input: { contestID: string, offerobj: OfferObj }, thunkAPI) {
+  return thunkReq(thunkAPI, 'POST', `/app/api/contests/${input.contestID}/offer`, { offerobj: input.offerobj });
 }
 // Cancel an offer
-function cancelofferfunc({ contestID, offerID }, thunkAPI) {
-  return thunkReq(thunkAPI, 'DELETE', `/app/api/contests/${contestID}/offer`, JSON.stringify({ offerID }));
+function cancelofferfunc(input: { contestID: string, offerID: string }, thunkAPI) {
+  return thunkReq(thunkAPI, 'DELETE', `/app/api/contests/${input.contestID}/offer`, { offerID: input.offerID });
 }
 
 export {

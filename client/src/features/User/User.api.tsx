@@ -1,29 +1,30 @@
 import thunkReq from '../../helpers/thunkReqWrapper';
 
-function accountfunc(body, thunkAPI) {
+function accountfunc(_body = {}, thunkAPI) {
   return thunkReq(thunkAPI, 'GET', '/app/auth/account');
 }
 
-function signupfunc({
-  name, email, password, skipVerification,
+function signupfunc(input: {
+  name: string, 
+  email: string,
+  password: string, 
+  skipVerification: boolean
 }, thunkAPI) {
-  return thunkReq(thunkAPI, 'POST', '/app/auth/signup', JSON.stringify({
-    name, email, password, skipVerification,
-  }));
+  return thunkReq(thunkAPI, 'POST', '/app/auth/signup', input);
 }
 
-function forgotfunc({ email }, thunkAPI) {
-  return thunkReq(thunkAPI, 'POST', '/app/auth/forgot', JSON.stringify({ email }));
+function forgotfunc(input: { email: string }, thunkAPI) {
+  return thunkReq(thunkAPI, 'POST', '/app/auth/forgot', input);
 }
 
-function resetfunc({ token, password, confirmPassword }, thunkAPI) {
-  return thunkReq(thunkAPI, 'POST', '/app/auth/resetPasswordToken', JSON.stringify({ token, password, confirmPassword }));
+function resetfunc(input: { token: string, password: string, confirmPassword: string }, thunkAPI) {
+  return thunkReq(thunkAPI, 'POST', '/app/auth/resetPasswordToken', input);
 }
 
-function loginfunc({ email, password }, thunkAPI) {
-  return thunkReq(thunkAPI, 'POST', '/app/auth/login', JSON.stringify({ email, password }));
+function loginfunc(input: { email: string, password: string }, thunkAPI) {
+  return thunkReq(thunkAPI, 'POST', '/app/auth/login', input);
 }
-function logoutfunc(body, thunkAPI) {
+function logoutfunc(_body = {}, thunkAPI) {
   return thunkReq(thunkAPI, 'DELETE', '/app/auth/logout');
 }
 
