@@ -5,9 +5,9 @@ function accountfunc(_body = {}, thunkAPI) {
 }
 
 function signupfunc(input: {
-  name: string, 
+  name: string,
   email: string,
-  password: string, 
+  password: string,
   skipVerification: boolean
 }, thunkAPI) {
   return thunkReq(thunkAPI, 'POST', '/app/auth/signup', input);

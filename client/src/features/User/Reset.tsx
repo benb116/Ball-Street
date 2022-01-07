@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useAppSelector, useAppDispatch } from '../../app/hooks'
+import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import { resetUser, userSelector } from './UserSlice';
 
 const Signup = () => {
   const dispatch = useAppDispatch();
-  const { token } = useParams<{token: string}>();
+  const { token } = useParams<{ token: string }>();
   const { register, handleSubmit } = useForm();
   const history = useHistory();
   const { id } = useAppSelector(userSelector);
@@ -42,7 +42,6 @@ const Signup = () => {
                     type="password"
                     {...register('password')}
                     required
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
                 </div>
               </div>
@@ -56,7 +55,6 @@ const Signup = () => {
                     type="password"
                     {...register('confirmPassword')}
                     required
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
                 </div>
               </div>
@@ -68,12 +66,11 @@ const Signup = () => {
                     {...register('token')}
                     value={token}
                     hidden
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
                 </div>
               </div>
               <div>
-                <button type="submit" className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <button type="submit">
                   <p> Submit</p>
                 </button>
               </div>

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useAppSelector, useAppDispatch } from '../../app/hooks'
 import { Link } from 'react-router-dom';
+import { useAppSelector, useAppDispatch } from '../../app/hooks';
 
 import { contestsSelector, getContests } from './ContestsSlice';
 

@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
-import type { RootState } from '../../app/store'
+import type { RootState } from '../../app/store';
 
 import {
   signupfunc, loginfunc, logoutfunc, accountfunc, forgotfunc, resetfunc,
@@ -39,6 +39,7 @@ export const userSlice = createSlice({
       state = { ...state, ...payload };
     },
     clearState: (state) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       state = defaultState;
     },
   },

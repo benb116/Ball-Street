@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useAppSelector } from '../../../app/hooks'
+import { useAppSelector } from '../../../app/hooks';
 
 import { leadersSelector } from './LeaderboardSlice';
 import RenderPrice from '../../../helpers/util';

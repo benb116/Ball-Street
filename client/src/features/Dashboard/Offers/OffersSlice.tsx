@@ -1,8 +1,8 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
+// eslint-disable-next-line import/no-cycle
 import { RootState } from '../../../app/store';
-
 import { createofferfunc, cancelofferfunc, getoffersfunc } from './Offers.api';
 
 export const getOffers = createAsyncThunk('offers/getOffers', getoffersfunc);
@@ -13,7 +13,7 @@ interface OfferState {
   bids: Record<string, any>[],
   asks: Record<string, any>[],
   remove: string[],
-};
+}
 const defaultState: OfferState = {
   bids: [],
   asks: [],

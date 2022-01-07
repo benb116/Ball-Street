@@ -1,8 +1,8 @@
 /* eslint-disable no-nested-ternary */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useAppSelector, useAppDispatch } from '../../../app/hooks'
 import { useParams } from 'react-router-dom';
+import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 import { isOnRosterSelector, preAdd, preDrop } from '../Entry/EntrySlice';
 import { setModal } from '../Modal/ModalSlice';
 import { cancelOffer, offersSelector } from '../Offers/OffersSlice';

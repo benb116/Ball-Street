@@ -4,7 +4,7 @@ const thunkReq = async function tr(thunkAPI, type: string, uri: string, body: Re
       method: type,
       headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
       credentials: 'same-origin',
-      body: JSON.stringify(body)
+      body: JSON.stringify(body),
     });
     const data = await response.json();
 

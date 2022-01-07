@@ -1,7 +1,7 @@
 import thunkReq from '../../helpers/thunkReqWrapper';
 
 // Get all contests
-function getcontestsfunc(_a={}, thunkAPI) {
+function getcontestsfunc(_a = {}, thunkAPI) {
   return thunkReq(thunkAPI, 'GET', '/app/api/contests/');
 }
 // Get a specific contest

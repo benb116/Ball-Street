@@ -1,11 +1,11 @@
 import React from 'react';
-import { useAppSelector, useAppDispatch } from '../../../app/hooks'
+import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 import {
   allGamesSelector, allTeamsSelector, filterSelector, setFilter,
 } from './PlayersSlice';
 
-function debounce(func, wait) {
-  let timeout;
+function debounce(func: (a: any) => any, wait: number) {
+  let timeout: ReturnType<typeof setTimeout>;
   return function d(...args) {
     const context = this;
     const later = function l() {
@@ -47,8 +47,7 @@ const PlayerFilter = () => {
         <option value="K">K</option>
         <option value="DEF">DEF</option>
       </select>
-
-      <select style={{ cursor: 'pointer' }} onChange={handleChange} name="teamAbr" value={filters.team}>
+      <select style={{ cursor: 'pointer' }} onChange={handleChange} name="teamAbr" value={filters.teamAbr}>
         <option value="">Team</option>
         {Object.keys(theteams)
           .sort((a,b) => theteams[a].abr > theteams[b].abr ? 1 : -1)

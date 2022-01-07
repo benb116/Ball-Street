@@ -1,11 +1,13 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
+// eslint-disable-next-line import/no-cycle
 import { RootState } from '../../../app/store';
 
 interface ModelState {
   modalIsOpen: boolean,
   info: {
     nflplayerID: number,
+    nflplayerName: string,
     isbid: boolean,
     price: number,
     protected: boolean,
@@ -15,6 +17,7 @@ const defaultState: ModelState = {
   modalIsOpen: false,
   info: {
     nflplayerID: 0,
+    nflplayerName: '',
     isbid: true,
     price: 0,
     protected: false,

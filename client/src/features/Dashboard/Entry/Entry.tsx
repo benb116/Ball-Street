@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { useAppSelector, useAppDispatch } from '../../../app/hooks'
 import { useParams } from 'react-router-dom';
+import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 import { allTeamsSelector, playersSelector, pricesMapSelector } from '../Players/PlayersSlice';
 import RenderPrice from '../../../helpers/util';
 

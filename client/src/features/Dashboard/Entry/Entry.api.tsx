@@ -6,18 +6,18 @@ function getentryfunc(input: { contestID: string }, thunkAPI) {
 }
 // Add a player in pregame
 function preaddfunc(input: { contestID: string, nflplayerID: string }, thunkAPI) {
-  return thunkReq(thunkAPI, 'POST', `/app/api/contests/${input.contestID}/add`, 
-  { nflplayerID: input.nflplayerID });
+  return thunkReq(thunkAPI, 'POST', `/app/api/contests/${input.contestID}/add`,
+    { nflplayerID: input.nflplayerID });
 }
 // Drop a player in pregame
 function predropfunc(input: { contestID: string, nflplayerID: string }, thunkAPI) {
-  return thunkReq(thunkAPI, 'POST', `/app/api/contests/${input.contestID}/drop`, 
-  { nflplayerID: input.nflplayerID });
+  return thunkReq(thunkAPI, 'POST', `/app/api/contests/${input.contestID}/drop`,
+    { nflplayerID: input.nflplayerID });
 }
 // Move players around the roster (swap players in certain positions)
 function reorderrosterfunc(input: { contestID: string, pos1: string, pos2: string }, thunkAPI) {
-  return thunkReq(thunkAPI, 'PUT', `/app/api/contests/${input.contestID}/entry`, 
-  { pos1: input.pos1, pos2: input.pos2 });
+  return thunkReq(thunkAPI, 'PUT', `/app/api/contests/${input.contestID}/entry`,
+    { pos1: input.pos1, pos2: input.pos2 });
 }
 
 export {

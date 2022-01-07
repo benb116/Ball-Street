@@ -17,8 +17,8 @@ interface ContestItem {
   name: string
 }
 interface EntryItem {
-    UserId: number,
-    pointtotal: number,
+  UserId: number,
+  pointtotal: number,
 }
 interface ContestsState {
   allcontests: ContestItem[],
@@ -55,13 +55,13 @@ export const contestsSlice = createSlice({
     builder.addCase(getContest.fulfilled, (state, { payload }) => {
       state.thiscontest = payload;
     });
-    builder.addCase(getContest.rejected,(state, { payload }) => {
+    builder.addCase(getContest.rejected, (state, { payload }) => {
       if (payload) { toast.error(payload); }
     });
     builder.addCase(getEntries.fulfilled, (state, { payload }) => {
       state.thiscontestentries = payload;
     });
-    builder.addCase(getEntries.rejected,(state, { payload }) => {
+    builder.addCase(getEntries.rejected, (state, { payload }) => {
       if (payload) { toast.error(payload); }
     });
     builder.addCase(getMyEntry.fulfilled, (state, { payload }) => {

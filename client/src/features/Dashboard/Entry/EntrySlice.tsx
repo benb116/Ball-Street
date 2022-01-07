@@ -1,8 +1,8 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
+// eslint-disable-next-line import/no-cycle
 import { RootState } from '../../../app/store';
-
 import {
   getentryfunc, preaddfunc, predropfunc, reorderrosterfunc,
 } from './Entry.api';
@@ -31,7 +31,7 @@ export const entrySlice = createSlice({
   initialState: defaultState,
   reducers: {
     clear: (state) => {
-      // eslint-disable-next-line no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       state = defaultState;
     },
     offerFilled: () => {

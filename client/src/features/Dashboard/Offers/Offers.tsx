@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useAppSelector, useAppDispatch } from '../../../app/hooks'
 import { useParams } from 'react-router-dom';
+import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 import { allTeamsSelector, playerSelector } from '../Players/PlayersSlice';
 
 import { cancelOffer, getOffers, offersSelector } from './OffersSlice';

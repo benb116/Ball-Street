@@ -1,9 +1,9 @@
 import Modal from 'react-modal';
 import React from 'react';
-import { useAppSelector, useAppDispatch } from '../../../app/hooks'
 import { useForm } from 'react-hook-form';
 
 import { useParams } from 'react-router';
+import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 import { modalSelector, modalStatusSelector, closeModal } from './ModalSlice';
 import { createOffer } from '../Offers/OffersSlice';
 
@@ -23,7 +23,7 @@ Modal.setAppElement('#root');
 const OfferModal = () => {
   const dispatch = useAppDispatch();
   const { register, handleSubmit } = useForm();
-  const { contestID } = useParams();
+  const { contestID } = useParams<{ contestID: string }>();
 
   const modalIsOpen = useAppSelector(modalStatusSelector);
   const modalInfo = useAppSelector(modalSelector);

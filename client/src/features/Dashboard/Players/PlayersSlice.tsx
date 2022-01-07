@@ -1,8 +1,9 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { string } from 'prop-types';
 import toast from 'react-hot-toast';
+// eslint-disable-next-line import/no-cycle
 import { RootState } from '../../../app/store';
-
 import { getgamesfunc, getplayersfunc } from './Players.api';
 
 export const getPlayers = createAsyncThunk('players/getPlayers', getplayersfunc);
@@ -54,6 +55,7 @@ export const playersSlice = createSlice({
   initialState: defaultState,
   reducers: {
     clear: (state) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       state = defaultState;
     },
     setFilter: (state, action) => {
@@ -138,10 +140,9 @@ export const priceMapSelector = (playerID: number) => (state: RootState) => (sta
 
 export const pricesMapSelector = (playerIDs: number[]) => (state: RootState) => (
   playerIDs.reduce((acc, cur) => {
-    const out = acc;
-    out[cur] = (state.players.priceMap[cur] || {});
-    return out;
-  }, {})
+    acc[cur] = (state.players.priceMap[cur] || {});
+    return acc;
+  }, {} as Record<string, any>)
 );
 
 export const filterSelector = (state: RootState) => state.players.filter;

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { useAppSelector, useAppDispatch } from '../../app/hooks'
+import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import {
   getAccount, isLoggedInSelector, logoutUser, userSelector,
 } from '../User/UserSlice';

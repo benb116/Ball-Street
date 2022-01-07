@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useAppSelector, useAppDispatch } from '../../app/hooks'
 import { useForm } from 'react-hook-form';
 import { Link, useParams } from 'react-router-dom';
+import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import {
   contestSelector,
   createEntry,
@@ -65,7 +65,6 @@ const Contest = () => {
             <div>
               <button
                 type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 Create entry
               </button>

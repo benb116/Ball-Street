@@ -3,8 +3,8 @@
 /* eslint-disable no-nested-ternary */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useAppSelector, useAppDispatch } from '../../../app/hooks'
 import { useParams } from 'react-router-dom';
+import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 import { allTeamsSelector, playerSelector, priceMapSelector } from '../Players/PlayersSlice';
 
 import {
@@ -86,7 +86,15 @@ function RosterItem({ playerid, position }) {
   if (!thisplayer || !theteams[thisplayer.NFLTeamId]) {
     return (
       <tr>
-        <td style={{ cursor: 'pointer', fontWeight: (shouldHighlight() ? 'bold' : 'normal') }} onClick={reorderClick}>{position}</td>
+        <td
+          style={{
+            cursor: 'pointer',
+            fontWeight: (shouldHighlight() ? 'bold' : 'normal'),
+          }}
+          onClick={reorderClick}
+        >
+          {position}
+        </td>
       </tr>
     );
   }
@@ -140,7 +148,14 @@ function RosterItem({ playerid, position }) {
 
   return (
     <tr playerid={thisplayer.id}>
-      <td style={{ cursor: 'pointer', fontWeight: (shouldHighlight() ? 'bold' : 'normal') }} onClick={reorderClick}>{position}</td>
+      <td
+        style={
+        { cursor: 'pointer', fontWeight: (shouldHighlight() ? 'bold' : 'normal') }
+        }
+        onClick={reorderClick}
+      >
+        {position}
+      </td>
       <td>
         {thisplayer.name}
         <span style={{ fontSize: '0.75em' }}>
