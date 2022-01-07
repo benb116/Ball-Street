@@ -7,13 +7,13 @@ import {
   contestSelector,
   createEntry,
   entriesSelector,
-  EntryItemType,
   getContest,
   getEntries,
   getMyEntry,
   myEntrySelector,
 } from './ContestsSlice';
 import RenderPrice from '../../helpers/util';
+import { EntryItemType } from '../types';
 
 // Show info about a specific contest and its entries
 const Contest = () => {

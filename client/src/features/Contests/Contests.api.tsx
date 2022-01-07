@@ -1,25 +1,26 @@
 import thunkReq from '../../helpers/thunkReqWrapper';
+import { ContestItemType, EntryItemType, EntryType } from '../types';
 
 // Get all contests
-function getcontestsfunc(_a = {}, thunkAPI) {
-  return thunkReq(thunkAPI, 'GET', '/app/api/contests/');
+async function getcontestsfunc(_a = {}, thunkAPI) {
+  return await thunkReq(thunkAPI, 'GET', '/app/api/contests/') as ContestItemType[];
 }
 // Get a specific contest
-function getcontestfunc(input: { contestID: string }, thunkAPI) {
-  return thunkReq(thunkAPI, 'GET', `/app/api/contests/${input.contestID}/`);
+async function getcontestfunc(input: { contestID: string }, thunkAPI) {
+  return await thunkReq(thunkAPI, 'GET', `/app/api/contests/${input.contestID}/`) as ContestItemType;
 }
 // Get my entry in a contest
-function getmyentryfunc(input: { contestID: string }, thunkAPI) {
-  return thunkReq(thunkAPI, 'GET', `/app/api/contests/${input.contestID}/entry`);
+async function getmyentryfunc(input: { contestID: string }, thunkAPI) {
+  return await thunkReq(thunkAPI, 'GET', `/app/api/contests/${input.contestID}/entry`) as EntryType;
 }
 // Get all entries in a contest
-function getentriesfunc(input: { contestID: string }, thunkAPI) {
-  return thunkReq(thunkAPI, 'GET', `/app/api/contests/${input.contestID}/entries`);
+async function getentriesfunc(input: { contestID: string }, thunkAPI) {
+  return await thunkReq(thunkAPI, 'GET', `/app/api/contests/${input.contestID}/entries`) as EntryItemType[];
 }
 
 // Make an entry in a contest
-function createentryfunc(input: { contestID: string }, thunkAPI) {
-  return thunkReq(thunkAPI, 'POST', `/app/api/contests/${input.contestID}/entry`);
+async function createentryfunc(input: { contestID: string }, thunkAPI) {
+  return await thunkReq(thunkAPI, 'POST', `/app/api/contests/${input.contestID}/entry`) as EntryType;
 }
 
 export {

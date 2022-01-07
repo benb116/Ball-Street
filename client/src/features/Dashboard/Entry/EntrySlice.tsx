@@ -3,6 +3,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
 // eslint-disable-next-line import/no-cycle
 import { RootState } from '../../../app/store';
+import { EntryType } from '../../types';
 import {
   getentryfunc, preaddfunc, predropfunc, reorderrosterfunc,
 } from './Entry.api';
@@ -14,7 +15,7 @@ export const reorderRoster = createAsyncThunk('entry/reorderRoster', reorderrost
 
 interface EntryState {
   balance: number,
-  roster: Record<string, number>,
+  roster: Record<string, number | null>,
   rposSelected: [number, string],
   rosterUpdate: boolean,
 }
@@ -77,14 +78,9 @@ export const entrySlice = createSlice({
   },
 });
 
-function setEntry(state: EntryState, payload) {
+function setEntry(state: EntryState, payload: EntryType) {
   state.balance = payload.pointtotal;
-  const rost = { ...payload };
-  delete rost.pointtotal;
-  delete rost.UserId;
-  delete rost.ContestId;
-  delete rost.createdAt;
-  delete rost.updatedAt;
+  const rost = { ...payload } as Omit<EntryType, 'pointtotal' | 'UserId' | 'ContestId' | 'createdAt' | 'updatedAt'>;
   state.roster = rost;
   return state;
 }

@@ -85,7 +85,7 @@ function PointTotals() {
   const thisentry = useAppSelector(entrySelector);
   const rpos = Object.keys(thisentry.roster);
 
-  const rosterPlayerIDs = Object.values(thisentry.roster).filter((p) => p !== null); // All playerIDs
+  const rosterPlayerIDs = Object.values(thisentry.roster).filter((p) => p !== null) as number[]; // All playerIDs
   const players = useAppSelector(playersSelector(rosterPlayerIDs)); // Player DB info
   const priceMaps = useAppSelector(pricesMapSelector(rosterPlayerIDs)); // Player proj and statprice info
   const theteams = useAppSelector(allTeamsSelector); // Are teams in pre or mid? Show different price as a result
@@ -97,8 +97,8 @@ function PointTotals() {
     const theplayer = players.find((p) => p.id === thisplayerID);
     if (!theplayer || !theteams[theplayer.NFLTeamId]) { return out; }
     const thephase = theteams[theplayer.NFLTeamId].phase;
-    const dispProj = thephase === 'pre' ? theplayer.preprice : (priceMaps[thisplayerID].projPrice || 0);
-    const dispStat = thephase === 'pre' ? theplayer.postprice : (priceMaps[thisplayerID].statPrice || 0);
+    const dispProj = thephase === 'pre' ? theplayer.preprice : (priceMaps[theplayer.id].projPrice || 0);
+    const dispStat = thephase === 'pre' ? theplayer.postprice : (priceMaps[theplayer.id].statPrice || 0);
 
     if (theplayer) {
       out[0] += Number(dispStat) || 0;

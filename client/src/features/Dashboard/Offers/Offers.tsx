@@ -5,8 +5,9 @@ import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 import { allTeamsSelector, playerSelector } from '../Players/PlayersSlice';
 
 import {
-  cancelOffer, getOffers, OfferItemType, offersSelector,
+  cancelOffer, getOffers, offersSelector,
 } from './OffersSlice';
+import { OfferItemType } from '../../types';
 
 // Show offers for different players
 const Offers = () => {

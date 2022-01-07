@@ -6,8 +6,9 @@ import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 import { isOnRosterSelector, preAdd, preDrop } from '../Entry/EntrySlice';
 import { setModal } from '../Modal/ModalSlice';
 import { cancelOffer, offersSelector } from '../Offers/OffersSlice';
-import { allTeamsSelector, PlayerItemType, priceMapSelector } from './PlayersSlice';
+import { allTeamsSelector, priceMapSelector } from './PlayersSlice';
 import RenderPrice from '../../../helpers/util';
+import { PlayerItemType } from '../../types';
 
 // Show a player's row in the list
 function PlayerItem({ playerdata }: { playerdata: PlayerItemType }) {
@@ -24,8 +25,8 @@ function PlayerItem({ playerdata }: { playerdata: PlayerItemType }) {
   const teamAbr = theteams[playerdata.NFLTeamId].abr;
 
   // Show correct price info
-  const dispProj = thephase === 'pre' ? playerdata.preprice : (priceMap.projPrice || 0);
-  const dispStat = thephase === 'pre' ? playerdata.postprice : (priceMap.statPrice || 0);
+  const dispProj = thephase === 'pre' ? playerdata.preprice : (priceMap?.projPrice || 0);
+  const dispStat = thephase === 'pre' ? playerdata.postprice : (priceMap?.statPrice || 0);
   const dispLast = priceMap?.lastprice ? Math.round(priceMap.lastprice / 100) : '';
   const dispBid = priceMap?.bestbid ? Math.round(priceMap.bestbid / 100) : '';
   const dispAsk = priceMap?.bestask ? Math.round(priceMap.bestask / 100) : '';
@@ -103,12 +104,8 @@ function PlayerItem({ playerdata }: { playerdata: PlayerItemType }) {
   );
 }
 
-<<<<<<< HEAD
 // Show correct action button
-function ActionButton({ thephase, oclick, text }) {
-=======
 function ActionButton({ thephase, oclick, text }: { thephase: string, oclick: () => void, text: string }) {
->>>>>>> 9692ca2 (Component item types)
   if (thephase !== 'pre' && thephase !== 'mid') {
     return (<td />);
   }

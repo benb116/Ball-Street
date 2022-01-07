@@ -6,15 +6,16 @@ import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 import {
-  allTeamsSelector, NFLPosType, NFLPosTypes, playerSelector, priceMapSelector,
+  allTeamsSelector, NFLPosTypes, playerSelector, priceMapSelector,
 } from '../Players/PlayersSlice';
 
 import {
   preDrop, rposSelector, selectRPos, reorderRoster,
 } from './EntrySlice';
-import { cancelOffer, OfferItemType, offersSelector } from '../Offers/OffersSlice';
+import { cancelOffer, offersSelector } from '../Offers/OffersSlice';
 import { setModal } from '../Modal/ModalSlice';
 import RenderPrice from '../../../helpers/util';
+import { NFLPosType, OfferItemType } from '../../types';
 
 const flexID = 99;
 const rosterkey = {
@@ -32,7 +33,7 @@ const rosterkey = {
 type RosterPosType = 'QB1' | 'RB1' | 'RB2' | 'WR1' | 'WR2' | 'TE1' | 'FLEX1' | 'FLEX2' | 'K1' | 'DEF1';
 
 // Show a specific row in the roster table
-function RosterItem({ playerid, position }: { playerid: number, position: RosterPosType }) {
+function RosterItem({ playerid, position }: { playerid: number | null, position: RosterPosType }) {
   const dispatch = useAppDispatch();
 
   const { contestID } = useParams<{ contestID: string }>();
@@ -94,15 +95,15 @@ function RosterItem({ playerid, position }: { playerid: number, position: Roster
   // Pull player's game phase and determine prices to show
   const thephase = theteams[thisplayer.NFLTeamId].phase;
   const teamAbr = theteams[thisplayer.NFLTeamId].abr;
-  const dispProj = thephase === 'pre' ? thisplayer.preprice : (priceMap.projPrice || 0);
-  const dispStat = thephase === 'pre' ? thisplayer.postprice : (priceMap.statPrice || 0);
+  const dispProj = thephase === 'pre' ? thisplayer.preprice : (priceMap?.projPrice || 0);
+  const dispStat = thephase === 'pre' ? thisplayer.postprice : (priceMap?.statPrice || 0);
   const dispLast = priceMap?.lastprice ? Math.round(priceMap.lastprice / 100) : '';
   const dispBid = priceMap?.bestbid ? Math.round(priceMap.bestbid / 100) : '';
   const dispAsk = priceMap?.bestask ? Math.round(priceMap.bestask / 100) : '';
 
   // If user drops player (pregame)
   const onpredrop = () => {
-    dispatch(preDrop({ contestID, nflplayerID: playerid }));
+    dispatch(preDrop({ contestID, nflplayerID: thisplayer.id }));
   };
 
   // If user wants to submit ask offer (midgame)
@@ -122,6 +123,7 @@ function RosterItem({ playerid, position }: { playerid: number, position: Roster
 
   // If user wants to cancel an active offer
   const oncancelOffer = (oid: string) => {
+    if (!oid) return;
     dispatch(cancelOffer({ contestID, offerID: oid }));
   };
 
@@ -130,7 +132,7 @@ function RosterItem({ playerid, position }: { playerid: number, position: Roster
   let text = '–';
   if (thephase === 'mid') {
     if (playeroffer) {
-      oclick = () => oncancelOffer(playeroffer.id);
+      oclick = () => oncancelOffer(playeroffer?.id || '');
       text = '✕';
     } else {
       oclick = onask;

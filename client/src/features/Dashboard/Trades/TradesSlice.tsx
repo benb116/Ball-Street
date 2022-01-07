@@ -3,17 +3,11 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
 // eslint-disable-next-line import/no-cycle
 import { RootState } from '../../../app/store';
+import { TradeItemType } from '../../types';
 import gettradesfunc from './Trades.api';
 
 export const getTrades = createAsyncThunk('trades/getTrades', gettradesfunc);
 
-export interface TradeItemType {
-  id: string,
-  NFLPlayerId: number,
-  price: number,
-  isbid: boolean,
-  createdAt: string,
-}
 interface TradesState {
   trades: TradeItemType[],
   tradeUpdate: boolean,
@@ -34,7 +28,7 @@ export const tradesSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(getTrades.fulfilled, (state, { payload }) => {
       state.trades = payload.map((t) => {
-        const data = (t.bid || t.ask);
+        const data = (t.bid ? t.bid : t.ask);
         // Pull certain info
         const out: TradeItemType = {
           price: t.price,

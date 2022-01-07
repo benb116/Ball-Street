@@ -1,23 +1,24 @@
 import thunkReq from '../../../helpers/thunkReqWrapper';
+import { EntryType } from '../../types';
 
 // Get my entry in a contest
-function getentryfunc(input: { contestID: string }, thunkAPI) {
-  return thunkReq(thunkAPI, 'GET', `/app/api/contests/${input.contestID}/entry`);
+async function getentryfunc(input: { contestID: string }, thunkAPI) {
+  return await thunkReq(thunkAPI, 'GET', `/app/api/contests/${input.contestID}/entry`) as EntryType;
 }
 // Add a player in pregame
-function preaddfunc(input: { contestID: string, nflplayerID: number }, thunkAPI) {
-  return thunkReq(thunkAPI, 'POST', `/app/api/contests/${input.contestID}/add`,
-    { nflplayerID: input.nflplayerID });
+async function preaddfunc(input: { contestID: string, nflplayerID: number }, thunkAPI) {
+  return await thunkReq(thunkAPI, 'POST', `/app/api/contests/${input.contestID}/add`,
+    { nflplayerID: input.nflplayerID }) as EntryType;
 }
 // Drop a player in pregame
-function predropfunc(input: { contestID: string, nflplayerID: number }, thunkAPI) {
-  return thunkReq(thunkAPI, 'POST', `/app/api/contests/${input.contestID}/drop`,
-    { nflplayerID: input.nflplayerID });
+async function predropfunc(input: { contestID: string, nflplayerID: number }, thunkAPI) {
+  return await thunkReq(thunkAPI, 'POST', `/app/api/contests/${input.contestID}/drop`,
+    { nflplayerID: input.nflplayerID }) as EntryType;
 }
 // Move players around the roster (swap players in certain positions)
-function reorderrosterfunc(input: { contestID: string, pos1: string, pos2: string }, thunkAPI) {
-  return thunkReq(thunkAPI, 'PUT', `/app/api/contests/${input.contestID}/entry`,
-    { pos1: input.pos1, pos2: input.pos2 });
+async function reorderrosterfunc(input: { contestID: string, pos1: string, pos2: string }, thunkAPI) {
+  return await thunkReq(thunkAPI, 'PUT', `/app/api/contests/${input.contestID}/entry`,
+    { pos1: input.pos1, pos2: input.pos2 }) as EntryType;
 }
 
 export {

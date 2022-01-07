@@ -1,13 +1,14 @@
 import thunkReq from '../../../helpers/thunkReqWrapper';
+import { GameItemType, PlayerItemType } from '../../types';
 
 // Get all players
-function getplayersfunc(_a = {}, thunkAPI) {
-  return thunkReq(thunkAPI, 'GET', '/app/api/nfldata/');
+async function getplayersfunc(_a = {}, thunkAPI) {
+  return await thunkReq(thunkAPI, 'GET', '/app/api/nfldata/') as PlayerItemType[];
 }
 
 // Get all games
-function getgamesfunc(_a = {}, thunkAPI) {
-  return thunkReq(thunkAPI, 'GET', '/app/api/nfldata/games');
+async function getgamesfunc(_a = {}, thunkAPI) {
+  return await thunkReq(thunkAPI, 'GET', '/app/api/nfldata/games') as GameItemType[];
 }
 
 export {

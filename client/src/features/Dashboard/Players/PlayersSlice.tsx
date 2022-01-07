@@ -3,6 +3,9 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
 // eslint-disable-next-line import/no-cycle
 import { RootState } from '../../../app/store';
+import {
+  GameItemType, PlayerItemType, PriceMapItemType, TeamMapItemType,
+} from '../../types';
 import { getgamesfunc, getplayersfunc } from './Players.api';
 
 export const getPlayers = createAsyncThunk('players/getPlayers', getplayersfunc);
@@ -17,41 +20,12 @@ export const NFLPosTypes = {
   6: { name: 'DEF', canflex: false },
   99: { name: 'FLEX', canflex: true },
 };
-export type NFLPosType = 1 | 2 | 3 | 4 | 5 | 6 | 99;
-
-export interface PlayerItemType {
-  id: number,
-  name: string,
-  posName?: string,
-  NFLTeamId: number,
-  NFLPositionId: NFLPosType,
-  injuryStatus?: string | null,
-  preprice: number,
-  postprice: number,
-  projPrice: number,
-  statPrice: number,
-  NFLTeam: {
-    gamePhase: string,
-  },
-}
-
-export interface GameItemType {
-  HomeId: number,
-  AwayId: number,
-  phase: string,
-  home: {
-    abr: string,
-  },
-  away: {
-    abr: string,
-  }
-}
 
 interface PlayerState {
   playerlist: PlayerItemType[],
   gamelist: GameItemType[],
-  teamMap: Record<string, any>,
-  priceMap: Record<string, any>,
+  teamMap: TeamMapItemType,
+  priceMap: Record<string, PriceMapItemType>,
   filter: {
     name: string,
     posName: string,
@@ -101,7 +75,7 @@ export const playersSlice = createSlice({
       }
       state.sortProp = payload; // Change sort property
     },
-    updatePrices: (state, { payload }) => { // Update price info for a set of players
+    updatePrices: (state, { payload }: { payload: PriceMapItemType[] }) => { // Update price info for a set of players
       const ns = state;
       payload.forEach((p) => {
         const pm = ns.priceMap[p.nflplayerID] || {};
@@ -127,7 +101,7 @@ export const playersSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(getPlayers.fulfilled, (state, { payload }: { payload: PlayerItemType[] }) => {
+    builder.addCase(getPlayers.fulfilled, (state, { payload }) => {
       const np = payload.map((p) => {
         p.posName = NFLPosTypes[p.NFLPositionId].name;
         return p;
@@ -146,7 +120,7 @@ export const playersSlice = createSlice({
         acc[cur.home.id] = cur.home;
         acc[cur.home.id].phase = cur.phase;
         return acc;
-      }, {});
+      }, {} as TeamMapItemType);
     });
     builder.addCase(getGames.rejected, (_state, { payload }) => {
       if (payload) { toast.error(payload as string); }
@@ -159,23 +133,25 @@ export const {
 } = playersSlice.actions;
 
 export const allPlayersSelector = (state: RootState) => (
-  state.players.playerlist.map((p) => ({ ...p, ...state.players.priceMap[p.id] }))
+  state.players.playerlist.map((p) => ({ ...p, ...state.players.priceMap[p.id] })) as PlayerItemType[]
 );
-export const allGamesSelector = (state: RootState) => (state.players.gamelist || []);
-export const allTeamsSelector = (state: RootState) => (state.players.teamMap || {});
-export const playerSelector = (playerID: number) => (state: RootState) => (
-  state.players.playerlist.find((p) => p.id === playerID) as PlayerItemType
+export const allGamesSelector = (state: RootState) => (state.players.gamelist || [] as GameItemType[]);
+export const allTeamsSelector = (state: RootState) => (state.players.teamMap || {} as Record<string, PriceMapItemType>);
+export const playerSelector = (playerID: number | null) => (state: RootState) => (
+  !playerID ? null : state.players.playerlist.find((p) => p.id === playerID) as PlayerItemType
 );
 export const playersSelector = (playerIDs: number[]) => (state: RootState) => (
   state.players.playerlist.filter((p) => playerIDs.indexOf(p.id) > -1)
 );
-export const priceMapSelector = (playerID: number) => (state: RootState) => (state.players.priceMap[playerID] || {});
+export const priceMapSelector = (playerID: number | null) => (state: RootState) => (
+  !playerID ? null : state.players.priceMap[playerID] || {}
+);
 
 export const pricesMapSelector = (playerIDs: number[]) => (state: RootState) => (
   playerIDs.reduce((acc, cur) => {
     acc[cur] = (state.players.priceMap[cur] || {});
     return acc;
-  }, {} as Record<string, any>)
+  }, {} as Record<string, PriceMapItemType>)
 );
 
 export const filterSelector = (state: RootState) => state.players.filter;

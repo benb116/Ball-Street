@@ -3,20 +3,12 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
 // eslint-disable-next-line import/no-cycle
 import { RootState } from '../../../app/store';
+import { OfferItemType } from '../../types';
 import { createofferfunc, cancelofferfunc, getoffersfunc } from './Offers.api';
 
 export const getOffers = createAsyncThunk('offers/getOffers', getoffersfunc);
 export const createOffer = createAsyncThunk('offers/createOffer', createofferfunc);
 export const cancelOffer = createAsyncThunk('offers/cancelOffer', cancelofferfunc);
-
-export interface OfferItemType {
-  id: string,
-  NFLPlayerId: number,
-  price: number,
-  protected: boolean,
-  isbid: boolean,
-  expire?: number,
-}
 
 interface OfferState {
   bids: OfferItemType[],
@@ -35,7 +27,7 @@ export const offersSlice = createSlice({
   reducers: {
     // Clear an offer from the list
     // Don't know if it's bid or ask so check both
-    removeOffer: (state, { payload }) => {
+    removeOffer: (state, { payload } : { payload: string }) => {
       state.remove.push(payload);
       state.bids = state.bids.filter((o) => o.id !== payload);
       state.asks = state.asks.filter((o) => o.id !== payload);
@@ -52,7 +44,7 @@ export const offersSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(getOffers.fulfilled, (state, { payload }: { payload: OfferItemType[] }) => {
+    builder.addCase(getOffers.fulfilled, (state, { payload }) => {
       payload.forEach((o) => {
         if (o.isbid) { state.bids.push(o); } else { state.asks.push(o); }
       });
@@ -60,7 +52,8 @@ export const offersSlice = createSlice({
     builder.addCase(getOffers.rejected, (_state, { payload }) => {
       if (payload) { toast.error(payload as string); }
     });
-    builder.addCase(createOffer.fulfilled, (state, { payload }: { payload: OfferItemType }) => {
+
+    builder.addCase(createOffer.fulfilled, (state, { payload }) => {
       // If an offer is filled immediately,
       // It may be marked as filled before the "create offer" has resolved.
       // So check to make sure it hasn't already been added to the "remove" list
@@ -76,7 +69,8 @@ export const offersSlice = createSlice({
     builder.addCase(createOffer.rejected, (_state, { payload }) => {
       if (payload) { toast.error(payload as string); }
     });
-    builder.addCase(cancelOffer.fulfilled, (state, { payload }: { payload: OfferItemType }) => {
+
+    builder.addCase(cancelOffer.fulfilled, (state, { payload }) => {
       if (payload.isbid) {
         state.bids = state.bids.filter((o) => o.id !== payload.id);
       } else {

@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 
-import { ContestItemType, contestsSelector, getContests } from './ContestsSlice';
+import { contestsSelector, getContests } from './ContestsSlice';
+import { ContestItemType } from '../types';
 
 // Show info about all contests available
 const Contests = () => {

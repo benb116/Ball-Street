@@ -2,8 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useAppSelector } from '../../../app/hooks';
 
-import { LeaderItemType, leadersSelector } from './LeaderboardSlice';
+import { leadersSelector } from './LeaderboardSlice';
 import RenderPrice from '../../../helpers/util';
+import { LeaderItemType } from '../../types';
 
 // Show leaderboard of entries in the contest
 const Leaderboards = () => {

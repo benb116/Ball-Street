@@ -11,11 +11,11 @@ import {
   getGames,
   allTeamsSelector,
   allGamesSelector,
-  GameItemType,
 } from './PlayersSlice';
 
 import PlayerFilter from './PlayerFilter';
 import PlayerItem from './PlayerItem';
+import { GameItemType } from '../../types';
 
 // Show list of all active players
 const Players = () => {
@@ -41,7 +41,7 @@ const Players = () => {
       if (!p.name.toLowerCase().includes(filters.name)) return false;
 
       // Position filter
-      if (filters.posName === 'FLEX') {
+      if (filters.posName === 'FLEX' && p.posName) {
         if (['RB', 'WR', 'TE'].indexOf(p.posName) === -1) return false;
       } else if (p.posName !== filters.posName && filters.posName !== '') return false;
 

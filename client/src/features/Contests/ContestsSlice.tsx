@@ -3,6 +3,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
 // eslint-disable-next-line import/no-cycle
 import { RootState } from '../../app/store';
+import { ContestItemType, EntryItemType, EntryType } from '../types';
 
 import {
   getcontestsfunc,
@@ -12,20 +13,11 @@ import {
   getmyentryfunc,
 } from './Contests.api';
 
-export interface ContestItemType {
-  id: number,
-  nflweek: number,
-  name: string
-}
-export interface EntryItemType {
-  UserId: number,
-  pointtotal: number,
-}
 interface ContestsState {
   allcontests: ContestItemType[],
   thiscontest: ContestItemType | null,
   thiscontestentries: EntryItemType[],
-  thiscontestmyentry: EntryItemType | null,
+  thiscontestmyentry: EntryType | null,
 }
 const defaultState: ContestsState = {
   allcontests: [],

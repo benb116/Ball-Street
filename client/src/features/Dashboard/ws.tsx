@@ -2,8 +2,9 @@ import { store } from '../../app/store';
 import { setPhase, updatePrices, setInjury } from './Players/PlayersSlice';
 import { removeOffer, alertProtMatch } from './Offers/OffersSlice';
 import { offerFilled, updateRoster } from './Entry/EntrySlice';
-import { LeaderItemType, updateLeaders } from './Leaderboard/LeaderboardSlice';
+import { updateLeaders } from './Leaderboard/LeaderboardSlice';
 import { updateTrades } from './Trades/TradesSlice';
+import { LeaderItemType } from '../types';
 
 // Init WS connection and dispatch actions based on events
 const initWS = (contestID: string) => {
@@ -24,7 +25,7 @@ const initWS = (contestID: string) => {
       switch (msg.event) {
         case 'offerFilled':
           delOffer(msg.offerID);
-          fillOffer(msg.offerID);
+          fillOffer();
           upRost();
           break;
         case 'offerCancelled':

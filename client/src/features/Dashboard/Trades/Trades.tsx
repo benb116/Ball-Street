@@ -5,8 +5,9 @@ import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 import { playerSelector } from '../Players/PlayersSlice';
 
 import {
-  getTrades, TradeItemType, tradesSelector, tradeUpdateSelector,
+  getTrades, tradesSelector, tradeUpdateSelector,
 } from './TradesSlice';
+import { TradeItemType } from '../../types';
 
 const Trades = () => {
   const dispatch = useAppDispatch();

@@ -1,22 +1,19 @@
 import thunkReq from '../../../helpers/thunkReqWrapper';
+import { OfferItemType, OfferObj } from '../../types';
 
 // Get my offers in a contest
-function getoffersfunc(input: { contestID: string }, thunkAPI) {
-  return thunkReq(thunkAPI, 'GET', `/app/api/contests/${input.contestID}/offers`);
-}
-interface OfferObj {
-  nflplayerID: number,
-  isbid: boolean,
-  price: number,
-  protected: boolean,
+async function getoffersfunc(input: { contestID: string }, thunkAPI) {
+  return await thunkReq(thunkAPI, 'GET', `/app/api/contests/${input.contestID}/offers`) as OfferItemType[];
 }
 // Create an offer
-function createofferfunc(input: { contestID: string, offerobj: OfferObj }, thunkAPI) {
-  return thunkReq(thunkAPI, 'POST', `/app/api/contests/${input.contestID}/offer`, { offerobj: input.offerobj });
+async function createofferfunc(input: { contestID: string, offerobj: OfferObj }, thunkAPI) {
+  return await thunkReq(thunkAPI, 'POST', `/app/api/contests/${input.contestID}/offer`,
+    { offerobj: input.offerobj }) as OfferItemType;
 }
 // Cancel an offer
-function cancelofferfunc(input: { contestID: string, offerID: string }, thunkAPI) {
-  return thunkReq(thunkAPI, 'DELETE', `/app/api/contests/${input.contestID}/offer`, { offerID: input.offerID });
+async function cancelofferfunc(input: { contestID: string, offerID: string }, thunkAPI) {
+  return await thunkReq(thunkAPI, 'DELETE', `/app/api/contests/${input.contestID}/offer`,
+    { offerID: input.offerID }) as OfferItemType;
 }
 
 export {
