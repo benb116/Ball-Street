@@ -43,36 +43,38 @@ export const createEntry = createAsyncThunk('contests/createEntry', createentryf
 export const contestsSlice = createSlice({
   name: 'contests',
   initialState: defaultState,
-  reducers: {
-
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getContests.fulfilled, (state, { payload }) => {
       state.allcontests = payload;
     });
-    builder.addCase(getContests.rejected, (state, { payload }) => {
+    builder.addCase(getContests.rejected, (_state, { payload }) => {
       if (payload) { toast.error(payload as string); }
     });
+
     builder.addCase(getContest.fulfilled, (state, { payload }) => {
       state.thiscontest = payload;
     });
-    builder.addCase(getContest.rejected, (state, { payload }) => {
+    builder.addCase(getContest.rejected, (_state, { payload }) => {
       if (payload) { toast.error(payload as string); }
     });
+
     builder.addCase(getEntries.fulfilled, (state, { payload }) => {
       state.thiscontestentries = payload;
     });
-    builder.addCase(getEntries.rejected, (state, { payload }) => {
+    builder.addCase(getEntries.rejected, (_state, { payload }) => {
       if (payload) { toast.error(payload as string); }
     });
+
     builder.addCase(getMyEntry.fulfilled, (state, { payload }) => {
       state.thiscontestmyentry = payload;
     });
+
     builder.addCase(createEntry.fulfilled, (state, { payload }) => {
       state.thiscontestentries.push(payload);
       state.thiscontestmyentry = payload;
     });
-    builder.addCase(createEntry.rejected, (state, { payload }) => {
+    builder.addCase(createEntry.rejected, (_state, { payload }) => {
       if (payload) { toast.error(payload as string); }
     });
   },

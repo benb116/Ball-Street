@@ -57,7 +57,7 @@ export const offersSlice = createSlice({
         if (o.isbid) { state.bids.push(o); } else { state.asks.push(o); }
       });
     });
-    builder.addCase(getOffers.rejected, (state, { payload }) => {
+    builder.addCase(getOffers.rejected, (_state, { payload }) => {
       if (payload) { toast.error(payload as string); }
     });
     builder.addCase(createOffer.fulfilled, (state, { payload }: { payload: OfferItemType }) => {
@@ -73,7 +73,7 @@ export const offersSlice = createSlice({
         toast.success('Offer submitted');
       }
     });
-    builder.addCase(createOffer.rejected, (state, { payload }) => {
+    builder.addCase(createOffer.rejected, (_state, { payload }) => {
       if (payload) { toast.error(payload as string); }
     });
     builder.addCase(cancelOffer.fulfilled, (state, { payload }: { payload: OfferItemType }) => {
@@ -84,7 +84,7 @@ export const offersSlice = createSlice({
       }
       toast.success('Offer cancelled');
     });
-    builder.addCase(cancelOffer.rejected, (state, { payload }) => {
+    builder.addCase(cancelOffer.rejected, (_state, { payload }) => {
       if (payload) { toast.error(payload as string); }
     });
   },

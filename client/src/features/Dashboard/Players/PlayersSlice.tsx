@@ -134,9 +134,10 @@ export const playersSlice = createSlice({
       });
       state.playerlist = np;
     });
-    builder.addCase(getPlayers.rejected, (state, { payload }) => {
+    builder.addCase(getPlayers.rejected, (_state, { payload }) => {
       if (payload) { toast.error(payload as string); }
     });
+
     builder.addCase(getGames.fulfilled, (state, { payload }) => {
       state.gamelist = [...payload].sort((a, b) => a.startTime - b.startTime);
       state.teamMap = payload.reduce((acc, cur) => { // team and game phase info
@@ -147,7 +148,7 @@ export const playersSlice = createSlice({
         return acc;
       }, {});
     });
-    builder.addCase(getGames.rejected, (state, { payload }) => {
+    builder.addCase(getGames.rejected, (_state, { payload }) => {
       if (payload) { toast.error(payload as string); }
     });
   },
