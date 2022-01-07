@@ -20,7 +20,7 @@ export const leaderboardSlice = createSlice({
   name: 'leaderboard',
   initialState: defaultState,
   reducers: {
-    updateLeaders: (state, { payload }) => {
+    updateLeaders: (state, { payload }: { payload: LeaderItemType[] }) => {
       state.leaders = (payload || []);
     },
   },

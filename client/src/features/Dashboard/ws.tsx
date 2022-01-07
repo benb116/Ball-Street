@@ -2,7 +2,7 @@ import { store } from '../../app/store';
 import { setPhase, updatePrices, setInjury } from './Players/PlayersSlice';
 import { removeOffer, alertProtMatch } from './Offers/OffersSlice';
 import { offerFilled, updateRoster } from './Entry/EntrySlice';
-import { updateLeaders } from './Leaderboard/LeaderboardSlice';
+import { LeaderItemType, updateLeaders } from './Leaderboard/LeaderboardSlice';
 import { updateTrades } from './Trades/TradesSlice';
 
 // Init WS connection and dispatch actions based on events
@@ -74,7 +74,7 @@ function markPrice(arr) {
   store.dispatch(updatePrices(arr));
 }
 
-function markInjury(info) {
+function markInjury(info: Record<number, string | null>) {
   store.dispatch(setInjury(info));
 }
 
@@ -82,8 +82,8 @@ function delOffer(oid: string) {
   store.dispatch(removeOffer(oid));
 }
 
-function fillOffer(oid: string) {
-  store.dispatch(offerFilled(oid));
+function fillOffer() {
+  store.dispatch(offerFilled());
 }
 
 function upRost() {
@@ -91,15 +91,15 @@ function upRost() {
   store.dispatch(updateTrades());
 }
 
-function protMatch({ offerID, expire }) {
+function protMatch({ offerID, expire }: { offerID: string, expire: number }) {
   store.dispatch(alertProtMatch({ offerID, expire }));
 }
 
-function upLead(board) {
+function upLead(board: LeaderItemType[]) {
   store.dispatch(updateLeaders(board));
 }
 
-function newPhase(nphase) {
+function newPhase(nphase: { nflTeamID: number, gamePhase: string, }) {
   store.dispatch(setPhase(nphase));
 }
 

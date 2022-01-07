@@ -14,6 +14,7 @@ export interface OfferItemType {
   NFLPlayerId: number,
   price: number,
   protected: boolean,
+  isbid: boolean,
   expire?: number,
 }
 
@@ -51,7 +52,7 @@ export const offersSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(getOffers.fulfilled, (state, { payload }) => {
+    builder.addCase(getOffers.fulfilled, (state, { payload }: { payload: OfferItemType[] }) => {
       payload.forEach((o) => {
         if (o.isbid) { state.bids.push(o); } else { state.asks.push(o); }
       });
@@ -59,7 +60,7 @@ export const offersSlice = createSlice({
     builder.addCase(getOffers.rejected, (state, { payload }) => {
       if (payload) { toast.error(payload as string); }
     });
-    builder.addCase(createOffer.fulfilled, (state, { payload }) => {
+    builder.addCase(createOffer.fulfilled, (state, { payload }: { payload: OfferItemType }) => {
       // If an offer is filled immediately,
       // It may be marked as filled before the "create offer" has resolved.
       // So check to make sure it hasn't already been added to the "remove" list
@@ -75,7 +76,7 @@ export const offersSlice = createSlice({
     builder.addCase(createOffer.rejected, (state, { payload }) => {
       if (payload) { toast.error(payload as string); }
     });
-    builder.addCase(cancelOffer.fulfilled, (state, { payload }) => {
+    builder.addCase(cancelOffer.fulfilled, (state, { payload }: { payload: OfferItemType }) => {
       if (payload.isbid) {
         state.bids = state.bids.filter((o) => o.id !== payload.id);
       } else {

@@ -5,12 +5,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
-import { allTeamsSelector, playerSelector, priceMapSelector } from '../Players/PlayersSlice';
+import {
+  allTeamsSelector, NFLPosType, NFLPosTypes, playerSelector, priceMapSelector,
+} from '../Players/PlayersSlice';
 
 import {
   preDrop, rposSelector, selectRPos, reorderRoster,
 } from './EntrySlice';
-import { cancelOffer, offersSelector } from '../Offers/OffersSlice';
+import { cancelOffer, OfferItemType, offersSelector } from '../Offers/OffersSlice';
 import { setModal } from '../Modal/ModalSlice';
 import RenderPrice from '../../../helpers/util';
 
@@ -27,20 +29,10 @@ const rosterkey = {
   K1: 5,
   DEF1: 6,
 };
-
-const NFLPosTypes = {
-  1: { name: 'QB', canflex: false },
-  2: { name: 'RB', canflex: true },
-  3: { name: 'WR', canflex: true },
-  4: { name: 'TE', canflex: true },
-  5: { name: 'K', canflex: false },
-  6: { name: 'DEF', canflex: false },
-  99: {},
-};
-NFLPosTypes[flexID] = { name: 'FLEX', canflex: true };
+type RosterPosType = 'QB1' | 'RB1' | 'RB2' | 'WR1' | 'WR2' | 'TE1' | 'FLEX1' | 'FLEX2' | 'K1' | 'DEF1';
 
 // Show a specific row in the roster table
-function RosterItem({ playerid, position }: { playerid: number, position: string }) {
+function RosterItem({ playerid, position }: { playerid: number, position: RosterPosType }) {
   const dispatch = useAppDispatch();
 
   const { contestID } = useParams<{ contestID: string }>();
@@ -125,11 +117,11 @@ function RosterItem({ playerid, position }: { playerid: number, position: string
   };
 
   // Is there an active offer for the player
-  let playeroffer = null;
-  playeroffer = offers.asks.find((o) => o.NFLPlayerId === thisplayer.id);
+  let playeroffer: OfferItemType | null = null;
+  playeroffer = offers.asks.find((o) => o.NFLPlayerId === thisplayer.id) || null;
 
   // If user wants to cancel an active offer
-  const oncancelOffer = (oid) => {
+  const oncancelOffer = (oid: string) => {
     dispatch(cancelOffer({ contestID, offerID: oid }));
   };
 
@@ -147,7 +139,7 @@ function RosterItem({ playerid, position }: { playerid: number, position: string
   }
 
   return (
-    <tr playerid={thisplayer.id}>
+    <tr data-playerid={thisplayer.id}>
       <td
         style={
         { cursor: 'pointer', fontWeight: (shouldHighlight() ? 'bold' : 'normal') }
@@ -179,13 +171,12 @@ function RosterItem({ playerid, position }: { playerid: number, position: string
 }
 
 // Get the name of a position type from it's number
-function posName(posNum: number) {
-  if (!posNum) return '';
+function posName(posNum: NFLPosType) {
   return `(${NFLPosTypes[posNum].name})`;
 }
 
 // Generic action button that triggers a drop/offer/cancel
-function ActionButton({ thephase, oclick, text }) {
+function ActionButton({ thephase, oclick, text }: { thephase: string, oclick: () => void, text: string }) {
   if (thephase !== 'pre' && thephase !== 'mid') {
     return (<td />);
   }

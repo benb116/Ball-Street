@@ -50,7 +50,7 @@ const Entry = () => {
           {rpos.map((pos) => ( // Create a roster item for each position
             <RosterItem
               key={pos}
-              position={pos}
+              data-position={pos}
               playerid={thisentry.roster[pos]}
             />
           ))}

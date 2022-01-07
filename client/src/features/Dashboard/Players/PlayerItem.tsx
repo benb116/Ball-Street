@@ -81,7 +81,7 @@ function PlayerItem({ playerdata }: { playerdata: PlayerItemType }) {
   }
 
   return (
-    <tr playerid={playerdata.id}>
+    <tr data-playerid={playerdata.id}>
       <td style={{ width: '10rem', overflow: 'hidden' }}>
         {playerdata.name}
         {' '}
