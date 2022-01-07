@@ -7,6 +7,7 @@ import {
   contestSelector,
   createEntry,
   entriesSelector,
+  EntryItemType,
   getContest,
   getEntries,
   getMyEntry,
@@ -76,7 +77,7 @@ const Contest = () => {
   );
 };
 
-function EntryItem({ entrydata }) {
+function EntryItem({ entrydata }: { entrydata: EntryItemType }) {
   return (
     <li>
       {entrydata.UserId}

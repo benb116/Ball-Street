@@ -9,9 +9,17 @@ export const getOffers = createAsyncThunk('offers/getOffers', getoffersfunc);
 export const createOffer = createAsyncThunk('offers/createOffer', createofferfunc);
 export const cancelOffer = createAsyncThunk('offers/cancelOffer', cancelofferfunc);
 
+export interface OfferItemType {
+  id: string,
+  NFLPlayerId: number,
+  price: number,
+  protected: boolean,
+  expire?: number,
+}
+
 interface OfferState {
-  bids: Record<string, any>[],
-  asks: Record<string, any>[],
+  bids: OfferItemType[],
+  asks: OfferItemType[],
   remove: string[],
 }
 const defaultState: OfferState = {

@@ -10,7 +10,7 @@ const Signup = () => {
   const history = useHistory();
   const { id } = useAppSelector(userSelector);
 
-  const onSubmit = (data) => {
+  const onSubmit = (data: { email: string, }) => {
     dispatch(forgotUser(data));
   };
 

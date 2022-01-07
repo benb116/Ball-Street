@@ -1,6 +1,5 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { string } from 'prop-types';
 import toast from 'react-hot-toast';
 // eslint-disable-next-line import/no-cycle
 import { RootState } from '../../../app/store';
@@ -18,9 +17,37 @@ const NFLPosTypes = {
   6: { name: 'DEF', canflex: false },
 };
 
+export interface PlayerItemType {
+  id: number,
+  name: string,
+  posName: string,
+  NFLTeamId: number,
+  NFLPositionId: number,
+  injuryStatus?: string | null,
+  preprice: number,
+  postprice: number,
+  projPrice: number,
+  statPrice: number,
+  NFLTeam: {
+    gamePhase: string,
+  },
+}
+
+export interface GameItemType {
+  HomeId: number,
+  AwayId: number,
+  phase: string,
+  home: {
+    abr: string,
+  },
+  away: {
+    abr: string,
+  }
+}
+
 interface PlayerState {
-  playerlist: Record<string, any>[],
-  gamelist: Record<string, any>[],
+  playerlist: PlayerItemType[],
+  gamelist: (GameItemType | null)[],
   teamMap: Record<string, any>,
   priceMap: Record<string, any>,
   filter: {
@@ -131,7 +158,7 @@ export const allPlayersSelector = (state: RootState) => (
 export const allGamesSelector = (state: RootState) => (state.players.gamelist || []);
 export const allTeamsSelector = (state: RootState) => (state.players.teamMap || {});
 export const playerSelector = (playerID: number) => (state: RootState) => (
-  state.players.playerlist.find((p) => p.id === playerID)
+  state.players.playerlist.find((p) => p.id === playerID) as PlayerItemType
 );
 export const playersSelector = (playerIDs: number[]) => (state: RootState) => (
   state.players.playerlist.filter((p) => playerIDs.indexOf(p.id) > -1)

@@ -10,7 +10,12 @@ const Signup = () => {
   const history = useHistory();
   const { id } = useAppSelector(userSelector);
 
-  const onSubmit = (data) => {
+  const onSubmit = (data: {
+    name: string,
+    email: string,
+    password: string,
+    skipVerification: boolean
+  }) => {
     dispatch(signupUser(data));
   };
 

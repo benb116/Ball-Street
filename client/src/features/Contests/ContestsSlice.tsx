@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
+// eslint-disable-next-line import/no-cycle
 import { RootState } from '../../app/store';
 
 import {
@@ -11,20 +12,20 @@ import {
   getmyentryfunc,
 } from './Contests.api';
 
-interface ContestItem {
+export interface ContestItemType {
   id: number,
   nflweek: number,
   name: string
 }
-interface EntryItem {
+export interface EntryItemType {
   UserId: number,
   pointtotal: number,
 }
 interface ContestsState {
-  allcontests: ContestItem[],
-  thiscontest: ContestItem | null,
-  thiscontestentries: EntryItem[],
-  thiscontestmyentry: EntryItem | null,
+  allcontests: ContestItemType[],
+  thiscontest: ContestItemType | null,
+  thiscontestentries: EntryItemType[],
+  thiscontestmyentry: EntryItemType | null,
 }
 const defaultState: ContestsState = {
   allcontests: [],

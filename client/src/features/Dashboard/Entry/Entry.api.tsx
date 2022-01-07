@@ -5,12 +5,12 @@ function getentryfunc(input: { contestID: string }, thunkAPI) {
   return thunkReq(thunkAPI, 'GET', `/app/api/contests/${input.contestID}/entry`);
 }
 // Add a player in pregame
-function preaddfunc(input: { contestID: string, nflplayerID: string }, thunkAPI) {
+function preaddfunc(input: { contestID: string, nflplayerID: number }, thunkAPI) {
   return thunkReq(thunkAPI, 'POST', `/app/api/contests/${input.contestID}/add`,
     { nflplayerID: input.nflplayerID });
 }
 // Drop a player in pregame
-function predropfunc(input: { contestID: string, nflplayerID: string }, thunkAPI) {
+function predropfunc(input: { contestID: string, nflplayerID: number }, thunkAPI) {
   return thunkReq(thunkAPI, 'POST', `/app/api/contests/${input.contestID}/drop`,
     { nflplayerID: input.nflplayerID });
 }

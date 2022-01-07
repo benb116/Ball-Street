@@ -11,6 +11,7 @@ import {
   getGames,
   allTeamsSelector,
   allGamesSelector,
+  GameItemType,
 } from './PlayersSlice';
 
 import PlayerFilter from './PlayerFilter';
@@ -28,7 +29,7 @@ const Players = () => {
 
   // If we're filtering by a game
   const thegamefilter = filters.game;
-  let thegame = null;
+  let thegame: (GameItemType | null) = null;
   if (thegamefilter !== '') {
     thegame = thegames[Number(thegamefilter)];
   }
@@ -146,63 +147,63 @@ function ListHeader() {
 
   // Change sort
   function handleClick(evt) {
-    dispatch(setSort(evt.target.getAttribute('value')));
+    dispatch(setSort(evt.target.getAttribute('data-value')));
   }
   const sorts = useAppSelector(sortSelector);
   const { sortProp, sortDesc } = sorts;
 
   return (
     <tr style={{ fontSize: '.8rem' }}>
-      <th style={{ width: '10rem', cursor: 'pointer' }} onClick={handleClick} value="name">
+      <th style={{ width: '10rem', cursor: 'pointer' }} onClick={handleClick} data-value="name">
         Name
         <span style={{ fontSize: '0.5em' }}>
           {' '}
           {sortProp === 'name' ? (sortDesc ? '▼' : '▲') : ''}
         </span>
       </th>
-      <th style={{ width: '2.2rem', cursor: 'pointer' }} onClick={handleClick} value="posName">
+      <th style={{ width: '2.2rem', cursor: 'pointer' }} onClick={handleClick} data-value="posName">
         Pos
         <span style={{ fontSize: '0.5em' }}>
           {' '}
           {sortProp === 'posName' ? (sortDesc ? '▼' : '▲') : ''}
         </span>
       </th>
-      <th style={{ width: '2.4rem', cursor: 'pointer' }} onClick={handleClick} value="teamAbr">
+      <th style={{ width: '2.4rem', cursor: 'pointer' }} onClick={handleClick} data-value="teamAbr">
         Team
         <span style={{ fontSize: '0.5em' }}>
           {' '}
           {sortProp === 'teamAbr' ? (sortDesc ? '▼' : '▲') : ''}
         </span>
       </th>
-      <th style={{ width: '2rem', cursor: 'pointer', textAlign: 'right' }} onClick={handleClick} value="preprice">
+      <th style={{ width: '2rem', cursor: 'pointer', textAlign: 'right' }} onClick={handleClick} data-value="preprice">
         Proj
         <span style={{ fontSize: '0.5em' }}>
           {' '}
           {sortProp === 'preprice' ? (sortDesc ? '▼' : '▲') : ''}
         </span>
       </th>
-      <th style={{ width: '2rem', cursor: 'pointer', textAlign: 'right' }} onClick={handleClick} value="postprice">
+      <th style={{ width: '2rem', cursor: 'pointer', textAlign: 'right' }} onClick={handleClick} data-value="postprice">
         Pts
         <span style={{ fontSize: '0.5em' }}>
           {' '}
           {sortProp === 'postprice' ? (sortDesc ? '▼' : '▲') : ''}
         </span>
       </th>
-      <th style={{ width: '2.2rem', cursor: 'pointer', textAlign: 'right' }} onClick={handleClick} value="lastprice">
+      <th style={{ width: '2.2rem', cursor: 'pointer', textAlign: 'right' }} onClick={handleClick} data-value="lastprice">
         Last
         <span style={{ fontSize: '0.5em' }}>
           {' '}
           {sortProp === 'lastprice' ? (sortDesc ? '▼' : '▲') : ''}
         </span>
       </th>
-      <th style={{ width: '2rem', cursor: 'pointer', textAlign: 'right' }} onClick={handleClick} value="bestbid">
+      <th style={{ width: '2rem', cursor: 'pointer', textAlign: 'right' }} onClick={handleClick} data-value="bestbid">
         Bid
         <span style={{ fontSize: '0.5em' }}>
           {' '}
           {sortProp === 'bestbid' ? (sortDesc ? '▼' : '▲') : ''}
         </span>
       </th>
-      <th style={{ width: '2rem', cursor: 'pointer', textAlign: 'right' }} onClick={handleClick} value="bestask">
+      <th style={{ width: '2rem', cursor: 'pointer', textAlign: 'right' }} onClick={handleClick} data-value="bestask">
         Ask
         <span style={{ fontSize: '0.5em' }}>
           {' '}

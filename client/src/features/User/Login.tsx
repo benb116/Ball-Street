@@ -11,7 +11,7 @@ const Login = () => {
   const history = useHistory();
   const { id } = useAppSelector(userSelector);
 
-  const onSubmit = (data) => {
+  const onSubmit = (data: { email: string, password: string }) => {
     dispatch(loginUser(data));
   };
 

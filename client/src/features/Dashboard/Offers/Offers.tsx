@@ -4,7 +4,9 @@ import { useParams } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 import { allTeamsSelector, playerSelector } from '../Players/PlayersSlice';
 
-import { cancelOffer, getOffers, offersSelector } from './OffersSlice';
+import {
+  cancelOffer, getOffers, OfferItemType, offersSelector,
+} from './OffersSlice';
 
 // Show offers for different players
 const Offers = () => {
@@ -41,7 +43,7 @@ const Offers = () => {
   );
 };
 
-function OfferItem({ offerdata }) {
+function OfferItem({ offerdata }: { offerdata: OfferItemType }) {
   // Used for protected offer times
   // Value says whether a countdown has started
   // Count is a dummy variable that is updated to cause a rerender
@@ -52,9 +54,12 @@ function OfferItem({ offerdata }) {
   const { contestID } = useParams<{ contestID: string }>();
 
   const playerdata = useAppSelector(playerSelector(offerdata.NFLPlayerId));
+  if (!playerdata) {
+    return (<span />);
+  }
   const teamdata = useAppSelector(allTeamsSelector);
   const thephase = teamdata[playerdata?.NFLTeamId]?.phase;
-  if (!playerdata || thephase !== 'mid') {
+  if (thephase !== 'mid') {
     return (<span />);
   }
 

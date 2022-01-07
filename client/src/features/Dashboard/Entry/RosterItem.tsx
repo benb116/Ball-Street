@@ -40,7 +40,7 @@ const NFLPosTypes = {
 NFLPosTypes[flexID] = { name: 'FLEX', canflex: true };
 
 // Show a specific row in the roster table
-function RosterItem({ playerid, position }) {
+function RosterItem({ playerid, position }: { playerid: number, position: string }) {
   const dispatch = useAppDispatch();
 
   const { contestID } = useParams<{ contestID: string }>();

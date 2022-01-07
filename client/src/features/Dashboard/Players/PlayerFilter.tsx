@@ -60,7 +60,7 @@ const PlayerFilter = () => {
       <select style={{ cursor: 'pointer' }} onChange={handleChange} name="game" value={filters.game}>
         <option value="">Game</option>
         {thegames.map((g, i) => {
-          if (g.phase !== 'post') { // Hide games in post
+          if (g && g.phase !== 'post') { // Hide games in post
             return (
               <option key={g.HomeId} value={i}>
                 {g.away.abr}

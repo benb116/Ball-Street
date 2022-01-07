@@ -11,7 +11,7 @@ const Signup = () => {
   const history = useHistory();
   const { id } = useAppSelector(userSelector);
 
-  const onSubmit = (data) => {
+  const onSubmit = (data: { token: string, password: string, confirmPassword: string }) => {
     dispatch(resetUser(data));
   };
 

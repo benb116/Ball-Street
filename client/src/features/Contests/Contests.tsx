@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 
-import { contestsSelector, getContests } from './ContestsSlice';
+import { ContestItemType, contestsSelector, getContests } from './ContestsSlice';
 
 // Show info about all contests available
 const Contests = () => {
@@ -36,7 +36,7 @@ const Contests = () => {
   );
 };
 
-function ContestItem({ contestdata }) {
+function ContestItem({ contestdata }: { contestdata: ContestItemType }) {
   return (
     <li>
       <Link to={`/contests/${contestdata.id}`}>

@@ -4,7 +4,9 @@ import { useParams } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 import { playerSelector } from '../Players/PlayersSlice';
 
-import { getTrades, tradesSelector, tradeUpdateSelector } from './TradesSlice';
+import {
+  getTrades, TradeItemType, tradesSelector, tradeUpdateSelector,
+} from './TradesSlice';
 
 const Trades = () => {
   const dispatch = useAppDispatch();
@@ -42,14 +44,14 @@ const Trades = () => {
   );
 };
 
-function TradeItem({ tradedata }) {
+function TradeItem({ tradedata }: { tradedata: TradeItemType }) {
   // Pull some info about the nfl player
-  const playerData = (useAppSelector(playerSelector(tradedata.NFLPlayerId)) || {});
+  const playerData = useAppSelector(playerSelector(tradedata.NFLPlayerId));
   return (
     <div>
       {(tradedata.isbid ? 'Added' : 'Dropped')}
       -
-      {(playerData.name || '')}
+      {(playerData?.name || '')}
       -
       {(tradedata.price / 100)}
     </div>

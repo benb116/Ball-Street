@@ -7,8 +7,15 @@ import gettradesfunc from './Trades.api';
 
 export const getTrades = createAsyncThunk('trades/getTrades', gettradesfunc);
 
+export interface TradeItemType {
+  id: string,
+  NFLPlayerId: number,
+  price: number,
+  isbid: boolean,
+  createdAt: string,
+}
 interface TradesState {
-  trades: Record<string, any>[],
+  trades: TradeItemType[],
   tradeUpdate: boolean,
 }
 const defaultState: TradesState = {
@@ -28,15 +35,16 @@ export const tradesSlice = createSlice({
     builder.addCase(getTrades.fulfilled, (state, { payload }) => {
       state.trades = payload.map((t) => {
         const data = (t.bid || t.ask);
-        const out = {};
         // Pull certain info
-        out.price = t.price;
-        out.NFLPlayerId = data.NFLPlayerId;
-        out.isbid = data.isbid;
-        out.createdAt = data.createdAt;
-        out.id = data.id;
+        const out: TradeItemType = {
+          price: t.price,
+          NFLPlayerId: data.NFLPlayerId,
+          isbid: data.isbid,
+          createdAt: data.createdAt,
+          id: data.id,
+        };
         return out;
-      }).sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
+      }).sort((a: TradeItemType, b: TradeItemType) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
       state.tradeUpdate = false; // reset a flag
     });
     builder.addCase(getTrades.rejected, (state, { payload }) => {

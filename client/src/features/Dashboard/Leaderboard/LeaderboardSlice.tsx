@@ -3,8 +3,14 @@ import { createSlice } from '@reduxjs/toolkit';
 // eslint-disable-next-line import/no-cycle
 import { RootState } from '../../../app/store';
 
+export interface LeaderItemType {
+  id: number,
+  user: number,
+  total: number
+}
+
 interface LeaderState {
-  leaders: Record<string, any>[]
+  leaders: LeaderItemType[]
 }
 const defaultState: LeaderState = {
   leaders: [],

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useAppSelector } from '../../../app/hooks';
 
-import { leadersSelector } from './LeaderboardSlice';
+import { LeaderItemType, leadersSelector } from './LeaderboardSlice';
 import RenderPrice from '../../../helpers/util';
 
 // Show leaderboard of entries in the contest
@@ -28,7 +28,7 @@ const Leaderboards = () => {
   );
 };
 
-function LeaderboardItem({ leaderdata }) {
+function LeaderboardItem({ leaderdata }: { leaderdata: LeaderItemType }) {
   return (
     <div>
       {leaderdata.user}

@@ -35,11 +35,15 @@ const OfferModal = () => {
   function close() {
     dispatch(closeModal());
   }
-  function handleClick(data) {
+  function handleClick(data: { price: number, protected: boolean }) {
     // eslint-disable-next-line no-param-reassign
     data.price *= 100;
-    const offerobj = { ...modalInfo, ...data };
-    delete offerobj.nflplayerName;
+    const offerobj = {
+      nflplayerID: modalInfo.nflplayerID,
+      isbid: modalInfo.isbid,
+      price: data.price,
+      protected: data.protected,
+    };
     dispatch(createOffer({ contestID, offerobj }));
     close();
   }
