@@ -57,7 +57,7 @@ export const offersSlice = createSlice({
       });
     });
     builder.addCase(getOffers.rejected, (state, { payload }) => {
-      if (payload) { toast.error(payload); }
+      if (payload) { toast.error(payload as string); }
     });
     builder.addCase(createOffer.fulfilled, (state, { payload }) => {
       // If an offer is filled immediately,
@@ -73,7 +73,7 @@ export const offersSlice = createSlice({
       }
     });
     builder.addCase(createOffer.rejected, (state, { payload }) => {
-      if (payload) { toast.error(payload); }
+      if (payload) { toast.error(payload as string); }
     });
     builder.addCase(cancelOffer.fulfilled, (state, { payload }) => {
       if (payload.isbid) {
@@ -84,7 +84,7 @@ export const offersSlice = createSlice({
       toast.success('Offer cancelled');
     });
     builder.addCase(cancelOffer.rejected, (state, { payload }) => {
-      if (payload) { toast.error(payload); }
+      if (payload) { toast.error(payload as string); }
     });
   },
 });

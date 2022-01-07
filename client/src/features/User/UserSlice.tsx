@@ -53,21 +53,21 @@ export const userSlice = createSlice({
       }
     });
     builder.addCase(signupUser.rejected, (state, { payload }) => {
-      toast.error(payload);
+      toast.error(payload as string);
     });
 
     builder.addCase(forgotUser.fulfilled, () => {
       toast.success('An email was sent to this address');
     });
     builder.addCase(forgotUser.rejected, (state, { payload }) => {
-      toast.error(payload);
+      toast.error(payload as string);
     });
 
     builder.addCase(resetUser.fulfilled, () => {
       toast.success('Password reset successfully');
     });
     builder.addCase(resetUser.rejected, (state, { payload }) => {
-      toast.error(payload);
+      toast.error(payload as string);
     });
 
     builder.addCase(loginUser.fulfilled, (state, { payload }) => {
@@ -79,7 +79,7 @@ export const userSlice = createSlice({
       }
     });
     builder.addCase(loginUser.rejected, (state, { payload }) => {
-      toast.error(payload);
+      toast.error(payload as string);
     });
 
     builder.addCase(logoutUser.fulfilled, (state) => {
@@ -87,7 +87,7 @@ export const userSlice = createSlice({
       localStorage.setItem('isLoggedIn', 'false');
     });
     builder.addCase(logoutUser.rejected, (state, { payload }) => {
-      toast.error(payload);
+      toast.error(payload as string);
     });
 
     builder.addCase(getAccount.fulfilled, (state, { payload }) => {

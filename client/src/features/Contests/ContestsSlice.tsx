@@ -51,19 +51,19 @@ export const contestsSlice = createSlice({
       state.allcontests = payload;
     });
     builder.addCase(getContests.rejected, (state, { payload }) => {
-      if (payload) { toast.error(payload); }
+      if (payload) { toast.error(payload as string); }
     });
     builder.addCase(getContest.fulfilled, (state, { payload }) => {
       state.thiscontest = payload;
     });
     builder.addCase(getContest.rejected, (state, { payload }) => {
-      if (payload) { toast.error(payload); }
+      if (payload) { toast.error(payload as string); }
     });
     builder.addCase(getEntries.fulfilled, (state, { payload }) => {
       state.thiscontestentries = payload;
     });
     builder.addCase(getEntries.rejected, (state, { payload }) => {
-      if (payload) { toast.error(payload); }
+      if (payload) { toast.error(payload as string); }
     });
     builder.addCase(getMyEntry.fulfilled, (state, { payload }) => {
       state.thiscontestmyentry = payload;
@@ -73,7 +73,7 @@ export const contestsSlice = createSlice({
       state.thiscontestmyentry = payload;
     });
     builder.addCase(createEntry.rejected, (state, { payload }) => {
-      if (payload) { toast.error(payload); }
+      if (payload) { toast.error(payload as string); }
     });
   },
 });

@@ -130,7 +130,7 @@ export const playersSlice = createSlice({
       state.playerlist = np;
     });
     builder.addCase(getPlayers.rejected, (state, { payload }) => {
-      if (payload) { toast.error(payload); }
+      if (payload) { toast.error(payload as string); }
     });
     builder.addCase(getGames.fulfilled, (state, { payload }) => {
       state.gamelist = [...payload].sort((a, b) => a.startTime - b.startTime);
@@ -143,7 +143,7 @@ export const playersSlice = createSlice({
       }, {});
     });
     builder.addCase(getGames.rejected, (state, { payload }) => {
-      if (payload) { toast.error(payload); }
+      if (payload) { toast.error(payload as string); }
     });
   },
 });

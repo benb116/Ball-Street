@@ -48,7 +48,7 @@ export const tradesSlice = createSlice({
       state.tradeUpdate = false; // reset a flag
     });
     builder.addCase(getTrades.rejected, (state, { payload }) => {
-      if (payload) { toast.error(payload); }
+      if (payload) { toast.error(payload as string); }
     });
   },
 });

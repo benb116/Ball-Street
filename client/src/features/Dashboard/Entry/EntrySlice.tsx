@@ -60,19 +60,19 @@ export const entrySlice = createSlice({
       setEntry(state, payload);
     });
     builder.addCase(preAdd.rejected, (state, { payload }) => {
-      if (payload) { toast.error(payload); }
+      if (payload) { toast.error(payload as string); }
     });
     builder.addCase(preDrop.fulfilled, (state, { payload }) => {
       setEntry(state, payload);
     });
     builder.addCase(preDrop.rejected, (state, { payload }) => {
-      if (payload) { toast.error(payload); }
+      if (payload) { toast.error(payload as string); }
     });
     builder.addCase(reorderRoster.fulfilled, (state, { payload }) => {
       setEntry(state, payload);
     });
     builder.addCase(reorderRoster.rejected, (state, { payload }) => {
-      if (payload) { toast.error(payload); }
+      if (payload) { toast.error(payload as string); }
     });
   },
 });
