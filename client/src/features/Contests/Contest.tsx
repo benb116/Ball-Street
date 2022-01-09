@@ -23,9 +23,8 @@ const Contest = () => {
 
   const thiscontest = useAppSelector(contestSelector); // Get info about this contest
   const thiscontestentries = useAppSelector(entriesSelector); // Get the entries in this contest
-  const sortedEntries = [...thiscontestentries].sort((a, b) => { // Sort by total points
-    return (b.projTotal || b.pointtotal) - (a.projTotal || a.pointtotal)
-  });
+  const sortedEntries = [...thiscontestentries]
+    .sort((a, b) => (b.projTotal || b.pointtotal) - (a.projTotal || a.pointtotal)); // Sort by total points
   const thiscontestmyentry = useAppSelector(myEntrySelector);
 
   // Pull data
@@ -93,6 +92,7 @@ EntryItem.propTypes = {
   entrydata: PropTypes.shape({
     UserId: PropTypes.number.isRequired,
     pointtotal: PropTypes.number.isRequired,
+    projTotal: PropTypes.number,
   }).isRequired,
 };
 export default Contest;

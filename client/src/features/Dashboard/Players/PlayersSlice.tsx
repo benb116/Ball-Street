@@ -156,7 +156,6 @@ export const pricesMapSelector = (playerIDs: number[]) => (state: RootState) => 
 
 export const filterSelector = (state: RootState) => state.players.filter;
 export const sortSelector = (state: RootState) => {
-  const { sortProp } = state.players;
-  const { sortDesc } = state.players;
+  const { sortProp, sortDesc } = state.players;
   return { sortProp, sortDesc };
 };

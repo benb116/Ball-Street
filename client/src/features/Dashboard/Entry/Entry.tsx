@@ -7,6 +7,7 @@ import RenderPrice from '../../../helpers/util';
 import { getEntry, entrySelector, rosterUpdateSelector } from './EntrySlice';
 
 import RosterItem from './RosterItem';
+import { RosterPosType } from '../../types';
 
 // Display the user's current entry (balance + players)
 const Entry = () => {
@@ -15,7 +16,7 @@ const Entry = () => {
 
   const thisentry = useAppSelector(entrySelector);
   const rUpdate = useAppSelector(rosterUpdateSelector); // Flag set if the entry should be updated
-  const rpos = Object.keys(thisentry.roster); // All roster positions
+  const rpos = Object.keys(thisentry.roster) as RosterPosType[]; // All roster positions
 
   // Initial data pull
   useEffect(() => {
@@ -50,7 +51,7 @@ const Entry = () => {
           {rpos.map((pos) => ( // Create a roster item for each position
             <RosterItem
               key={pos}
-              data-position={pos}
+              position={pos}
               playerid={thisentry.roster[pos]}
             />
           ))}
@@ -83,7 +84,7 @@ function RosterHeader() {
 // Table footer showing calculated point totals
 function PointTotals() {
   const thisentry = useAppSelector(entrySelector);
-  const rpos = Object.keys(thisentry.roster);
+  const rpos = Object.keys(thisentry.roster) as RosterPosType[]; // All roster positions
 
   const rosterPlayerIDs = Object.values(thisentry.roster).filter((p) => p !== null) as number[]; // All playerIDs
   const players = useAppSelector(playersSelector(rosterPlayerIDs)); // Player DB info

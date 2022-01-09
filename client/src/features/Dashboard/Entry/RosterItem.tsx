@@ -15,7 +15,7 @@ import {
 import { cancelOffer, offersSelector } from '../Offers/OffersSlice';
 import { setModal } from '../Modal/ModalSlice';
 import RenderPrice from '../../../helpers/util';
-import { NFLPosType, OfferItemType } from '../../types';
+import { NFLPosType, OfferItemType, RosterPosType } from '../../types';
 
 const flexID = 99;
 const rosterkey = {
@@ -30,7 +30,6 @@ const rosterkey = {
   K1: 5,
   DEF1: 6,
 };
-type RosterPosType = 'QB1' | 'RB1' | 'RB2' | 'WR1' | 'WR2' | 'TE1' | 'FLEX1' | 'FLEX2' | 'K1' | 'DEF1';
 
 // Show a specific row in the roster table
 function RosterItem({ playerid, position }: { playerid: number | null, position: RosterPosType }) {
@@ -57,7 +56,7 @@ function RosterItem({ playerid, position }: { playerid: number | null, position:
     } else if (thisplayer?.NFLPositionId) {
       dispatch(selectRPos([thisplayer.NFLPositionId, position]));
     } else {
-      dispatch(selectRPos([rosterkey[position], position]));
+      dispatch(selectRPos([rosterkey[position] as NFLPosType, position]));
     }
   };
 
@@ -65,7 +64,7 @@ function RosterItem({ playerid, position }: { playerid: number | null, position:
   const shouldHighlight = () => {
     const selectedType = rposSelected[0];
     if (selectedType === 0) return false; // If flag is not set, then don't
-    const thisType = rosterkey[position];
+    const thisType = rosterkey[position] as NFLPosType;
     if (selectedType === thisType) return true; // If same pos type, can def do it
     if (selectedType === flexID || thisType === flexID) { // If either is a flex position
       if (selectedType === flexID && !NFLPosTypes[thisType].canflex) return false; // Can't if non-flex type can't flex

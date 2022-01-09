@@ -3,7 +3,9 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
 // eslint-disable-next-line import/no-cycle
 import { RootState } from '../../../app/store';
-import { EntryType } from '../../types';
+import {
+  EntryType, NFLPosType, RosterPosType, RosterType,
+} from '../../types';
 import {
   getentryfunc, preaddfunc, predropfunc, reorderrosterfunc,
 } from './Entry.api';
@@ -15,8 +17,8 @@ export const reorderRoster = createAsyncThunk('entry/reorderRoster', reorderrost
 
 interface EntryState {
   balance: number,
-  roster: Record<string, number | null>,
-  rposSelected: [number, string],
+  roster: RosterType | Record<string, never>,
+  rposSelected: [NFLPosType | 0, RosterPosType | ''],
   rosterUpdate: boolean,
 }
 
@@ -41,7 +43,7 @@ export const entrySlice = createSlice({
     updateRoster: (state) => {
       state.rosterUpdate = true;
     },
-    selectRPos: (state, { payload }) => {
+    selectRPos: (state, { payload }: { payload: [NFLPosType | 0, RosterPosType | ''] }) => {
       // If current state is 0, nothing is currently selected.
       // This is the first click, so set the state
       if (state.rposSelected[0] === 0) {
@@ -80,7 +82,9 @@ export const entrySlice = createSlice({
 
 function setEntry(state: EntryState, payload: EntryType) {
   state.balance = payload.pointtotal;
-  const rost = { ...payload } as Omit<EntryType, 'pointtotal' | 'UserId' | 'ContestId' | 'createdAt' | 'updatedAt'>;
+  const {
+    pointtotal, UserId, ContestId, createdAt, updatedAt, ...rost
+  } = payload;
   state.roster = rost;
   return state;
 }

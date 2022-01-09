@@ -6,9 +6,12 @@ export interface ContestItemType {
 export interface EntryItemType {
   UserId: number,
   pointtotal: number,
+  projTotal?: number,
 }
 export interface EntryType extends EntryItemType {
   ContestId: number,
+  UserId: number,
+  pointtotal: number,
   createdAt: string,
   updatedAt: string,
   QB1: number | null,
@@ -22,6 +25,9 @@ export interface EntryType extends EntryItemType {
   K1: number | null,
   DEF1: number | null,
 }
+export type RosterType = Omit<EntryType, 'pointtotal' | 'projTotal' |
+'UserId' | 'ContestId' | 'createdAt' | 'updatedAt'>;
+export type RosterPosType = keyof RosterType;
 
 export type NFLPosType = 1 | 2 | 3 | 4 | 5 | 6 | 99;
 export interface PlayerItemType {
@@ -95,9 +101,19 @@ export interface TradeItemType {
 }
 export interface TradeBid {
   price: number,
-  bid: Record<string, any>,
+  bid: {
+    NFLPlayerId: number,
+    isbid: boolean
+    createdAt: string
+    id: string,
+  },
 }
 export interface TradeAsk {
   price: number,
-  ask: Record<string, any>,
+  ask: {
+    NFLPlayerId: number,
+    isbid: boolean
+    createdAt: string
+    id: string,
+  },
 }

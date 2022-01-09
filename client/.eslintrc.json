@@ -35,7 +35,7 @@
             "allowModules": [],
             "tryExtensions": [".js", ".json", ".node", ".ts", ".tsx"]
         }],
-        "max-len": ["error", { "code": 120, "tabWidth": 2, "ignoreComments": true }],
+        "max-len": ["error", { "code": 150, "tabWidth": 2, "ignoreComments": true }],
         "react/jsx-props-no-spreading": "off"
     }
 }

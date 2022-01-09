@@ -28,7 +28,7 @@ export const tradesSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(getTrades.fulfilled, (state, { payload }) => {
       state.trades = payload.map((t) => {
-        const data = (t.bid ? t.bid : t.ask);
+        const data = ('bid' in t ? t.bid : t.ask);
         // Pull certain info
         const out: TradeItemType = {
           price: t.price,
