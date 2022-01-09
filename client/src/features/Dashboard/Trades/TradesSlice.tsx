@@ -1,8 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
-// eslint-disable-next-line import/no-cycle
-import { RootState } from '../../../app/store';
+import type { RootState } from '../../../app/store';
 import { TradeItemType } from '../../types';
 import gettradesfunc from './Trades.api';
 
