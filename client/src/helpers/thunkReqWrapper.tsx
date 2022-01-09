@@ -1,13 +1,13 @@
 const thunkReq = async function tr(thunkAPI, type: string, uri: string, body: Record<string, any> | null = null) {
   try {
-    const response = await fetch(uri, {
+    const fetchopts: RequestInit = {
       method: type,
       headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
       credentials: 'same-origin',
-      body: JSON.stringify(body),
-    });
+    };
+    if (body) fetchopts.body = JSON.stringify(body);
+    const response = await fetch(uri, fetchopts);
     const data = await response.json();
-
     if (response.status === 200) {
       return data;
     }

@@ -17,6 +17,7 @@ RUN npm install
 COPY --chown=node:node ./client ./
 # Prevent warnings and errors from stopping server
 ENV DISABLE_ESLINT_PLUGIN=true
+ENV TSC_COMPILE_ON_ERROR=true
 # immediately killed in production
 CMD [ "npm", "start" ]
 
