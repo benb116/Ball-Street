@@ -4,18 +4,13 @@ import {
   allGamesSelector, allTeamsSelector, filterSelector, setFilter,
 } from './PlayersSlice';
 
-function debounce(func: (a: any) => any, wait: number) {
-  let timeout: ReturnType<typeof setTimeout>;
-  return function d(...args) {
-    const context = this;
-    const later = function l() {
-      timeout = null;
-      func.apply(context, args);
-    };
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
+const debounce = (fn: (a: any) => any, ms = 300) => {
+  let timeoutId: ReturnType<typeof setTimeout>;
+  return function debounceInner(this: any, ...args: [a: any]) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => fn.apply(this, args), ms);
   };
-}
+};
 
 // Player list filter
 // Name, Position, Team, Game, Game phase
@@ -50,10 +45,10 @@ const PlayerFilter = () => {
       <select style={{ cursor: 'pointer' }} onChange={handleChange} name="teamAbr" value={filters.teamAbr}>
         <option value="">Team</option>
         {Object.keys(theteams)
-          .sort((a,b) => theteams[a].abr > theteams[b].abr ? 1 : -1)
+          .sort((a, b) => (theteams[a].abr > theteams[b].abr ? 1 : -1))
           .map((tid) => {
             if (theteams[tid].phase === 'post') return null;
-            return <option key={theteams[tid].id} value={theteams[tid].abr}>{theteams[tid].abr}</option>
+            return <option key={theteams[tid].id} value={theteams[tid].abr}>{theteams[tid].abr}</option>;
           })}
       </select>
 
