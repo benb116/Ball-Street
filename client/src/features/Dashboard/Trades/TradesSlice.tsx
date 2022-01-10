@@ -1,11 +1,9 @@
 /* eslint-disable no-param-reassign */
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
 import type { RootState } from '../../../app/store';
+import API from '../../../helpers/api';
 import { TradeItemType } from '../../types';
-import gettradesfunc from './Trades.api';
-
-export const getTrades = createAsyncThunk('trades/getTrades', gettradesfunc);
 
 interface TradesState {
   trades: TradeItemType[],
@@ -25,7 +23,7 @@ export const tradesSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(getTrades.fulfilled, (state, { payload }) => {
+    builder.addMatcher(API.endpoints.getTrades.matchFulfilled, (state, { payload }) => {
       state.trades = payload.map((t) => {
         const data = ('bid' in t ? t.bid : t.ask);
         // Pull certain info
@@ -40,8 +38,8 @@ export const tradesSlice = createSlice({
       }).sort((a: TradeItemType, b: TradeItemType) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
       state.tradeUpdate = false; // reset a flag
     });
-    builder.addCase(getTrades.rejected, (state, { payload }) => {
-      if (payload) { toast.error(payload as string); }
+    builder.addMatcher(API.endpoints.getTrades.matchRejected, (_state, { error }) => {
+      if (error) { toast.error(error.message || 'Unknown error'); }
     });
   },
 });

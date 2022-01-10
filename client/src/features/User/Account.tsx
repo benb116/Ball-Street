@@ -1,19 +1,12 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
-import { useAppSelector, useAppDispatch } from '../../app/hooks';
-import { userSelector, clearState } from './UserSlice';
+import { useAppSelector } from '../../app/hooks';
+import { useLogoutMutation } from '../../helpers/api';
+import { userSelector } from './UserSlice';
 
 const Account = () => {
-  const history = useHistory();
-
-  const dispatch = useAppDispatch();
-
   const { email } = useAppSelector(userSelector);
 
-  const onLogOut = () => {
-    dispatch(clearState());
-    history.push('/login');
-  };
+  const [logout] = useLogoutMutation();
 
   return (
     <div className="container mx-auto">
@@ -25,7 +18,7 @@ const Account = () => {
         </div>
 
         <button
-          onClick={onLogOut}
+          onClick={() => { logout(); }}
           className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
           type="submit"
         >

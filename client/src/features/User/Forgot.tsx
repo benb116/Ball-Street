@@ -1,23 +1,19 @@
 import React, { useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useAppSelector, useAppDispatch } from '../../app/hooks';
-import { forgotUser, userSelector } from './UserSlice';
+import { useAppSelector } from '../../app/hooks';
+import { userSelector } from './UserSlice';
+import { useForgotMutation } from '../../helpers/api';
 
-const Signup = () => {
-  const dispatch = useAppDispatch();
+const Forgot = () => {
   const { register, handleSubmit } = useForm();
   const history = useHistory();
   const { id } = useAppSelector(userSelector);
 
-  const onSubmit = (data: { email: string, }) => {
-    dispatch(forgotUser(data));
-  };
+  const [forgot] = useForgotMutation();
 
   useEffect(() => {
-    if (localStorage.getItem('isLoggedIn') === 'true') {
-      history.push('/');
-    }
+    if (localStorage.getItem('isLoggedIn') === 'true') history.push('/');
   }, [history, id]);
 
   return (
@@ -31,7 +27,7 @@ const Signup = () => {
         </div>
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-            <form className="space-y-6" onSubmit={handleSubmit(onSubmit)} method="POST">
+            <form className="space-y-6" onSubmit={handleSubmit(forgot)} method="POST">
               <div>
                 <span>
                   Email address
@@ -69,4 +65,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Forgot;

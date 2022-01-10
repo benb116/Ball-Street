@@ -1,11 +1,8 @@
 /* eslint-disable no-param-reassign */
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
 import type { RootState } from '../../app/store';
-
-import {
-  signupfunc, loginfunc, logoutfunc, accountfunc, forgotfunc, resetfunc,
-} from './User.api';
+import API from '../../helpers/api';
 
 interface UserState {
   info: {
@@ -24,13 +21,6 @@ const defaultState: UserState = {
   redirect: '',
 };
 
-export const signupUser = createAsyncThunk('users/signupUser', signupfunc);
-export const forgotUser = createAsyncThunk('users/forgotUser', forgotfunc);
-export const resetUser = createAsyncThunk('users/resetUser', resetfunc);
-export const loginUser = createAsyncThunk('users/loginUser', loginfunc);
-export const logoutUser = createAsyncThunk('users/logoutUser', logoutfunc);
-export const getAccount = createAsyncThunk('users/getAccount', accountfunc);
-
 export const userSlice = createSlice({
   name: 'user',
   initialState: defaultState,
@@ -44,7 +34,7 @@ export const userSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(signupUser.fulfilled, (state, { payload }) => {
+    builder.addMatcher(API.endpoints.signup.matchFulfilled, (state, { payload }) => {
       if (payload.needsVerification) {
         toast.success('Account created. Please check your email to verify your account.');
       } else {
@@ -52,25 +42,25 @@ export const userSlice = createSlice({
         localStorage.setItem('isLoggedIn', 'true');
       }
     });
-    builder.addCase(signupUser.rejected, (state, { payload }) => {
-      toast.error(payload as string);
+    builder.addMatcher(API.endpoints.signup.matchRejected, (_state, { error }) => {
+      if (error) { toast.error(error.message || 'Unknown error'); }
     });
 
-    builder.addCase(forgotUser.fulfilled, () => {
+    builder.addMatcher(API.endpoints.forgot.matchFulfilled, () => {
       toast.success('An email was sent to this address');
     });
-    builder.addCase(forgotUser.rejected, (state, { payload }) => {
-      toast.error(payload as string);
+    builder.addMatcher(API.endpoints.forgot.matchRejected, (_state, { error }) => {
+      if (error) { toast.error(error.message || 'Unknown error'); }
     });
 
-    builder.addCase(resetUser.fulfilled, () => {
+    builder.addMatcher(API.endpoints.reset.matchFulfilled, () => {
       toast.success('Password reset successfully');
     });
-    builder.addCase(resetUser.rejected, (state, { payload }) => {
-      toast.error(payload as string);
+    builder.addMatcher(API.endpoints.reset.matchRejected, (_state, { error }) => {
+      if (error) { toast.error(error.message || 'Unknown error'); }
     });
 
-    builder.addCase(loginUser.fulfilled, (state, { payload }) => {
+    builder.addMatcher(API.endpoints.login.matchFulfilled, (state, { payload }) => {
       if (payload.needsVerification) {
         toast.success('Please check your email to verify your account.');
       } else {
@@ -78,26 +68,26 @@ export const userSlice = createSlice({
         localStorage.setItem('isLoggedIn', 'true');
       }
     });
-    builder.addCase(loginUser.rejected, (state, { payload }) => {
-      toast.error(payload as string);
+    builder.addMatcher(API.endpoints.login.matchRejected, (_state, { error }) => {
+      if (error) { toast.error(error.message || 'Unknown error'); }
     });
 
-    builder.addCase(logoutUser.fulfilled, (state) => {
+    builder.addMatcher(API.endpoints.logout.matchFulfilled, (state) => {
       state.info = defaultState.info;
       localStorage.setItem('isLoggedIn', 'false');
     });
-    builder.addCase(logoutUser.rejected, (state, { payload }) => {
-      toast.error(payload as string);
+    builder.addMatcher(API.endpoints.logout.matchRejected, (_state, { error }) => {
+      if (error) { toast.error(error.message || 'Unknown error'); }
     });
 
-    builder.addCase(getAccount.fulfilled, (state, { payload }) => {
+    builder.addMatcher(API.endpoints.getAccount.matchFulfilled, (state, { payload }) => {
       if (!payload) {
         localStorage.setItem('isLoggedIn', 'false');
       } else {
         state.info = { ...state.info, ...payload };
       }
     });
-    builder.addCase(getAccount.rejected, () => {
+    builder.addMatcher(API.endpoints.getAccount.matchRejected, () => {
       localStorage.setItem('isLoggedIn', 'false');
     });
   },

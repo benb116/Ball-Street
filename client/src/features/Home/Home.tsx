@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
-import {
-  getAccount, isLoggedInSelector, logoutUser, userSelector,
-} from '../User/UserSlice';
+import { useGetAccountQuery, useLogoutMutation } from '../../helpers/api';
+import { isLoggedInSelector, userSelector } from '../User/UserSlice';
 
 const Home = () => {
   const dispatch = useAppDispatch();
@@ -12,11 +11,7 @@ const Home = () => {
   const { email } = useAppSelector(userSelector);
   const isLoggedIn = useAppSelector(isLoggedInSelector); // Use localstorage to know if logged in
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      dispatch(getAccount());
-    }
-  }, [dispatch, isLoggedIn]);
+  const [logout] = useLogoutMutation();
 
   const loginRed = () => {
     localStorage.setItem('isLoggedIn', 'false');
@@ -24,10 +19,11 @@ const Home = () => {
     // In theory people can see this webpage as a landing if they aren't logged in
   };
 
-  const onLogOut = () => {
-    dispatch(logoutUser());
-    loginRed();
-  };
+  useEffect(() => {
+    if (!isLoggedIn) loginRed();
+  }, [dispatch, isLoggedIn, email]);
+
+  useGetAccountQuery();
 
   return (
     <div className="container mx-auto">
@@ -42,7 +38,7 @@ const Home = () => {
             <Link to="/contests">Contests</Link>
             <br />
             <button
-              onClick={onLogOut}
+              onClick={() => { logout(); }}
               className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
               type="button"
             >

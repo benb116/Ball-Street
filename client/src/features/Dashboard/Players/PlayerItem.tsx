@@ -3,12 +3,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
-import { isOnRosterSelector, preAdd, preDrop } from '../Entry/EntrySlice';
+import { isOnRosterSelector } from '../Entry/EntrySlice';
 import { setModal } from '../Modal/ModalSlice';
-import { cancelOffer, offersSelector } from '../Offers/OffersSlice';
+import { offersSelector } from '../Offers/OffersSlice';
 import { allTeamsSelector, priceMapSelector } from './PlayersSlice';
 import RenderPrice from '../../../helpers/util';
 import { PlayerItemType } from '../../types';
+import { useCancelOfferMutation, usePreAddMutation, usePreDropMutation } from '../../../helpers/api';
 
 // Show a player's row in the list
 function PlayerItem({ playerdata }: { playerdata: PlayerItemType }) {
@@ -19,6 +20,10 @@ function PlayerItem({ playerdata }: { playerdata: PlayerItemType }) {
 
   const showDrop = useAppSelector(isOnRosterSelector(playerdata.id));
   const priceMap = useAppSelector(priceMapSelector(playerdata.id));
+
+  const [preAdd] = usePreAddMutation();
+  const [preDrop] = usePreDropMutation();
+  const [cancelOffer] = useCancelOfferMutation();
 
   // Player's team info
   const thephase = theteams[playerdata.NFLTeamId].phase;
@@ -33,11 +38,11 @@ function PlayerItem({ playerdata }: { playerdata: PlayerItemType }) {
 
   // Player actions
   const onpredrop = () => {
-    dispatch(preDrop({ contestID, nflplayerID: playerdata.id }));
+    preDrop({ contestID, nflplayerID: playerdata.id });
   };
 
   const onpreadd = () => {
-    dispatch(preAdd({ contestID, nflplayerID: playerdata.id }));
+    preAdd({ contestID, nflplayerID: playerdata.id });
   };
 
   const onask = () => {
@@ -64,7 +69,7 @@ function PlayerItem({ playerdata }: { playerdata: PlayerItemType }) {
   const playerofferasks = offers.asks.find((o) => o.NFLPlayerId === playerdata.id);
   const playeroffer = playerofferbids || playerofferasks;
   const oncancelOffer = (oid: string) => {
-    dispatch(cancelOffer({ contestID, offerID: oid }));
+    cancelOffer({ contestID, offerID: oid });
   };
 
   // Determine correct action for the player

@@ -1,13 +1,9 @@
 /* eslint-disable no-param-reassign */
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
 import type { RootState } from '../../../app/store';
+import API from '../../../helpers/api';
 import { OfferItemType } from '../../types';
-import { createofferfunc, cancelofferfunc, getoffersfunc } from './Offers.api';
-
-export const getOffers = createAsyncThunk('offers/getOffers', getoffersfunc);
-export const createOffer = createAsyncThunk('offers/createOffer', createofferfunc);
-export const cancelOffer = createAsyncThunk('offers/cancelOffer', cancelofferfunc);
 
 interface OfferState {
   bids: OfferItemType[],
@@ -43,16 +39,16 @@ export const offersSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(getOffers.fulfilled, (state, { payload }) => {
+    builder.addMatcher(API.endpoints.getOffers.matchFulfilled, (state, { payload }) => {
       payload.forEach((o) => {
         if (o.isbid) { state.bids.push(o); } else { state.asks.push(o); }
       });
     });
-    builder.addCase(getOffers.rejected, (_state, { payload }) => {
-      if (payload) { toast.error(payload as string); }
+    builder.addMatcher(API.endpoints.getOffers.matchRejected, (_state, { error }) => {
+      if (error) { toast.error(error.message || 'Unknown error'); }
     });
 
-    builder.addCase(createOffer.fulfilled, (state, { payload }) => {
+    builder.addMatcher(API.endpoints.createOffer.matchFulfilled, (state, { payload }) => {
       // If an offer is filled immediately,
       // It may be marked as filled before the "create offer" has resolved.
       // So check to make sure it hasn't already been added to the "remove" list
@@ -65,11 +61,11 @@ export const offersSlice = createSlice({
         toast.success('Offer submitted');
       }
     });
-    builder.addCase(createOffer.rejected, (_state, { payload }) => {
-      if (payload) { toast.error(payload as string); }
+    builder.addMatcher(API.endpoints.createOffer.matchRejected, (_state, { error }) => {
+      if (error) { toast.error(error.message || 'Unknown error'); }
     });
 
-    builder.addCase(cancelOffer.fulfilled, (state, { payload }) => {
+    builder.addMatcher(API.endpoints.cancelOffer.matchFulfilled, (state, { payload }) => {
       if (payload.isbid) {
         state.bids = state.bids.filter((o) => o.id !== payload.id);
       } else {
@@ -77,8 +73,8 @@ export const offersSlice = createSlice({
       }
       toast.success('Offer cancelled');
     });
-    builder.addCase(cancelOffer.rejected, (_state, { payload }) => {
-      if (payload) { toast.error(payload as string); }
+    builder.addMatcher(API.endpoints.cancelOffer.matchRejected, (_state, { error }) => {
+      if (error) { toast.error(error.message || 'Unknown error'); }
     });
   },
 });

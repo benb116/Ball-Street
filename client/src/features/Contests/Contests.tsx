@@ -1,24 +1,19 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { useAppSelector, useAppDispatch } from '../../app/hooks';
+import { useAppSelector } from '../../app/hooks';
 
-import { contestsSelector, getContests } from './ContestsSlice';
+import { contestsSelector } from './ContestsSlice';
 import { ContestItemType } from '../types';
+import { useGetContestsQuery } from '../../helpers/api';
 
 // Show info about all contests available
 const Contests = () => {
-  const dispatch = useAppDispatch();
-
   const allcontests = useAppSelector(contestsSelector);
   const sortedContests = [...allcontests].sort((a, b) => b.nflweek - a.nflweek);
 
   // Pull data
-  const pullContests = () => {
-    dispatch(getContests());
-  };
-
-  useEffect(pullContests, [dispatch]);
+  useGetContestsQuery();
 
   return (
     <div className="container mx-auto">

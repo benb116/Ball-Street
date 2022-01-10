@@ -9,13 +9,12 @@ import {
   allTeamsSelector, NFLPosTypes, playerSelector, priceMapSelector,
 } from '../Players/PlayersSlice';
 
-import {
-  preDrop, rposSelector, selectRPos, reorderRoster,
-} from './EntrySlice';
-import { cancelOffer, offersSelector } from '../Offers/OffersSlice';
+import { rposSelector, selectRPos } from './EntrySlice';
+import { offersSelector } from '../Offers/OffersSlice';
 import { setModal } from '../Modal/ModalSlice';
 import RenderPrice from '../../../helpers/util';
 import { NFLPosType, OfferItemType, RosterPosType } from '../../types';
+import { useCancelOfferMutation, usePreDropMutation, useReorderRosterMutation } from '../../../helpers/api';
 
 const flexID = 99;
 const rosterkey = {
@@ -43,15 +42,19 @@ function RosterItem({ playerid, position }: { playerid: number | null, position:
   const offers = useAppSelector(offersSelector); // Does this player have an active offer?
   const priceMap = useAppSelector(priceMapSelector(playerid)); // Player's stat and proj prices
 
+  const [reorder] = useReorderRosterMutation();
+  const [preDrop] = usePreDropMutation();
+  const [cancelOffer] = useCancelOfferMutation();
+
   // When the pos label is clicked, trying to reorder roster
   const reorderClick = () => {
     // If flag has been set (a pos was previously clicked), try to reorder the two
     if (rposSelected[0] !== 0) {
-      dispatch(reorderRoster({
+      reorder({
         contestID,
         pos1: rposSelected[1],
         pos2: position,
-      }));
+      });
       dispatch(selectRPos([0, '']));
     } else if (thisplayer?.NFLPositionId) {
       dispatch(selectRPos([thisplayer.NFLPositionId, position]));
@@ -102,7 +105,7 @@ function RosterItem({ playerid, position }: { playerid: number | null, position:
 
   // If user drops player (pregame)
   const onpredrop = () => {
-    dispatch(preDrop({ contestID, nflplayerID: thisplayer.id }));
+    preDrop({ contestID, nflplayerID: thisplayer.id });
   };
 
   // If user wants to submit ask offer (midgame)
@@ -123,7 +126,7 @@ function RosterItem({ playerid, position }: { playerid: number | null, position:
   // If user wants to cancel an active offer
   const oncancelOffer = (oid: string) => {
     if (!oid) return;
-    dispatch(cancelOffer({ contestID, offerID: oid }));
+    cancelOffer({ contestID, offerID: oid });
   };
 
   // Which click handler to use depends on phase and if there's an offer

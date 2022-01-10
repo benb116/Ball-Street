@@ -4,24 +4,19 @@ import { useParams } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 import { playerSelector } from '../Players/PlayersSlice';
 
-import {
-  getTrades, tradesSelector, tradeUpdateSelector,
-} from './TradesSlice';
+import { tradesSelector, tradeUpdateSelector } from './TradesSlice';
 import { TradeItemType } from '../../types';
+import { useGetTradesQuery } from '../../../helpers/api';
 
 const Trades = () => {
   const dispatch = useAppDispatch();
   const { contestID } = useParams<{ contestID: string }>();
   const tUpdate = useAppSelector(tradeUpdateSelector);
 
-  useEffect(() => {
-    dispatch(getTrades({ contestID }));
-  }, [contestID, dispatch]);
+  useGetTradesQuery(contestID);
 
   useEffect(() => {
-    if (tUpdate) {
-      dispatch(getTrades({ contestID }));
-    }
+    if (tUpdate) useGetTradesQuery(contestID);
   }, [contestID, dispatch, tUpdate]);
 
   const trades = useAppSelector(tradesSelector);

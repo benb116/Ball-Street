@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router';
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 import { modalSelector, modalStatusSelector, closeModal } from './ModalSlice';
-import { createOffer } from '../Offers/OffersSlice';
+import { useCreateOfferMutation } from '../../../helpers/api';
 
 const customStyles = {
   content: {
@@ -24,6 +24,8 @@ const OfferModal = () => {
   const dispatch = useAppDispatch();
   const { register, handleSubmit } = useForm();
   const { contestID } = useParams<{ contestID: string }>();
+
+  const [createOffer] = useCreateOfferMutation();
 
   const modalIsOpen = useAppSelector(modalStatusSelector);
   const modalInfo = useAppSelector(modalSelector);
@@ -44,7 +46,7 @@ const OfferModal = () => {
       price: data.price,
       protected: data.protected,
     };
-    dispatch(createOffer({ contestID, offerobj }));
+    createOffer({ contestID, offerobj });
     close();
   }
 

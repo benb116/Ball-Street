@@ -1,24 +1,20 @@
 import React, { useEffect } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useAppSelector, useAppDispatch } from '../../app/hooks';
-import { resetUser, userSelector } from './UserSlice';
+import { useAppSelector } from '../../app/hooks';
+import { userSelector } from './UserSlice';
+import { useResetMutation } from '../../helpers/api';
 
-const Signup = () => {
-  const dispatch = useAppDispatch();
+const Reset = () => {
   const { token } = useParams<{ token: string }>();
   const { register, handleSubmit } = useForm();
   const history = useHistory();
   const { id } = useAppSelector(userSelector);
 
-  const onSubmit = (data: { token: string, password: string, confirmPassword: string }) => {
-    dispatch(resetUser(data));
-  };
+  const [reset] = useResetMutation();
 
   useEffect(() => {
-    if (localStorage.getItem('isLoggedIn') === 'true') {
-      history.push('/');
-    }
+    if (localStorage.getItem('isLoggedIn') === 'true') history.push('/');
   }, [history, id]);
 
   return (
@@ -31,7 +27,7 @@ const Signup = () => {
         </div>
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-            <form className="space-y-6" onSubmit={handleSubmit(onSubmit)} method="POST">
+            <form className="space-y-6" onSubmit={handleSubmit(reset)} method="POST">
               <div>
                 <span>
                   Password
@@ -92,4 +88,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Reset;

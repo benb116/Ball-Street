@@ -1,22 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
-import { useAppSelector, useAppDispatch } from '../../../app/hooks';
+import { useAppSelector } from '../../../app/hooks';
 import { allTeamsSelector, playerSelector } from '../Players/PlayersSlice';
 
-import {
-  cancelOffer, getOffers, offersSelector,
-} from './OffersSlice';
+import { offersSelector } from './OffersSlice';
 import { OfferItemType } from '../../types';
+import { useCancelOfferMutation, useGetOffersQuery } from '../../../helpers/api';
 
 // Show offers for different players
 const Offers = () => {
-  const dispatch = useAppDispatch();
   const { contestID } = useParams<{ contestID: string }>();
 
-  useEffect(() => {
-    dispatch(getOffers({ contestID }));
-  }, [contestID, dispatch]);
+  useGetOffersQuery(contestID);
 
   const offers = useAppSelector(offersSelector);
 
@@ -51,8 +47,8 @@ function OfferItem({ offerdata }: { offerdata: OfferItemType }) {
   const [value, setValue] = useState(true); // integer state
   const [, setCount] = useState(0); // integer state
 
-  const dispatch = useAppDispatch();
   const { contestID } = useParams<{ contestID: string }>();
+  const [cancelOffer] = useCancelOfferMutation();
 
   const playerdata = useAppSelector(playerSelector(offerdata.NFLPlayerId));
   if (!playerdata) {
@@ -65,7 +61,7 @@ function OfferItem({ offerdata }: { offerdata: OfferItemType }) {
   }
 
   const oncancelOffer = (oid: string) => {
-    dispatch(cancelOffer({ contestID, offerID: oid }));
+    cancelOffer({ contestID, offerID: oid });
   };
 
   // Want to rerender this once a second if the expire flag is set

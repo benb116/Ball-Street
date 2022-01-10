@@ -1,23 +1,15 @@
 import React, { useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useAppSelector, useAppDispatch } from '../../app/hooks';
-import { signupUser, userSelector } from './UserSlice';
+import { useAppSelector } from '../../app/hooks';
+import { userSelector } from './UserSlice';
+import { useSignupMutation } from '../../helpers/api';
 
 const Signup = () => {
-  const dispatch = useAppDispatch();
   const { register, handleSubmit } = useForm();
   const history = useHistory();
   const { id } = useAppSelector(userSelector);
-
-  const onSubmit = (data: {
-    name: string,
-    email: string,
-    password: string,
-    skipVerification: boolean
-  }) => {
-    dispatch(signupUser(data));
-  };
+  const [signup] = useSignupMutation();
 
   useEffect(() => {
     if (localStorage.getItem('isLoggedIn') === 'true') {
@@ -35,7 +27,7 @@ const Signup = () => {
         </div>
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-            <form className="space-y-6" onSubmit={handleSubmit(onSubmit)} method="POST">
+            <form className="space-y-6" onSubmit={handleSubmit(signup)} method="POST">
               <div>
                 <span>
                   Name

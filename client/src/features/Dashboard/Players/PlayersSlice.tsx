@@ -1,14 +1,11 @@
 /* eslint-disable no-param-reassign */
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
 import type { RootState } from '../../../app/store';
+import API from '../../../helpers/api';
 import {
   GameItemType, PlayerItemType, PriceMapItemType, TeamMapItemType,
 } from '../../types';
-import { getgamesfunc, getplayersfunc } from './Players.api';
-
-export const getPlayers = createAsyncThunk('players/getPlayers', getplayersfunc);
-export const getGames = createAsyncThunk('players/getGames', getgamesfunc);
 
 export const NFLPosTypes = {
   1: { name: 'QB', canflex: false },
@@ -75,12 +72,11 @@ export const playersSlice = createSlice({
       state.sortProp = payload; // Change sort property
     },
     updatePrices: (state, { payload }: { payload: PriceMapItemType[] }) => { // Update price info for a set of players
-      const ns = state;
       payload.forEach((p) => {
-        const pm = ns.priceMap[p.nflplayerID] || {};
-        ns.priceMap[p.nflplayerID] = { ...(pm), ...p }; // Overwrite old values
+        const pm = state.priceMap[p.nflplayerID] || {};
+        state.priceMap[p.nflplayerID] = { ...(pm), ...p }; // Overwrite old values
       });
-      state = ns;
+      // state = ns;
     },
     setPhase: (state, { payload }: { payload: { nflTeamID: number, gamePhase: string, } }) => { // Set the phase of a team to a new phase
       state.gamelist = state.gamelist.map((g) => {
@@ -100,29 +96,29 @@ export const playersSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(getPlayers.fulfilled, (state, { payload }) => {
-      const np = payload.map((p) => {
-        p.posName = NFLPosTypes[p.NFLPositionId].name;
-        return p;
+    builder.addMatcher(API.endpoints.getPlayers.matchFulfilled, (state, { payload }) => {
+      state.playerlist = payload.map((p) => {
+        const np = { ...p };
+        np.posName = NFLPosTypes[p.NFLPositionId].name;
+        return np;
       });
-      state.playerlist = np;
     });
-    builder.addCase(getPlayers.rejected, (_state, { payload }) => {
-      if (payload) { toast.error(payload as string); }
+    builder.addMatcher(API.endpoints.getPlayers.matchRejected, (_state, { error }) => {
+      if (error) { toast.error(error.message || 'Unknown error'); }
     });
 
-    builder.addCase(getGames.fulfilled, (state, { payload }) => {
+    builder.addMatcher(API.endpoints.getGames.matchFulfilled, (state, { payload }) => {
       state.gamelist = [...payload].sort((a, b) => a.startTime - b.startTime);
       state.teamMap = payload.reduce((acc, cur) => { // team and game phase info
-        acc[cur.away.id] = cur.away;
+        acc[cur.away.id] = { ...cur.away };
         acc[cur.away.id].phase = cur.phase;
-        acc[cur.home.id] = cur.home;
+        acc[cur.home.id] = { ...cur.home };
         acc[cur.home.id].phase = cur.phase;
         return acc;
       }, {} as TeamMapItemType);
     });
-    builder.addCase(getGames.rejected, (_state, { payload }) => {
-      if (payload) { toast.error(payload as string); }
+    builder.addMatcher(API.endpoints.getGames.matchRejected, (_state, { error }) => {
+      if (error) { toast.error(error.message || 'Unknown error'); }
     });
   },
 });

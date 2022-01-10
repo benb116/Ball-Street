@@ -1,14 +1,12 @@
 /* eslint-disable no-nested-ternary */
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 
 import {
-  getPlayers,
   allPlayersSelector,
   filterSelector,
   sortSelector,
   setSort,
-  getGames,
   allTeamsSelector,
   allGamesSelector,
 } from './PlayersSlice';
@@ -16,10 +14,12 @@ import {
 import PlayerFilter from './PlayerFilter';
 import PlayerItem from './PlayerItem';
 import { GameItemType } from '../../types';
+import { useGetPlayersQuery, useGetGamesQuery } from '../../../helpers/api';
 
 // Show list of all active players
 const Players = () => {
-  const dispatch = useAppDispatch();
+  useGetPlayersQuery();
+  useGetGamesQuery();
 
   const theplayers = useAppSelector(allPlayersSelector);
   const theteams = useAppSelector(allTeamsSelector);
@@ -92,14 +92,6 @@ const Players = () => {
       const out = (item1 || 0) > (item2 || 0); // Compare as boolean
       return (out ? 1 : -1) * (sorts.sortDesc ? 1 : -1) * flip;
     });
-
-  useEffect(() => {
-    dispatch(getPlayers());
-  }, [dispatch]);
-
-  useEffect(() => {
-    dispatch(getGames());
-  }, [dispatch]);
 
   return (
     <div

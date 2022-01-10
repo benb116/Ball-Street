@@ -1,18 +1,11 @@
 /* eslint-disable no-param-reassign */
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
 import type { RootState } from '../../../app/store';
+import API from '../../../helpers/api';
 import {
   EntryType, NFLPosType, RosterPosType, RosterType,
 } from '../../types';
-import {
-  getentryfunc, preaddfunc, predropfunc, reorderrosterfunc,
-} from './Entry.api';
-
-export const getEntry = createAsyncThunk('entry/getEntry', getentryfunc);
-export const preAdd = createAsyncThunk('entry/preAdd', preaddfunc);
-export const preDrop = createAsyncThunk('entry/preDrop', predropfunc);
-export const reorderRoster = createAsyncThunk('entry/reorderRoster', reorderrosterfunc);
 
 interface EntryState {
   balance: number,
@@ -54,27 +47,27 @@ export const entrySlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(getEntry.fulfilled, (state, { payload }) => {
+    builder.addMatcher(API.endpoints.getEntry.matchFulfilled, (state, { payload }) => {
       setEntry(state, payload);
       state.rosterUpdate = false;
     });
-    builder.addCase(preAdd.fulfilled, (state, { payload }) => {
+    builder.addMatcher(API.endpoints.preAdd.matchFulfilled, (state, { payload }) => {
       setEntry(state, payload);
     });
-    builder.addCase(preAdd.rejected, (_state, { payload }) => {
-      if (payload) { toast.error(payload as string); }
+    builder.addMatcher(API.endpoints.preAdd.matchRejected, (_state, { error }) => {
+      if (error) { toast.error(error.message || 'Unknown error'); }
     });
-    builder.addCase(preDrop.fulfilled, (state, { payload }) => {
+    builder.addMatcher(API.endpoints.preDrop.matchFulfilled, (state, { payload }) => {
       setEntry(state, payload);
     });
-    builder.addCase(preDrop.rejected, (_state, { payload }) => {
-      if (payload) { toast.error(payload as string); }
+    builder.addMatcher(API.endpoints.preDrop.matchRejected, (_state, { error }) => {
+      if (error) { toast.error(error.message || 'Unknown error'); }
     });
-    builder.addCase(reorderRoster.fulfilled, (state, { payload }) => {
+    builder.addMatcher(API.endpoints.reorderRoster.matchFulfilled, (state, { payload }) => {
       setEntry(state, payload);
     });
-    builder.addCase(reorderRoster.rejected, (_state, { payload }) => {
-      if (payload) { toast.error(payload as string); }
+    builder.addMatcher(API.endpoints.reorderRoster.matchRejected, (_state, { error }) => {
+      if (error) { toast.error(error.message || 'Unknown error'); }
     });
   },
 });

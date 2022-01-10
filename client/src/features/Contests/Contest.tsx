@@ -1,24 +1,16 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { useForm } from 'react-hook-form';
 import { Link, useParams } from 'react-router-dom';
-import { useAppSelector, useAppDispatch } from '../../app/hooks';
-import {
-  contestSelector,
-  createEntry,
-  entriesSelector,
-  getContest,
-  getEntries,
-  getMyEntry,
-  myEntrySelector,
-} from './ContestsSlice';
+import { useAppSelector } from '../../app/hooks';
+import { contestSelector, entriesSelector, myEntrySelector } from './ContestsSlice';
 import RenderPrice from '../../helpers/util';
 import { EntryItemType } from '../types';
+import {
+  useGetContestQuery, useGetEntriesQuery, useGetEntryQuery, useCreateEntryMutation,
+} from '../../helpers/api';
 
 // Show info about a specific contest and its entries
 const Contest = () => {
-  const dispatch = useAppDispatch();
-  const { handleSubmit } = useForm();
   const { contestID } = useParams<{ contestID: string }>(); // Get contestID from URL params
 
   const thiscontest = useAppSelector(contestSelector); // Get info about this contest
@@ -28,16 +20,12 @@ const Contest = () => {
   const thiscontestmyentry = useAppSelector(myEntrySelector);
 
   // Pull data
-  useEffect(() => {
-    dispatch(getContest({ contestID }));
-    dispatch(getEntries({ contestID }));
-    dispatch(getMyEntry({ contestID }));
-  }, [contestID, dispatch]);
+  useGetContestQuery(contestID);
+  useGetEntriesQuery(contestID);
+  useGetEntryQuery(contestID);
 
   // User wants to create an entry in this contest
-  const onCreateEntry = () => {
-    dispatch(createEntry({ contestID }));
-  };
+  const [createEntry] = useCreateEntryMutation();
 
   return (
     <div className="container mx-auto">
@@ -61,15 +49,14 @@ const Contest = () => {
       <br />
       {!thiscontestmyentry // If the user doesn't have an entry in this contest
         ? (
-          <form className="space-y-6" onSubmit={handleSubmit(onCreateEntry)} method="POST">
-            <div>
-              <button
-                type="submit"
-              >
-                Create entry
-              </button>
-            </div>
-          </form>
+          <div>
+            <button
+              onClick={() => { createEntry(contestID); }}
+              type="submit"
+            >
+              Create entry
+            </button>
+          </div>
         )
         : <Link to={`/contests/${contestID}/dashboard`}>Go to dashboard</Link>}
     </div>

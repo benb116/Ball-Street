@@ -4,10 +4,11 @@ import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 import { allTeamsSelector, playersSelector, pricesMapSelector } from '../Players/PlayersSlice';
 import RenderPrice from '../../../helpers/util';
 
-import { getEntry, entrySelector, rosterUpdateSelector } from './EntrySlice';
+import { entrySelector, rosterUpdateSelector } from './EntrySlice';
 
 import RosterItem from './RosterItem';
 import { RosterPosType } from '../../types';
+import { useGetEntryQuery } from '../../../helpers/api';
 
 // Display the user's current entry (balance + players)
 const Entry = () => {
@@ -19,15 +20,11 @@ const Entry = () => {
   const rpos = Object.keys(thisentry.roster) as RosterPosType[]; // All roster positions
 
   // Initial data pull
-  useEffect(() => {
-    dispatch(getEntry({ contestID }));
-  }, [contestID, dispatch]);
+  useGetEntryQuery(contestID);
 
   // When an offer is filled, the rUpdate flag is raised
   useEffect(() => {
-    if (rUpdate) {
-      dispatch(getEntry({ contestID }));
-    }
+    if (rUpdate) useGetEntryQuery(contestID);
   }, [contestID, dispatch, rUpdate]);
 
   return (
