@@ -1,7 +1,17 @@
 // Need to use the React-specific entry point to import createApi
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import {
-  ContestItemType, EntryItemType, EntryType, GameItemType, OfferItemType, OfferObj, PlayerItemType, TradeAsk, TradeBid, TradeItemType,
+  AccountType,
+  ContestItemType,
+  EntryItemType,
+  EntryType,
+  GameItemType,
+  OfferItemType,
+  OfferObj,
+  PlayerItemType,
+  SignupType,
+  TradeAsk,
+  TradeBid,
 } from '../features/types';
 
 // Define a service using a base URL and expected endpoints
@@ -10,20 +20,20 @@ const API = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: '/app' }),
   endpoints: (build) => ({
     // User
-    getAccount: build.query<any, void>({ query: () => '/auth/account' }),
-    signup: build.mutation<any, { name: string, email: string, password: string, skipVerification: boolean, }>({
+    getAccount: build.query<AccountType, void>({ query: () => '/auth/account' }),
+    signup: build.mutation<SignupType, { name: string, email: string, password: string, skipVerification: boolean, }>({
       query: (body) => ({ url: '/auth/signup', method: 'POST', body }),
     }),
-    login: build.mutation<any, { email: string, password: string }>({
+    login: build.mutation<SignupType, { email: string, password: string }>({
       query: (body) => ({ url: '/auth/login', method: 'POST', body }),
     }),
-    forgot: build.mutation<any, { email: string }>({
+    forgot: build.mutation<void, { email: string }>({
       query: (body) => ({ url: '/auth/forgot', method: 'POST', body }),
     }),
-    reset: build.mutation<any, { token: string, password: string, confirmPassword: string }>({
+    reset: build.mutation<void, { token: string, password: string, confirmPassword: string }>({
       query: (body) => ({ url: '/auth/resetPasswordToken', method: 'POST', body }),
     }),
-    logout: build.mutation<any, any>({ query: () => ({ url: '/auth/logout', method: 'DELETE' }) }),
+    logout: build.mutation<void, void>({ query: () => ({ url: '/auth/logout', method: 'DELETE' }) }),
 
     // Contests
     getContests: build.query<ContestItemType[], void>({ query: () => '/api/contests' }),
