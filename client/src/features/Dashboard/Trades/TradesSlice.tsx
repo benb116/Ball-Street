@@ -1,8 +1,10 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
+
 import type { RootState } from '../../../app/store';
 import API from '../../../helpers/api';
+
 import { TradeItemType } from '../../types';
 
 interface TradesState {

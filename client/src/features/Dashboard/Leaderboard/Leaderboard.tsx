@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import { useAppSelector } from '../../../app/hooks';
+import RenderPrice from '../../../helpers/util';
 
 import { leadersSelector } from './LeaderboardSlice';
-import RenderPrice from '../../../helpers/util';
+
 import { LeaderItemType } from '../../types';
 
 // Show leaderboard of entries in the contest

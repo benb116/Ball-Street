@@ -1,5 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import React from 'react';
+
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 
 import {
@@ -10,11 +11,12 @@ import {
   allTeamsSelector,
   allGamesSelector,
 } from './PlayersSlice';
+import { useGetPlayersQuery, useGetGamesQuery } from '../../../helpers/api';
 
 import PlayerFilter from './PlayerFilter';
 import PlayerItem from './PlayerItem';
+
 import { GameItemType } from '../../types';
-import { useGetPlayersQuery, useGetGamesQuery } from '../../../helpers/api';
 
 // Show list of all active players
 const Players = () => {

@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
-import { useAppSelector, useAppDispatch } from '../../../app/hooks';
-import { playerSelector } from '../Players/PlayersSlice';
 
+import { useAppSelector, useAppDispatch } from '../../../app/hooks';
+
+import { playerSelector } from '../Players/PlayersSlice';
 import { tradesSelector, tradeUpdateSelector } from './TradesSlice';
-import { TradeItemType } from '../../types';
 import { useGetTradesQuery } from '../../../helpers/api';
+
+import { TradeItemType } from '../../types';
 
 const Trades = () => {
   const dispatch = useAppDispatch();

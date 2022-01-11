@@ -1,6 +1,8 @@
 import React from 'react';
-import './App.css';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+
+import './App.css';
+
 import Home from './features/Home/Home';
 import About from './features/About/About';
 import Login from './features/User/Login';
@@ -12,6 +14,7 @@ import Account from './features/User/Account';
 import Contests from './features/Contests/Contests';
 import Contest from './features/Contests/Contest';
 import Dashboard from './features/Dashboard/Dashboard';
+
 import PrivateRoute from './helpers/PrivateRoute';
 
 function App() {

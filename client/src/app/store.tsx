@@ -8,6 +8,7 @@ import { playersSlice } from '../features/Dashboard/Players/PlayersSlice';
 import { contestsSlice } from '../features/Contests/ContestsSlice';
 import { modalSlice } from '../features/Dashboard/Modal/ModalSlice';
 import { tradesSlice } from '../features/Dashboard/Trades/TradesSlice';
+
 import API from '../helpers/api';
 
 export const store = configureStore({

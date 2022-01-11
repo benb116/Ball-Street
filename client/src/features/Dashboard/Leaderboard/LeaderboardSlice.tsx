@@ -1,6 +1,8 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
+
 import type { RootState } from '../../../app/store';
+
 import { LeaderItemType } from '../../types';
 
 interface LeaderState {

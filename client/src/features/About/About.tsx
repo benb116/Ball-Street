@@ -1,11 +1,11 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
+
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import { userSelector, clearState } from '../User/UserSlice';
 
 const About = () => {
   const history = useHistory();
-
   const dispatch = useAppDispatch();
 
   const { email } = useAppSelector(userSelector);

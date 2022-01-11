@@ -1,7 +1,12 @@
 import React from 'react';
+
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
+
 import {
-  allGamesSelector, allTeamsSelector, filterSelector, setFilter,
+  allGamesSelector,
+  allTeamsSelector,
+  filterSelector,
+  setFilter,
 } from './PlayersSlice';
 
 const debounce = (fn: (a: any) => any, ms = 300) => {

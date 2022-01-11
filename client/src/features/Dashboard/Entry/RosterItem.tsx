@@ -4,17 +4,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
-import { useAppSelector, useAppDispatch } from '../../../app/hooks';
-import {
-  allTeamsSelector, NFLPosTypes, playerSelector, priceMapSelector,
-} from '../Players/PlayersSlice';
 
+import { useAppSelector, useAppDispatch } from '../../../app/hooks';
+import RenderPrice from '../../../helpers/util';
+
+import {
+  allTeamsSelector,
+  NFLPosTypes,
+  playerSelector,
+  priceMapSelector,
+} from '../Players/PlayersSlice';
 import { rposSelector, selectRPos } from './EntrySlice';
 import { offersSelector } from '../Offers/OffersSlice';
 import { setModal } from '../Modal/ModalSlice';
-import RenderPrice from '../../../helpers/util';
-import { NFLPosType, OfferItemType, RosterPosType } from '../../types';
 import { useCancelOfferMutation, usePreDropMutation, useReorderRosterMutation } from '../../../helpers/api';
+
+import { NFLPosType, OfferItemType, RosterPosType } from '../../types';
 
 const flexID = 99;
 const rosterkey = {

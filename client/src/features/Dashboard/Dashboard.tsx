@@ -6,9 +6,9 @@ import Trades from './Trades/Trades';
 import Players from './Players/Players';
 import Offers from './Offers/Offers';
 import Leaderboard from './Leaderboard/Leaderboard';
+import OfferModal from './Modal/Modal';
 
 import initWS from './ws';
-import OfferModal from './Modal/Modal';
 
 const Dashboard = () => {
   const { contestID } = useParams<{ contestID: string }>();

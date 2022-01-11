@@ -1,13 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link, useParams } from 'react-router-dom';
+
 import { useAppSelector } from '../../app/hooks';
-import { contestSelector, entriesSelector, myEntrySelector } from './ContestsSlice';
 import RenderPrice from '../../helpers/util';
-import { EntryItemType } from '../types';
+
+import { contestSelector, entriesSelector, myEntrySelector } from './ContestsSlice';
 import {
-  useGetContestQuery, useGetEntriesQuery, useGetEntryQuery, useCreateEntryMutation,
+  useGetContestQuery,
+  useGetEntriesQuery,
+  useGetEntryQuery,
+  useCreateEntryMutation,
 } from '../../helpers/api';
+
+import { EntryItemType } from '../types';
 
 // Show info about a specific contest and its entries
 const Contest = () => {

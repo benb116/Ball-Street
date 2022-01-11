@@ -1,9 +1,10 @@
 import Modal from 'react-modal';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-
 import { useParams } from 'react-router';
+
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
+
 import { modalSelector, modalStatusSelector, closeModal } from './ModalSlice';
 import { useCreateOfferMutation } from '../../../helpers/api';
 

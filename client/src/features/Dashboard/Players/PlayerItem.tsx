@@ -2,14 +2,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
+
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
+import RenderPrice from '../../../helpers/util';
+
 import { isOnRosterSelector } from '../Entry/EntrySlice';
 import { setModal } from '../Modal/ModalSlice';
 import { offersSelector } from '../Offers/OffersSlice';
 import { allTeamsSelector, priceMapSelector } from './PlayersSlice';
-import RenderPrice from '../../../helpers/util';
-import { PlayerItemType } from '../../types';
 import { useCancelOfferMutation, usePreAddMutation, usePreDropMutation } from '../../../helpers/api';
+
+import { PlayerItemType } from '../../types';
 
 // Show a player's row in the list
 function PlayerItem({ playerdata }: { playerdata: PlayerItemType }) {

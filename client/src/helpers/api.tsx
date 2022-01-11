@@ -1,5 +1,6 @@
 // Need to use the React-specific entry point to import createApi
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+
 import {
   AccountType,
   ContestItemType,
@@ -90,15 +91,7 @@ export const {
   useGetEntryQuery,
   useCreateEntryMutation,
 } = API;
-export const {
-  usePreAddMutation,
-  usePreDropMutation,
-  useReorderRosterMutation,
-} = API;
-export const {
-  useGetOffersQuery,
-  useCreateOfferMutation,
-  useCancelOfferMutation,
-} = API;
+export const { usePreAddMutation, usePreDropMutation, useReorderRosterMutation } = API;
+export const { useGetOffersQuery, useCreateOfferMutation, useCancelOfferMutation } = API;
 export const { useGetPlayersQuery, useGetGamesQuery } = API;
 export const { useGetTradesQuery } = API;

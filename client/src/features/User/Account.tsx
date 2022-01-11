@@ -1,5 +1,7 @@
 import React from 'react';
+
 import { useAppSelector } from '../../app/hooks';
+
 import { useLogoutMutation } from '../../helpers/api';
 import { userSelector } from './UserSlice';
 

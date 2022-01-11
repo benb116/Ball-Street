@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
+
 import type { RootState } from '../../../app/store';
 
 interface ModelState {

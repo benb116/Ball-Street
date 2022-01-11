@@ -1,10 +1,15 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
+
 import type { RootState } from '../../../app/store';
 import API from '../../../helpers/api';
+
 import {
-  EntryType, NFLPosType, RosterPosType, RosterType,
+  EntryType,
+  NFLPosType,
+  RosterPosType,
+  RosterType,
 } from '../../types';
 
 interface EntryState {

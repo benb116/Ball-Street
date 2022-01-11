@@ -1,10 +1,15 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
+
 import type { RootState } from '../../../app/store';
 import API from '../../../helpers/api';
+
 import {
-  GameItemType, PlayerItemType, PriceMapItemType, TeamMapItemType,
+  GameItemType,
+  PlayerItemType,
+  PriceMapItemType,
+  TeamMapItemType,
 } from '../../types';
 
 export const NFLPosTypes = {

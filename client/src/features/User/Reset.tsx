@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+
 import { useAppSelector } from '../../app/hooks';
+
 import { userSelector } from './UserSlice';
 import { useResetMutation } from '../../helpers/api';
 

@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
-import { useAppSelector } from '../../../app/hooks';
-import { allTeamsSelector, playerSelector } from '../Players/PlayersSlice';
 
+import { useAppSelector } from '../../../app/hooks';
+
+import { allTeamsSelector, playerSelector } from '../Players/PlayersSlice';
 import { offersSelector } from './OffersSlice';
-import { OfferItemType } from '../../types';
 import { useCancelOfferMutation, useGetOffersQuery } from '../../../helpers/api';
+
+import { OfferItemType } from '../../types';
 
 // Show offers for different players
 const Offers = () => {
