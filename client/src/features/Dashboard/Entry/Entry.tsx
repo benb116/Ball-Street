@@ -20,11 +20,11 @@ const Entry = () => {
   const rpos = Object.keys(thisentry.roster) as RosterPosType[]; // All roster positions
 
   // Initial data pull
-  useGetEntryQuery(contestID);
+  const { refetch } = useGetEntryQuery(contestID);
 
   // When an offer is filled, the rUpdate flag is raised
   useEffect(() => {
-    if (rUpdate) useGetEntryQuery(contestID);
+    if (rUpdate) refetch();
   }, [contestID, dispatch, rUpdate]);
 
   return (

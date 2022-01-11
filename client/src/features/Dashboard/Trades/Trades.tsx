@@ -13,10 +13,10 @@ const Trades = () => {
   const { contestID } = useParams<{ contestID: string }>();
   const tUpdate = useAppSelector(tradeUpdateSelector);
 
-  useGetTradesQuery(contestID);
+  const { refetch } = useGetTradesQuery(contestID);
 
   useEffect(() => {
-    if (tUpdate) useGetTradesQuery(contestID);
+    if (tUpdate) refetch();
   }, [contestID, dispatch, tUpdate]);
 
   const trades = useAppSelector(tradesSelector);
