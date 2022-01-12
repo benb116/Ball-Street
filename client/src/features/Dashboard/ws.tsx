@@ -6,7 +6,7 @@ import { offerFilled, updateRoster } from './Entry/EntrySlice';
 import { updateLeaders } from './Leaderboard/LeaderboardSlice';
 import { updateTrades } from './Trades/TradesSlice';
 
-import { LeaderItemType } from '../types';
+import { LeaderItemType, PriceMapItemType } from '../types';
 
 // Init WS connection and dispatch actions based on events
 const initWS = (contestID: string) => {
@@ -68,12 +68,12 @@ const initWS = (contestID: string) => {
 
   socket.addEventListener('error', (err) => {
     // eslint-disable-next-line no-console
-    console.error('Socket encountered error: ', err.message, 'Closing socket');
+    console.error('Socket encountered error: ', err, 'Closing socket');
     socket.close();
   });
 };
 
-function markPrice(arr) {
+function markPrice(arr: PriceMapItemType[]) {
   store.dispatch(updatePrices(arr));
 }
 

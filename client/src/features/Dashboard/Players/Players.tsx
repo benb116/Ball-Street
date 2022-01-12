@@ -140,64 +140,64 @@ function ListHeader() {
   const dispatch = useAppDispatch();
 
   // Change sort
-  function handleClick(evt) {
-    dispatch(setSort(evt.target.getAttribute('data-value')));
+  function handleClick(label: string) {
+    dispatch(setSort(label));
   }
   const sorts = useAppSelector(sortSelector);
   const { sortProp, sortDesc } = sorts;
 
   return (
     <tr style={{ fontSize: '.8rem' }}>
-      <th style={{ width: '10rem', cursor: 'pointer' }} onClick={handleClick} data-value="name">
+      <th style={{ width: '10rem', cursor: 'pointer' }} onClick={() => { handleClick('name'); }}>
         Name
         <span style={{ fontSize: '0.5em' }}>
           {' '}
           {sortProp === 'name' ? (sortDesc ? '▼' : '▲') : ''}
         </span>
       </th>
-      <th style={{ width: '2.2rem', cursor: 'pointer' }} onClick={handleClick} data-value="posName">
+      <th style={{ width: '2.2rem', cursor: 'pointer' }} onClick={() => { handleClick('posName'); }}>
         Pos
         <span style={{ fontSize: '0.5em' }}>
           {' '}
           {sortProp === 'posName' ? (sortDesc ? '▼' : '▲') : ''}
         </span>
       </th>
-      <th style={{ width: '2.4rem', cursor: 'pointer' }} onClick={handleClick} data-value="teamAbr">
+      <th style={{ width: '2.4rem', cursor: 'pointer' }} onClick={() => { handleClick('teamAbr'); }}>
         Team
         <span style={{ fontSize: '0.5em' }}>
           {' '}
           {sortProp === 'teamAbr' ? (sortDesc ? '▼' : '▲') : ''}
         </span>
       </th>
-      <th style={{ width: '2rem', cursor: 'pointer', textAlign: 'right' }} onClick={handleClick} data-value="preprice">
+      <th style={{ width: '2rem', cursor: 'pointer', textAlign: 'right' }} onClick={() => { handleClick('preprice'); }}>
         Proj
         <span style={{ fontSize: '0.5em' }}>
           {' '}
           {sortProp === 'preprice' ? (sortDesc ? '▼' : '▲') : ''}
         </span>
       </th>
-      <th style={{ width: '2rem', cursor: 'pointer', textAlign: 'right' }} onClick={handleClick} data-value="postprice">
+      <th style={{ width: '2rem', cursor: 'pointer', textAlign: 'right' }} onClick={() => { handleClick('postprice'); }}>
         Pts
         <span style={{ fontSize: '0.5em' }}>
           {' '}
           {sortProp === 'postprice' ? (sortDesc ? '▼' : '▲') : ''}
         </span>
       </th>
-      <th style={{ width: '2.2rem', cursor: 'pointer', textAlign: 'right' }} onClick={handleClick} data-value="lastprice">
+      <th style={{ width: '2.2rem', cursor: 'pointer', textAlign: 'right' }} onClick={() => { handleClick('lastprice'); }}>
         Last
         <span style={{ fontSize: '0.5em' }}>
           {' '}
           {sortProp === 'lastprice' ? (sortDesc ? '▼' : '▲') : ''}
         </span>
       </th>
-      <th style={{ width: '2rem', cursor: 'pointer', textAlign: 'right' }} onClick={handleClick} data-value="bestbid">
+      <th style={{ width: '2rem', cursor: 'pointer', textAlign: 'right' }} onClick={() => { handleClick('bestbid'); }}>
         Bid
         <span style={{ fontSize: '0.5em' }}>
           {' '}
           {sortProp === 'bestbid' ? (sortDesc ? '▼' : '▲') : ''}
         </span>
       </th>
-      <th style={{ width: '2rem', cursor: 'pointer', textAlign: 'right' }} onClick={handleClick} data-value="bestask">
+      <th style={{ width: '2rem', cursor: 'pointer', textAlign: 'right' }} onClick={() => { handleClick('bestask'); }}>
         Ask
         <span style={{ fontSize: '0.5em' }}>
           {' '}

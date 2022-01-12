@@ -51,7 +51,7 @@ const OfferModal = () => {
     close();
   }
 
-  function onFormSubmit(e) {
+  function onFormSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     handleSubmit(handleClick);
   }

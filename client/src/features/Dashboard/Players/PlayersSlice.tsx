@@ -22,18 +22,21 @@ export const NFLPosTypes = {
   99: { name: 'FLEX', canflex: true },
 };
 
+interface FilterType {
+  name: string,
+  posName: string,
+  teamAbr: string,
+  game: string,
+  phase: string,
+}
+export type FilterNameType = keyof FilterType;
+
 interface PlayerState {
   playerlist: PlayerItemType[],
   gamelist: GameItemType[],
   teamMap: TeamMapItemType,
   priceMap: Record<string, PriceMapItemType>,
-  filter: {
-    name: string,
-    posName: string,
-    teamAbr: string,
-    game: string,
-    phase: string,
-  },
+  filter: FilterType,
   sortProp: string,
   sortDesc: boolean,
 }
@@ -62,12 +65,9 @@ export const playersSlice = createSlice({
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       state = defaultState;
     },
-    setFilter: (state, { payload }: {
-      payload: {
-        name: 'name' | 'posName' | 'teamAbr' | 'game' | 'phase',
-        value: string,
-      }
-    }) => { state.filter[payload.name] = payload.value; },
+    setFilter: (state, { payload }: { payload: { name: FilterNameType, value: string, } }) => {
+      state.filter[payload.name] = payload.value;
+    },
     setSort: (state, { payload }: { payload: string }) => {
       if (state.sortProp === payload) { // If double click, change order
         state.sortDesc = !state.sortDesc;

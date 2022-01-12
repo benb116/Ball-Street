@@ -5,6 +5,7 @@ import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 import {
   allGamesSelector,
   allTeamsSelector,
+  FilterNameType,
   filterSelector,
   setFilter,
 } from './PlayersSlice';
@@ -25,10 +26,10 @@ const PlayerFilter = () => {
   const thegames = useAppSelector(allGamesSelector);
   const theteams = useAppSelector(allTeamsSelector);
 
-  function handleChange(evt) {
-    const { name } = evt.target;
+  function handleChange(evt: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
     const { value } = evt.target;
-    dispatch(setFilter({ name, value }));
+    const filterName = evt.target.name as FilterNameType;
+    dispatch(setFilter({ name: filterName, value }));
   }
 
   const handleChangeDebounce = debounce(handleChange, 300);
