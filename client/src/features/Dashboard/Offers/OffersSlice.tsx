@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 
 import type { RootState } from '../../../app/store';
 import API from '../../../helpers/api';
+import { ErrHandler } from '../../../helpers/util';
 
 import { OfferItemType } from '../../types';
 
@@ -46,9 +47,7 @@ export const offersSlice = createSlice({
         if (o.isbid) { state.bids.push(o); } else { state.asks.push(o); }
       });
     });
-    builder.addMatcher(API.endpoints.getOffers.matchRejected, (_state, { error }) => {
-      if (error) { toast.error(error.message || 'Unknown error'); }
-    });
+    builder.addMatcher(API.endpoints.getOffers.matchRejected, ErrHandler);
 
     builder.addMatcher(API.endpoints.createOffer.matchFulfilled, (state, { payload }) => {
       // If an offer is filled immediately,
@@ -63,9 +62,7 @@ export const offersSlice = createSlice({
         toast.success('Offer submitted');
       }
     });
-    builder.addMatcher(API.endpoints.createOffer.matchRejected, (_state, { error }) => {
-      if (error) { toast.error(error.message || 'Unknown error'); }
-    });
+    builder.addMatcher(API.endpoints.createOffer.matchRejected, ErrHandler);
 
     builder.addMatcher(API.endpoints.cancelOffer.matchFulfilled, (state, { payload }) => {
       if (payload.isbid) {
@@ -75,9 +72,7 @@ export const offersSlice = createSlice({
       }
       toast.success('Offer cancelled');
     });
-    builder.addMatcher(API.endpoints.cancelOffer.matchRejected, (_state, { error }) => {
-      if (error) { toast.error(error.message || 'Unknown error'); }
-    });
+    builder.addMatcher(API.endpoints.cancelOffer.matchRejected, ErrHandler);
   },
 });
 

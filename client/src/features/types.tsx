@@ -1,3 +1,9 @@
+export interface ErrType {
+  data: {
+    error: string
+  }
+}
+
 export interface AccountType {
   email: string,
   id: number,

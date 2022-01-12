@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 
 import type { RootState } from '../../app/store';
 import API from '../../helpers/api';
+import { ErrHandler } from '../../helpers/util';
 
 interface UserState {
   info: {
@@ -43,23 +44,17 @@ export const userSlice = createSlice({
         localStorage.setItem('isLoggedIn', 'true');
       }
     });
-    builder.addMatcher(API.endpoints.signup.matchRejected, (_state, { error }) => {
-      if (error) { toast.error(error.message || 'Unknown error'); }
-    });
+    builder.addMatcher(API.endpoints.signup.matchRejected, ErrHandler);
 
     builder.addMatcher(API.endpoints.forgot.matchFulfilled, () => {
       toast.success('An email was sent to this address');
     });
-    builder.addMatcher(API.endpoints.forgot.matchRejected, (_state, { error }) => {
-      if (error) { toast.error(error.message || 'Unknown error'); }
-    });
+    builder.addMatcher(API.endpoints.forgot.matchRejected, ErrHandler);
 
     builder.addMatcher(API.endpoints.reset.matchFulfilled, () => {
       toast.success('Password reset successfully');
     });
-    builder.addMatcher(API.endpoints.reset.matchRejected, (_state, { error }) => {
-      if (error) { toast.error(error.message || 'Unknown error'); }
-    });
+    builder.addMatcher(API.endpoints.reset.matchRejected, ErrHandler);
 
     builder.addMatcher(API.endpoints.login.matchFulfilled, (state, { payload }) => {
       if (payload.needsVerification) {
@@ -69,17 +64,13 @@ export const userSlice = createSlice({
         localStorage.setItem('isLoggedIn', 'true');
       }
     });
-    builder.addMatcher(API.endpoints.login.matchRejected, (_state, { error }) => {
-      if (error) { toast.error(error.message || 'Unknown error'); }
-    });
+    builder.addMatcher(API.endpoints.login.matchRejected, ErrHandler);
 
     builder.addMatcher(API.endpoints.logout.matchFulfilled, (state) => {
       state.info = defaultState.info;
       localStorage.setItem('isLoggedIn', 'false');
     });
-    builder.addMatcher(API.endpoints.logout.matchRejected, (_state, { error }) => {
-      if (error) { toast.error(error.message || 'Unknown error'); }
-    });
+    builder.addMatcher(API.endpoints.logout.matchRejected, ErrHandler);
 
     builder.addMatcher(API.endpoints.getAccount.matchFulfilled, (state, { payload }) => {
       if (!payload) {

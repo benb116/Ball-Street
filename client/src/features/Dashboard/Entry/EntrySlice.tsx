@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 
 import type { RootState } from '../../../app/store';
 import API from '../../../helpers/api';
+import { ErrHandler } from '../../../helpers/util';
 
 import {
   EntryType,
@@ -59,21 +60,15 @@ export const entrySlice = createSlice({
     builder.addMatcher(API.endpoints.preAdd.matchFulfilled, (state, { payload }) => {
       setEntry(state, payload);
     });
-    builder.addMatcher(API.endpoints.preAdd.matchRejected, (_state, { error }) => {
-      if (error) { toast.error(error.message || 'Unknown error'); }
-    });
+    builder.addMatcher(API.endpoints.preAdd.matchRejected, ErrHandler);
     builder.addMatcher(API.endpoints.preDrop.matchFulfilled, (state, { payload }) => {
       setEntry(state, payload);
     });
-    builder.addMatcher(API.endpoints.preDrop.matchRejected, (_state, { error }) => {
-      if (error) { toast.error(error.message || 'Unknown error'); }
-    });
+    builder.addMatcher(API.endpoints.preDrop.matchRejected, ErrHandler);
     builder.addMatcher(API.endpoints.reorderRoster.matchFulfilled, (state, { payload }) => {
       setEntry(state, payload);
     });
-    builder.addMatcher(API.endpoints.reorderRoster.matchRejected, (_state, { error }) => {
-      if (error) { toast.error(error.message || 'Unknown error'); }
-    });
+    builder.addMatcher(API.endpoints.reorderRoster.matchRejected, ErrHandler);
   },
 });
 

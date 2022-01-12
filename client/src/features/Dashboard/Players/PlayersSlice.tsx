@@ -1,9 +1,9 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
-import toast from 'react-hot-toast';
 
 import type { RootState } from '../../../app/store';
 import API from '../../../helpers/api';
+import { ErrHandler } from '../../../helpers/util';
 
 import {
   GameItemType,
@@ -108,9 +108,7 @@ export const playersSlice = createSlice({
         return np;
       });
     });
-    builder.addMatcher(API.endpoints.getPlayers.matchRejected, (_state, { error }) => {
-      if (error) { toast.error(error.message || 'Unknown error'); }
-    });
+    builder.addMatcher(API.endpoints.getPlayers.matchRejected, ErrHandler);
 
     builder.addMatcher(API.endpoints.getGames.matchFulfilled, (state, { payload }) => {
       state.gamelist = [...payload].sort((a, b) => a.startTime - b.startTime);
@@ -122,9 +120,7 @@ export const playersSlice = createSlice({
         return acc;
       }, {} as TeamMapItemType);
     });
-    builder.addMatcher(API.endpoints.getGames.matchRejected, (_state, { error }) => {
-      if (error) { toast.error(error.message || 'Unknown error'); }
-    });
+    builder.addMatcher(API.endpoints.getGames.matchRejected, ErrHandler);
   },
 });
 

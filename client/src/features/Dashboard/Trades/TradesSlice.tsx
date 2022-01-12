@@ -1,9 +1,9 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
-import toast from 'react-hot-toast';
 
 import type { RootState } from '../../../app/store';
 import API from '../../../helpers/api';
+import { ErrHandler } from '../../../helpers/util';
 
 import { TradeItemType } from '../../types';
 
@@ -40,9 +40,7 @@ export const tradesSlice = createSlice({
       }).sort((a: TradeItemType, b: TradeItemType) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
       state.tradeUpdate = false; // reset a flag
     });
-    builder.addMatcher(API.endpoints.getTrades.matchRejected, (_state, { error }) => {
-      if (error) { toast.error(error.message || 'Unknown error'); }
-    });
+    builder.addMatcher(API.endpoints.getTrades.matchRejected, ErrHandler);
   },
 });
 

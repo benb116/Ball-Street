@@ -1,9 +1,9 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
-import toast from 'react-hot-toast';
 
 import type { RootState } from '../../app/store';
 import API from '../../helpers/api';
+import { ErrHandler } from '../../helpers/util';
 
 import { ContestItemType, EntryItemType, EntryType } from '../types';
 
@@ -28,23 +28,17 @@ export const contestsSlice = createSlice({
     builder.addMatcher(API.endpoints.getContests.matchFulfilled, (state, { payload }) => {
       state.allcontests = payload;
     });
-    builder.addMatcher(API.endpoints.getContests.matchRejected, (_state, { error }) => {
-      if (error) { toast.error(error.message || 'Unknown error'); }
-    });
+    builder.addMatcher(API.endpoints.getContests.matchRejected, ErrHandler);
 
     builder.addMatcher(API.endpoints.getContest.matchFulfilled, (state, { payload }) => {
       state.thiscontest = payload;
     });
-    builder.addMatcher(API.endpoints.getContest.matchRejected, (_state, { error }) => {
-      if (error) { toast.error(error.message || 'Unknown error'); }
-    });
+    builder.addMatcher(API.endpoints.getContest.matchRejected, ErrHandler);
 
     builder.addMatcher(API.endpoints.getEntries.matchFulfilled, (state, { payload }) => {
       state.thiscontestentries = payload;
     });
-    builder.addMatcher(API.endpoints.getEntries.matchRejected, (_state, { error }) => {
-      if (error) { toast.error(error.message || 'Unknown error'); }
-    });
+    builder.addMatcher(API.endpoints.getEntries.matchRejected, ErrHandler);
 
     builder.addMatcher(API.endpoints.getEntry.matchFulfilled, (state, { payload }) => {
       state.thiscontestmyentry = payload;
@@ -54,9 +48,7 @@ export const contestsSlice = createSlice({
       state.thiscontestentries.push(payload);
       state.thiscontestmyentry = payload;
     });
-    builder.addMatcher(API.endpoints.createEntry.matchRejected, (_state, { error }) => {
-      if (error) { toast.error(error.message || 'Unknown error'); }
-    });
+    builder.addMatcher(API.endpoints.createEntry.matchRejected, ErrHandler);
   },
 });
 
