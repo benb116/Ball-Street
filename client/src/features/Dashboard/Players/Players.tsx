@@ -10,13 +10,14 @@ import {
   setSort,
   allTeamsSelector,
   allGamesSelector,
+  pricesMapSelector,
 } from './PlayersSlice';
 import { useGetPlayersQuery, useGetGamesQuery } from '../../../helpers/api';
 
 import PlayerFilter from './PlayerFilter';
 import PlayerItem from './PlayerItem';
 
-import { GameItemType } from '../../types';
+import { GameItemType, SortByType } from '../../types';
 
 // Show list of all active players
 const Players = () => {
@@ -28,6 +29,7 @@ const Players = () => {
   const thegames = useAppSelector(allGamesSelector);
   const filters = useAppSelector(filterSelector);
   const sorts = useAppSelector(sortSelector);
+  const priceMap = useAppSelector(pricesMapSelector);
 
   // If we're filtering by a game
   const thegamefilter = filters.game;
@@ -69,18 +71,23 @@ const Players = () => {
       const bPhase = theteams[b.NFLTeamId]?.phase;
 
       const sortBy = sorts.sortProp; // What are we sorting by?
-      let [item1, item2] = [a[sortBy], b[sortBy]]; // Get that property
-      if (sortBy === 'preprice') {
-        if (aPhase !== 'pre') { item1 = a.projPrice; }
-        if (bPhase !== 'pre') { item2 = b.projPrice; }
-      }
-      if (sortBy === 'postprice') {
-        if (aPhase !== 'pre') { item1 = a.statPrice; }
-        if (bPhase !== 'pre') { item2 = b.statPrice; }
-      }
+      let item1;
+      let item2;
       if (sortBy === 'teamAbr') {
         item1 = theteams[a.NFLTeamId].abr;
         item2 = theteams[b.NFLTeamId].abr;
+      } else if (sortBy === 'lastprice' || sortBy === 'bestbid' || sortBy === 'bestask') {
+        [item1, item2] = [priceMap[a.id][sortBy], priceMap[b.id][sortBy]]; // Get that property
+      } else {
+        [item1, item2] = [a[sortBy], b[sortBy]]; // Get that property
+        if (sortBy === 'preprice') {
+          if (aPhase !== 'pre') { item1 = a.projPrice; }
+          if (bPhase !== 'pre') { item2 = b.projPrice; }
+        }
+        if (sortBy === 'postprice') {
+          if (aPhase !== 'pre') { item1 = a.statPrice; }
+          if (bPhase !== 'pre') { item2 = b.statPrice; }
+        }
       }
 
       // Should flip order?
@@ -140,7 +147,7 @@ function ListHeader() {
   const dispatch = useAppDispatch();
 
   // Change sort
-  function handleClick(label: string) {
+  function handleClick(label: SortByType) {
     dispatch(setSort(label));
   }
   const sorts = useAppSelector(sortSelector);

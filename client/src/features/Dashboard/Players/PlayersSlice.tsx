@@ -7,9 +7,11 @@ import { ErrHandler } from '../../../helpers/util';
 
 import {
   GameItemType,
+  PhaseType,
   PlayerItemType,
   PriceMapItemType,
-  TeamMapItemType,
+  SortByType,
+  TeamMapType,
 } from '../../types';
 
 export const NFLPosTypes = {
@@ -34,10 +36,10 @@ export type FilterNameType = keyof FilterType;
 interface PlayerState {
   playerlist: PlayerItemType[],
   gamelist: GameItemType[],
-  teamMap: TeamMapItemType,
+  teamMap: TeamMapType,
   priceMap: Record<string, PriceMapItemType>,
   filter: FilterType,
-  sortProp: string,
+  sortProp: SortByType,
   sortDesc: boolean,
 }
 
@@ -68,7 +70,7 @@ export const playersSlice = createSlice({
     setFilter: (state, { payload }: { payload: { name: FilterNameType, value: string, } }) => {
       state.filter[payload.name] = payload.value;
     },
-    setSort: (state, { payload }: { payload: string }) => {
+    setSort: (state, { payload }: { payload: SortByType }) => {
       if (state.sortProp === payload) { // If double click, change order
         state.sortDesc = !state.sortDesc;
       } else { // Set descending first
@@ -86,8 +88,8 @@ export const playersSlice = createSlice({
     setPhase: (state, { payload }: { payload: { nflTeamID: number, gamePhase: string, } }) => { // Set the phase of a team to a new phase
       state.gamelist = state.gamelist.map((g) => {
         if (g.HomeId === payload.nflTeamID || g.AwayId === payload.nflTeamID) {
-          g.phase = payload.gamePhase;
-          state.teamMap[payload.nflTeamID].phase = payload.gamePhase; // Update phase for the team specifically too
+          g.phase = payload.gamePhase as PhaseType;
+          state.teamMap[payload.nflTeamID].phase = payload.gamePhase as PhaseType; // Update phase for the team specifically too
         }
         return g;
       });
@@ -113,12 +115,10 @@ export const playersSlice = createSlice({
     builder.addMatcher(API.endpoints.getGames.matchFulfilled, (state, { payload }) => {
       state.gamelist = [...payload].sort((a, b) => a.startTime - b.startTime);
       state.teamMap = payload.reduce((acc, cur) => { // team and game phase info
-        acc[cur.away.id] = { ...cur.away };
-        acc[cur.away.id].phase = cur.phase;
-        acc[cur.home.id] = { ...cur.home };
-        acc[cur.home.id].phase = cur.phase;
+        acc[cur.away.id] = { ...cur.away, phase: cur.phase };
+        acc[cur.home.id] = { ...cur.home, phase: cur.phase };
         return acc;
-      }, {} as TeamMapItemType);
+      }, {} as TeamMapType);
     });
     builder.addMatcher(API.endpoints.getGames.matchRejected, ErrHandler);
   },
@@ -132,7 +132,8 @@ export const allPlayersSelector = (state: RootState) => (
   state.players.playerlist.map((p) => ({ ...p, ...state.players.priceMap[p.id] })) as PlayerItemType[]
 );
 export const allGamesSelector = (state: RootState) => (state.players.gamelist || [] as GameItemType[]);
-export const allTeamsSelector = (state: RootState) => (state.players.teamMap || {} as Record<string, PriceMapItemType>);
+export const allTeamsSelector = (state: RootState) => (state.players.teamMap || {} as TeamMapType);
+export const pricesMapSelector = (state: RootState) => (state.players.priceMap || {} as Record<string, PriceMapItemType>);
 export const playerSelector = (playerID: number | null) => (state: RootState) => (
   !playerID ? null : state.players.playerlist.find((p) => p.id === playerID) as PlayerItemType
 );
@@ -141,13 +142,6 @@ export const playersSelector = (playerIDs: number[]) => (state: RootState) => (
 );
 export const priceMapSelector = (playerID: number | null) => (state: RootState) => (
   !playerID ? null : state.players.priceMap[playerID] || {}
-);
-
-export const pricesMapSelector = (playerIDs: number[]) => (state: RootState) => (
-  playerIDs.reduce((acc, cur) => {
-    acc[cur] = (state.players.priceMap[cur] || {});
-    return acc;
-  }, {} as Record<string, PriceMapItemType>)
 );
 
 export const filterSelector = (state: RootState) => state.players.filter;

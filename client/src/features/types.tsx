@@ -71,26 +71,34 @@ interface TeamItemType {
   id: number,
   abr: string,
 }
+export type PhaseType = 'pre' | 'mid' | 'post';
 export interface GameItemType {
   HomeId: number,
   AwayId: number,
-  phase: string,
+  phase: PhaseType,
   home: TeamItemType,
   away: TeamItemType,
   startTime: number,
 }
-export interface TeamMapItemType {
-  [key: string]: any,
+export interface TeamMapType {
+  [key: string] :{
+    id: number,
+    phase: PhaseType,
+    abr: string,
+  }
 }
 
-export interface PriceMapItemType {
-  nflplayerID: number,
+export interface PriceKeysType {
   statPrice?: number,
   projPrice?: number,
   bestbid?: number,
   bestask?: number,
   lastprice?: number,
 }
+export interface PriceMapItemType extends PriceKeysType {
+  nflplayerID: number,
+}
+export type SortByType = keyof PlayerItemType | keyof PriceKeysType | 'teamAbr';
 
 export interface OfferItemType {
   id: string,
