@@ -6,10 +6,10 @@ import { useParams } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 import RenderPrice from '../../../helpers/util';
 
-import { isOnRosterSelector } from '../Entry/EntrySlice';
-import { setModal } from '../Modal/ModalSlice';
-import { offersSelector } from '../Offers/OffersSlice';
-import { allTeamsSelector, priceMapSelector } from './PlayersSlice';
+import { isOnRosterSelector } from '../Entry/Entry.slice';
+import { setModal } from '../Modal/Modal.slice';
+import { offersSelector } from '../Offers/Offers.slice';
+import { allTeamsSelector, priceMapSelector } from './Players.slice';
 import { useCancelOfferMutation, usePreAddMutation, usePreDropMutation } from '../../../helpers/api';
 
 import { PlayerItemType } from './Players.types';

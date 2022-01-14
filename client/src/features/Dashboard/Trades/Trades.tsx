@@ -4,8 +4,8 @@ import { useParams } from 'react-router-dom';
 
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 
-import { playerSelector } from '../Players/PlayersSlice';
-import { tradesSelector, tradeUpdateSelector } from './TradesSlice';
+import { playerSelector } from '../Players/Players.slice';
+import { tradesSelector, tradeUpdateSelector } from './Trades.slice';
 import { useGetTradesQuery } from '../../../helpers/api';
 
 import { TradeItemType } from './Trades.types';

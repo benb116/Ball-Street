@@ -5,7 +5,7 @@ import { Link, useParams } from 'react-router-dom';
 import { useAppSelector } from '../../app/hooks';
 import RenderPrice from '../../helpers/util';
 
-import { contestSelector, entriesSelector, myEntrySelector } from './ContestsSlice';
+import { contestSelector, entriesSelector, myEntrySelector } from './Contests.slice';
 import {
   useGetContestQuery,
   useGetEntriesQuery,

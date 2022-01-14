@@ -4,7 +4,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 
 import { useGetAccountQuery, useLogoutMutation } from '../../helpers/api';
-import { isLoggedInSelector, userSelector } from '../User/UserSlice';
+import { isLoggedInSelector, userSelector } from '../User/User.slice';
 
 const Home = () => {
   const dispatch = useAppDispatch();

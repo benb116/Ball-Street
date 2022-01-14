@@ -4,8 +4,8 @@ import { useParams } from 'react-router-dom';
 
 import { useAppSelector } from '../../../app/hooks';
 
-import { allTeamsSelector, playerSelector } from '../Players/PlayersSlice';
-import { offersSelector } from './OffersSlice';
+import { allTeamsSelector, playerSelector } from '../Players/Players.slice';
+import { offersSelector } from './Offers.slice';
 import { useCancelOfferMutation, useGetOffersQuery } from '../../../helpers/api';
 
 import { OfferItemType } from './Offers.types';

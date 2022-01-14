@@ -1,13 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { userSlice } from '../features/User/UserSlice';
+import { userSlice } from '../features/User/User.slice';
 
-import { entrySlice } from '../features/Dashboard/Entry/EntrySlice';
-import { leaderboardSlice } from '../features/Dashboard/Leaderboard/LeaderboardSlice';
-import { offersSlice } from '../features/Dashboard/Offers/OffersSlice';
-import { playersSlice } from '../features/Dashboard/Players/PlayersSlice';
-import { contestsSlice } from '../features/Contests/ContestsSlice';
-import { modalSlice } from '../features/Dashboard/Modal/ModalSlice';
-import { tradesSlice } from '../features/Dashboard/Trades/TradesSlice';
+import { entrySlice } from '../features/Dashboard/Entry/Entry.slice';
+import { leaderboardSlice } from '../features/Dashboard/Leaderboard/Leaderboard.slice';
+import { offersSlice } from '../features/Dashboard/Offers/Offers.slice';
+import { playersSlice } from '../features/Dashboard/Players/Players.slice';
+import { contestsSlice } from '../features/Contests/Contests.slice';
+import { modalSlice } from '../features/Dashboard/Modal/Modal.slice';
+import { tradesSlice } from '../features/Dashboard/Trades/Trades.slice';
 
 import API from '../helpers/api';
 

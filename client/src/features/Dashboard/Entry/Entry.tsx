@@ -4,8 +4,8 @@ import { useParams } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 import RenderPrice from '../../../helpers/util';
 
-import { allTeamsSelector, playersSelector, pricesMapSelector } from '../Players/PlayersSlice';
-import { entrySelector, rosterUpdateSelector } from './EntrySlice';
+import { allTeamsSelector, playersSelector, pricesMapSelector } from '../Players/Players.slice';
+import { entrySelector, rosterUpdateSelector } from './Entry.slice';
 import { useGetEntryQuery } from '../../../helpers/api';
 
 import RosterItem from './RosterItem';

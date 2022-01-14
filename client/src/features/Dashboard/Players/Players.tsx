@@ -11,7 +11,7 @@ import {
   allTeamsSelector,
   allGamesSelector,
   pricesMapSelector,
-} from './PlayersSlice';
+} from './Players.slice';
 import { useGetPlayersQuery, useGetGamesQuery } from '../../../helpers/api';
 
 import PlayerFilter from './PlayerFilter';

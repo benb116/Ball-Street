@@ -1,10 +1,10 @@
 import { store } from '../../app/store';
 
-import { setPhase, updatePrices, setInjury } from './Players/PlayersSlice';
-import { removeOffer, alertProtMatch } from './Offers/OffersSlice';
-import { offerFilled, updateRoster } from './Entry/EntrySlice';
-import { updateLeaders } from './Leaderboard/LeaderboardSlice';
-import { updateTrades } from './Trades/TradesSlice';
+import { setPhase, updatePrices, setInjury } from './Players/Players.slice';
+import { removeOffer, alertProtMatch } from './Offers/Offers.slice';
+import { offerFilled, updateRoster } from './Entry/Entry.slice';
+import { updateLeaders } from './Leaderboard/Leaderboard.slice';
+import { updateTrades } from './Trades/Trades.slice';
 import { PriceMapItemType } from './Players/Players.types';
 import { LeaderItemType } from './Leaderboard/Leaderboard.types';
 

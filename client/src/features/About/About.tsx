@@ -2,7 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
-import { userSelector, clearState } from '../User/UserSlice';
+import { userSelector, clearState } from '../User/User.slice';
 
 const About = () => {
   const history = useHistory();

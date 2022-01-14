@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 
 import { useAppSelector } from '../../app/hooks';
 
-import { userSelector } from './UserSlice';
+import { userSelector } from './User.slice';
 import { useLoginMutation } from '../../helpers/api';
 
 const Login = () => {

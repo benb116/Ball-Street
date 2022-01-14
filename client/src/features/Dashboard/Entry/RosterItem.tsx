@@ -13,10 +13,10 @@ import {
   NFLPosTypes,
   playerSelector,
   priceMapSelector,
-} from '../Players/PlayersSlice';
-import { rposSelector, selectRPos } from './EntrySlice';
-import { offersSelector } from '../Offers/OffersSlice';
-import { setModal } from '../Modal/ModalSlice';
+} from '../Players/Players.slice';
+import { rposSelector, selectRPos } from './Entry.slice';
+import { offersSelector } from '../Offers/Offers.slice';
+import { setModal } from '../Modal/Modal.slice';
 import { useCancelOfferMutation, usePreDropMutation, useReorderRosterMutation } from '../../../helpers/api';
 
 import { RosterPosType } from './Entry.types';

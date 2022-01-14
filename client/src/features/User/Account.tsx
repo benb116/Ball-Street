@@ -3,7 +3,7 @@ import React from 'react';
 import { useAppSelector } from '../../app/hooks';
 
 import { useLogoutMutation } from '../../helpers/api';
-import { userSelector } from './UserSlice';
+import { userSelector } from './User.slice';
 
 const Account = () => {
   const { email } = useAppSelector(userSelector);

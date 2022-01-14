@@ -8,7 +8,7 @@ import {
   FilterNameType,
   filterSelector,
   setFilter,
-} from './PlayersSlice';
+} from './Players.slice';
 
 const debounce = (fn: (a: any) => any, ms = 300) => {
   let timeoutId: ReturnType<typeof setTimeout>;
