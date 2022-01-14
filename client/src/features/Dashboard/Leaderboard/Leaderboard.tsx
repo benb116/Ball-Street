@@ -6,7 +6,7 @@ import RenderPrice from '../../../helpers/util';
 
 import { leadersSelector } from './LeaderboardSlice';
 
-import { LeaderItemType } from '../../types';
+import { LeaderItemType } from './Leaderboard.types';
 
 // Show leaderboard of entries in the contest
 const Leaderboards = () => {

@@ -5,8 +5,9 @@ import { removeOffer, alertProtMatch } from './Offers/OffersSlice';
 import { offerFilled, updateRoster } from './Entry/EntrySlice';
 import { updateLeaders } from './Leaderboard/LeaderboardSlice';
 import { updateTrades } from './Trades/TradesSlice';
+import { PriceMapItemType } from './Players/Players.types';
+import { LeaderItemType } from './Leaderboard/Leaderboard.types';
 
-import { LeaderItemType, PriceMapItemType } from '../types';
 
 // Init WS connection and dispatch actions based on events
 const initWS = (contestID: string) => {

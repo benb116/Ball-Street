@@ -5,7 +5,7 @@ import type { RootState } from '../../../app/store';
 import API from '../../../helpers/api';
 import { ErrHandler } from '../../../helpers/util';
 
-import { TradeItemType } from '../../types';
+import { TradeItemType } from './Trades.types';
 
 interface TradesState {
   trades: TradeItemType[],

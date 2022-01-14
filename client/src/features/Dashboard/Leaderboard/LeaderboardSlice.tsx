@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import type { RootState } from '../../../app/store';
 
-import { LeaderItemType } from '../../types';
+import { LeaderItemType } from './Leaderboard.types';
 
 interface LeaderState {
   leaders: LeaderItemType[]

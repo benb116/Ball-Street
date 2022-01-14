@@ -1,6 +1,11 @@
 import { isRejectedWithValue } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
-import { ErrType } from '../features/types';
+
+interface ErrType {
+  data: {
+    error: string
+  }
+}
 
 const RenderPrice = (price = 0) => (Math.round(price) / 100).toFixed(2);
 

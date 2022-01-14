@@ -13,7 +13,7 @@ import {
   useCreateEntryMutation,
 } from '../../helpers/api';
 
-import { EntryItemType } from '../types';
+import { EntryItemType } from '../Dashboard/Entry/Entry.types';
 
 // Show info about a specific contest and its entries
 const Contest = () => {

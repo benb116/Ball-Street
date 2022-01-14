@@ -6,7 +6,7 @@ import type { RootState } from '../../../app/store';
 import API from '../../../helpers/api';
 import { ErrHandler } from '../../../helpers/util';
 
-import { OfferItemType } from '../../types';
+import { OfferItemType } from './Offers.types';
 
 interface OfferState {
   bids: OfferItemType[],

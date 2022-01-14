@@ -19,7 +19,9 @@ import { offersSelector } from '../Offers/OffersSlice';
 import { setModal } from '../Modal/ModalSlice';
 import { useCancelOfferMutation, usePreDropMutation, useReorderRosterMutation } from '../../../helpers/api';
 
-import { NFLPosType, OfferItemType, RosterPosType } from '../../types';
+import { RosterPosType } from './Entry.types';
+import { NFLPosType } from '../Players/Players.types';
+import { OfferItemType } from '../Offers/Offers.types';
 
 const flexID = 99;
 const rosterkey = {

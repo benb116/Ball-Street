@@ -10,7 +10,7 @@ import { useGetEntryQuery } from '../../../helpers/api';
 
 import RosterItem from './RosterItem';
 
-import { RosterPosType } from '../../types';
+import { RosterPosType } from './Entry.types';
 
 // Display the user's current entry (balance + players)
 const Entry = () => {

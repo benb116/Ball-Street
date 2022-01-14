@@ -8,7 +8,7 @@ import { allTeamsSelector, playerSelector } from '../Players/PlayersSlice';
 import { offersSelector } from './OffersSlice';
 import { useCancelOfferMutation, useGetOffersQuery } from '../../../helpers/api';
 
-import { OfferItemType } from '../../types';
+import { OfferItemType } from './Offers.types';
 
 // Show offers for different players
 const Offers = () => {

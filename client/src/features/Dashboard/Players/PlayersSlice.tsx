@@ -12,7 +12,7 @@ import {
   PriceMapItemType,
   SortByType,
   TeamMapType,
-} from '../../types';
+} from './Players.types';
 
 export const NFLPosTypes = {
   1: { name: 'QB', canflex: false },

@@ -6,12 +6,8 @@ import type { RootState } from '../../../app/store';
 import API from '../../../helpers/api';
 import { ErrHandler } from '../../../helpers/util';
 
-import {
-  EntryType,
-  NFLPosType,
-  RosterPosType,
-  RosterType,
-} from '../../types';
+import { EntryType, RosterPosType, RosterType } from './Entry.types';
+import { NFLPosType } from '../Players/Players.types';
 
 interface EntryState {
   balance: number,

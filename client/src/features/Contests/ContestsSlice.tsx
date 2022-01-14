@@ -5,7 +5,8 @@ import type { RootState } from '../../app/store';
 import API from '../../helpers/api';
 import { ErrHandler } from '../../helpers/util';
 
-import { ContestItemType, EntryItemType, EntryType } from '../types';
+import { ContestItemType } from './Contests.types';
+import { EntryType, EntryItemType } from '../Dashboard/Entry/Entry.types';
 
 interface ContestsState {
   allcontests: ContestItemType[],

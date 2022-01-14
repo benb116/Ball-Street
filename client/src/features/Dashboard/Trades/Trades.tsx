@@ -8,7 +8,7 @@ import { playerSelector } from '../Players/PlayersSlice';
 import { tradesSelector, tradeUpdateSelector } from './TradesSlice';
 import { useGetTradesQuery } from '../../../helpers/api';
 
-import { TradeItemType } from '../../types';
+import { TradeItemType } from './Trades.types';
 
 const Trades = () => {
   const dispatch = useAppDispatch();

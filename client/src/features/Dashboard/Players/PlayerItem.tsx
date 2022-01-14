@@ -12,7 +12,7 @@ import { offersSelector } from '../Offers/OffersSlice';
 import { allTeamsSelector, priceMapSelector } from './PlayersSlice';
 import { useCancelOfferMutation, usePreAddMutation, usePreDropMutation } from '../../../helpers/api';
 
-import { PlayerItemType } from '../../types';
+import { PlayerItemType } from './Players.types';
 
 // Show a player's row in the list
 function PlayerItem({ playerdata }: { playerdata: PlayerItemType }) {

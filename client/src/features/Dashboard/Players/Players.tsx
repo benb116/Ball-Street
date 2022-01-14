@@ -17,7 +17,7 @@ import { useGetPlayersQuery, useGetGamesQuery } from '../../../helpers/api';
 import PlayerFilter from './PlayerFilter';
 import PlayerItem from './PlayerItem';
 
-import { GameItemType, SortByType } from '../../types';
+import { GameItemType, SortByType } from './Players.types';
 
 // Show list of all active players
 const Players = () => {

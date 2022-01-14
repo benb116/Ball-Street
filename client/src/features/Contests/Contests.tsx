@@ -7,7 +7,7 @@ import { useAppSelector } from '../../app/hooks';
 import { contestsSelector } from './ContestsSlice';
 import { useGetContestsQuery } from '../../helpers/api';
 
-import { ContestItemType } from '../types';
+import { ContestItemType } from './Contests.types';
 
 // Show info about all contests available
 const Contests = () => {
