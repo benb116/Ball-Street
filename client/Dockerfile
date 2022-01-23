@@ -21,8 +21,9 @@ ENV TSC_COMPILE_ON_ERROR=true
 # immediately killed in production
 CMD [ "npm", "start" ]
 
-FROM development as builder
 # build optimized files
+FROM development as builder
+ENV GENERATE_SOURCEMAP=false
 RUN npm run build
 
 # production environment
