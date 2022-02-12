@@ -1,8 +1,7 @@
 // Need to use the React-specific entry point to import createApi
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { EntryType } from 'perf_hooks';
 import { ContestItemType } from '../features/Contests/Contests.types';
-import { EntryItemType } from '../features/Dashboard/Entry/Entry.types';
+import { EntryItemType, EntryType } from '../features/Dashboard/Entry/Entry.types';
 import { OfferItemType, OfferObj } from '../features/Dashboard/Offers/Offers.types';
 import { GameItemType, PlayerItemType } from '../features/Dashboard/Players/Players.types';
 import { TradeAsk, TradeBid } from '../features/Dashboard/Trades/Trades.types';
