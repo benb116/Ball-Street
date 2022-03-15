@@ -67,6 +67,7 @@ function findMatchForBestBid(book: Book) {
 
   let evalbid = Number(book.bestbid);
   let done = false; // flag, done looking at unprot bids, check prot bids next
+
   // Each map has an iterator that will spit out entries oldest first
   // Keep track of the iterator of the current best price for bids
   let bidIterator = book.bid[evalbid].entries();
@@ -77,10 +78,13 @@ function findMatchForBestBid(book: Book) {
     // If none, we've exhausted a specific price level
     // Move to the next best price and try again
     if (!bestbidOffer) {
-      // eslint-disable-next-line no-loop-func
+      // eslint-disable-next-line @typescript-eslint/no-loop-func
       evalbid = Math.min(...bidPrices.filter((p) => p > evalbid));
       // If there are no more left, then exit this loop and go to pbids
-      if (evalbid === Infinity) { done = true; break; }
+      if (evalbid === Infinity) {
+        done = true;
+        break;
+      }
 
       logger.verbose(`next best bid price: ${evalbid}`);
       bidIterator = book.bid[evalbid].entries();
@@ -100,7 +104,7 @@ function findMatchForBestBid(book: Book) {
       // but only if this bid has not matched a protask
       // since we don't want an offer to match multiple protoffers
       // Search through values (matchers) of the protMatchMap
-      if (!findMatcher(book, bestbidOffer[0])) {
+      if (!findMatchee(book, bestbidOffer[0])) {
         // try to find a un/prot match and return
         bestpaskOffer = bestUnmatchedProtAsk(book);
         if (bestpaskOffer && evalbid >= bestpaskOffer[1].price) {
@@ -141,14 +145,17 @@ function findMatchForBestPBid(book: Book) {
     // If none, we've exhausted a specific price level
     // Move to the next best price and try again
     if (!bestpbidOffer) {
-      // eslint-disable-next-line no-loop-func
+      // eslint-disable-next-line @typescript-eslint/no-loop-func
       evalpbid = Math.min(...pbidPrices.filter((p) => p > evalpbid));
       // If there are no more left, then exit
-      if (evalpbid === Infinity) { done = true; break; }
+      if (evalpbid === Infinity) {
+        done = true;
+        break;
+      }
       logger.verbose(`next best pbid price: ${evalpbid}`);
 
       pbidIterator = book.pbid[evalpbid].entries();
-    } else if (!book.protMatchMap[bestpbidOffer[0]]) {
+    } else if (!(bestpbidOffer[0] in book.protMatchMap)) {
       // ^^^^^^^^^^^^^^^^^^^^^^^^^
       // We've found the best pbid
       // Next steps depends on whether this offer has matched/been matched before
@@ -161,12 +168,13 @@ function findMatchForBestPBid(book: Book) {
 
       // ^ one note: it's possible that there could be an ask
       // that could match it that gets ignored:
-      // 1 pbid offered
+      // 1 other pbid offered
       // 2 ask offered that matches 1
       // 3 this pbid offered that would match 2 but doesn't cause it matched 1 already
       // 4 ask that matches 3
       // 1 is cancelled, leaving 2 alone
       // ^ this scenario is fine, because 2 will be included in the random drawing for 3
+      // What if 4 never comes?
 
       // If this pbid hasn't been matched yet, try ask, then pask
 
@@ -185,7 +193,7 @@ function findMatchForBestPBid(book: Book) {
       // If that falls through, find an unmatched protected ask
       // that has also not matched a different pbid
       // but only if this bid has not matched a pask before
-      if (!findMatcher(book, bestpbidOffer[0])) {
+      if (!findMatchee(book, bestpbidOffer[0])) {
         bestpaskOffer = bestUnmatchedProtAsk(book, true);
         if (bestpaskOffer && evalpbid >= bestpaskOffer[1].price) {
           logger.verbose('found pbid + pask');
@@ -204,7 +212,7 @@ function findMatchForBestPBid(book: Book) {
   return false;
 }
 
-function findMatcher(book: Book, id: string) {
+function findMatchee(book: Book, id: string) {
   return Object.keys(book.protMatchMap).find((key) => book.protMatchMap[key] === id);
 }
 
@@ -220,13 +228,13 @@ function bestUnmatchedAsk(book: Book) {
     bestAskOffer = AskIterator.next().value;
   }
   // Iterate through the map(s) to find an unmatched offer
-  while (findMatcher(book, bestAskOffer[0])) {
+  while (findMatchee(book, bestAskOffer[0])) {
     bestAskOffer = AskIterator.next().value;
 
     // If none, we've exhausted a specific price level
     // Move to the next best available
     if (!bestAskOffer) {
-      // eslint-disable-next-line no-loop-func
+      // eslint-disable-next-line @typescript-eslint/no-loop-func
       evalask = Math.min(...askPrices.filter((p) => p > evalask));
       // If there are no more left, then can't match any asks
       if (evalask === Infinity) { return null; }
@@ -253,15 +261,15 @@ function bestUnmatchedProtAsk(book: Book, notMatcher = false) {
     // Absolute best protected offer
     bestPAskOffer = pAskIterator.next().value;
   }
-  // Iterate through the map(s) to find an unmatched offer
 
+  // Iterate through the map(s) to find an unmatched offer
   while (book.protMatchMap[bestPAskOffer[0]]
-      || (notMatcher && findMatcher(book, bestPAskOffer[0]))) {
+      || (notMatcher && findMatchee(book, bestPAskOffer[0]))) {
     bestPAskOffer = pAskIterator.next().value;
     // If none, we've exhausted a specific price level
     // Move to the next best available
     if (!bestPAskOffer) {
-      // eslint-disable-next-line no-loop-func
+      // eslint-disable-next-line @typescript-eslint/no-loop-func
       evalpask = Math.min(...paskPrices.filter((p) => p > evalpask));
       // If there are no more left, then can't match this protected
       if (evalpask === Infinity) { return null; }
