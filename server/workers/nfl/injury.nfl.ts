@@ -67,7 +67,10 @@ function Format(raw: InjuryDataType) {
     if (!playerid) return acc;
     const statusout = pidout.split('</abbr>')[0];
     let status = statusout[statusout.length - 1];
+    const statusPreChar = statusout[statusout.length - 2];
     if (['P', 'Q', 'D'].indexOf(status) === -1) status = 'O';
+    // Abbrev could be SUSP, which would otherwise be seen as P
+    if (statusPreChar !== '>') status = 'O';
     const pObj = {
       id: Number(playerid),
       injuryStatus: status,
