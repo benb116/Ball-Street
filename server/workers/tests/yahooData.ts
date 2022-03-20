@@ -1,4 +1,6 @@
+/* eslint-disable no-useless-escape */
 /* eslint-disable max-len */
+
 export default {
   games: {
     gamesSunNight: {

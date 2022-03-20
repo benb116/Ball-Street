@@ -2,6 +2,7 @@
 # Used to build all Node workers
 # Different entrypoints defined in docker compose
 FROM node:16-alpine3.13
+RUN apk --no-cache --virtual build-dependencies add python3 make g++
 RUN npm install -g nodemon typescript
 # Use non-privileged user and make new folder for files
 USER node 

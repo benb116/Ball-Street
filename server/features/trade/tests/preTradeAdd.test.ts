@@ -7,26 +7,26 @@ describe('preTradeAdd service', () => {
       user: 1,
       params: { contestID: 2 },
       body: {
-        nflplayerID: 27648,
-        rosterposition: 'TE1',
+        nflplayerID: 17,
+        rosterposition: 'DEF1',
       },
     },
     {
       ContestId: 2,
-      DEF1: 21,
+      DEF1: 17,
       FLEX1: null,
       FLEX2: null,
       K1: 30266,
       QB1: null,
       RB1: 31885,
       RB2: null,
-      TE1: 27648,
+      TE1: 30213,
       UserId: 1,
       WR1: null,
       WR2: null,
       pointtotal: 8900,
     },
-    'UPDATE "Entries" SET "TE1"=null, "pointtotal"=10000 WHERE "ContestId"=2 AND "UserId"=1;',
+    'UPDATE "Entries" SET "DEF1"=null, "pointtotal"=10000 WHERE "ContestId"=2 AND "UserId"=1;',
   ));
 
   test('Duplicate add returns error 406', ErrorTest(

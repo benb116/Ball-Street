@@ -1,10 +1,10 @@
 const secret = {
   db: {
     user: 'user',
-    pass: 'pass',
+    pass: 'password',
     host: 'localhost',
-    port: 1234,
-    name: 'dbName',
+    port: 5432,
+    name: 'databasename',
   },
 };
 
