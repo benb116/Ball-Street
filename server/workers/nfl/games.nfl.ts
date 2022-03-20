@@ -26,7 +26,7 @@ export async function InitGameState() {
 }
 
 // Parse game info and generate DB records and phase map
-function ParseGameFileInit(data: string) {
+export function ParseGameFileInit(data: string) {
   const rawlines = data.split('\n');
   const gamelines = rawlines.filter((l: string) => l[0] === 'g');
   const currentweek = (Number(process.env.WEEK) || 0);
@@ -150,7 +150,7 @@ export async function PullAllGames() {
 }
 
 // Find games that have changed the time elapsed
-function ParseGameFileUpdate(data: string) {
+export function ParseGameFileUpdate(data: string) {
   const rawlines = data.split('\n');
   const gamelines = rawlines.filter((l: string) => l[0] === 'g');
   const changedTeams: number[] = [];
