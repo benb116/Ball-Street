@@ -109,6 +109,8 @@ class Book {
     if (!thetree[price].size) {
       delete thetree[price];
     }
+    // if offer was part of a protected match, delete it
+    delete this.protMatchMap[offer.id];
   }
 
   // Mark that a protected offer has been matched
