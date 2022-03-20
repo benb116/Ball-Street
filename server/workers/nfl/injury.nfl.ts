@@ -25,7 +25,7 @@ export default async function PullLatestInjuries() {
   }
 }
 
-function FindInjuryChanges(injuryObjs: NFLPlayerType[]) {
+export function FindInjuryChanges(injuryObjs: NFLPlayerType[]) {
   // Determine which players' injury status has changed
   return injuryObjs.filter((e) => {
     // Update injobj and return players that changed
@@ -60,7 +60,7 @@ async function PublishInjuryChanges(changedInjuries: NFLPlayerType[]) {
   );
 }
 
-function FormatInjuryObjects(raw: string) {
+export function FormatInjuryObjects(raw: string) {
   const main = raw.split('<tbody>')[1].split('</tbody')[0];
 
   const units = main.split('</tr>');

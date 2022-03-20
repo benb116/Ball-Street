@@ -4,6 +4,7 @@ import { ParseGameFileInit, ParseGameFileUpdate } from '../nfl/games.nfl';
 
 import yahoo from './yahooData';
 import setPhase from '../nfl/phase.nfl';
+import { FormatInjuryObjects, FindInjuryChanges } from '../nfl/injury.nfl';
 // The mock factory returns a mocked function
 jest.mock('../nfl/phase.nfl', () => jest.fn());
 
@@ -65,5 +66,34 @@ describe('NFL worker tests', () => {
         });
       });
     });
+  });
+
+  test('Test injury parsing', async () => {
+    const injuryObjects = FormatInjuryObjects(yahoo.injury.data);
+    FindInjuryChanges(injuryObjects);
+    expect(injuryObjects).toEqual(yahoo.injury.injuryobjects); // Better way to evaluate than toEqual?
+    const newInjury1 = {
+      id: 30996,
+      injuryStatus: 'P',
+      name: 'injury',
+      NFLPositionId: 1,
+      NFLTeamId: 1,
+      active: false, // If this was a new player record, don't show in results
+      preprice: null,
+      postprice: null,
+      jersey: 0,
+    };
+    const newInjury2 = {
+      id: 28514,
+      injuryStatus: 'Q',
+      name: 'injury',
+      NFLPositionId: 1,
+      NFLTeamId: 1,
+      active: false, // If this was a new player record, don't show in results
+      preprice: null,
+      postprice: null,
+      jersey: 0,
+    };
+    expect(FindInjuryChanges([newInjury1, newInjury2])).toEqual([newInjury1]);
   });
 });
