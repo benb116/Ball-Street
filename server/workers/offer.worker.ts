@@ -18,6 +18,7 @@ import evalProtected from './offer/protected.offer';
 import Book from './offer/book.offer';
 
 import { OfferType } from '../features/offer/offer.model';
+import { MatchPair } from './offer/evaluate.offer';
 
 const offerQueue = new Queue('offer-queue', queueOptions);
 const protectedQueue = new Queue('protected-queue', queueOptions);
@@ -78,8 +79,14 @@ function protectedProcessor(job: ProtMatchJob) {
 // so async operations are awaited within this loop
 async function evaluateBook(playerBook: Book) {
   let match = playerBook.evaluate();
+  let oldMatch: false | MatchPair = false;
   while (match) {
     try {
+      // If we get the same match twice in a row, something is wrong
+      if (oldMatch && match.bid.id === oldMatch.bid.id && match.ask.id === oldMatch.ask.id) {
+        throw new Error(`Consecutive matches are identical ${JSON.stringify(match)}`);
+      }
+      oldMatch = { ...match };
       logger.info(`match ${match.bid.id} ${match.ask.id}`);
       const isBidOld = (Date.parse(match.bid.createdAt) < Date.parse(match.ask.createdAt));
       const oldOffer = (isBidOld ? match.bid : match.ask);
