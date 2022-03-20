@@ -79,40 +79,43 @@ function protectedProcessor(job: ProtMatchJob) {
 async function evaluateBook(playerBook: Book) {
   let match = playerBook.evaluate();
   while (match) {
-    logger.info(`match ${match.bid.id} ${match.ask.id}`);
-    const isBidOld = (Date.parse(match.bid.createdAt) < Date.parse(match.ask.createdAt));
-    const oldOffer = (isBidOld ? match.bid : match.ask);
-    const newOffer = (!isBidOld ? match.bid : match.ask);
+    try {
+      logger.info(`match ${match.bid.id} ${match.ask.id}`);
+      const isBidOld = (Date.parse(match.bid.createdAt) < Date.parse(match.ask.createdAt));
+      const oldOffer = (isBidOld ? match.bid : match.ask);
+      const newOffer = (!isBidOld ? match.bid : match.ask);
 
-    // If the old offer is protected, create a protMatch
-    if (oldOffer.protected) {
-      // eslint-disable-next-line no-await-in-loop
-      await playerBook.match(oldOffer, newOffer);
-      addToProtectedMatchQueue(oldOffer, newOffer, playerBook.contestID, playerBook.nflplayerID);
-    } else {
-      // Otherwise try to fill the offer now
-      // eslint-disable-next-line no-await-in-loop
-      const result = await fillOffers(match.bid.id, match.ask.id);
-      // Remove filled or errored orders from the book
-      if (!result.bid || result.bid.filled || result.bid.cancelled) {
-        playerBook.cancel(result.bid || match.bid);
+      // If the old offer is protected, create a protMatch
+      if (oldOffer.protected) {
+        // eslint-disable-next-line no-await-in-loop
+        await playerBook.match(oldOffer, newOffer);
+        addToProtectedMatchQueue(oldOffer, newOffer, playerBook.contestID, playerBook.nflplayerID);
+      } else {
+        // Otherwise try to fill the offer now
+        // eslint-disable-next-line no-await-in-loop
+        const result = await fillOffers(match.bid.id, match.ask.id);
+        // Remove filled or errored orders from the book
+        if (!result.bid || result.bid.filled || result.bid.cancelled) {
+          playerBook.cancel(result.bid || match.bid);
+        }
+        if (!result.ask || result.ask.filled || result.ask.cancelled) {
+          playerBook.cancel(result.ask || match.ask);
+        }
       }
-      if (!result.ask || result.ask.filled || result.ask.cancelled) {
-        playerBook.cancel(result.ask || match.ask);
-      }
+
+      // Check if there's another match
+      match = playerBook.evaluate();
+    } catch (error) {
+      logger.error(`${playerBook.contestID}-${playerBook.nflplayerID} - ${error}`);
+      match = false;
     }
-
-    // Check if there's another match
-    match = playerBook.evaluate();
   }
   // Set latest best prices
   updateBest(playerBook);
 }
 
 // Add a protMatch to the queue and send a ping
-function addToProtectedMatchQueue(
-  eOffer: OfferType, nOffer: OfferType, ContestId: number, NFLPlayerId: number,
-) {
+function addToProtectedMatchQueue(eOffer: OfferType, nOffer: OfferType, ContestId: number, NFLPlayerId: number) {
   protectedQueue.add({
     existingOffer: eOffer.id,
     newOffer: nOffer.id,

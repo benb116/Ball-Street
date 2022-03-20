@@ -126,9 +126,7 @@ class Book {
   // So it can be matched again
   async unmatch(matchee: MatcherType) {
     await ProtectedMatch.destroy({
-      where: {
-        existingId: matchee.id,
-      },
+      where: { existingId: matchee.id },
     });
     delete this.protMatchMap[matchee.id];
   }

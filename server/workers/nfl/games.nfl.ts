@@ -10,21 +10,19 @@ import setPhase from './phase.nfl';
 import NFLGame, { NFLGameCreateType } from '../../features/nflgame/nflgame.model';
 
 const teamIDs = Object.values(teams).map((t) => t.id, [] as number[]);
+type PhaseMapType = Record<string, string | number>;
 
 // Determine all games and their phases
-export function InitGameState() {
-  return axios.get('https://relay-stream.sports.yahoo.com/nfl/games.txt').then((raw) => raw.data)
-    .then(ParseGameFileInit)
-    .then(async ({ phasemap, gameobjs }) => {
-      // Add games to DB (phases changed later)
-      await NFLGame.bulkCreate(gameobjs, { ignoreDuplicates: true });
-      return phasemap;
-    })
-    .then(setGamePhases)
-    .catch((err) => {
-      logger.error(err);
-      return {};
-    });
+export async function InitGameState() {
+  try {
+    const data: string = await axios.get('https://relay-stream.sports.yahoo.com/nfl/games.txt').then((raw) => raw.data);
+    const { phasemap, gameobjs } = ParseGameFileInit(data);
+    await NFLGame.bulkCreate(gameobjs, { ignoreDuplicates: true });
+    return await setGamePhases(phasemap);
+  } catch (err) {
+    logger.error(err);
+    return {};
+  }
 }
 
 // Parse game info and generate DB records and phase map
@@ -32,38 +30,18 @@ function ParseGameFileInit(data: string) {
   const rawlines = data.split('\n');
   const gamelines = rawlines.filter((l: string) => l[0] === 'g');
   const currentweek = (Number(process.env.WEEK) || 0);
-  const phasemap: Record<string, string | number> = {};
 
-  // Build up the list of games for the DB and the phasemap.
-  const gameobjs = gamelines.map((gameline: string) => {
+  // Create a map of team IDs and their gamephases
+  const phasemaps = gamelines.map(CreatePhaseMap);
+  const phasemap: PhaseMapType = Object.assign({}, ...phasemaps);
+
+  // Build up the list of game objects for the DB.
+  const gameobjs = gamelines.map((gameline) => {
     const terms = gameline.split('|');
     const awayTeamID = Number(terms[2]);
     const homeTeamID = Number(terms[3]);
 
-    const gameState = terms[4]; // F finished, P playing, S not started yet
     const starttime = Number(terms[10]);
-    switch (gameState) {
-      case 'F':
-        phasemap[awayTeamID] = 'post';
-        phasemap[homeTeamID] = 'post';
-        break;
-      case 'P':
-        phasemap[awayTeamID] = 'mid';
-        phasemap[homeTeamID] = 'mid';
-        break;
-      case 'S':
-        if (Date.now() > starttime * 1000) {
-          // For some reason, gamestate hasn't updated but it should have
-          phasemap[awayTeamID] = 'mid';
-          phasemap[homeTeamID] = 'mid';
-        } else {
-          phasemap[awayTeamID] = starttime;
-          phasemap[homeTeamID] = starttime;
-        }
-        break;
-      default:
-        logger.error('Unexpected game state', gameline);
-    }
 
     // Return obj to be used for DB record
     return {
@@ -74,7 +52,7 @@ function ParseGameFileInit(data: string) {
     } as NFLGameCreateType;
   });
 
-  if (gameobjs.length < 16) {
+  if (phasemaps.length < teamIDs.length / 2) {
     // Some teams are on bye. Mark them in pairs with post
     const gameteams = Object.keys(phasemap);
     let remainteams = teamIDs;
@@ -97,10 +75,46 @@ function ParseGameFileInit(data: string) {
   return { phasemap, gameobjs };
 }
 
+// Create entries in the Phase Map
+function CreatePhaseMap(gameline: string) {
+  const phasemap: PhaseMapType = {};
+
+  const terms = gameline.split('|');
+  const awayTeamID = Number(terms[2]);
+  const homeTeamID = Number(terms[3]);
+
+  const gameState = terms[4]; // F finished, P playing, S not started yet
+  const starttime = Number(terms[10]);
+
+  switch (gameState) {
+    case 'F':
+      phasemap[awayTeamID] = 'post';
+      phasemap[homeTeamID] = 'post';
+      break;
+    case 'P':
+      phasemap[awayTeamID] = 'mid';
+      phasemap[homeTeamID] = 'mid';
+      break;
+    case 'S':
+      if (Date.now() > starttime * 1000) {
+        // For some reason, gamestate hasn't updated but it should have
+        phasemap[awayTeamID] = 'mid';
+        phasemap[homeTeamID] = 'mid';
+      } else {
+        phasemap[awayTeamID] = starttime;
+        phasemap[homeTeamID] = starttime;
+      }
+      break;
+    default:
+      logger.error('Unexpected game state', gameline);
+  }
+  return phasemap;
+}
+
 // Set game phases for each game
 // Schedule phase changes
 // and update the timeObj
-async function setGamePhases(phasemap: Record<string, string | number>) {
+async function setGamePhases(phasemap: PhaseMapType) {
   const phaseTeams = Object.keys(phasemap);
   // Record phase info in DB
   const setPhases = phaseTeams.map((team) => {
@@ -110,14 +124,13 @@ async function setGamePhases(phasemap: Record<string, string | number>) {
     return setPhase(teamID, phase);
   });
   await Promise.all(setPhases);
+
   // Populate timeobj and set up timeouts for "mid" conversions
   phaseTeams.forEach((team) => {
     const teamID = Number(team);
     const phase = phasemap[teamID];
     if (typeof phase === 'number') {
-      setTimeout(() => {
-        setPhase(teamID, 'mid');
-      }, (Number(phase) * 1000 - Date.now()));
+      setTimeout(() => { setPhase(teamID, 'mid'); }, (Number(phase) * 1000 - Date.now()));
     } else if (phase === 'post') {
       state.timeObj[teamID] = 1;
     }
@@ -126,20 +139,21 @@ async function setGamePhases(phasemap: Record<string, string | number>) {
 
 // Pull game info and update timefractions
 // timefrac is time elapsed / total game time for use in live projections
-export function PullAllGames() {
-  return axios.get('https://relay-stream.sports.yahoo.com/nfl/games.txt').then((raw) => raw.data)
-    .then(ParseGameFileUpdate)
-    .catch((err) => {
-      logger.error(err);
-      return [];
-    });
+export async function PullAllGames() {
+  try {
+    const data: string = await axios.get('https://relay-stream.sports.yahoo.com/nfl/games.txt').then((raw) => raw.data);
+    return ParseGameFileUpdate(data);
+  } catch (err) {
+    logger.error(err);
+    return [];
+  }
 }
 
 // Find games that have changed the time elapsed
 function ParseGameFileUpdate(data: string) {
   const rawlines = data.split('\n');
   const gamelines = rawlines.filter((l: string) => l[0] === 'g');
-  const changedTimes: number[] = [];
+  const changedTeams: number[] = [];
   gamelines.forEach((gameline: string) => {
     const terms = gameline.split('|');
     const team1 = Number(terms[2]);
@@ -159,25 +173,33 @@ function ParseGameFileUpdate(data: string) {
       return;
     }
 
-    // Calculate time left in the game
-    const quarter = Number(terms[6]);
-    const time = terms[7].split(':');
-    const isOT = Number(quarter === 5);
-    // Calculation should take into account overtime
-    const timeElapsed = (
-      (quarter - 1) * 15 * 60)
-      + ((15 - 5 * isOT) * 60 - Number(time[0]) * 60 + Number(time[1])
-      );
-    const timefrac = timeElapsed / ((60 * 60) + (10 * 60 * isOT));
+    const timefrac = CalculateTimefrac(gameline);
 
     if (state.timeObj[team1] === undefined || state.timeObj[team1] !== timefrac) {
       state.timeObj[team1] = timefrac;
-      changedTimes.push(team1);
+      changedTeams.push(team1);
     }
     if (state.timeObj[team2] === undefined || state.timeObj[team2] !== timefrac) {
       state.timeObj[team2] = timefrac;
-      changedTimes.push(team2);
+      changedTeams.push(team2);
     }
   });
-  return changedTimes;
+  return changedTeams;
+}
+
+// Calculate time left in the game
+function CalculateTimefrac(gameline: string) {
+  const terms = gameline.split('|');
+
+  // Calculate time left in the game
+  const quarter = Number(terms[6]);
+  const time = terms[7].split(':');
+  const isOT = Number(quarter === 5);
+  // Calculation should take into account overtime
+  const timeElapsed = (
+    (quarter - 1) * 15 * 60)
+      + ((15 - 5 * isOT) * 60 - Number(time[0]) * 60 + Number(time[1])
+      );
+  const timefrac = timeElapsed / ((60 * 60) + (10 * 60 * isOT));
+  return timefrac;
 }

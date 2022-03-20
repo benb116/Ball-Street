@@ -41,7 +41,7 @@ async function runMatches(poffer: OfferType, playerBook: Book) {
     // Randomly chosen so no incentive to submit first
     const randomInd = Math.floor(Math.random() * matchingOfferIDs.length);
     const randomOffer = matchingOfferIDs[randomInd];
-    logger.verbose(`Try to fill ${randomOffer}`);
+    logger.verbose(`Try to fill ${randomOffer.id}`);
     const bidoffer = (ispbid ? poffer.id : randomOffer.id);
     const askoffer = (!ispbid ? poffer.id : randomOffer.id);
 
