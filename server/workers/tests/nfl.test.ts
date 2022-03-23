@@ -83,17 +83,7 @@ describe('NFL worker tests', () => {
       postprice: null,
       jersey: 0,
     };
-    const newInjury2 = {
-      id: 28514,
-      injuryStatus: 'Q',
-      name: 'injury',
-      NFLPositionId: 1,
-      NFLTeamId: 1,
-      active: false, // If this was a new player record, don't show in results
-      preprice: null,
-      postprice: null,
-      jersey: 0,
-    };
-    expect(FindInjuryChanges([newInjury1, newInjury2])).toEqual([newInjury1]);
+    injuryObjects[0] = newInjury1
+    expect(FindInjuryChanges(injuryObjects)).toEqual([newInjury1]);
   });
 });
