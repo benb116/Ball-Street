@@ -8,7 +8,6 @@ import { updateTrades } from './Trades/Trades.slice';
 import { PriceMapItemType } from './Players/Players.types';
 import { LeaderItemType } from './Leaderboard/Leaderboard.types';
 
-
 // Init WS connection and dispatch actions based on events
 const initWS = (contestID: string) => {
   const { host } = window.location;

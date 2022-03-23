@@ -8,7 +8,7 @@ import type Book from './book.offer';
 
 import { OfferType } from '../../features/offer/offer.model';
 
-interface MatchPair {
+export interface MatchPair {
   bid: OfferType,
   ask: OfferType
 }
@@ -55,7 +55,7 @@ function evaluateFn(book: Book) {
   }
 
   // if nothing, return false;
-  return false;
+  return false as const;
 }
 
 function findMatchForBestBid(book: Book) {
