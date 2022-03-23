@@ -27,13 +27,27 @@ export default async function PullLatestInjuries() {
 
 export function FindInjuryChanges(injuryObjs: NFLPlayerType[]) {
   // Determine which players' injury status has changed
-  return injuryObjs.filter((e) => {
-    // Update injobj and return players that changed
+  // If a player is no longer listed on the page, their entry is removed
+  const newInjObj: typeof state.injObj = {};
+  // Find objects that changed/were added
+  const changedObjects = injuryObjs.filter((e) => {
     if (!e || !e.id) return false;
-    const oldstatus = state.injObj[e.id];
-    state.injObj[e.id] = e.injuryStatus;
-    return oldstatus !== e.injuryStatus;
+    const oldstatus = state.injObj[e.id]; // what was the old status
+    newInjObj[e.id] = e.injuryStatus; // Set current status in new object
+    delete state.injObj[e.id]; // Delete from old object
+    return oldstatus !== e.injuryStatus; // Has it changed
   });
+
+  // Remaining players were on the list but aren't any more
+  const healthyPlayers = Object.keys(state.injObj);
+  // Create updated for each of them as well
+  healthyPlayers.forEach((playerID) => {
+    changedObjects.push(GenerateInjuryObject(Number(playerID), null));
+  });
+
+  // Set the new object
+  state.injObj = newInjObj;
+  return changedObjects;
 }
 
 async function PublishInjuryChanges(changedInjuries: NFLPlayerType[]) {
@@ -95,4 +109,18 @@ export function FormatInjuryObjects(raw: string) {
     acc.push(pObj);
     return acc;
   }, [] as Required<NFLPlayerCreateType>[]);
+}
+
+function GenerateInjuryObject(playerid: number, status: string | null) {
+  return {
+    id: playerid,
+    injuryStatus: status,
+    name: 'injury',
+    NFLPositionId: 1,
+    NFLTeamId: 1,
+    active: false,
+    preprice: null,
+    postprice: null,
+    jersey: 0,
+  } as Required<NFLPlayerCreateType>;
 }
