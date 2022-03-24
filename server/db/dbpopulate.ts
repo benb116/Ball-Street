@@ -59,6 +59,8 @@ async function PopulateDB() {
   }, {
     UserId: 3, ContestId: 2, pointtotal: 500, RB1: 31885, WR1: null, WR2: null, K1: 30266, DEF1: null, TE1: 30213,
   }, {
+    UserId: 5, ContestId: 2, pointtotal: 500, RB1: 31885, WR1: null, WR2: null, K1: 30266, DEF1: null, TE1: 30213,
+  }, {
     UserId: 1, ContestId: 3, pointtotal: 10000, RB1: 31885, WR1: null, WR2: null, K1: 30266, DEF1: 21, TE1: null,
   }, {
     UserId: 2, ContestId: 3, pointtotal: 1500, RB1: 31885, WR1: 32398, WR2: 28026, K1: 30266, DEF1: null, TE1: null,

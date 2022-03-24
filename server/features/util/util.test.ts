@@ -1,3 +1,6 @@
+import sequelize from '../../db';
+import Entry from '../entry/entry.model';
+
 import { isInvalidSpot, isPlayerOnRoster, isOpenRoster } from './util';
 
 describe('util testing', () => {
@@ -50,4 +53,50 @@ describe('util testing', () => {
     };
     expect(isOpenRoster(theentry2, 2)).toBe('FLEX2');
   });
+
+  test('Transaction locking', async () => {
+    const t1 = await sequelize.transaction();
+    const t2 = await sequelize.transaction();
+
+    let theentry2 = new Promise(() => { });
+
+    // Lock the row, update and commit after 3 seconds, then recheck the row
+    Entry.findOne({
+      where: { UserId: 5, ContestId: 2 },
+      transaction: t1,
+      lock: t1.LOCK.UPDATE,
+    }).then(async (e) => {
+      // Right after the first row lock, try a second
+      // This should wait until first lock is released
+      // Check outside of the try block that new value is received
+      theentry2 = Entry.findOne({
+        where: { UserId: 5, ContestId: 2 },
+        transaction: t2,
+        lock: t2.LOCK.UPDATE,
+      }).then((e2) => {
+        if (!e2) return null;
+        return e2.get('pointtotal');
+      });
+
+      if (!e) return;
+      await e.update({ pointtotal: 100 }, { transaction: t1 });
+      setTimeout(async () => { await t1.commit(); }, 1000);
+    }).catch(console.error);
+
+    // Because we use Read Committed, select commands without for update
+    // are not locked and don't wait for the locking transaction to complete
+    const theentry3 = await Entry.findOne({
+      where: {
+        UserId: 5,
+        ContestId: 2,
+      },
+    });
+    if (!theentry3) return;
+    expect(theentry3.get('pointtotal')).toBe(500);
+
+    // This second transaction should have waited and requeried
+    // So it should see the new data
+    const out = await theentry2;
+    expect(out).toBe(100);
+  }, 5000);
 });
