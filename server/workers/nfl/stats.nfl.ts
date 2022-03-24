@@ -10,15 +10,16 @@ import statUpdate from '../live/channels/statUpdate.channel';
 import { client, rediskeys } from '../../db/redis';
 
 // Get all latest statlines and filter out ones we don't care about
-export function PullAllStats() {
-  return axios.get('https://relay-stream.sports.yahoo.com/nfl/stats.txt')
-    .then((raw) => raw.data.split('\n'))
-    .then((lines: string[]) => lines.filter(StatType))
-    .then((lines) => lines.filter(UpdateStats))
-    .catch((err) => {
-      logger.error(err);
-      return [];
-    });
+export async function GetNewStats() {
+  try {
+    const rawLines = await axios.get('https://relay-stream.sports.yahoo.com/nfl/stats.txt')
+      .then((raw) => raw.data.split('\n'));
+    const statLines = rawLines.filter(StatType);
+    return statLines.filter(UpdateStats);
+  } catch (error) {
+    logger.error(error);
+    return [];
+  }
 }
 
 // Allow a statline if it's one of the valid stat categories
@@ -34,6 +35,8 @@ export function UpdateStats(line: string) {
   terms.shift();
   terms.shift();
   const statline = terms.join('|');
+
+  // Compare old statline to new
   if (!state.statObj[playerid]) state.statObj[playerid] = {};
   const diff = (
     !state.statObj[playerid][stattype]

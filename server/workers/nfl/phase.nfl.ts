@@ -48,20 +48,25 @@ async function setPhase(teamID: number, newphase: string) {
   validate(req, schema);
 
   logger.info(`Team ${teamID} phase set to ${newphase}`);
+  try {
+    // Update DB
+    await NFLGame.update({ phase: newphase }, {
+      where: {
+        [Op.or]: [{ HomeId: teamID }, { AwayId: teamID }],
+        week: Number(process.env.WEEK),
+      },
+    });
 
-  return NFLGame.update({ phase: newphase }, {
-    where: {
-      [Op.or]: [{ HomeId: teamID }, { AwayId: teamID }],
-      week: Number(process.env.WEEK),
-    },
-  })
-    .then(() => {
-      if (newphase === 'post') return convertTeamPlayers(teamID);
-      return Promise.resolve();
-    })
-    .then(() => { phaseChange.pub(teamID, newphase); })
-    .then(() => client.DEL('/nfldata/games')) // Force a refresh of game data
-    .catch(logger.error);
+    // Convert players to points if game ended
+    if (newphase === 'post') await convertTeamPlayers(teamID);
+
+    // Announce phase change
+    phaseChange.pub(teamID, newphase);
+    // Delete cache entry
+    client.DEL('/nfldata/games');
+  } catch (error) {
+    logger.error(error);
+  }
 }
 
 // Convert all players on a team in all entries to points
@@ -102,18 +107,17 @@ async function convertTeamPlayers(teamID: number) {
 
 // Set a player's postprice based on statlines
 function setPostPrice(p: NFLPlayerType) {
-  const playerid = p.id;
+  const newp = p;
+  const playerid = newp.id;
   const stats = state.statObj[playerid];
   const statpoints = (stats ? SumPoints(stats) : 0);
-  // eslint-disable-next-line no-param-reassign
-  p.postprice = statpoints;
+  newp.postprice = statpoints;
   return p;
 }
 
 // Convert any team players in an entry to points
-async function convertEntry(
-  e: EntryType, players: NFLPlayerType[], statmap: Record<string, number>,
-) {
+async function convertEntry(e: EntryType, players: NFLPlayerType[], statmap: Record<string, number>) {
+  // Operate inside a single transaction so conversion is atomic
   return sequelize.transaction(isoOption, async (t) => {
     const theentry = await Entry.findOne({
       where: {
@@ -123,16 +127,22 @@ async function convertEntry(
       ...tobj(t),
     });
     if (!theentry) return null;
+
+    // Pull final point value for each and add to a running total
+    // Also set roster spot to null
+    const newSet: EntryType = {
+      pointtotal: dv(theentry).pointtotal || 0,
+      UserId: e.UserId,
+      ContestId: e.ContestId,
+    };
     players.forEach((p) => {
       const pos = isPlayerOnRoster(dv(theentry), p.id);
       if (pos) {
-        const newSet: Record<string, number | null> = {
-          pointtotal: dv(theentry).pointtotal += (statmap[p.id] || 0),
-        };
+        newSet.pointtotal += (statmap[p.id] || 0);
         newSet[pos] = null;
-        theentry.set(newSet);
       }
     });
+    theentry.set(newSet);
 
     await theentry.save({ transaction: t });
     return theentry;

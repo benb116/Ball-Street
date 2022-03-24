@@ -1,0 +1,6 @@
+node_modules
+dist
+src/serviceWorker.tsx
+src/setupTests.tsx
+src/setupProxy.tsx
+src/setupProxy.js

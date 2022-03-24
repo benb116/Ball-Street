@@ -101,7 +101,7 @@ async function attemptFill(t: Transaction, bidid: string, askid: string) {
     .catch((err) => {
       logger.warn(`Offer could not be filled: ${boffer.id} - ${err.message}`);
 
-      return Offer.destroy({ where: { id: boffer.id }, transaction: t })
+      return Offer.update({ cancelled: true }, { where: { id: boffer.id }, transaction: t })
         .then(() => offerCancelled.pub(boffer.UserId, boffer.id))
         .finally(() => false);
     });
@@ -110,7 +110,7 @@ async function attemptFill(t: Transaction, bidid: string, askid: string) {
     .catch((err) => {
       logger.warn(`Offer could not be filled: ${aoffer.id} - ${err.message}`);
 
-      return Offer.destroy({ where: { id: aoffer.id }, transaction: t })
+      return Offer.update({ cancelled: true }, { where: { id: aoffer.id }, transaction: t })
         .then(() => offerCancelled.pub(aoffer.UserId, aoffer.id))
         .finally(() => false);
     });

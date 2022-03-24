@@ -5,6 +5,10 @@ interface ErrorRespType {
   status: number,
   message: string,
 }
+interface ResponseMapType {
+  default: ErrorRespType,
+  [key: string]: ErrorRespType,
+}
 
 interface SequelizeError {
   parent: {
@@ -23,7 +27,7 @@ export interface ServiceInput {
 // Handle errors in services
 // Takes a map that determines message and status based on error
 // Passes UErrors through directly.
-export default function errorHandler(responseMap: Record<string, ErrorRespType>) {
+export default function errorHandler(responseMap: ResponseMapType) {
   return function errorHandlerInner(err: unknown) {
     if (isUError(err)) throw err;
 

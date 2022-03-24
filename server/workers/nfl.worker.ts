@@ -4,7 +4,7 @@ import logger from '../utilities/logger';
 
 import state from './nfl/state.nfl';
 import { InitGameState, PullAllGames } from './nfl/games.nfl';
-import { CalcValues, PullAllStats, SetValues } from './nfl/stats.nfl';
+import { CalcValues, GetNewStats, SetValues } from './nfl/stats.nfl';
 import scrape from '../db/playerscraper';
 import PullLatestInjuries from './nfl/injury.nfl';
 
@@ -34,7 +34,7 @@ async function init() {
   const gamesChanged = InitGameState().then(PullAllGames);
   // What are the latest stats?
   logger.info('Pulling initial stats');
-  const newlines = PullAllStats();
+  const newlines = GetNewStats();
   // Calculate latest point values and push
   Promise.all([newlines, gamesChanged]).then(([newout, gameout]) => {
     logger.info('Calculating point values');
@@ -50,7 +50,7 @@ async function repeat() {
   state.playerTeamMap = await createPTMap().catch(() => state.playerTeamMap || {});
   const gamesChanged = PullAllGames();
   // What are the latest stats?
-  const newlines = PullAllStats();
+  const newlines = GetNewStats();
   // Calculate latest point values and push
   Promise.all([newlines, gamesChanged]).then(([newout, gameout]) => {
     SetValues(CalcValues(newout, gameout));

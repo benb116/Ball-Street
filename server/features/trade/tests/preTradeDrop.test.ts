@@ -4,10 +4,10 @@ import { ErrorTest, ObjectTest } from '../../util/util.tests';
 describe('preTradeDrop service', () => {
   test('Valid request returns data', ObjectTest(
     service, {
-      user: 2,
+      user: 1,
       params: { contestID: 2 },
       body: {
-        nflplayerID: 32398,
+        nflplayerID: 30213,
       },
     },
     {
@@ -20,12 +20,12 @@ describe('preTradeDrop service', () => {
       RB1: 31885,
       RB2: null,
       TE1: null,
-      UserId: 2,
+      UserId: 1,
       WR1: null,
-      WR2: 28026,
-      pointtotal: 2600,
+      WR2: null,
+      pointtotal: 11100,
     },
-    'UPDATE "Entries" SET "WR1"=32398, "pointtotal"=1500 WHERE "ContestId"=2 AND "UserId"=2;',
+    'UPDATE "Entries" SET "TE1"=30213, "pointtotal"=10000 WHERE "ContestId"=2 AND "UserId"=1;',
   ));
 
   test('Duplicate drop returns error 406', ErrorTest(

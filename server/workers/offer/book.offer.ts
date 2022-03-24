@@ -109,11 +109,12 @@ class Book {
     if (!thetree[price].size) {
       delete thetree[price];
     }
+    // if offer was part of a protected match, delete it
+    delete this.protMatchMap[offer.id];
   }
 
   // Mark that a protected offer has been matched
   // So it doesn't rematch over and over
-
   async match(matchee: MatcherType, matcher: MatcherType) {
     await ProtectedMatch.create({
       existingId: matchee.id,
@@ -127,9 +128,7 @@ class Book {
   // So it can be matched again
   async unmatch(matchee: MatcherType) {
     await ProtectedMatch.destroy({
-      where: {
-        existingId: matchee.id,
-      },
+      where: { existingId: matchee.id },
     });
     delete this.protMatchMap[matchee.id];
   }
@@ -174,10 +173,7 @@ class Book {
     const allMatchingOffers = allMatchingPrices
       .map((p) => thetree[p]) // get limit trees
       .map((l) => [...l.entries()]) // get offers
-      .reduce((acc, cur) => { // concat all
-        const added = [...acc, ...cur];
-        return added;
-      }, [])
+      .reduce((acc, cur) => [...acc, ...cur], []) // concat all
       .map((e) => e[1]);
 
     // Search protected opposite offers that are newer than this offer
@@ -188,10 +184,7 @@ class Book {
     const allMatchingPOffers = allMatchingPPrices
       .map((p) => theptree[p])
       .map((l) => [...l.entries()])
-      .reduce((acc, cur) => {
-        const added = [...acc, ...cur];
-        return added;
-      }, [])
+      .reduce((acc, cur) => [...acc, ...cur], []) // concat all
     // only offers submitted after protected
       .filter((e) => Date.parse(e[1].createdAt) > Date.parse(offer.createdAt))
       .map((e) => e[1]);

@@ -1,0 +1,70 @@
+name: Run Tests
+
+on:
+  pull_request:
+    branches: [ master ]
+    # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Create .env file from example
+      run: cp example.env .env
+
+    - name: Create secret file from example
+      run: cp secret.example.ts secret.ts
+      working-directory: server
+
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+
+    - name: Install server dependencies
+      run: npm install --production=false # install dev dependencies too
+      working-directory: server
+      
+    - name: Run ESLint - Server
+      run: ./node_modules/.bin/eslint ./ --fix
+      working-directory: server
+
+    - name: Install client dependencies
+      run: npm install --production=false # install dev dependencies too
+      working-directory: client
+      
+    - name: Run ESLint - Client
+      run: ./node_modules/.bin/eslint ./ --fix
+      working-directory: client
+
+    - name: Compile Typescript
+      run: ./node_modules/.bin/tsc
+      working-directory: server
+
+    - name: Build from Docker-Compose
+      run: docker-compose -f docker-compose.yml -f development.yml build
+
+    - name: Launch containers
+      run: docker-compose -f docker-compose.yml -f development.yml up -d
+
+    - name: Pull env vars from file
+      run: source ./.env
+      
+    - name: Docker ps 1
+      run: docker ps
+            
+    - name: Sleep for 15 seconds
+      run: sleep 5s
+      shell: bash
+      
+    - name: Docker logs 2
+      run: docker-compose logs
+    
+    - name: Run tests
+      run: WEEK=14 ../node_modules/.bin/jest --forceExit
+      working-directory: server/dist

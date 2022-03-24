@@ -3,7 +3,7 @@ import { ErrorTest, ObjectTest } from '../../util/util.tests';
 
 describe('createEntry service', () => {
   test('Valid request returns data', ObjectTest(
-    service, { user: 1, params: { contestID: 3 }, body: {} },
+    service, { user: 4, params: { contestID: 3 }, body: {} },
     {
       ContestId: 3,
       DEF1: null,
@@ -14,12 +14,12 @@ describe('createEntry service', () => {
       RB1: null,
       RB2: null,
       TE1: null,
-      UserId: 1,
+      UserId: 4,
       WR1: null,
       WR2: null,
       pointtotal: 10000,
     },
-    'DELETE from "Entries" WHERE "ContestId"=3 AND "UserId"=1;',
+    'DELETE from "Entries" WHERE "ContestId"=3 AND "UserId"=4;',
   ));
 
   test('Duplicate entry returns error 406', ErrorTest(
