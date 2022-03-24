@@ -62,7 +62,7 @@ describe('util testing', () => {
 
     // Lock the row, update and commit after 3 seconds, then recheck the row
     Entry.findOne({
-      where: { UserId: 3, ContestId: 2 },
+      where: { UserId: 5, ContestId: 2 },
       transaction: t1,
       lock: t1.LOCK.UPDATE,
     }).then(async (e) => {
@@ -70,7 +70,7 @@ describe('util testing', () => {
       // This should wait until first lock is released
       // Check outside of the try block that new value is received
       theentry2 = Entry.findOne({
-        where: { UserId: 3, ContestId: 2 },
+        where: { UserId: 5, ContestId: 2 },
         transaction: t2,
         lock: t2.LOCK.UPDATE,
       }).then((e2) => {
@@ -87,7 +87,7 @@ describe('util testing', () => {
     // are not locked and don't wait for the locking transaction to complete
     const theentry3 = await Entry.findOne({
       where: {
-        UserId: 3,
+        UserId: 5,
         ContestId: 2,
       },
     });
