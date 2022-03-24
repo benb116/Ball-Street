@@ -58,19 +58,14 @@ describe('util testing', () => {
     const t1 = await sequelize.transaction();
     const t2 = await sequelize.transaction();
 
-    let theentry2;
+    let theentry2 = new Promise(() => { });
 
-    try {
-      // Lock the row, update and commit after 3 seconds, then recheck the row
-      Entry.findOne({
-        where: { UserId: 3, ContestId: 2 },
-        transaction: t1,
-        lock: t1.LOCK.UPDATE,
-      }).then(async (e) => {
-        if (!e) return;
-        await e.update({ pointtotal: 100 }, { transaction: t1 });
-        setTimeout(async () => { await t1.commit(); }, 3000);
-      });
+    // Lock the row, update and commit after 3 seconds, then recheck the row
+    Entry.findOne({
+      where: { UserId: 3, ContestId: 2 },
+      transaction: t1,
+      lock: t1.LOCK.UPDATE,
+    }).then(async (e) => {
       // Right after the first row lock, try a second
       // This should wait until first lock is released
       // Check outside of the try block that new value is received
@@ -78,13 +73,16 @@ describe('util testing', () => {
         where: { UserId: 3, ContestId: 2 },
         transaction: t2,
         lock: t2.LOCK.UPDATE,
-      }).then((e) => {
-        if (!e) return null;
-        return e.get('pointtotal');
+      }).then((e2) => {
+        if (!e2) return null;
+        return e2.get('pointtotal');
       });
-    } catch (err) {
-      fail(err);
-    }
+
+      if (!e) return;
+      await e.update({ pointtotal: 100 }, { transaction: t1 });
+      setTimeout(async () => { await t1.commit(); }, 1000);
+    }).catch(console.error);
+
     // Because we use Read Committed, select commands without for update
     // are not locked and don't wait for the locking transaction to complete
     const theentry3 = await Entry.findOne({
