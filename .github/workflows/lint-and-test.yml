@@ -1,8 +1,6 @@
 name: Run Tests
 
 on:
-  push:
-    branches: [ master ]
   pull_request:
     branches: [ master ]
     # Allows you to run this workflow manually from the Actions tab
@@ -61,7 +59,7 @@ jobs:
       run: docker ps
             
     - name: Sleep for 15 seconds
-      run: sleep 15s
+      run: sleep 5s
       shell: bash
       
     - name: Docker logs 2
