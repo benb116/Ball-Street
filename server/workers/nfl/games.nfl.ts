@@ -188,7 +188,7 @@ export function ParseGameFileUpdate(data: string) {
 }
 
 // Calculate time left in the game
-function CalculateTimefrac(gameline: string) {
+export function CalculateTimefrac(gameline: string) {
   const terms = gameline.split('|');
 
   // Calculate time left in the game

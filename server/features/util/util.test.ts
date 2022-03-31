@@ -81,6 +81,7 @@ describe('util testing', () => {
       if (!e) return;
       await e.update({ pointtotal: 100 }, { transaction: t1 });
       setTimeout(async () => { await t1.commit(); }, 1000);
+    // eslint-disable-next-line no-console
     }).catch(console.error);
 
     // Because we use Read Committed, select commands without for update
