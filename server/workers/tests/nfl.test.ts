@@ -1,10 +1,11 @@
 import state from '../nfl/state.nfl';
 import { SumPoints } from '../nfl/dict.nfl';
-import { ParseGameFileInit, ParseGameFileUpdate } from '../nfl/games.nfl';
+import { CalculateTimefrac, ParseGameFileInit, ParseGameFileUpdate } from '../nfl/games.nfl';
 
 import yahoo from './yahooData';
 import setPhase from '../nfl/phase.nfl';
 import { FormatInjuryObjects, FindInjuryChanges } from '../nfl/injury.nfl';
+import { EstimateProjection } from '../nfl/stats.nfl';
 // The mock factory returns a mocked function
 jest.mock('../nfl/phase.nfl', () => jest.fn());
 
@@ -30,6 +31,54 @@ describe('NFL worker tests', () => {
       test(`${JSON.stringify(obj)} = ${pointvals[i]}`, () => {
         expect(SumPoints(obj)).toBe(pointvals[i]);
       });
+    });
+  });
+
+  describe('Test time fraction calculation', () => {
+    const gamelines = [
+      'g|20211216024|12|24|F|26|5|0:00|34|28|1639704000|1|10|15|0|2|2|0|0|1012|0|0|0|1|3|1',
+      'g|20211220005|13|5|P|26|2|7:49|7|0|1640037600|1|10|92|5|2|3|5|29|46|0|0|1|1|3|0',
+      'g|20211220003|16|3|S|0|1|15:00|0|0|1640049300|1|10|65|0|3|3|0|0|3|0|0|0|0|3|0',
+      'g|20211218011|17|11|F|26|4|0:00|17|27|1639876800|3|12|52|0|2|2|0|0|98|0|0|0|1|3|1',
+      'g|20211216024|12|24|P|26|5|3:00|34|28|1639704000|1|10|15|0|2|2|0|0|1012|0|0|0|1|3|1', // OT
+    ];
+    const fracvals = [1, 0.39694444444444443, 0, 1, 0.9571428571428572];
+
+    gamelines.forEach((l, i) => {
+      test(l, () => { expect(CalculateTimefrac(l)).toBe(fracvals[i]); });
+    });
+  });
+
+  describe('Test point projection calculation', () => {
+    state.playerTeamMap = {
+      100: 3,
+      101: 4,
+      102: 5,
+      103: 4,
+      3: 3, // DEF
+      4: 4,
+      5: 5,
+    };
+    state.timeObj = {
+      3: 0,
+      4: 0.3,
+      5: 1,
+    };
+    state.preProjObj = {
+      100: 2000,
+      101: 1600,
+      102: 800,
+      103: 850,
+      3: 720, // DEF
+      4: 520,
+      5: 1080,
+    };
+    const pIDs = [100, 101, 102, 103, 3, 4, 5];
+    const statpoints = [0, 0, 1000, 500, 1000, 800, 1200];
+    const projvals = [2000, 1120, 1000, 1095, 720, 464, 1200];
+
+    pIDs.forEach((p, i) => {
+      test(`${p} projection`, () => { expect(EstimateProjection(p, statpoints[i])).toBe(projvals[i]); });
     });
   });
 
@@ -83,7 +132,7 @@ describe('NFL worker tests', () => {
       postprice: null,
       jersey: 0,
     };
-    injuryObjects[0] = newInjury1
+    injuryObjects[0] = newInjury1;
     expect(FindInjuryChanges(injuryObjects)).toEqual([newInjury1]);
   });
 });
