@@ -5,6 +5,7 @@ import { CalculateTimefrac, ParseGameFileInit, ParseGameFileUpdate } from '../nf
 import yahoo from './yahooData';
 import setPhase from '../nfl/phase.nfl';
 import { FormatInjuryObjects, FindInjuryChanges } from '../nfl/injury.nfl';
+import { EstimateProjection } from '../nfl/stats.nfl';
 // The mock factory returns a mocked function
 jest.mock('../nfl/phase.nfl', () => jest.fn());
 
@@ -45,6 +46,39 @@ describe('NFL worker tests', () => {
 
     gamelines.forEach((l, i) => {
       test(l, () => { expect(CalculateTimefrac(l)).toBe(fracvals[i]); });
+    });
+  });
+
+  describe('Test point projection calculation', () => {
+    state.playerTeamMap = {
+      100: 3,
+      101: 4,
+      102: 5,
+      103: 4,
+      3: 3, // DEF
+      4: 4,
+      5: 5,
+    };
+    state.timeObj = {
+      3: 0,
+      4: 0.3,
+      5: 1,
+    };
+    state.preProjObj = {
+      100: 2000,
+      101: 1600,
+      102: 800,
+      103: 850,
+      3: 720, // DEF
+      4: 520,
+      5: 1080,
+    };
+    const pIDs = [100, 101, 102, 103, 3, 4, 5];
+    const statpoints = [0, 0, 1000, 500, 1000, 800, 1200];
+    const projvals = [2000, 1120, 1000, 1095, 720, 464, 1200];
+
+    pIDs.forEach((p, i) => {
+      test(`${p} projection`, () => { expect(EstimateProjection(p, statpoints[i])).toBe(projvals[i]); });
     });
   });
 

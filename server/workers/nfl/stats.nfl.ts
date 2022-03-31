@@ -75,7 +75,7 @@ function CalcPlayer(playerid: number) {
 }
 
 // Calculate new live projection for a player
-function EstimateProjection(playerid: number, statpoints: number) {
+export function EstimateProjection(playerid: number, statpoints: number) {
   // Find player's team
   const teamID = (state.playerTeamMap[playerid] || playerid);
   // Find time remaining
@@ -87,11 +87,7 @@ function EstimateProjection(playerid: number, statpoints: number) {
 
   // Calculate and return
   if (isDefense) {
-    return (
-      1000
-      - ((1000 - (state.preProjObj[dbid] || 0)) * timeleft)
-      - (1000 - statpoints)
-    );
+    return statpoints - ((1000 - (state.preProjObj[dbid] || 0)) * timeleft);
   }
   return statpoints + timeleft * (state.preProjObj[dbid] || 0);
 }
