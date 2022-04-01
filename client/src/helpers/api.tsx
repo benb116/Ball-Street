@@ -51,10 +51,10 @@ const API = createApi({
     // Offers
     getOffers: build.query<OfferItemType[], string>({ query: (contestID) => `/api/contests/${contestID}/offers` }),
     createOffer: build.mutation<OfferItemType, { contestID: string, offerobj: OfferObj }>({
-      query: ({ contestID, ...body }) => ({ url: `/api/contests/${contestID}/add`, method: 'POST', body }),
+      query: ({ contestID, ...body }) => ({ url: `/api/contests/${contestID}/offer`, method: 'POST', body }),
     }),
     cancelOffer: build.mutation<OfferItemType, { contestID: string, offerID: string }>({
-      query: ({ contestID, ...body }) => ({ url: `/api/contests/${contestID}/drop`, method: 'POST', body }),
+      query: ({ contestID, ...body }) => ({ url: `/api/contests/${contestID}/offer`, method: 'DELETE', body }),
     }),
 
     // Players
