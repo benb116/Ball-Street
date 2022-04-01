@@ -8,6 +8,7 @@ import state from './state.nfl';
 import setPhase from './phase.nfl';
 
 import NFLGame, { NFLGameCreateType } from '../../features/nflgame/nflgame.model';
+import yahooData from '../tests/yahooData';
 
 const teamIDs = Object.values(teams).map((t) => t.id, [] as number[]);
 type PhaseMapType = Record<string, string | number>;
@@ -15,14 +16,21 @@ type PhaseMapType = Record<string, string | number>;
 // Determine all games and their phases
 export async function InitGameState() {
   try {
-    const data: string = await axios.get('https://relay-stream.sports.yahoo.com/nfl/games.txt').then((raw) => raw.data);
-    const { phasemap, gameobjs } = ParseGameFileInit(data);
+    const rawGame = await pullGameData();
+    const { phasemap, gameobjs } = ParseGameFileInit(rawGame.data);
     await NFLGame.bulkCreate(gameobjs, { ignoreDuplicates: true });
     return await setGamePhases(phasemap);
   } catch (err) {
     logger.error(err);
     return {};
   }
+}
+
+function pullGameData() {
+  if (Number(process.env.YAHOO_MOCK)) {
+    return yahooData.games.gamesMonNightMidgame;
+  }
+  return axios.get('https://relay-stream.sports.yahoo.com/nfl/games.txt');
 }
 
 // Parse game info and generate DB records and phase map
@@ -141,8 +149,8 @@ async function setGamePhases(phasemap: PhaseMapType) {
 // timefrac is time elapsed / total game time for use in live projections
 export async function PullAllGames() {
   try {
-    const data: string = await axios.get('https://relay-stream.sports.yahoo.com/nfl/games.txt').then((raw) => raw.data);
-    return ParseGameFileUpdate(data);
+    const rawGame = await pullGameData();
+    return ParseGameFileUpdate(rawGame.data);
   } catch (err) {
     logger.error(err);
     return [];

@@ -8,18 +8,26 @@ import state from './state.nfl';
 import statUpdate from '../live/channels/statUpdate.channel';
 
 import { client, rediskeys } from '../../db/redis';
+import yahooData from '../tests/yahooData';
 
 // Get all latest statlines and filter out ones we don't care about
 export async function GetNewStats() {
   try {
-    const rawLines = await axios.get('https://relay-stream.sports.yahoo.com/nfl/stats.txt')
-      .then((raw) => raw.data.split('\n'));
+    const statData = await pullStatData();
+    const rawLines = statData.data.split('\n');
     const statLines = rawLines.filter(StatType);
     return statLines.filter(UpdateStats);
   } catch (error) {
     logger.error(error);
     return [];
   }
+}
+
+function pullStatData() {
+  if (Number(process.env.YAHOO_MOCK)) {
+    return yahooData.stats.statsMonNightMidgame;
+  }
+  return axios.get('https://relay-stream.sports.yahoo.com/nfl/stats.txt');
 }
 
 // Allow a statline if it's one of the valid stat categories
