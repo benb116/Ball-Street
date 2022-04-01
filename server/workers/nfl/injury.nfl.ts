@@ -10,12 +10,13 @@ import state from './state.nfl';
 import injuryUpdate, { InjuryUpdateType } from '../live/channels/injuryUpdate.channel';
 
 import NFLPlayer, { NFLPlayerCreateType, NFLPlayerType } from '../../features/nflplayer/nflplayer.model';
+import yahooData from '../tests/yahooData';
 
 let injuryInited = false;
 
 export default async function PullLatestInjuries() {
   try {
-    const rawInjury = await axios.get('https://football.fantasysports.yahoo.com/f1/injuries');
+    const rawInjury = await pullInjuryData();
     const injuryObjects = FormatInjuryObjects(rawInjury.data);
     const injuryChanges = FindInjuryChanges(injuryObjects);
     return await PublishInjuryChanges(injuryChanges);
@@ -23,6 +24,13 @@ export default async function PullLatestInjuries() {
     logger.error(error);
     return [];
   }
+}
+
+function pullInjuryData() {
+  if (Number(process.env.YAHOO_MOCK)) {
+    return yahooData.injury;
+  }
+  return axios.get('https://football.fantasysports.yahoo.com/f1/injuries');
 }
 
 export function FindInjuryChanges(injuryObjs: NFLPlayerType[]) {

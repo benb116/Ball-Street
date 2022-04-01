@@ -1,3 +1,7 @@
+// Pull data about players, games, and stats
+// Disseminate changes to live servers
+// And manage contest entries
+
 import axios from 'axios';
 
 import logger from '../utilities/logger';
@@ -11,6 +15,7 @@ import PullLatestInjuries from './nfl/injury.nfl';
 import getNFLPlayers from '../features/nflplayer/services/getNFLPlayers.service';
 
 import { NFLPlayerType } from '../features/nflplayer/nflplayer.model';
+import yahooData from './tests/yahooData';
 
 const checkInterval = 10000;
 
@@ -21,7 +26,7 @@ async function init() {
   logger.info('Creating playerTeamMap');
   state.playerTeamMap = await createPTMap();
   // If production, pull down players for the week
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === 'production' && !Number(process.env.YAHOO_MOCK)) {
     logger.info('Scraping player data');
     await scrape().catch(logger.error);
   }
@@ -60,17 +65,24 @@ async function repeat() {
 }
 
 // Populate the playerTeamMap
-function createPTMap() {
-  return axios.get('https://relay-stream.sports.yahoo.com/nfl/players.txt')
-    .then((raw) => raw.data.split('\n'))
-    .then((rawlines) => rawlines.filter((l: string) => l[0] === 'm'))
-    .then((playerlines) => playerlines.reduce((acc: Record<string, number>, line: string) => {
-      const terms = line.split('|');
-      const playerID = terms[1];
-      const teamID = Number(terms[2]);
-      acc[playerID] = teamID;
-      return acc;
-    }, {}));
+async function createPTMap() {
+  const raw = await pullPlayerData();
+  const rawlines = raw.data.split('\n');
+  const playerlines = rawlines.filter((l: string) => l[0] === 'm');
+  return playerlines.reduce((acc: Record<string, number>, line: string) => {
+    const terms = line.split('|');
+    const playerID = terms[1];
+    const teamID = Number(terms[2]);
+    acc[playerID] = teamID;
+    return acc;
+  }, {});
+}
+
+function pullPlayerData() {
+  if (Number(process.env.YAHOO_MOCK)) {
+    return yahooData.players.playersMonNightMid17;
+  }
+  return axios.get('https://relay-stream.sports.yahoo.com/nfl/players.txt');
 }
 
 // Populate the preProjMap
