@@ -45,7 +45,7 @@ const API = createApi({
       query: ({ contestID, ...body }) => ({ url: `/api/contests/${contestID}/drop`, method: 'POST', body }),
     }),
     reorderRoster: build.mutation<EntryType, { contestID: string, pos1: string, pos2: string }>({
-      query: ({ contestID, ...body }) => ({ url: `/api/contests/${contestID}/reorder`, method: 'POST', body }),
+      query: ({ contestID, ...body }) => ({ url: `/api/contests/${contestID}/entry`, method: 'PUT', body }),
     }),
 
     // Offers
