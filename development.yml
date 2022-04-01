@@ -9,6 +9,8 @@ services:
         restart: unless-stopped
         volumes:
             - ./client:/home/node/app
+        ports:
+            - 3000:3000
 
     api:
         command: nodemon --inspect=0.0.0.0:9229 dist/workers/api.worker.js
