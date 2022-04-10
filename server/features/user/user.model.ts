@@ -7,6 +7,7 @@ export interface UserType {
   verified: boolean,
   name: string,
   pwHash?: string,
+  cash: number
 }
 
 export type UserTypePWHash = Required<UserType>;
@@ -38,6 +39,11 @@ const User: ModelDefined<UserType, UserCreateType> = sequelize.define('User', {
   name: {
     type: DataTypes.STRING,
     allowNull: false,
+  },
+  cash: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0,
   },
 }, {
   defaultScope: {

@@ -30,7 +30,7 @@ async function login(req: LoginInput) {
     return genVerify({ id: theuser.id, email });
   }
   return {
-    needsVerification: false, id: theuser.id, email: theuser.email, name: theuser.name,
+    needsVerification: false, id: theuser.id, email: theuser.email, name: theuser.name, cash: theuser.cash,
   };
 }
 

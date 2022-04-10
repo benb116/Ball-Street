@@ -26,7 +26,9 @@ async function PopulateDB() {
     pwHash: '$2b$10$v3qgumBibz8Uouevm5xeTOFWheNtLVRyLeGqp2tZbfdMJ.iHQtgVq',
     name: 'bot',
     verified: (u !== 'email5@gmail.com' && u !== 'email6@gmail.com'),
+    cash: 1000,
   }));
+  userRecords[5].cash = 0;
   await User.bulkCreate(userRecords);
 
   const curweek = Number(process.env.WEEK);
