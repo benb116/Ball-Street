@@ -10,6 +10,7 @@ export interface ContestType {
   name: string,
   nflweek: number,
   budget: number,
+  buyin: number,
 }
 
 export type ContestCreateType = Optional<ContestType, 'id'>;
@@ -26,6 +27,11 @@ const Contest: ModelDefined<ContestType, ContestCreateType> = sequelize.define('
   budget: {
     type: DataTypes.INTEGER,
     allowNull: false,
+  },
+  buyin: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0,
   },
 });
 

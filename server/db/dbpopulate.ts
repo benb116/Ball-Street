@@ -35,16 +35,19 @@ async function PopulateDB() {
     name: 'Ball Street Big One',
     budget: 10000,
     nflweek: curweek,
+    buyin: 2000,
   };
   const con2: ContestCreateType = {
     name: 'Private Contest',
     budget: 10000,
     nflweek: curweek,
+    buyin: 500,
   };
   const con3: ContestCreateType = {
     name: 'Public Contest 2',
     budget: 10000,
     nflweek: curweek,
+    buyin: 500,
   };
   await Contest.bulkCreate([con, con2, con3]);
 
