@@ -19,12 +19,17 @@ describe('createEntry service', () => {
       WR2: null,
       pointtotal: 10000,
     },
-    'DELETE from "Entries" WHERE "ContestId"=3 AND "UserId"=4;',
+    'DELETE from "Entries" WHERE "ContestId"=3 AND "UserId"=4; UPDATE "Users" SET "cash"=1000 WHERE "id"=4;',
   ));
 
   test('Duplicate entry returns error 406', ErrorTest(
-    service, { user: 1, params: { contestID: 1 }, body: {} },
+    service, { user: 1, params: { contestID: 2 }, body: {} },
     406, 'An entry already exists',
+  ));
+
+  test('Insufficient funds returns error 402', ErrorTest(
+    service, { user: 1, params: { contestID: 1 }, body: {} },
+    402, 'User has insufficient funds',
   ));
 
   test('Missing contestID returns error 400', ErrorTest(
