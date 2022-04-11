@@ -8,7 +8,7 @@ import LedgerKind from './ledgerKind.model';
 export interface LedgerEntryType {
   id: string,
   UserId: number,
-  ContestId?: number,
+  ContestId: number | null,
   value: number,
   LedgerKindId: number,
 }
