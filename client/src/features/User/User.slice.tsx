@@ -81,6 +81,13 @@ export const userSlice = createSlice({
         state.info = { ...state.info, ...payload };
       }
     });
+    builder.addMatcher(API.endpoints.getAccount.matchRejected, (state, resp) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      if (resp.error.message === 'Aborted due to condition callback returning false.') return;
+      state = defaultState;
+      localStorage.setItem('isLoggedIn', 'false');
+    });
+
 
     builder.addMatcher(API.endpoints.deposit.matchFulfilled, (state, { payload }) => {
       toast.success('Deposit confirmed');
