@@ -6,7 +6,7 @@ import sequelize from '../../../db';
 
 describe('createEntry service', () => {
   test('Valid request returns data and creates ledger entry', async () => {
-    const input = { user: 4, params: { contestID: 3 }, body: {} };
+    const input = { user: 5, params: { contestID: 3 }, body: {} };
     const output = {
       ContestId: 3,
       DEF1: null,
@@ -17,7 +17,7 @@ describe('createEntry service', () => {
       RB1: null,
       RB2: null,
       TE1: null,
-      UserId: 4,
+      UserId: 5,
       WR1: null,
       WR2: null,
       pointtotal: 10000,
@@ -35,9 +35,9 @@ describe('createEntry service', () => {
     expect(theLedgerEntry).toMatchObject(outLedge);
 
     await sequelize.query(`
-      DELETE from "Entries" WHERE "ContestId"=3 AND "UserId"=4;
-      DELETE from "LedgerEntries" WHERE "ContestId"=3 AND "UserId"=4;
-      UPDATE "Users" SET "cash"=1000 WHERE "id"=4;
+      DELETE from "Entries" WHERE "ContestId"=3 AND "UserId"=5;
+      DELETE from "LedgerEntries" WHERE "ContestId"=3 AND "UserId"=5;
+      UPDATE "Users" SET "cash"=1000 WHERE "id"=5;
     `);
   });
 
