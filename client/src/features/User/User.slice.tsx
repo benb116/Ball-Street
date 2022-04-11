@@ -11,6 +11,7 @@ interface UserState {
     id: number | null,
     email: string,
     name: string,
+    cash: number,
   },
   redirect: string,
 }
@@ -19,6 +20,7 @@ const defaultState: UserState = {
     id: null,
     email: '',
     name: '',
+    cash: 0,
   },
   redirect: '',
 };
