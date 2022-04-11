@@ -81,9 +81,17 @@ export const userSlice = createSlice({
         state.info = { ...state.info, ...payload };
       }
     });
-    builder.addMatcher(API.endpoints.getAccount.matchRejected, () => {
-      localStorage.setItem('isLoggedIn', 'false');
+
+    builder.addMatcher(API.endpoints.deposit.matchFulfilled, (state, { payload }) => {
+      toast.success('Deposit confirmed');
+      state.info = { ...state.info, ...payload };
     });
+    builder.addMatcher(API.endpoints.deposit.matchRejected, ErrHandler);
+    builder.addMatcher(API.endpoints.withdraw.matchFulfilled, (state, { payload }) => {
+      toast.success('Withdrawal confirmed');
+      state.info = { ...state.info, ...payload };
+    });
+    builder.addMatcher(API.endpoints.withdraw.matchRejected, ErrHandler);
   },
 });
 

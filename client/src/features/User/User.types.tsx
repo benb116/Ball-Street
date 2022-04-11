@@ -12,3 +12,7 @@ export interface SignupType {
 export interface ForgotType {
   resetLinkSent: string,
 }
+
+export interface DepositWithdrawType {
+  amount: number,
+}
