@@ -56,3 +56,16 @@ export const RefreshTime = 5; // seconds
 // Email verification parameters
 export const verificationTimeout = 5; // minutes
 export const verificationTokenLength = 128;
+
+interface LedgerKindType {
+  id: number,
+  isCredit: boolean,
+}
+export const LedgerKindTypes: Record<string, LedgerKindType> = {
+  Deposit: { id: 1, isCredit: true },
+  Withdrawal: { id: 2, isCredit: false },
+  'Entry Fee': { id: 3, isCredit: false },
+  'Entry Prize': { id: 4, isCredit: true },
+  'Miscellaneous Credit': { id: 5, isCredit: true },
+  'Miscellaneous Debit': { id: 6, isCredit: false },
+};
