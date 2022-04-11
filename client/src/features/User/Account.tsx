@@ -1,14 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 
 import {
-  useDepositMutation, useGetAccountQuery, useLogoutMutation, useWithdrawMutation,
+  useDepositMutation,
+  useGetAccountQuery,
+  useGetUserLedgerQuery,
+  useLogoutMutation,
+  useWithdrawMutation,
 } from '../../helpers/api';
 import { isLoggedInSelector, userSelector } from './User.slice';
-import { DepositWithdrawType } from './User.types';
+import { DepositWithdrawType, LedgerEntryJoinedType } from './User.types';
 
 const Account = () => {
   const { register, handleSubmit } = useForm();
@@ -16,7 +20,7 @@ const Account = () => {
   const dispatch = useAppDispatch();
   const history = useHistory();
 
-  const { email, cash } = useAppSelector(userSelector);
+  const { email, cash, ledger } = useAppSelector(userSelector);
   const isLoggedIn = useAppSelector(isLoggedInSelector); // Use localstorage to know if logged in
 
   const [logout] = useLogoutMutation();
@@ -27,6 +31,9 @@ const Account = () => {
     localStorage.setItem('isLoggedIn', 'false');
     history.push('/login');
   };
+
+  const [pagenum, setPagenum] = useState(1);
+  useGetUserLedgerQuery(pagenum, { refetchOnMountOrArgChange: true });
 
   const depositCents = (body: DepositWithdrawType) => {
     // eslint-disable-next-line no-param-reassign
@@ -97,6 +104,12 @@ const Account = () => {
           </div>
         </form>
         <br />
+        <div>
+          {ledger.map((entry) => <LedgerEntry key={entry.id} entrydata={entry} />)}
+        </div>
+        <button type="button" onClick={() => { if (pagenum > 1) setPagenum(pagenum - 1); }}>Previous</button>
+        <button type="button" onClick={() => { setPagenum(pagenum + 1); }}>Next</button>
+        <br />
         <button
           onClick={() => { logout(); }}
           className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
@@ -108,5 +121,20 @@ const Account = () => {
     </div>
   );
 };
+
+function LedgerEntry({ entrydata }: { entrydata: LedgerEntryJoinedType }) {
+  return (
+    <div>
+      {new Date(entrydata.createdAt).toString()}
+      {' - '}
+      {entrydata.LedgerKind.name}
+      {' '}
+      {entrydata.ContestId ? `Contest ${entrydata.ContestId} ` : ''}
+      {entrydata.LedgerKind.isCredit ? '+' : '-'}
+      $
+      {entrydata.value / 100}
+    </div>
+  );
+}
 
 export default Account;

@@ -121,7 +121,7 @@ router.get('/account', authenticate, routeHandler(getAccount));
 
 router.post('/deposit', authenticate, routeHandler(deposit));
 router.post('/withdraw', authenticate, routeHandler(withdraw));
-router.get('/ledger', authenticate, routeHandler(getUserLedger));
+router.get('/ledger/:page', authenticate, routeHandler(getUserLedger));
 
 router.delete('/logout', authenticate, (req, res) => {
   req.session.destroy(() => {
