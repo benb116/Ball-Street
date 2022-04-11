@@ -13,6 +13,11 @@ describe('getUserOffers service', () => {
     },
     {
       ContestId: 3,
+      LedgerKind: {
+        id: 3,
+        isCredit: false,
+        name: 'Entry Fee',
+      },
       LedgerKindId: 3,
       UserId: 3,
       id: '16c94b61-3c76-4078-8fbc-67fac7ed26a6',
@@ -20,12 +25,22 @@ describe('getUserOffers service', () => {
     },
     {
       ContestId: 1,
+      LedgerKind: {
+        id: 3,
+        isCredit: false,
+        name: 'Entry Fee',
+      },
       LedgerKindId: 3,
       UserId: 3,
       id: '16c94b61-3c76-4078-8fbc-67fac7ed26b2',
       value: 2000,
     }, {
       ContestId: null,
+      LedgerKind: {
+        id: 1,
+        isCredit: true,
+        name: 'Deposit',
+      },
       LedgerKindId: 1,
       UserId: 3,
       id: '16c94b61-3c76-4078-8fbc-67fac7ed26d2',

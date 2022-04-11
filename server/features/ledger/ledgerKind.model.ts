@@ -1,3 +1,5 @@
+// Static table of types for ledger entries
+
 import { DataTypes, ModelDefined, Optional } from 'sequelize';
 import sequelize from '../../db';
 

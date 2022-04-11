@@ -1,3 +1,5 @@
+// An entry into the global transaction ledger
+
 import Sequelize, { DataTypes, ModelDefined, Optional } from 'sequelize';
 import sequelize from '../../db';
 
@@ -39,5 +41,9 @@ const LedgerEntry: ModelDefined<LedgerEntryType, LedgerEntryCreateType> = sequel
     allowNull: false,
   },
 });
+
+LedgerEntry.belongsTo(User);
+LedgerEntry.belongsTo(Contest);
+LedgerEntry.belongsTo(LedgerKind);
 
 export default LedgerEntry;

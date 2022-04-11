@@ -1,9 +1,12 @@
+// Show the recent ledger entries for a user
+
 import Joi from 'joi';
 
 import { dv, validate } from '../../util/util';
 import validators from '../../util/util.schema';
 import errorHandler, { ServiceInput } from '../../util/util.service';
 import LedgerEntry from '../ledgerEntry.model';
+import LedgerKind from '../ledgerKind.model';
 
 const schema = Joi.object({
   user: validators.user,
@@ -34,6 +37,9 @@ function getUserLedger(req: GetUserLedgerInput) {
     order: [['createdAt', 'DESC']],
     limit: paginationLimit,
     offset: paginationLimit * ((value.params.page || 1) - 1),
+    include: [
+      { model: LedgerKind },
+    ],
   }).then(dv)
     .catch(errorHandler({
       default: { message: 'Cannot retrieve transactions', status: 500 },
