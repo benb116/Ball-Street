@@ -7,9 +7,10 @@ import validators from '../../util/util.schema';
 import errorHandler, { ServiceInput } from '../../util/util.service';
 
 import sequelize from '../../../db';
-import LedgerEntry, { LedgerEntryCreateType } from '../../ledger/ledgerEntry.model';
+import LedgerEntry, { LedgerEntryCreateType, LedgerEntryType } from '../../ledger/ledgerEntry.model';
 import { LedgerKindTypes } from '../../../config';
 import User from '../user.model';
+import LedgerKind from '../../ledger/ledgerKind.model';
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
@@ -60,9 +61,12 @@ async function withdraw(req: WithdrawalInput) {
       value: value.body.amount,
     };
 
-    await LedgerEntry.create(ledgerObj, tobj(t));
+    const out: LedgerEntryType = await LedgerEntry.create(ledgerObj, tobj(t)).then(dv);
 
-    return dv(theuser);
+    return LedgerEntry.findByPk(out.id, {
+      include: [{ model: LedgerKind }, { model: User }],
+      transaction: t,
+    }).then(dv);
   })
     .catch(errorHandler({
       default: { message: 'Withdrawal could not be completed', status: 500 },
