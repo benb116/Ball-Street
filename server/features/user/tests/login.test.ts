@@ -4,7 +4,9 @@ import { ErrorTest, ObjectTest } from '../../util/util.tests';
 describe('login service', () => {
   test('Valid request returns data', ObjectTest(
     service, { email: 'email1@gmail.com', password: 'password1' },
-    { email: 'email1@gmail.com', id: 1, name: 'bot' },
+    {
+      email: 'email1@gmail.com', id: 1, name: 'bot', cash: 1000,
+    },
   ));
 
   test('Needs verification', ObjectTest(

@@ -35,12 +35,12 @@ async function signup(req: SignupInput) {
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);
     const theuser = await User.create({
-      name, email, pwHash: hash, verified: skipVerification,
+      name, email, pwHash: hash, verified: skipVerification, cash: 0,
     }).then(dv);
     if (!theuser) { uError('User could not be created', 500); }
     if (!skipVerification) return await genVerify({ id: theuser.id, email: theuser.email });
     return {
-      needsVerification: false, id: theuser.id, email: theuser.email, name: theuser.name,
+      needsVerification: false, id: theuser.id, email: theuser.email, name: theuser.name, cash: theuser.cash,
     };
   } catch (err) {
     const f = errorHandler({

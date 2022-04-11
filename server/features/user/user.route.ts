@@ -12,6 +12,9 @@ import getAccount from './services/getAccount.service';
 import evalVerify from './services/evalVerify.service';
 import genPassReset from './services/genPassReset.service';
 import evalPassReset from './services/evalPassReset.service';
+import withdraw from './services/withdraw.service';
+import deposit from './services/deposit.service';
+import getUserLedger from '../ledger/services/getUserLedger.service';
 
 const router = express.Router();
 
@@ -115,6 +118,10 @@ router.post('/resetPasswordToken', async (req, res) => {
 });
 
 router.get('/account', authenticate, routeHandler(getAccount));
+
+router.post('/deposit', authenticate, routeHandler(deposit));
+router.post('/withdraw', authenticate, routeHandler(withdraw));
+router.get('/ledger/:page', authenticate, routeHandler(getUserLedger));
 
 router.delete('/logout', authenticate, (req, res) => {
   req.session.destroy(() => {

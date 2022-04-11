@@ -5,12 +5,15 @@ import toast from 'react-hot-toast';
 import type { RootState } from '../../app/store';
 import API from '../../helpers/api';
 import { ErrHandler } from '../../helpers/util';
+import { LedgerEntryJoinedType } from './User.types';
 
 interface UserState {
   info: {
     id: number | null,
     email: string,
     name: string,
+    cash: number,
+    ledger: LedgerEntryJoinedType[]
   },
   redirect: string,
 }
@@ -19,6 +22,8 @@ const defaultState: UserState = {
     id: null,
     email: '',
     name: '',
+    cash: 0,
+    ledger: [],
   },
   redirect: '',
 };
@@ -79,9 +84,35 @@ export const userSlice = createSlice({
         state.info = { ...state.info, ...payload };
       }
     });
-    builder.addMatcher(API.endpoints.getAccount.matchRejected, () => {
+    builder.addMatcher(API.endpoints.getAccount.matchRejected, (state, resp) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      if (resp.error.message === 'Aborted due to condition callback returning false.') return;
+      state = defaultState;
       localStorage.setItem('isLoggedIn', 'false');
     });
+
+    builder.addMatcher(API.endpoints.getUserLedger.matchFulfilled, (state, { payload }) => {
+      if (!payload) {
+        localStorage.setItem('isLoggedIn', 'false');
+      } else {
+        state.info.ledger = payload;
+      }
+    });
+
+    builder.addMatcher(API.endpoints.deposit.matchFulfilled, (state, { payload }) => {
+      toast.success('Deposit confirmed');
+      state.info.ledger.unshift(payload);
+      if (state.info.ledger.length > 10) state.info.ledger.pop();
+      state.info.cash = payload.User.cash;
+    });
+    builder.addMatcher(API.endpoints.deposit.matchRejected, ErrHandler);
+    builder.addMatcher(API.endpoints.withdraw.matchFulfilled, (state, { payload }) => {
+      toast.success('Withdrawal confirmed');
+      state.info.ledger.unshift(payload);
+      if (state.info.ledger.length > 10) state.info.ledger.pop();
+      state.info.cash = payload.User.cash;
+    });
+    builder.addMatcher(API.endpoints.withdraw.matchRejected, ErrHandler);
   },
 });
 

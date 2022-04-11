@@ -1,10 +1,13 @@
 import service from '../services/createEntry.service';
-import { ErrorTest, ObjectTest } from '../../util/util.tests';
+import { ErrorTest } from '../../util/util.tests';
+import LedgerEntry from '../../ledger/ledgerEntry.model';
+import { LedgerKindTypes } from '../../../config';
+import sequelize from '../../../db';
 
 describe('createEntry service', () => {
-  test('Valid request returns data', ObjectTest(
-    service, { user: 4, params: { contestID: 3 }, body: {} },
-    {
+  test('Valid request returns data and creates ledger entry', async () => {
+    const input = { user: 5, params: { contestID: 3 }, body: {} };
+    const output = {
       ContestId: 3,
       DEF1: null,
       FLEX1: null,
@@ -14,17 +17,38 @@ describe('createEntry service', () => {
       RB1: null,
       RB2: null,
       TE1: null,
-      UserId: 4,
+      UserId: 5,
       WR1: null,
       WR2: null,
       pointtotal: 10000,
-    },
-    'DELETE from "Entries" WHERE "ContestId"=3 AND "UserId"=4;',
-  ));
+    };
+    const out = await service(input);
+    expect(out).toMatchObject(output);
+
+    const outLedge = {
+      UserId: input.user,
+      ContestId: input.params.contestID,
+      LedgerKindId: LedgerKindTypes['Entry Fee'].id,
+      value: 500,
+    };
+    const theLedgerEntry = await LedgerEntry.findOne({ where: outLedge });
+    expect(theLedgerEntry).toMatchObject(outLedge);
+
+    await sequelize.query(`
+      DELETE from "Entries" WHERE "ContestId"=3 AND "UserId"=5;
+      DELETE from "LedgerEntries" WHERE "ContestId"=3 AND "UserId"=5;
+      UPDATE "Users" SET "cash"=1000 WHERE "id"=5;
+    `);
+  });
 
   test('Duplicate entry returns error 406', ErrorTest(
-    service, { user: 1, params: { contestID: 1 }, body: {} },
+    service, { user: 1, params: { contestID: 2 }, body: {} },
     406, 'An entry already exists',
+  ));
+
+  test('Insufficient funds returns error 402', ErrorTest(
+    service, { user: 6, params: { contestID: 1 }, body: {} },
+    402, 'User has insufficient funds',
   ));
 
   test('Missing contestID returns error 400', ErrorTest(

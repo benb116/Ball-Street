@@ -21,6 +21,14 @@ const schema = Joi.object({
         'number.greater': 'Budget must be greater than 0',
         'any.required': 'Please specify a budget',
       }),
+    buyin: Joi.number().integer().greater(0).optional()
+      .default(0)
+      .messages({
+        'number.base': 'Budget is invalid',
+        'number.integer': 'Budget is invalid',
+        'number.greater': 'Budget must be greater than 0',
+        'any.required': 'Please specify a budget',
+      }),
   }).required(),
 });
 
@@ -29,6 +37,7 @@ interface CreateContestInput extends ServiceInput {
   body: {
     name: string,
     budget: number,
+    buyin: number,
   }
 }
 
@@ -39,6 +48,7 @@ async function createContest(req: CreateContestInput) {
     name: value.body.name,
     nflweek: Number(process.env.WEEK),
     budget: value.body.budget,
+    buyin: value.body.buyin,
   };
   return Contest.create(contestObj).catch(errorHandler({
     default: { message: 'Contest could not be created', status: 500 },

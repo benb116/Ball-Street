@@ -5,7 +5,9 @@ import { EntryItemType, EntryType } from '../features/Dashboard/Entry/Entry.type
 import { OfferItemType, OfferObj } from '../features/Dashboard/Offers/Offers.types';
 import { GameItemType, PlayerItemType } from '../features/Dashboard/Players/Players.types';
 import { TradeAsk, TradeBid } from '../features/Dashboard/Trades/Trades.types';
-import { AccountType, SignupType } from '../features/User/User.types';
+import {
+  AccountType, DepositWithdrawType, LedgerEntryJoinedType, NewLedgerEntryType, SignupType,
+} from '../features/User/User.types';
 
 // Define a service using a base URL and expected endpoints
 const API = createApi({
@@ -27,6 +29,13 @@ const API = createApi({
       query: (body) => ({ url: '/auth/resetPasswordToken', method: 'POST', body }),
     }),
     logout: build.mutation<void, void>({ query: () => ({ url: '/auth/logout', method: 'DELETE' }) }),
+    deposit: build.mutation<NewLedgerEntryType, DepositWithdrawType>({
+      query: (body) => ({ url: '/auth/deposit', method: 'POST', body }),
+    }),
+    withdraw: build.mutation<NewLedgerEntryType, DepositWithdrawType>({
+      query: (body) => ({ url: '/auth/withdraw', method: 'POST', body }),
+    }),
+    getUserLedger: build.query<LedgerEntryJoinedType[], number>({ query: (pagenum) => `/auth/ledger/${pagenum}` }),
 
     // Contests
     getContests: build.query<ContestItemType[], void>({ query: () => '/api/contests' }),
@@ -75,6 +84,9 @@ export const {
   useSignupMutation,
   useForgotMutation,
   useResetMutation,
+  useDepositMutation,
+  useWithdrawMutation,
+  useGetUserLedgerQuery,
 } = API;
 export const {
   useGetContestsQuery,

@@ -10,7 +10,7 @@ const Home = () => {
   const dispatch = useAppDispatch();
   const history = useHistory();
 
-  const { email } = useAppSelector(userSelector);
+  const { email, cash } = useAppSelector(userSelector);
   const isLoggedIn = useAppSelector(isLoggedInSelector); // Use localstorage to know if logged in
 
   const [logout] = useLogoutMutation();
@@ -36,7 +36,13 @@ const Home = () => {
               Welcome back
               {' '}
               <h3>{email}</h3>
+              <h4>
+                $
+                {cash / 100}
+              </h4>
             </div>
+            <Link to="/account">Account</Link>
+            <br />
             <Link to="/contests">Contests</Link>
             <br />
             <button
