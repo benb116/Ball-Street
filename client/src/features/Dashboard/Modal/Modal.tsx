@@ -60,7 +60,9 @@ const OfferModal = () => {
     <div>
       <Modal
         isOpen={modalIsOpen}
+        // eslint-disable-next-line react/jsx-no-bind
         onAfterOpen={afterOpenModal}
+        // eslint-disable-next-line react/jsx-no-bind
         onRequestClose={close}
         style={customStyles}
         contentLabel="Offer Modal"

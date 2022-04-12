@@ -134,15 +134,17 @@ export const allPlayersSelector = (state: RootState) => (
 export const allGamesSelector = (state: RootState) => (state.players.gamelist || [] as GameItemType[]);
 export const allTeamsSelector = (state: RootState) => (state.players.teamMap || {} as TeamMapType);
 export const pricesMapSelector = (state: RootState) => (state.players.priceMap || {} as Record<string, PriceMapItemType>);
-export const playerSelector = (playerID: number | null) => (state: RootState) => (
-  !playerID ? null : state.players.playerlist.find((p) => p.id === playerID) as PlayerItemType
-);
+export const playerSelector = (playerID: number | null) => (state: RootState) => {
+  const { players } = state;
+  return !playerID ? null : players.playerlist.find((p) => p.id === playerID) as PlayerItemType;
+};
 export const playersSelector = (playerIDs: number[]) => (state: RootState) => (
   state.players.playerlist.filter((p) => playerIDs.indexOf(p.id) > -1)
 );
-export const priceMapSelector = (playerID: number | null) => (state: RootState) => (
-  !playerID ? null : state.players.priceMap[playerID] || {}
-);
+export const priceMapSelector = (playerID: number | null) => (state: RootState) => {
+  const { players } = state;
+  return !playerID ? null : players.priceMap[playerID] || {};
+};
 
 export const filterSelector = (state: RootState) => state.players.filter;
 export const sortSelector = (state: RootState) => {
