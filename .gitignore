@@ -12,3 +12,4 @@ server/logs/
 **/*.log
 coverage/
 dist/
+**/*.DS_Store

@@ -1,7 +1,7 @@
 // Configuration parameters for the site
 export const CallbackURL: string = (process.env.CALLBACK_URL || '');
 // How long to wait before filling a protected offer
-export const ProtectionDelay = 30; // seconds
+export const ProtectionDelay = (process.env.NODE_ENV === 'production' ? 30 : 5); // seconds
 // Define NFL positions
 interface NFLPosType {
   name: string

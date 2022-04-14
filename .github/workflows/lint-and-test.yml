@@ -55,14 +55,14 @@ jobs:
     - name: Pull env vars from file
       run: source ./.env
       
-    - name: Docker ps 1
+    - name: Docker ps
       run: docker ps
             
-    - name: Sleep for 15 seconds
+    - name: Sleep for 5 seconds
       run: sleep 5s
       shell: bash
       
-    - name: Docker logs 2
+    - name: Docker logs
       run: docker-compose logs
     
     - name: Run tests
