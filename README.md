@@ -4,11 +4,11 @@ Ball Street is a live-trading weekly fantasy football game. Build an underrated 
 
 ## How to play
 
-Join a contest with other users and create your entry. Before the week's games begin, add any player to your roster using your budget of points. The cost to add a player before their game equals their fantasy projection, so you're incentivized to find undervalued players. Once a game begins, players in that game can no longer be added or dropped on their own; trades happen between different users who submit bid and ask offers. Bid low and ask high to adjust your lineup as the week goes on. When a game is over, the players' point values are calculated based on their stats. End with the highest total to win.
+The goal of the contest is to assemble a roster of players who accrue the most fantasy points. Before the week's games begin, users add players to their rosters. The cost to add a player equals their projected fantasy score for the week. Once a game begins, NFL players in that game can no longer be added or dropped on their own; trades can only happen between different users who submit bid and ask offers. When a game is over, the players' true scores are calculated based on their stats. End with the highest total to win.
 
 ## How it works
 
-Ball Street is built using React on the frontend and Node.js on the backend. React and Redux make handling the Dashboard data straightforward, while Node excels at handling I/O heavy server tasks. Docker is used to containerize the various processes (see [docker-compose](docker-compose.yml)). Client-server communication takes place using REST api calls and websockets.
+Ball Street is built using Node.js, React, PostgreSQL and more. Docker is used to containerize the various processes (see [docker-compose](docker-compose.yml)). Client-server communication takes place using REST api calls and websockets.
 
 See [client](client) and [server](server) code
 
