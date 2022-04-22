@@ -76,14 +76,43 @@ const OfferModal = () => {
         </span>
         <form onSubmit={onFormSubmit}>
           <span>Price</span>
-          <input {...register('price')} defaultValue={Math.floor(modalInfo.price / 100)} />
+          <input
+            style={{
+              fontSize: '1em',
+              margin: '0.5em',
+              width: '5em',
+              borderColor: 'lightgray',
+              borderWidth: '0.075em',
+              boxShadow: 'white',
+              borderRadius: '.5em',
+              borderStyle: 'solid',
+            }}
+            {...register('price')}
+            defaultValue={Math.floor(modalInfo.price / 100)}
+          />
           <br />
           <span>🔒 Protected</span>
           <input {...register('protected')} type="checkbox" />
           <br />
-          <button onClick={handleSubmit(handleClick)} type="submit">Submit offer</button>
+          <button className="AppButton" onClick={handleSubmit(handleClick)} type="submit">Submit offer</button>
         </form>
-        <button onClick={close} type="button">close</button>
+        <button
+          style={{
+            position: 'absolute',
+            top: '0',
+            left: '0',
+            backgroundColor: 'white',
+            boxShadow: 'white',
+            borderColor: 'white',
+            borderStyle: 'solid',
+            cursor: 'pointer',
+          }}
+          onClick={close}
+          type="button"
+        >
+          ✕
+
+        </button>
 
       </Modal>
     </div>
