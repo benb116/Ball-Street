@@ -11,10 +11,8 @@ import { LeaderItemType } from './Leaderboard.types';
 // Show leaderboard of entries in the contest
 const Leaderboards = () => {
   const leaders = useAppSelector(leadersSelector);
-
   return (
     <div
-      className="container mx-auto"
       style={{
         height: '50%',
         boxSizing: 'border-box',

@@ -91,7 +91,7 @@ function PlayerItem({ playerdata }: { playerdata: PlayerItemType }) {
 
   return (
     <tr data-playerid={playerdata.id}>
-      <td style={{ width: '10rem', overflow: 'hidden' }}>
+      <td style={{ width: '12rem', overflow: 'hidden' }}>
         {playerdata.name}
         {' '}
         <span style={{ fontSize: '0.75em', color: 'red' }}>
@@ -100,12 +100,12 @@ function PlayerItem({ playerdata }: { playerdata: PlayerItemType }) {
         </span>
       </td>
       <td style={{ width: '2.2rem' }}>{playerdata.posName}</td>
-      <td style={{ width: '2.2rem' }}>{teamAbr}</td>
-      <td style={{ width: '2rem', textAlign: 'right' }}>{RenderPrice(dispProj)}</td>
-      <td style={{ width: '2rem', textAlign: 'right' }}>{RenderPrice(dispStat)}</td>
-      <td style={{ width: '2rem', textAlign: 'right' }}>{dispLast}</td>
-      <td style={{ width: '2rem', textAlign: 'right' }}>{dispBid}</td>
-      <td style={{ width: '2rem', textAlign: 'right' }}>{dispAsk}</td>
+      <td style={{ width: '2.4rem' }}>{teamAbr}</td>
+      <td style={{ width: '3rem', textAlign: 'right' }}>{RenderPrice(dispProj)}</td>
+      <td style={{ width: '3rem', textAlign: 'right' }}>{RenderPrice(dispStat)}</td>
+      <td style={{ width: '2.5rem', textAlign: 'right' }}>{dispLast}</td>
+      <td style={{ width: '2.5rem', textAlign: 'right' }}>{dispBid}</td>
+      <td style={{ width: '2.5rem', textAlign: 'right' }}>{dispAsk}</td>
 
       <ActionButton thephase={thephase} oclick={oclick} text={text} />
     </tr>
@@ -118,11 +118,9 @@ function ActionButton({ thephase, oclick, text }: { thephase: string, oclick: ()
     return (<td />);
   }
   return (
-    <td style={{ textAlign: 'center' }}>
+    <td style={{ textAlign: 'center', width: '3rem' }}>
       <button
-        style={{
-          cursor: 'pointer', width: '2rem', fontWeight: 'bold', textAlign: 'center', padding: 0,
-        }}
+        className="ActionButton"
         onClick={oclick}
         type="button"
       >

@@ -36,9 +36,22 @@ const PlayerFilter = () => {
 
   return (
     <form>
-      <input style={{ cursor: 'pointer' }} onChange={handleChangeDebounce} name="name" />
+      <input
+        style={{
+          width: '15em',
+          cursor: 'pointer',
+          borderColor: 'lightgray',
+          borderWidth: '0.075em',
+          boxShadow: 'white',
+          borderRadius: '.5em',
+          borderStyle: 'solid',
+        }}
+        placeholder="Player Name"
+        onChange={handleChangeDebounce}
+        name="name"
+      />
 
-      <select style={{ cursor: 'pointer' }} onChange={handleChange} name="posName" value={filters.posName}>
+      <select className="Dropdown" onChange={handleChange} name="posName" value={filters.posName}>
         <option value="">Pos</option>
         <option value="QB">QB</option>
         <option value="RB">RB</option>
@@ -48,7 +61,7 @@ const PlayerFilter = () => {
         <option value="K">K</option>
         <option value="DEF">DEF</option>
       </select>
-      <select style={{ cursor: 'pointer' }} onChange={handleChange} name="teamAbr" value={filters.teamAbr}>
+      <select className="Dropdown" onChange={handleChange} name="teamAbr" value={filters.teamAbr}>
         <option value="">Team</option>
         {Object.keys(theteams)
           .sort((a, b) => (theteams[a].abr > theteams[b].abr ? 1 : -1))
@@ -58,7 +71,7 @@ const PlayerFilter = () => {
           })}
       </select>
 
-      <select style={{ cursor: 'pointer' }} onChange={handleChange} name="game" value={filters.game}>
+      <select className="Dropdown" onChange={handleChange} name="game" value={filters.game}>
         <option value="">Game</option>
         {thegames.map((g, i) => {
           if (g && g.phase !== 'post') { // Hide games in post
@@ -76,7 +89,7 @@ const PlayerFilter = () => {
         })}
       </select>
 
-      <select style={{ cursor: 'pointer' }} onChange={handleChange} name="phase" value={filters.phase}>
+      <select className="Dropdown" onChange={handleChange} name="phase" value={filters.phase}>
         <option value="">Phase</option>
         <option value="pre">Pregame</option>
         <option value="mid">Midgame</option>

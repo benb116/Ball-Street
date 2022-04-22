@@ -57,6 +57,24 @@ body {
   display: block;
 }
 
+.Dropdown {
+  border-color: lightgray;
+  border-width: 0.075em;
+  box-shadow: white;
+  border-radius: .5em;
+  border-style:solid;
+  cursor: pointer;
+}
+
+.GreenButton {
+  background-color: rgb(110, 232, 185);
+  border-color: rgb(110, 232, 185);;
+}
+.GreenButton:hover {
+  background-color: rgb(91, 194, 154);
+  border-color: rgb(91, 194, 154);
+}
+
 .AppButton {
   font-size: 1em;  
   margin: 0.5em auto;
@@ -70,11 +88,6 @@ body {
   display: block;
   cursor: pointer;
 }
-.AppButton:hover {
-  background-color: rgb(91, 194, 154);
-  border-color: rgb(91, 194, 154);
-}
-
 .SmallButton {
   font-size: 1em;  
   margin: 0.5em;
@@ -94,4 +107,25 @@ body {
   display: block;
   color: black;
   text-decoration: none;
+}
+
+.ActionButton {
+  cursor: pointer;
+  width: 3rem;
+  font-weight: bold;
+  text-align: center;
+  padding: 0;
+  background-color: rgb(110, 232, 185);
+  border-color: rgb(110, 232, 185);
+  box-shadow: white;
+  border-radius: .5em;
+  border-style:solid;
+}
+
+#PlayerTable tr:nth-child(even) {
+  background-color: #ececec;
+}
+
+#EntryTable tr {
+  height: 1.5em;
 }

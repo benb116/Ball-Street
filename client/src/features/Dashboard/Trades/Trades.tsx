@@ -24,7 +24,6 @@ const Trades = () => {
   const trades = useAppSelector(tradesSelector);
   return (
     <div
-      className="container mx-auto"
       style={{
         height: '50%',
         boxSizing: 'border-box',
@@ -47,10 +46,12 @@ function TradeItem({ tradedata }: { tradedata: TradeItemType }) {
   const playerData = useAppSelector(playerSelector(tradedata.NFLPlayerId));
   return (
     <div>
+      {new Date(tradedata.createdAt).toLocaleString()}
+      {' '}
       {(tradedata.isbid ? 'Added' : 'Dropped')}
-      -
+      {' '}
       {(playerData?.name || '')}
-      -
+      {' for '}
       {(tradedata.price / 100)}
     </div>
   );
@@ -62,6 +63,7 @@ TradeItem.propTypes = {
     NFLPlayerId: PropTypes.number.isRequired,
     price: PropTypes.number.isRequired,
     isbid: PropTypes.bool.isRequired,
+    createdAt: PropTypes.string.isRequired,
   }).isRequired,
 };
 

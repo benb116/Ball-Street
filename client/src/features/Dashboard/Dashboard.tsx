@@ -20,11 +20,11 @@ const Dashboard = () => {
 
   return (
     <div
-      className="container mx-auto"
       style={{
         textAlign: 'left',
         height: '100%',
         width: '100%',
+        fontSize: '1em',
       }}
     >
       <div style={{

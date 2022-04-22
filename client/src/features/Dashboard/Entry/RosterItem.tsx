@@ -194,9 +194,7 @@ function ActionButton({ thephase, oclick, text }: { thephase: string, oclick: ()
   return (
     <td style={{ textAlign: 'center' }}>
       <button
-        style={{
-          cursor: 'pointer', width: '2rem', fontWeight: 'bold', textAlign: 'center', padding: 0,
-        }}
+        className="ActionButton"
         onClick={oclick}
         type="button"
       >
