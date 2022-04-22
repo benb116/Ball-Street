@@ -10,11 +10,15 @@ const Home = () => {
   }, [history]);
 
   return (
-    <div className="container mx-auto">
-      Your account has been verified! You are being redirected
-      <Link to="/"> home</Link>
-      .
-    </div>
+    <>
+      <div style={{ marginTop: '10em' }}>
+        <h2>Your account has been verified!</h2>
+        <p>
+          You are being redirected
+          <Link className="AppLink" to="/"> Home</Link>
+        </p>
+      </div>
+    </>
   );
 };
 

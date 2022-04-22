@@ -44,7 +44,7 @@ const Entry = () => {
       Balance:
       {' '}
       {RenderPrice(thisentry.balance)}
-      <table>
+      <table id="EntryTable">
         <RosterHeader />
         <tbody>
           {rpos.map((pos) => ( // Create a roster item for each position
@@ -74,7 +74,7 @@ function RosterHeader() {
         <th style={{ width: '2rem', textAlign: 'right' }}>Last</th>
         <th style={{ width: '2rem', textAlign: 'right' }}>Bid</th>
         <th style={{ width: '2rem', textAlign: 'right' }}>Ask</th>
-        <th style={{ width: '2rem', textAlign: 'center' }}>Action</th>
+        <th style={{ width: '3rem', textAlign: 'center' }}>Action</th>
       </tr>
     </thead>
   );

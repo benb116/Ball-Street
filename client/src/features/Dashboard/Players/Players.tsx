@@ -118,12 +118,14 @@ const Players = () => {
     >
       <h3>Players</h3>
       <PlayerFilter />
-      <table style={{
-        height: '100%',
-        flex: 1,
-        display: 'flex',
-        flexFlow: 'column',
-      }}
+      <table
+        id="PlayerTable"
+        style={{
+          height: '100%',
+          flex: 1,
+          display: 'flex',
+          flexFlow: 'column',
+        }}
       >
         <thead>
           <ListHeader />
@@ -155,7 +157,7 @@ function ListHeader() {
 
   return (
     <tr style={{ fontSize: '.8rem' }}>
-      <th style={{ width: '10rem', cursor: 'pointer' }} onClick={() => { handleClick('name'); }}>
+      <th style={{ width: '12rem', cursor: 'pointer' }} onClick={() => { handleClick('name'); }}>
         Name
         <span style={{ fontSize: '0.5em' }}>
           {' '}
@@ -176,42 +178,42 @@ function ListHeader() {
           {sortProp === 'teamAbr' ? (sortDesc ? '▼' : '▲') : ''}
         </span>
       </th>
-      <th style={{ width: '2rem', cursor: 'pointer', textAlign: 'right' }} onClick={() => { handleClick('preprice'); }}>
+      <th style={{ width: '3rem', cursor: 'pointer', textAlign: 'right' }} onClick={() => { handleClick('preprice'); }}>
         Proj
         <span style={{ fontSize: '0.5em' }}>
           {' '}
           {sortProp === 'preprice' ? (sortDesc ? '▼' : '▲') : ''}
         </span>
       </th>
-      <th style={{ width: '2rem', cursor: 'pointer', textAlign: 'right' }} onClick={() => { handleClick('postprice'); }}>
+      <th style={{ width: '3rem', cursor: 'pointer', textAlign: 'right' }} onClick={() => { handleClick('postprice'); }}>
         Pts
         <span style={{ fontSize: '0.5em' }}>
           {' '}
           {sortProp === 'postprice' ? (sortDesc ? '▼' : '▲') : ''}
         </span>
       </th>
-      <th style={{ width: '2.2rem', cursor: 'pointer', textAlign: 'right' }} onClick={() => { handleClick('lastprice'); }}>
+      <th style={{ width: '2.5rem', cursor: 'pointer', textAlign: 'right' }} onClick={() => { handleClick('lastprice'); }}>
         Last
         <span style={{ fontSize: '0.5em' }}>
           {' '}
           {sortProp === 'lastprice' ? (sortDesc ? '▼' : '▲') : ''}
         </span>
       </th>
-      <th style={{ width: '2rem', cursor: 'pointer', textAlign: 'right' }} onClick={() => { handleClick('bestbid'); }}>
+      <th style={{ width: '2.5rem', cursor: 'pointer', textAlign: 'right' }} onClick={() => { handleClick('bestbid'); }}>
         Bid
         <span style={{ fontSize: '0.5em' }}>
           {' '}
           {sortProp === 'bestbid' ? (sortDesc ? '▼' : '▲') : ''}
         </span>
       </th>
-      <th style={{ width: '2rem', cursor: 'pointer', textAlign: 'right' }} onClick={() => { handleClick('bestask'); }}>
+      <th style={{ width: '2.5rem', cursor: 'pointer', textAlign: 'right' }} onClick={() => { handleClick('bestask'); }}>
         Ask
         <span style={{ fontSize: '0.5em' }}>
           {' '}
           {sortProp === 'bestask' ? (sortDesc ? '▼' : '▲') : ''}
         </span>
       </th>
-      <th style={{ width: '2rem', textAlign: 'center' }}>Action</th>
+      <th style={{ width: '3rem', textAlign: 'center' }}>Action</th>
     </tr>
   );
 }

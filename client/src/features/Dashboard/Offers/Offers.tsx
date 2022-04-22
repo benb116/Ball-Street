@@ -20,7 +20,6 @@ const Offers = () => {
 
   return (
     <div
-      className="container mx-auto"
       style={{
         height: '50%',
         boxSizing: 'border-box',
@@ -30,14 +29,22 @@ const Offers = () => {
       }}
     >
       <h3>Offers</h3>
-      <h4 style={{ margin: 0 }}>Bids</h4>
-      <div>
-        {offers.bids.map((offer) => <OfferItem key={offer.id} offerdata={offer} />)}
-      </div>
-      <h4 style={{ margin: 0 }}>Asks</h4>
-      <div>
-        {offers.asks.map((offer) => <OfferItem key={offer.id} offerdata={offer} />)}
-      </div>
+      {offers.bids.length ? (
+        <div>
+          <h4 style={{ margin: 0 }}>Bids</h4>
+          <div>
+            {offers.bids.map((offer) => <OfferItem key={offer.id} offerdata={offer} />)}
+          </div>
+        </div>
+      ) : (<div />)}
+      {offers.asks.length ? (
+        <div>
+          <h4 style={{ margin: 0 }}>Asks</h4>
+          <div>
+            {offers.asks.map((offer) => <OfferItem key={offer.id} offerdata={offer} />)}
+          </div>
+        </div>
+      ) : (<div />)}
     </div>
   );
 };
@@ -78,17 +85,19 @@ function OfferItem({ offerdata }: { offerdata: OfferItemType }) {
     <div>
       <button
         onClick={() => oncancelOffer(offerdata.id)}
-        style={{ cursor: 'pointer' }}
+        className="ActionButton"
         type="button"
       >
         ✕
         {' '}
       </button>
+      {' '}
       {playerdata.name}
       {' '}
       -
       {' '}
       {(offerdata.price / 100)}
+      {' '}
       {offerdata.protected ? '🔒' : ''}
       {offerdata.expire ? (` Fills in ${
         Math.max(0, Math.floor((offerdata.expire - Date.now()) / 1000))

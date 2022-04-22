@@ -10,7 +10,7 @@ const Home = () => {
   const dispatch = useAppDispatch();
   const history = useHistory();
 
-  const { email, cash } = useAppSelector(userSelector);
+  const { email, cash, name } = useAppSelector(userSelector);
   const isLoggedIn = useAppSelector(isLoggedInSelector); // Use localstorage to know if logged in
 
   const [logout] = useLogoutMutation();
@@ -28,41 +28,32 @@ const Home = () => {
   useGetAccountQuery();
 
   return (
-    <div className="container mx-auto">
+    <div>
       {isLoggedIn
         ? (
           <>
-            <div className="container mx-auto">
-              Welcome back
-              {' '}
-              <h3>{email}</h3>
-              <h4>
-                $
+            <div style={{ marginTop: '10em' }}>
+              <h2>
+                Welcome back,
+                {' '}
+                {name}
+              </h2>
+              <p>
+                Account balance: $
                 {cash / 100}
-              </h4>
+              </p>
             </div>
-            <Link to="/account">Account</Link>
-            <br />
-            <Link to="/contests">Contests</Link>
-            <br />
-            <button
-              onClick={() => { logout(); }}
-              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-              type="button"
-            >
+            <Link className="AppLink" to="/account">Account</Link>
+            <Link className="AppLink" to="/contests">Contests</Link>
+            <button onClick={() => { logout(); }} className="AppButton" type="button">
               Log Out
             </button>
           </>
         )
         : (
           <>
-            <h3>Ball Street</h3>
-            <button
-              onClick={loginRed}
-              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-              type="button"
-            >
-              Log In
+            <button onClick={() => { loginRed(); }} className="AppButton" type="button">
+              Log in
             </button>
           </>
         )}

@@ -8,7 +8,6 @@ import {
   useDepositMutation,
   useGetAccountQuery,
   useGetUserLedgerQuery,
-  useLogoutMutation,
   useWithdrawMutation,
 } from '../../helpers/api';
 import { isLoggedInSelector, userSelector } from './User.slice';
@@ -23,7 +22,6 @@ const Account = () => {
   const { email, cash, ledger } = useAppSelector(userSelector);
   const isLoggedIn = useAppSelector(isLoggedInSelector); // Use localstorage to know if logged in
 
-  const [logout] = useLogoutMutation();
   const [deposit] = useDepositMutation();
   const [withdraw] = useWithdrawMutation();
 
@@ -53,87 +51,84 @@ const Account = () => {
   useGetAccountQuery();
 
   return (
-    <div className="container mx-auto">
-      <>
-        <div className="container mx-auto">
-          Account info
-          {' '}
-          <h3>{email}</h3>
-          <h4>
-            $
-            {cash / 100}
-          </h4>
-          <Link to="/">Home</Link>
-        </div>
-        <br />
-        <form className="space-y-6" onSubmit={handleSubmit(depositCents)} method="POST">
-          <div>
-            <div className="mt-1">
-              <input
-                id="depositamount"
-                type="text"
-                autoComplete="amount"
-                {...register('amount')}
-                required
-              />
-            </div>
-          </div>
-          <div>
-            <button type="submit">
-              Deposit
-            </button>
-          </div>
-        </form>
-        <br />
-        <form className="space-y-6" onSubmit={h2(withdrawCents)} method="POST">
-          <div>
-            <div className="mt-1">
-              <input
-                id="withdrawamount"
-                type="text"
-                autoComplete="amount"
-                {...r2('amount')}
-                required
-              />
-            </div>
-          </div>
-          <div>
-            <button type="submit">
-              Withdraw
-            </button>
-          </div>
-        </form>
-        <br />
-        <div>
+    <>
+      <div style={{ marginTop: '10em' }}>
+        <h2>Account details</h2>
+        <p>
+          Account balance: $
+          {cash / 100}
+        </p>
+      </div>
+
+      <div id="Transactions" style={{ display: 'inline-block', verticalAlign: 'top', margin: '3em' }}>
+        <h4>Transactions</h4>
+        <table>
+          <tr>
+            <th style={{ width: '15em' }}>Date</th>
+            <th style={{ width: '10em' }}>Description</th>
+            <th style={{ width: '5em' }}>Amount</th>
+          </tr>
           {ledger.map((entry) => <LedgerEntry key={entry.id} entrydata={entry} />)}
-        </div>
-        <button type="button" onClick={() => { if (pagenum > 1) setPagenum(pagenum - 1); }}>Previous</button>
-        <button type="button" onClick={() => { setPagenum(pagenum + 1); }}>Next</button>
+        </table>
         <br />
-        <button
-          onClick={() => { logout(); }}
-          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-          type="submit"
-        >
-          Log Out
-        </button>
-      </>
-    </div>
+        <button className="SmallButton" type="button" onClick={() => { if (pagenum > 1) setPagenum(pagenum - 1); }}>Previous</button>
+        <button className="SmallButton" type="button" onClick={() => { setPagenum(pagenum + 1); }}>Next</button>
+      </div>
+
+      <div id="DepWith" style={{ display: 'inline-block', verticalAlign: 'top', margin: '3em' }}>
+        <h4>Deposits and Withdrawals</h4>
+        <form onSubmit={handleSubmit(depositCents)} method="POST">
+          <div>
+            <input
+              {...register('amount')}
+              id="depositamount"
+              type="text"
+              className="AppInput"
+              autoComplete="amount"
+              placeholder="Deposit $"
+              required
+            />
+          </div>
+          <button className="AppButton" type="submit">Deposit</button>
+        </form>
+        <br />
+        <form onSubmit={h2(withdrawCents)} method="POST">
+          <input
+            {...r2('amount')}
+            id="withdrawamount"
+            type="text"
+            className="AppInput"
+            autoComplete="amount"
+            placeholder="Withdrawal $"
+            required
+          />
+          <button className="AppButton" type="submit">Withdraw</button>
+        </form>
+      </div>
+
+      <Link className="AppLink" to="/">Home</Link>
+
+    </>
   );
 };
 
 function LedgerEntry({ entrydata }: { entrydata: LedgerEntryJoinedType }) {
   return (
-    <div>
-      {new Date(entrydata.createdAt).toString()}
-      {' - '}
-      {entrydata.LedgerKind.name}
-      {' '}
-      {entrydata.ContestId ? `Contest ${entrydata.ContestId} ` : ''}
-      {entrydata.LedgerKind.isCredit ? '+' : '-'}
-      $
-      {entrydata.value / 100}
-    </div>
+    <tr>
+      <td>
+        {new Date(entrydata.createdAt).toLocaleString()}
+      </td>
+      <td>
+        {entrydata.LedgerKind.name}
+        {' '}
+        {entrydata.ContestId ? `Contest ${entrydata.ContestId} ` : ''}
+      </td>
+      <td>
+        {entrydata.LedgerKind.isCredit ? '+' : '-'}
+        $
+        {entrydata.value / 100}
+      </td>
+    </tr>
   );
 }
 
