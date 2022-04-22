@@ -104,7 +104,7 @@ function CreatePhaseMap(gameline: string) {
       phasemap[homeTeamID] = 'mid';
       break;
     case 'S':
-      if (Date.now() > starttime * 1000) {
+      if (Date.now() / 1000 > starttime) {
         // For some reason, gamestate hasn't updated but it should have
         phasemap[awayTeamID] = 'mid';
         phasemap[homeTeamID] = 'mid';
