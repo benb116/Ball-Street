@@ -33,14 +33,20 @@ const Contest = () => {
   // User wants to create an entry in this contest
   const [createEntry] = useCreateEntryMutation();
 
+  if (!thiscontest) {
+    return (
+      <Link className="AppLink" to="/contests">Contests</Link>
+    );
+  }
+
   return (
     <div style={{ marginTop: '10em' }}>
       <h2>
-        {thiscontest?.name}
+        {thiscontest.name}
         {' '}
         - Week
         {' '}
-        {thiscontest?.nflweek}
+        {thiscontest.nflweek}
       </h2>
       <div
         id="ContestInfo"
@@ -55,11 +61,11 @@ const Contest = () => {
         <p>
           Point Budget:
           {' '}
-          {thiscontest?.budget / 100}
+          {thiscontest.budget / 100}
         </p>
         <p>
           Buy in: $
-          {thiscontest?.buyin / 100}
+          {thiscontest.buyin / 100}
         </p>
       </div>
       <div

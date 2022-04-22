@@ -21,9 +21,14 @@ const customStyles = {
 
 Modal.setAppElement('#root');
 
+interface ModalType {
+  price: number,
+  protected: boolean
+}
+
 const OfferModal = () => {
   const dispatch = useAppDispatch();
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit } = useForm<ModalType>();
   const { contestID } = useParams<{ contestID: string }>();
 
   const [createOffer] = useCreateOfferMutation();
@@ -38,7 +43,7 @@ const OfferModal = () => {
   function close() {
     dispatch(closeModal());
   }
-  function handleClick(data: { price: number, protected: boolean }) {
+  function handleClick(data: ModalType) {
     // eslint-disable-next-line no-param-reassign
     data.price *= 100;
     const offerobj = {

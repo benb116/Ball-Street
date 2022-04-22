@@ -6,9 +6,10 @@ import { useAppSelector } from '../../app/hooks';
 
 import { userSelector } from './User.slice';
 import { useForgotMutation } from './User.api';
+import { ForgotType } from './User.types';
 
 const Forgot = () => {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit } = useForm<ForgotType>();
   const history = useHistory();
   const { id } = useAppSelector(userSelector);
 

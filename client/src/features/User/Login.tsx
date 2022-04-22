@@ -6,9 +6,10 @@ import { useAppSelector } from '../../app/hooks';
 
 import { userSelector } from './User.slice';
 import { useLoginMutation } from './User.api';
+import { LoginInputType } from './User.types';
 
 const Login = () => {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit } = useForm<LoginInputType>();
   const history = useHistory();
   const { id } = useAppSelector(userSelector);
 

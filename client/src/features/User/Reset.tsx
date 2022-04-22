@@ -6,10 +6,11 @@ import { useAppSelector } from '../../app/hooks';
 
 import { userSelector } from './User.slice';
 import { useResetMutation } from './User.api';
+import { ResetInputType } from './User.types';
 
 const Reset = () => {
   const { token } = useParams<{ token: string }>();
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit } = useForm<ResetInputType>();
   const history = useHistory();
   const { id } = useAppSelector(userSelector);
 

@@ -9,7 +9,7 @@ interface ErrType {
 
 const RenderPrice = (price = 0) => (Math.round(price) / 100).toFixed(2);
 
-export const ErrHandler = (_state: any, action: any) => {
+export const ErrHandler = (_state: unknown, action: { payload: ErrType | unknown }) => {
   if (isRejectedWithValue(action)) { toast.error((action.payload as ErrType).data.error || 'Unknown error'); }
 };
 

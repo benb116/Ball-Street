@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 
@@ -10,9 +10,11 @@ import {
   setFilter,
 } from './Players.slice';
 
-const debounce = (fn: (a: any) => any, ms = 300) => {
+type EventType = ChangeEvent<HTMLInputElement | HTMLSelectElement>;
+
+const debounce = (fn: (a: EventType) => void, ms = 300) => {
   let timeoutId: ReturnType<typeof setTimeout>;
-  return function debounceInner(this: any, ...args: [a: any]) {
+  return function debounceInner(this: unknown, ...args: [a: EventType]) {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => fn.apply(this, args), ms);
   };
@@ -26,7 +28,7 @@ const PlayerFilter = () => {
   const thegames = useAppSelector(allGamesSelector);
   const theteams = useAppSelector(allTeamsSelector);
 
-  function handleChange(evt: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
+  function handleChange(evt: EventType) {
     const { value } = evt.target;
     const filterName = evt.target.name as FilterNameType;
     dispatch(setFilter({ name: filterName, value }));

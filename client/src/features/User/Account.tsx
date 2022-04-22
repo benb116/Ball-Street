@@ -14,8 +14,8 @@ import { isLoggedInSelector, userSelector } from './User.slice';
 import { DepositWithdrawType, LedgerEntryJoinedType } from './User.types';
 
 const Account = () => {
-  const { register, handleSubmit } = useForm();
-  const { register: r2, handleSubmit: h2 } = useForm();
+  const { register, handleSubmit } = useForm<DepositWithdrawType>();
+  const { register: r2, handleSubmit: h2 } = useForm<DepositWithdrawType>();
   const dispatch = useAppDispatch();
   const history = useHistory();
 
