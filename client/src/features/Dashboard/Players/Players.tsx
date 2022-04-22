@@ -12,7 +12,7 @@ import {
   allGamesSelector,
   pricesMapSelector,
 } from './Players.slice';
-import { useGetPlayersQuery, useGetGamesQuery } from '../../../helpers/api';
+import { useGetPlayersQuery, useGetGamesQuery } from './Players.api';
 
 import PlayerFilter from './PlayerFilter';
 import PlayerItem from './PlayerItem';

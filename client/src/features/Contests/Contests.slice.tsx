@@ -2,7 +2,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import type { RootState } from '../../app/store';
-import API from '../../helpers/api';
+import ContestsAPI from './Contests.api';
 import { ErrHandler } from '../../helpers/util';
 
 import { ContestItemType } from './Contests.types';
@@ -26,37 +26,37 @@ export const contestsSlice = createSlice({
   initialState: defaultState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addMatcher(API.endpoints.getContests.matchFulfilled, (state, { payload }) => {
+    builder.addMatcher(ContestsAPI.endpoints.getContests.matchFulfilled, (state, { payload }) => {
       state.allcontests = payload;
     });
-    builder.addMatcher(API.endpoints.getContests.matchRejected, ErrHandler);
+    builder.addMatcher(ContestsAPI.endpoints.getContests.matchRejected, ErrHandler);
 
-    builder.addMatcher(API.endpoints.getContest.matchFulfilled, (state, { payload }) => {
+    builder.addMatcher(ContestsAPI.endpoints.getContest.matchFulfilled, (state, { payload }) => {
       state.thiscontest = payload;
     });
-    builder.addMatcher(API.endpoints.getContest.matchRejected, ErrHandler);
+    builder.addMatcher(ContestsAPI.endpoints.getContest.matchRejected, ErrHandler);
 
-    builder.addMatcher(API.endpoints.getEntries.matchFulfilled, (state, { payload }) => {
+    builder.addMatcher(ContestsAPI.endpoints.getEntries.matchFulfilled, (state, { payload }) => {
       state.thiscontestentries = payload;
     });
-    builder.addMatcher(API.endpoints.getEntries.matchRejected, ErrHandler);
+    builder.addMatcher(ContestsAPI.endpoints.getEntries.matchRejected, ErrHandler);
 
-    builder.addMatcher(API.endpoints.getEntry.matchFulfilled, (state, { payload }) => {
+    builder.addMatcher(ContestsAPI.endpoints.getEntry.matchFulfilled, (state, { payload }) => {
       state.thiscontestmyentry = payload;
     });
-    builder.addMatcher(API.endpoints.getEntry.matchRejected, (state, resp) => {
+    builder.addMatcher(ContestsAPI.endpoints.getEntry.matchRejected, (state, resp) => {
       if (resp.payload?.status === 404) {
         state.thiscontestmyentry = null;
       } else {
-        return ErrHandler(state, resp);
+        ErrHandler(state, resp);
       }
     });
 
-    builder.addMatcher(API.endpoints.createEntry.matchFulfilled, (state, { payload }) => {
+    builder.addMatcher(ContestsAPI.endpoints.createEntry.matchFulfilled, (state, { payload }) => {
       state.thiscontestentries.push(payload);
       state.thiscontestmyentry = payload;
     });
-    builder.addMatcher(API.endpoints.createEntry.matchRejected, ErrHandler);
+    builder.addMatcher(ContestsAPI.endpoints.createEntry.matchRejected, ErrHandler);
   },
 });
 

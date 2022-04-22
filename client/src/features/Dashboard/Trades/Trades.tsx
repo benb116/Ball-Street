@@ -6,7 +6,7 @@ import { useAppSelector } from '../../../app/hooks';
 
 import { playerSelector } from '../Players/Players.slice';
 import { tradesSelector } from './Trades.slice';
-import { useGetTradesQuery } from '../../../helpers/api';
+import { useGetTradesQuery } from './Trades.api';
 
 import { TradeItemType } from './Trades.types';
 

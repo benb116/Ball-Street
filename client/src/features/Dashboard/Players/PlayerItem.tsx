@@ -10,9 +10,10 @@ import { isOnRosterSelector } from '../Entry/Entry.slice';
 import { setModal } from '../Modal/Modal.slice';
 import { offersSelector } from '../Offers/Offers.slice';
 import { allTeamsSelector, priceMapSelector } from './Players.slice';
-import { useCancelOfferMutation, usePreAddMutation, usePreDropMutation } from '../../../helpers/api';
 
 import { PlayerItemType } from './Players.types';
+import { usePreAddMutation, usePreDropMutation } from '../Entry/Entry.api';
+import { useCancelOfferMutation } from '../Offers/Offers.api';
 
 // Show a player's row in the list
 function PlayerItem({ playerdata }: { playerdata: PlayerItemType }) {

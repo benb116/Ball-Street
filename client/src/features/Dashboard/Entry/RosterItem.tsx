@@ -17,11 +17,12 @@ import {
 import { rposSelector, selectRPos } from './Entry.slice';
 import { offersSelector } from '../Offers/Offers.slice';
 import { setModal } from '../Modal/Modal.slice';
-import { useCancelOfferMutation, usePreDropMutation, useReorderRosterMutation } from '../../../helpers/api';
+import { usePreDropMutation, useReorderRosterMutation } from './Entry.api';
 
 import { RosterPosType } from './Entry.types';
 import { NFLPosType } from '../Players/Players.types';
 import { OfferItemType } from '../Offers/Offers.types';
+import { useCancelOfferMutation } from '../Offers/Offers.api';
 
 const flexID = 99;
 const rosterkey = {

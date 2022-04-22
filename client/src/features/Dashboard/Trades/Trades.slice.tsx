@@ -2,8 +2,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import type { RootState } from '../../../app/store';
-import API from '../../../helpers/api';
 import { ErrHandler } from '../../../helpers/util';
+import TradesAPI from './Trades.api';
 
 import { TradeItemType } from './Trades.types';
 
@@ -19,7 +19,7 @@ export const tradesSlice = createSlice({
   initialState: defaultState,
   reducers: { },
   extraReducers: (builder) => {
-    builder.addMatcher(API.endpoints.getTrades.matchFulfilled, (state, { payload }) => {
+    builder.addMatcher(TradesAPI.endpoints.getTrades.matchFulfilled, (state, { payload }) => {
       state.trades = payload.map((t) => {
         const data = ('bid' in t ? t.bid : t.ask);
         // Pull certain info
@@ -33,7 +33,7 @@ export const tradesSlice = createSlice({
         return out;
       }).sort((a: TradeItemType, b: TradeItemType) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
     });
-    builder.addMatcher(API.endpoints.getTrades.matchRejected, ErrHandler);
+    builder.addMatcher(TradesAPI.endpoints.getTrades.matchRejected, ErrHandler);
   },
 });
 

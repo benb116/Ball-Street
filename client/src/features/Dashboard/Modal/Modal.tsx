@@ -6,7 +6,7 @@ import { useParams } from 'react-router';
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 
 import { modalSelector, modalStatusSelector, closeModal } from './Modal.slice';
-import { useCreateOfferMutation } from '../../../helpers/api';
+import { useCreateOfferMutation } from '../Offers/Offers.api';
 
 const customStyles = {
   content: {

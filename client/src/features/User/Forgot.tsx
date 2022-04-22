@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useAppSelector } from '../../app/hooks';
 
 import { userSelector } from './User.slice';
-import { useForgotMutation } from '../../helpers/api';
+import { useForgotMutation } from './User.api';
 
 const Forgot = () => {
   const { register, handleSubmit } = useForm();

@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useAppSelector } from '../../app/hooks';
 
 import { userSelector } from './User.slice';
-import { useLoginMutation } from '../../helpers/api';
+import { useLoginMutation } from './User.api';
 
 const Login = () => {
   const { register, handleSubmit } = useForm();

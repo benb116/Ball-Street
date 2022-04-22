@@ -3,11 +3,12 @@ import { createSlice } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
 
 import type { RootState } from '../../../app/store';
-import API from '../../../helpers/api';
 import { ErrHandler } from '../../../helpers/util';
 
 import { EntryType, RosterPosType, RosterType } from './Entry.types';
 import { NFLPosType } from '../Players/Players.types';
+import EntryAPI from './Entry.api';
+import ContestsAPI from '../../Contests/Contests.api';
 
 interface EntryState {
   balance: number,
@@ -44,21 +45,21 @@ export const entrySlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addMatcher(API.endpoints.getEntry.matchFulfilled, (state, { payload }) => {
+    builder.addMatcher(ContestsAPI.endpoints.getEntry.matchFulfilled, (state, { payload }) => {
       setEntry(state, payload);
     });
-    builder.addMatcher(API.endpoints.preAdd.matchFulfilled, (state, { payload }) => {
+    builder.addMatcher(EntryAPI.endpoints.preAdd.matchFulfilled, (state, { payload }) => {
       setEntry(state, payload);
     });
-    builder.addMatcher(API.endpoints.preAdd.matchRejected, ErrHandler);
-    builder.addMatcher(API.endpoints.preDrop.matchFulfilled, (state, { payload }) => {
+    builder.addMatcher(EntryAPI.endpoints.preAdd.matchRejected, ErrHandler);
+    builder.addMatcher(EntryAPI.endpoints.preDrop.matchFulfilled, (state, { payload }) => {
       setEntry(state, payload);
     });
-    builder.addMatcher(API.endpoints.preDrop.matchRejected, ErrHandler);
-    builder.addMatcher(API.endpoints.reorderRoster.matchFulfilled, (state, { payload }) => {
+    builder.addMatcher(EntryAPI.endpoints.preDrop.matchRejected, ErrHandler);
+    builder.addMatcher(EntryAPI.endpoints.reorderRoster.matchFulfilled, (state, { payload }) => {
       setEntry(state, payload);
     });
-    builder.addMatcher(API.endpoints.reorderRoster.matchRejected, ErrHandler);
+    builder.addMatcher(EntryAPI.endpoints.reorderRoster.matchRejected, ErrHandler);
   },
 });
 

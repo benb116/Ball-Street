@@ -6,7 +6,7 @@ import RenderPrice from '../../../helpers/util';
 
 import { allTeamsSelector, playersSelector, pricesMapSelector } from '../Players/Players.slice';
 import { entrySelector } from './Entry.slice';
-import { useGetEntryQuery } from '../../../helpers/api';
+import { useGetEntryQuery } from '../../Contests/Contests.api';
 
 import RosterItem from './RosterItem';
 

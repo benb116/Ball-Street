@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { useAppSelector } from '../../app/hooks';
 
 import { contestsSelector } from './Contests.slice';
-import { useGetContestsQuery } from '../../helpers/api';
+import { useGetContestsQuery } from './Contests.api';
 
 import { ContestItemType } from './Contests.types';
 

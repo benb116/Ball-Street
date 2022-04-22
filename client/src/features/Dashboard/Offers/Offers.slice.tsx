@@ -3,8 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
 
 import type { RootState } from '../../../app/store';
-import API from '../../../helpers/api';
 import { ErrHandler } from '../../../helpers/util';
+import OffersAPI from './Offers.api';
 
 import { OfferItemType } from './Offers.types';
 
@@ -42,14 +42,14 @@ export const offersSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addMatcher(API.endpoints.getOffers.matchFulfilled, (state, { payload }) => {
+    builder.addMatcher(OffersAPI.endpoints.getOffers.matchFulfilled, (state, { payload }) => {
       payload.forEach((o) => {
         if (o.isbid) { state.bids.push(o); } else { state.asks.push(o); }
       });
     });
-    builder.addMatcher(API.endpoints.getOffers.matchRejected, ErrHandler);
+    builder.addMatcher(OffersAPI.endpoints.getOffers.matchRejected, ErrHandler);
 
-    builder.addMatcher(API.endpoints.createOffer.matchFulfilled, (state, { payload }) => {
+    builder.addMatcher(OffersAPI.endpoints.createOffer.matchFulfilled, (state, { payload }) => {
       // If an offer is filled immediately,
       // It may be marked as filled before the "create offer" has resolved.
       // So check to make sure it hasn't already been added to the "remove" list
@@ -62,9 +62,9 @@ export const offersSlice = createSlice({
         toast.success('Offer submitted');
       }
     });
-    builder.addMatcher(API.endpoints.createOffer.matchRejected, ErrHandler);
+    builder.addMatcher(OffersAPI.endpoints.createOffer.matchRejected, ErrHandler);
 
-    builder.addMatcher(API.endpoints.cancelOffer.matchFulfilled, (state, { payload }) => {
+    builder.addMatcher(OffersAPI.endpoints.cancelOffer.matchFulfilled, (state, { payload }) => {
       if (payload.isbid) {
         state.bids = state.bids.filter((o) => o.id !== payload.id);
       } else {
@@ -72,7 +72,7 @@ export const offersSlice = createSlice({
       }
       toast.success('Offer cancelled');
     });
-    builder.addMatcher(API.endpoints.cancelOffer.matchRejected, ErrHandler);
+    builder.addMatcher(OffersAPI.endpoints.cancelOffer.matchRejected, ErrHandler);
   },
 });
 

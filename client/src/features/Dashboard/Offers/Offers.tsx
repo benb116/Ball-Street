@@ -6,7 +6,7 @@ import { useAppSelector } from '../../../app/hooks';
 
 import { allTeamsSelector, playerSelector } from '../Players/Players.slice';
 import { offersSelector } from './Offers.slice';
-import { useCancelOfferMutation, useGetOffersQuery } from '../../../helpers/api';
+import { useCancelOfferMutation, useGetOffersQuery } from './Offers.api';
 
 import { OfferItemType } from './Offers.types';
 

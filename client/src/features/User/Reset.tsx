@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useAppSelector } from '../../app/hooks';
 
 import { userSelector } from './User.slice';
-import { useResetMutation } from '../../helpers/api';
+import { useResetMutation } from './User.api';
 
 const Reset = () => {
   const { token } = useParams<{ token: string }>();

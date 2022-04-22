@@ -2,8 +2,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import type { RootState } from '../../../app/store';
-import API from '../../../helpers/api';
 import { ErrHandler } from '../../../helpers/util';
+import PlayersAPI from './Players.api';
 
 import {
   GameItemType,
@@ -105,16 +105,16 @@ export const playersSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addMatcher(API.endpoints.getPlayers.matchFulfilled, (state, { payload }) => {
+    builder.addMatcher(PlayersAPI.endpoints.getPlayers.matchFulfilled, (state, { payload }) => {
       state.playerlist = payload.map((p) => {
         const np = { ...p };
         np.posName = NFLPosTypes[p.NFLPositionId].name;
         return np;
       });
     });
-    builder.addMatcher(API.endpoints.getPlayers.matchRejected, ErrHandler);
+    builder.addMatcher(PlayersAPI.endpoints.getPlayers.matchRejected, ErrHandler);
 
-    builder.addMatcher(API.endpoints.getGames.matchFulfilled, (state, { payload }) => {
+    builder.addMatcher(PlayersAPI.endpoints.getGames.matchFulfilled, (state, { payload }) => {
       state.gamelist = [...payload].sort((a, b) => a.startTime - b.startTime);
       state.teamMap = payload.reduce((acc, cur) => { // team and game phase info
         acc[cur.away.id] = { ...cur.away, phase: cur.phase };
@@ -122,7 +122,7 @@ export const playersSlice = createSlice({
         return acc;
       }, {} as TeamMapType);
     });
-    builder.addMatcher(API.endpoints.getGames.matchRejected, ErrHandler);
+    builder.addMatcher(PlayersAPI.endpoints.getGames.matchRejected, ErrHandler);
   },
 });
 

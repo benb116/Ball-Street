@@ -3,7 +3,7 @@ import { Link, useHistory } from 'react-router-dom';
 
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 
-import { useGetAccountQuery, useLogoutMutation } from '../../helpers/api';
+import { useGetAccountQuery, useLogoutMutation } from '../User/User.api';
 import { isLoggedInSelector, userSelector } from '../User/User.slice';
 
 const Home = () => {

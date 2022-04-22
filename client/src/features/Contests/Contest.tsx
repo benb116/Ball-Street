@@ -14,7 +14,7 @@ import {
   useGetEntriesQuery,
   useGetEntryQuery,
   useCreateEntryMutation,
-} from '../../helpers/api';
+} from './Contests.api';
 
 import { EntryItemType } from '../Dashboard/Entry/Entry.types';
 

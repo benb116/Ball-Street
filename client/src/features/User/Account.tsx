@@ -9,7 +9,7 @@ import {
   useGetAccountQuery,
   useGetUserLedgerQuery,
   useWithdrawMutation,
-} from '../../helpers/api';
+} from './User.api';
 import { isLoggedInSelector, userSelector } from './User.slice';
 import { DepositWithdrawType, LedgerEntryJoinedType } from './User.types';
 
