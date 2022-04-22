@@ -64,6 +64,9 @@ const Players = () => {
       if (theteams[p.NFLTeamId].phase === 'post') return false;
       if (theteams[p.NFLTeamId].phase !== filters.phase && filters.phase !== '') return false;
 
+      if (filters.injury === 'healthy' && p.injuryStatus) return false;
+      if (filters.injury === 'probable' && (p.injuryStatus && p.injuryStatus !== 'P')) return false;
+
       return true;
     })
     .sort((a, b) => {

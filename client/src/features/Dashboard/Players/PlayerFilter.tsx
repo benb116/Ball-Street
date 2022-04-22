@@ -38,7 +38,7 @@ const PlayerFilter = () => {
     <form>
       <input
         style={{
-          width: '15em',
+          width: '13em',
           cursor: 'pointer',
           borderColor: 'lightgray',
           borderWidth: '0.075em',
@@ -93,6 +93,11 @@ const PlayerFilter = () => {
         <option value="">Phase</option>
         <option value="pre">Pregame</option>
         <option value="mid">Midgame</option>
+      </select>
+      <select className="Dropdown" onChange={handleChange} name="injury" value={filters.injury}>
+        <option value="">Injury Status</option>
+        <option value="healthy">Healthy</option>
+        <option value="probable">Probable</option>
       </select>
     </form>
   );

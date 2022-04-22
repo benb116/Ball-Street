@@ -30,6 +30,7 @@ interface FilterType {
   teamAbr: string,
   game: string,
   phase: string,
+  injury: string,
 }
 export type FilterNameType = keyof FilterType;
 
@@ -54,6 +55,7 @@ const defaultState: PlayerState = {
     teamAbr: '',
     game: '',
     phase: '',
+    injury: '',
   },
   sortProp: 'preprice', // current sort metric
   sortDesc: true,
