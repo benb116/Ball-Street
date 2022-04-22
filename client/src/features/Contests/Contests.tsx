@@ -18,33 +18,31 @@ const Contests = () => {
   useGetContestsQuery();
 
   return (
-    <div className="container mx-auto">
-      <>
-        <div className="container mx-auto">
-          <br />
-          Contests
-          <br />
-          <ul>
-            {sortedContests
-              .map((contest) => <ContestItem key={contest.id} contestdata={contest} />)}
-          </ul>
+    <>
+      <div style={{ marginTop: '10em' }}>
+        <h2>Contests</h2>
+        <div>
+          {sortedContests
+            .map((contest) => <ContestItem key={contest.id} contestdata={contest} />)}
         </div>
-      </>
-    </div>
+        <br />
+        <Link className="AppLink" to="/">Home</Link>
+      </div>
+    </>
   );
 };
 
 function ContestItem({ contestdata }: { contestdata: ContestItemType }) {
   return (
-    <li>
-      <Link to={`/contests/${contestdata.id}`}>
+    <div>
+      <Link className="AppLink" to={`/contests/${contestdata.id}`}>
         {contestdata.name}
         {' '}
         - Week
         {' '}
         {contestdata.nflweek}
       </Link>
-    </li>
+    </div>
   );
 }
 
