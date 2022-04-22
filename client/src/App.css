@@ -66,15 +66,6 @@ body {
   cursor: pointer;
 }
 
-.GreenButton {
-  background-color: rgb(110, 232, 185);
-  border-color: rgb(110, 232, 185);;
-}
-.GreenButton:hover {
-  background-color: rgb(91, 194, 154);
-  border-color: rgb(91, 194, 154);
-}
-
 .AppButton {
   font-size: 1em;  
   margin: 0.5em auto;
