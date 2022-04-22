@@ -8,7 +8,7 @@ import {
 import { useAppSelector } from '../../app/hooks';
 import RenderPrice from '../../helpers/util';
 
-import { contestSelector, entriesSelector, myEntrySelector } from './Contests.slice';
+import { contestSelector, myEntrySelector } from './Contests.slice';
 import {
   useGetContestQuery,
   useGetEntriesQuery,
@@ -23,9 +23,6 @@ const Contest = () => {
   const { contestID } = useParams<{ contestID: string }>(); // Get contestID from URL params
 
   const thiscontest = useAppSelector(contestSelector); // Get info about this contest
-  const thiscontestentries = useAppSelector(entriesSelector); // Get the entries in this contest
-  const sortedEntries = [...thiscontestentries]
-    .sort((a, b) => (b.projTotal || b.pointtotal) - (a.projTotal || a.pointtotal)); // Sort by total points
   const thiscontestmyentry = useAppSelector(myEntrySelector);
 
   // Pull data
@@ -74,23 +71,21 @@ const Contest = () => {
           margin: '3em',
         }}
       >
-        <h4>Entries</h4>
-        <div>
-          {sortedEntries.map((entry) => (
-            <EntryItem
-              key={entry.UserId}
-              entrydata={entry}
-              isUser={(entry.UserId === thiscontestmyentry?.UserId)}
-            />
-          ))}
-        </div>
+        <h4>My entry</h4>
         {!thiscontestmyentry // If the user doesn't have an entry in this contest
           ? (
             <button className="AppButton" onClick={() => { createEntry(contestID); }} type="submit">
               Create entry
             </button>
           )
-          : <Link className="AppButton AppLink" to={`/contests/${contestID}/dashboard`}>Go to dashboard</Link>}
+          : (
+            <div>
+              Current points:
+              {' '}
+              {thiscontestmyentry.pointtotal / 100}
+              <Link className="AppButton AppLink" to={`/contests/${contestID}/dashboard`}>Go to dashboard</Link>
+            </div>
+          )}
       </div>
 
       <Link className="AppLink" to="/contests">Contests</Link>
@@ -104,10 +99,6 @@ function EntryItem({ entrydata, isUser }: { entrydata: EntryItemType, isUser: bo
       fontWeight: (isUser ? 'bold' : 'normal'),
     }}
     >
-      {entrydata.UserId}
-      {' '}
-      -
-      {' '}
       {RenderPrice(entrydata.projTotal || entrydata.pointtotal)}
     </div>
   );
