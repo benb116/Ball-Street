@@ -13,9 +13,13 @@ import {
 const API = createApi({
   reducerPath: 'API',
   baseQuery: fetchBaseQuery({ baseUrl: '/app' }),
+  tagTypes: ['Account', 'Roster', 'Trades', 'Ledger'],
   endpoints: (build) => ({
     // User
-    getAccount: build.query<AccountType, void>({ query: () => '/auth/account' }),
+    getAccount: build.query<AccountType, void>({
+      query: () => '/auth/account',
+      providesTags: ['Account'],
+    }),
     signup: build.mutation<SignupType, { name: string, email: string, password: string, skipVerification: boolean, }>({
       query: (body) => ({ url: '/auth/signup', method: 'POST', body }),
     }),
@@ -31,19 +35,28 @@ const API = createApi({
     logout: build.mutation<void, void>({ query: () => ({ url: '/auth/logout', method: 'DELETE' }) }),
     deposit: build.mutation<NewLedgerEntryType, DepositWithdrawType>({
       query: (body) => ({ url: '/auth/deposit', method: 'POST', body }),
+      invalidatesTags: ['Account', 'Ledger'],
     }),
     withdraw: build.mutation<NewLedgerEntryType, DepositWithdrawType>({
       query: (body) => ({ url: '/auth/withdraw', method: 'POST', body }),
+      invalidatesTags: ['Account', 'Ledger'],
     }),
-    getUserLedger: build.query<LedgerEntryJoinedType[], number>({ query: (pagenum) => `/auth/ledger/${pagenum}` }),
+    getUserLedger: build.query<LedgerEntryJoinedType[], number>({
+      query: (pagenum) => `/auth/ledger/${pagenum}`,
+      providesTags: ['Ledger'],
+    }),
 
     // Contests
     getContests: build.query<ContestItemType[], void>({ query: () => '/api/contests' }),
     getContest: build.query<ContestItemType, string>({ query: (contestID) => `/api/contests/${contestID}` }),
     getEntries: build.query<EntryItemType[], string>({ query: (contestID) => `/api/contests/${contestID}/entries` }),
-    getEntry: build.query<EntryType, string>({ query: (contestID) => `/api/contests/${contestID}/entry` }),
+    getEntry: build.query<EntryType, string>({
+      query: (contestID) => `/api/contests/${contestID}/entry`,
+      providesTags: ['Roster'],
+    }),
     createEntry: build.mutation<EntryType, string>({
       query: (contestID) => ({ url: `/api/contests/${contestID}/entry`, method: 'POST' }),
+      invalidatesTags: ['Account'],
     }),
 
     // Entries
@@ -71,7 +84,10 @@ const API = createApi({
     getGames: build.query<GameItemType[], void>({ query: () => '/api/nfldata/games' }),
 
     // Trades
-    getTrades: build.query<(TradeBid | TradeAsk)[], string>({ query: (contestID) => `/api/contests/${contestID}/trades` }),
+    getTrades: build.query<(TradeBid | TradeAsk)[], string>({
+      query: (contestID) => `/api/contests/${contestID}/trades`,
+      providesTags: ['Trades'],
+    }),
   }),
 });
 

@@ -9,21 +9,15 @@ import { TradeItemType } from './Trades.types';
 
 interface TradesState {
   trades: TradeItemType[],
-  tradeUpdate: boolean,
 }
 const defaultState: TradesState = {
   trades: [],
-  tradeUpdate: false,
 };
 
 export const tradesSlice = createSlice({
   name: 'trades',
   initialState: defaultState,
-  reducers: {
-    updateTrades: (state) => {
-      state.tradeUpdate = true; // Set a flag after an offer is filled
-    },
-  },
+  reducers: { },
   extraReducers: (builder) => {
     builder.addMatcher(API.endpoints.getTrades.matchFulfilled, (state, { payload }) => {
       state.trades = payload.map((t) => {
@@ -38,13 +32,9 @@ export const tradesSlice = createSlice({
         };
         return out;
       }).sort((a: TradeItemType, b: TradeItemType) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
-      state.tradeUpdate = false; // reset a flag
     });
     builder.addMatcher(API.endpoints.getTrades.matchRejected, ErrHandler);
   },
 });
 
-export const { updateTrades } = tradesSlice.actions;
-
 export const tradesSelector = (state: RootState) => state.trades.trades;
-export const tradeUpdateSelector = (state: RootState) => state.trades.tradeUpdate;

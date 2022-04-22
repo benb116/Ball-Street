@@ -44,6 +44,13 @@ export const contestsSlice = createSlice({
     builder.addMatcher(API.endpoints.getEntry.matchFulfilled, (state, { payload }) => {
       state.thiscontestmyentry = payload;
     });
+    builder.addMatcher(API.endpoints.getEntry.matchRejected, (state, resp) => {
+      if (resp.payload?.status === 404) {
+        state.thiscontestmyentry = null;
+      } else {
+        return ErrHandler(state, resp);
+      }
+    });
 
     builder.addMatcher(API.endpoints.createEntry.matchFulfilled, (state, { payload }) => {
       state.thiscontestentries.push(payload);

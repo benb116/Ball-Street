@@ -13,14 +13,12 @@ interface EntryState {
   balance: number,
   roster: RosterType | Record<string, never>,
   rposSelected: [NFLPosType | 0, RosterPosType | ''],
-  rosterUpdate: boolean,
 }
 
 const defaultState: EntryState = {
   balance: 0,
   roster: {},
   rposSelected: [0, ''], // Used for reordering roster. [NFLPositionID, RosterPosName]
-  rosterUpdate: false, // Flag telling the entry to refresh
 };
 
 export const entrySlice = createSlice({
@@ -33,9 +31,6 @@ export const entrySlice = createSlice({
     },
     offerFilled: () => {
       toast.success('Offer filled');
-    },
-    updateRoster: (state) => {
-      state.rosterUpdate = true;
     },
     selectRPos: (state, { payload }: { payload: [NFLPosType | 0, RosterPosType | ''] }) => {
       // If current state is 0, nothing is currently selected.
@@ -51,7 +46,6 @@ export const entrySlice = createSlice({
   extraReducers: (builder) => {
     builder.addMatcher(API.endpoints.getEntry.matchFulfilled, (state, { payload }) => {
       setEntry(state, payload);
-      state.rosterUpdate = false;
     });
     builder.addMatcher(API.endpoints.preAdd.matchFulfilled, (state, { payload }) => {
       setEntry(state, payload);
@@ -77,10 +71,9 @@ function setEntry(state: EntryState, payload: EntryType) {
   return state;
 }
 
-export const { offerFilled, updateRoster, selectRPos } = entrySlice.actions;
+export const { offerFilled, selectRPos } = entrySlice.actions;
 
 export const entrySelector = (state: RootState) => state.entry;
-export const rosterUpdateSelector = (state: RootState) => state.entry.rosterUpdate;
 export const isOnRosterSelector = (playerID: number) => (state: RootState) => (
   Object.values(state.entry.roster).indexOf(playerID) >= 0
 );

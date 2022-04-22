@@ -2,11 +2,11 @@ import { store } from '../../app/store';
 
 import { setPhase, updatePrices, setInjury } from './Players/Players.slice';
 import { removeOffer, alertProtMatch } from './Offers/Offers.slice';
-import { offerFilled, updateRoster } from './Entry/Entry.slice';
+import { offerFilled } from './Entry/Entry.slice';
 import { updateLeaders } from './Leaderboard/Leaderboard.slice';
-import { updateTrades } from './Trades/Trades.slice';
 import { PriceMapItemType } from './Players/Players.types';
 import { LeaderItemType } from './Leaderboard/Leaderboard.types';
+import API from '../../helpers/api';
 
 // Init WS connection and dispatch actions based on events
 const initWS = (contestID: string) => {
@@ -90,8 +90,7 @@ function fillOffer() {
 }
 
 function upRost() {
-  store.dispatch(updateRoster());
-  store.dispatch(updateTrades());
+  store.dispatch(API.util.invalidateTags(['Roster', 'Trades']));
 }
 
 function protMatch({ offerID, expire }: { offerID: string, expire: number }) {

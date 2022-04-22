@@ -70,6 +70,10 @@ const Account = () => {
           </tr>
           {ledger.map((entry) => <LedgerEntry key={entry.id} entrydata={entry} />)}
         </table>
+        Page
+        {' '}
+        {pagenum}
+        <br />
         <br />
         <button className="SmallButton" type="button" onClick={() => { if (pagenum > 1) setPagenum(pagenum - 1); }}>Previous</button>
         <button className="SmallButton" type="button" onClick={() => { setPagenum(pagenum + 1); }}>Next</button>

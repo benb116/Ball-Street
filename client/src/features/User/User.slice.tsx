@@ -101,16 +101,10 @@ export const userSlice = createSlice({
 
     builder.addMatcher(API.endpoints.deposit.matchFulfilled, (state, { payload }) => {
       toast.success('Deposit confirmed');
-      state.info.ledger.unshift(payload);
-      if (state.info.ledger.length > 10) state.info.ledger.pop();
-      state.info.cash = payload.User.cash;
     });
     builder.addMatcher(API.endpoints.deposit.matchRejected, ErrHandler);
     builder.addMatcher(API.endpoints.withdraw.matchFulfilled, (state, { payload }) => {
       toast.success('Withdrawal confirmed');
-      state.info.ledger.unshift(payload);
-      if (state.info.ledger.length > 10) state.info.ledger.pop();
-      state.info.cash = payload.User.cash;
     });
     builder.addMatcher(API.endpoints.withdraw.matchRejected, ErrHandler);
   },

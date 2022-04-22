@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { useAppSelector, useAppDispatch } from '../../../app/hooks';
+import { useAppSelector } from '../../../app/hooks';
 import RenderPrice from '../../../helpers/util';
 
 import { allTeamsSelector, playersSelector, pricesMapSelector } from '../Players/Players.slice';
-import { entrySelector, rosterUpdateSelector } from './Entry.slice';
+import { entrySelector } from './Entry.slice';
 import { useGetEntryQuery } from '../../../helpers/api';
 
 import RosterItem from './RosterItem';
@@ -14,20 +14,13 @@ import { RosterPosType } from './Entry.types';
 
 // Display the user's current entry (balance + players)
 const Entry = () => {
-  const dispatch = useAppDispatch();
   const { contestID } = useParams<{ contestID: string }>();
 
   const thisentry = useAppSelector(entrySelector);
-  const rUpdate = useAppSelector(rosterUpdateSelector); // Flag set if the entry should be updated
   const rpos = Object.keys(thisentry.roster) as RosterPosType[]; // All roster positions
 
   // Initial data pull
-  const { refetch } = useGetEntryQuery(contestID);
-
-  // When an offer is filled, the rUpdate flag is raised
-  useEffect(() => {
-    if (rUpdate) refetch();
-  }, [contestID, dispatch, rUpdate]);
+  useGetEntryQuery(contestID);
 
   return (
     <div
