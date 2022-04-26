@@ -6,16 +6,8 @@ describe('withdraw service', () => {
     service, { user: 4, params: {}, body: { amount: 300 } },
     {
       ContestId: null,
-      LedgerKind: {
-        id: 2,
-        isCredit: false,
-        name: 'Withdrawal',
-      },
       LedgerKindId: 2,
       UserId: 4,
-      User: {
-        cash: 700,
-      },
       value: 300,
     },
     `

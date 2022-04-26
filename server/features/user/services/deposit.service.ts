@@ -10,7 +10,6 @@ import sequelize from '../../../db';
 import LedgerEntry, { LedgerEntryCreateType, LedgerEntryType } from '../../ledger/ledgerEntry.model';
 import { LedgerKindTypes } from '../../../config';
 import User from '../user.model';
-import LedgerKind from '../../ledger/ledgerKind.model';
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
@@ -62,10 +61,7 @@ async function deposit(req: DepositInput) {
 
     const out: LedgerEntryType = await LedgerEntry.create(ledgerObj, tobj(t)).then(dv);
 
-    return LedgerEntry.findByPk(out.id, {
-      include: [{ model: LedgerKind }, { model: User }],
-      transaction: t,
-    }).then(dv);
+    return out;
   })
     .catch(errorHandler({
       default: { message: 'Deposit could not be completed', status: 500 },

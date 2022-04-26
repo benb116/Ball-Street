@@ -6,19 +6,11 @@ describe('deposit service', () => {
     service, { user: 4, params: {}, body: { amount: 300 } },
     {
       ContestId: null,
-      LedgerKind: {
-        id: 1,
-        isCredit: true,
-        name: 'Deposit',
-      },
       LedgerKindId: 1,
       UserId: 4,
-      User: {
-        cash: 1300,
-      },
       value: 300,
-
-    }, `
+    },
+    `
       DELETE from "LedgerEntries" WHERE "UserId"=4 AND "value"=300;
       UPDATE "Users" SET "cash"=1000 WHERE "id"=4;
     `,
