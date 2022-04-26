@@ -122,7 +122,6 @@ services:
             - POSTGRES_DB=$DB_NAME
         volumes:
           - ./server/db/dbinit.sql:/docker-entrypoint-initdb.d/dbinit.sql # DB initialization script
-          - ./server/db/dbpopulate.sql:/docker-entrypoint-initdb.d/dbpopulate.sql # DB initialization script
         networks:
           - app-network
 
