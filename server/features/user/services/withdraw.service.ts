@@ -11,6 +11,7 @@ import LedgerEntry, { LedgerEntryCreateType, LedgerEntryType } from '../../ledge
 import { LedgerKindTypes } from '../../../config';
 import User from '../user.model';
 import LedgerKind from '../../ledger/ledgerKind.model';
+import { SendWithdrawEmail } from '../../../utilities/email';
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
@@ -42,8 +43,6 @@ async function withdraw(req: WithdrawalInput) {
   const value: WithdrawalInput = validate(req, schema);
 
   return sequelize.transaction(isoOption, async (t) => {
-    // Confirm contest is valid and for the current week
-
     const theuser = await User.findOne({ where: { id: value.user }, ...tobj(t) });
     if (!theuser) return uError('No user found', 404);
     const userValue = dv(theuser);
@@ -62,6 +61,7 @@ async function withdraw(req: WithdrawalInput) {
     };
 
     const out: LedgerEntryType = await LedgerEntry.create(ledgerObj, tobj(t)).then(dv);
+    SendWithdrawEmail(userValue.email, out.id);
 
     return LedgerEntry.findByPk(out.id, {
       include: [{ model: LedgerKind }, { model: User }],

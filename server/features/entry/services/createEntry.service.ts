@@ -10,8 +10,9 @@ import Contest from '../../contest/contest.model';
 import Entry, { EntryCreateType } from '../entry.model';
 import sequelize from '../../../db';
 import User from '../../user/user.model';
-import LedgerEntry, { LedgerEntryCreateType } from '../../ledger/ledgerEntry.model';
+import LedgerEntry, { LedgerEntryCreateType, LedgerEntryType } from '../../ledger/ledgerEntry.model';
 import { LedgerKindTypes } from '../../../config';
+import { SendEntryEmail } from '../../../utilities/email';
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
@@ -61,14 +62,18 @@ async function createEntry(req: CreateEntryInput) {
       value: thecontest.buyin,
     };
 
-    await LedgerEntry.create(ledgerObj, tobj(t));
+    const ledgerout: LedgerEntryType = await LedgerEntry.create(ledgerObj, tobj(t)).then(dv);
 
     const entryObj: EntryCreateType = {
       UserId: value.user,
       ContestId: value.params.contestID,
       pointtotal: thecontest.budget,
     };
-    return Entry.create(entryObj, tobj(t));
+
+    const out = await Entry.create(entryObj, tobj(t));
+    SendEntryEmail(userValue.email, thecontest.name, ledgerout.id);
+
+    return out;
   })
     .catch(errorHandler({
       default: { message: 'Entry could not be created', status: 500 },

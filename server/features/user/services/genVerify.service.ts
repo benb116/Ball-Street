@@ -7,6 +7,7 @@ import { validate, uError } from '../../util/util';
 import validators from '../../util/util.schema';
 
 import { client, rediskeys } from '../../../db/redis';
+import { SendVerifyEmail } from '../../../utilities/email';
 
 const schema = Joi.object({
   id: validators.user,
@@ -27,23 +28,15 @@ async function genVerify(req: EvalVerifyInput) {
     await client.SET(rediskeys.emailVer(rand), email, { EX: verificationTimeout * 60 });
     return await sendVerificationEmail(id, email, rand);
   } catch (err) {
-    return uError('genVerify Error', 406);
+    return uError('Could not attempt verification', 406);
   }
 }
 
 async function sendVerificationEmail(id: number, email: string, rand: string) {
   const link = `${CallbackURL}/app/auth/verify?token=${rand}`;
   const msg = `Please click this link to verify your Ball Street account:\n${link}`;
-  SendEmail(email, 'Verify your Ball Street Account', msg);
-  return Promise.resolve({ needsVerification: true, id });
-}
-
-function SendEmail(to: string, subject: string, msg: string) {
-  return {
-    to,
-    subject,
-    msg,
-  };
+  await SendVerifyEmail(email, msg);
+  return { needsVerification: true, id };
 }
 
 export default genVerify;
