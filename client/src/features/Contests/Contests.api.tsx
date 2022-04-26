@@ -9,11 +9,11 @@ const ContestsAPI = BaseAPI.injectEndpoints({
     getEntries: build.query<EntryItemType[], string>({ query: (contestID) => `/api/contests/${contestID}/entries` }),
     getEntry: build.query<EntryType, string>({
       query: (contestID) => `/api/contests/${contestID}/entry`,
-      providesTags: ['Roster'],
+      providesTags: ['Roster'], // Roster updates on trades and offer fills
     }),
     createEntry: build.mutation<EntryType, string>({
       query: (contestID) => ({ url: `/api/contests/${contestID}/entry`, method: 'POST' }),
-      invalidatesTags: ['Account'],
+      invalidatesTags: ['Account'], // Might reduce cash in account
     }),
   }),
 });

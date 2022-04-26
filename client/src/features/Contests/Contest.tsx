@@ -1,9 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Link,
-  useParams,
-} from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import { useAppSelector } from '../../app/hooks';
 import RenderPrice from '../../helpers/util';
@@ -18,7 +15,7 @@ import {
 
 import { EntryItemType } from '../Dashboard/Entry/Entry.types';
 
-// Show info about a specific contest and its entries
+// Show info about a specific contest and a user's entry
 const Contest = () => {
   const { contestID } = useParams<{ contestID: string }>(); // Get contestID from URL params
 

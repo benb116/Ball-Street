@@ -26,6 +26,7 @@ export async function InitGameState() {
   }
 }
 
+// Get game data (from yahoo or mock data)
 function pullGameData() {
   if (Number(process.env.YAHOO_MOCK)) {
     return yahooData.games.gamesMonNightMidgame;

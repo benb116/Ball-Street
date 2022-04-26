@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import sequelize from '../../db';
 import { isUError } from './util';
 import { ServiceType } from './util.service';
@@ -47,6 +48,11 @@ export const ErrorTest = function ErrorTest(
   };
 };
 
+// Creates a series of test-objects for each label passed
+// Each object has a promise that can be resolved or rejected
+// and marked as "done"
+// When the promise is res/rej, a test can be triggered
+// test('Test Name', () => pMap.labelName.prom.then((data) => {});
 export const TestPromiseMap = function TestPromiseMap(labelArray: string[]) {
   interface PromiseMap {
     [key: string]: {

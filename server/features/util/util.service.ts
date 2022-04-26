@@ -43,4 +43,5 @@ export default function errorHandler(responseMap: ResponseMapType) {
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ServiceType = (inp: any) => Promise<any>;

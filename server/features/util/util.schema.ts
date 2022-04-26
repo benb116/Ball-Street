@@ -30,6 +30,7 @@ const validators = {
     'number.integer': 'Contest ID is invalid',
     'any.required': 'Please specify a contest',
   }),
+
   nflplayerID: Joi.number().integer().required().messages({
     'number.base': 'Player ID is invalid',
     'number.integer': 'Player ID is invalid',

@@ -15,17 +15,23 @@ import Offer from '../features/offer/offer.model';
 import PriceHistory from '../features/pricehistory/pricehistory.model';
 import Trade from '../features/trade/trade.model';
 import User from '../features/user/user.model';
+import LedgerKind from '../features/ledger/ledgerKind.model';
+import LedgerEntry from '../features/ledger/ledgerEntry.model';
+import ProtectedMatch from '../features/protectedmatch/protectedmatch.model';
 
 async function InitDB() {
   logger.info('Initializing the database');
   await User.sync({ force: true });
   await Contest.sync({ force: true });
+  await LedgerKind.sync({ force: true });
+  await LedgerEntry.sync({ force: true });
   await NFLTeam.sync({ force: true });
   await NFLGame.sync({ force: true });
   await NFLPosition.sync({ force: true });
   await NFLPlayer.sync({ force: true });
   await Entry.sync({ force: true });
   await Offer.sync({ force: true });
+  await ProtectedMatch.sync({ force: true });
   await PriceHistory.sync({ force: true });
   await Trade.sync({ force: true });
 

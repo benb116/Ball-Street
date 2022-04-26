@@ -26,6 +26,7 @@ export default async function PullLatestInjuries() {
   }
 }
 
+// Pull injury data from yahoo or mock data
 function pullInjuryData() {
   if (Number(process.env.YAHOO_MOCK)) {
     return yahooData.injury;
@@ -33,9 +34,9 @@ function pullInjuryData() {
   return axios.get('https://football.fantasysports.yahoo.com/f1/injuries');
 }
 
+// Determine which players' injury status has changed
+// If a player is no longer listed on the page, their entry is removed
 export function FindInjuryChanges(injuryObjs: NFLPlayerType[]) {
-  // Determine which players' injury status has changed
-  // If a player is no longer listed on the page, their entry is removed
   const newInjObj: typeof state.injObj = {};
   // Find objects that changed/were added
   const changedObjects = injuryObjs.filter((e) => {

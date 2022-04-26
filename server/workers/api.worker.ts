@@ -24,6 +24,4 @@ app.use(`${routePrefix}/auth/`, userRoute);
 app.use(`${routePrefix}/api/`, apiRoute);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  logger.info(`Listening on port ${PORT}`);
-});
+app.listen(PORT, () => { logger.info(`Listening on port ${PORT}`); });

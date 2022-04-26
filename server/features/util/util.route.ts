@@ -29,8 +29,11 @@ function routeHandler(service: ServiceType, cacheExpiry = 0) {
     } catch (err) {
       let outError;
       if (!isUError(err)) {
-        if (err instanceof Error) outError = uError(err.message);
-        outError = uError('Unknown error');
+        if (err instanceof Error) {
+          outError = uError(err.message);
+        } else {
+          outError = uError('Unknown error');
+        }
       } else {
         outError = err;
       }

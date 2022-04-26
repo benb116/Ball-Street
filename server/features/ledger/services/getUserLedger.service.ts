@@ -28,6 +28,7 @@ interface GetUserLedgerInput extends ServiceInput {
   body: Record<string, never>
 }
 
+// Number of entries per page
 const paginationLimit = 10;
 
 function getUserLedger(req: GetUserLedgerInput) {
