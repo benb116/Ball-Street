@@ -1,6 +1,6 @@
 // Set up the database with proper tables and NFL data
 
-import { LedgerKinds, RosterPosTypes } from '../config';
+import { EntryActionKinds, LedgerKinds, RosterPosTypes } from '../config';
 import teams from '../nflinfo';
 import logger from '../utilities/logger';
 import scrape from './playerscraper';
@@ -18,6 +18,8 @@ import User from '../features/user/user.model';
 import LedgerKind from '../features/ledger/ledgerKind.model';
 import LedgerEntry from '../features/ledger/ledgerEntry.model';
 import ProtectedMatch from '../features/protectedmatch/protectedmatch.model';
+import EntryAction from '../features/trade/entryaction.model';
+import EntryActionKind from '../features/trade/entryactionkind.model';
 
 async function InitDB() {
   logger.info('Initializing the database');
@@ -34,10 +36,16 @@ async function InitDB() {
   await ProtectedMatch.sync({ force: true });
   await PriceHistory.sync({ force: true });
   await Trade.sync({ force: true });
+  await EntryActionKind.sync({ force: true });
+  await EntryAction.sync({ force: true });
 
   // Create kinds of ledger entries
   const ledgerkindrecords = Object.keys(LedgerKinds).map((k) => ({ ...LedgerKinds[k], name: k }));
   await LedgerKind.bulkCreate(ledgerkindrecords);
+
+  // Create kinds of entry actions
+  const entryactionkindrecords = Object.keys(EntryActionKinds).map((k) => ({ ...EntryActionKinds[k], name: k }));
+  await EntryActionKind.bulkCreate(entryactionkindrecords);
 
   // Create nfl position DB records
   const nflposrecords = Object.keys(RosterPosTypes).map((p) => ({ ...RosterPosTypes[p], name: p }));

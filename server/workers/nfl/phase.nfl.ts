@@ -22,6 +22,8 @@ import NFLPlayer, { NFLPlayerType } from '../../features/nflplayer/nflplayer.mod
 // import Contest, { ContestType } from '../../features/contest/contest.model';
 import NFLGame from '../../features/nflgame/nflgame.model';
 import getWeekEntries from '../../features/entry/services/getWeekEntries.service';
+import EntryAction, { EntryActionType } from '../../features/trade/entryaction.model';
+import { EntryActionKinds } from '../../config';
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
@@ -135,16 +137,31 @@ async function convertEntry(e: EntryType, players: NFLPlayerType[], statmap: Rec
       UserId: e.UserId,
       ContestId: e.ContestId,
     };
-    players.forEach((p) => {
+    // Return list of playerIDs that are converted
+    const playersConverted = players.reduce((acc, p) => {
       const pos = isPlayerOnRoster(dv(theentry), p.id);
       if (pos) {
         newSet.pointtotal += (statmap[p.id] || 0);
         newSet[pos] = null;
+        acc.push(p.id);
       }
-    });
-    theentry.set(newSet);
+      return acc;
+    }, [] as number[]);
 
+    // Update entry record
+    theentry.set(newSet);
     await theentry.save({ transaction: t });
+
+    // Write conversion records
+    const entryActions = playersConverted.map((pID) => ({
+      EntryActionKindId: EntryActionKinds.Convert.id,
+      UserId: e.UserId,
+      ContestId: e.ContestId,
+      NFLPlayerId: pID,
+      price: (statmap[pID] || 0),
+    } as EntryActionType));
+    await EntryAction.bulkCreate(entryActions, { transaction: t });
+
     return theentry;
   });
 }

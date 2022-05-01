@@ -69,3 +69,12 @@ export const LedgerKinds: Record<string, LedgerKindType> = {
   'Miscellaneous Credit': { id: 5, isCredit: true },
   'Miscellaneous Debit': { id: 6, isCredit: false },
 };
+
+interface EntryActionKindType {
+  id: number,
+}
+export const EntryActionKinds: Record<string, EntryActionKindType> = {
+  Add: { id: 1 },
+  Drop: { id: 2 },
+  Convert: { id: 3 },
+};
