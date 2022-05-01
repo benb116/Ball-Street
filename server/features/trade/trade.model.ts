@@ -7,7 +7,7 @@ export interface TradeType {
   bidId: string,
   askId: string,
 }
-type TradeCreateType = TradeType;
+export type TradeCreateType = TradeType;
 
 const Trade: ModelDefined<TradeType, TradeCreateType> = sequelize.define('Trade', {
   price: { // What was the actual price that was traded at

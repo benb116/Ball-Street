@@ -1,11 +1,10 @@
-export interface TradeItemType {
-  id: string,
-  NFLPlayerId: number,
-  price: number,
-  isbid: boolean,
-  createdAt: string,
+export interface TradeTree {
+  bids: TradeBidType[],
+  asks: TradeAskType[],
+  actions: EntryActionType[],
 }
-export interface TradeBid {
+
+interface TradeBidType {
   price: number,
   bid: {
     NFLPlayerId: number,
@@ -14,7 +13,7 @@ export interface TradeBid {
     id: string,
   },
 }
-export interface TradeAsk {
+interface TradeAskType {
   price: number,
   ask: {
     NFLPlayerId: number,
@@ -22,4 +21,26 @@ export interface TradeAsk {
     createdAt: string
     id: string,
   },
+}
+
+interface EntryActionType {
+  id: string,
+  EntryActionKindId: number,
+  UserId: number,
+  ContestId: number,
+  NFLPlayerId: number,
+  price: number,
+  EntryActionKind: {
+    id: number,
+    name: string,
+  },
+  createdAt: string
+}
+
+export interface TradeItemType {
+  id: string,
+  action: string,
+  NFLPlayerId: number,
+  price: number,
+  createdAt: string,
 }

@@ -4,7 +4,6 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { RootState } from '../../../app/store';
 import { ErrHandler } from '../../../helpers/util';
 import TradesAPI from './Trades.api';
-
 import { TradeItemType } from './Trades.types';
 
 interface TradesState {
@@ -20,18 +19,29 @@ export const tradesSlice = createSlice({
   reducers: { },
   extraReducers: (builder) => {
     builder.addMatcher(TradesAPI.endpoints.getTrades.matchFulfilled, (state, { payload }) => {
-      state.trades = payload.map((t) => {
-        const data = ('bid' in t ? t.bid : t.ask);
-        // Pull certain info
-        const out: TradeItemType = {
-          price: t.price,
-          NFLPlayerId: data.NFLPlayerId,
-          isbid: data.isbid,
-          createdAt: data.createdAt,
-          id: data.id,
-        };
-        return out;
-      }).sort((a: TradeItemType, b: TradeItemType) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
+      const out: TradeItemType[] = [];
+      payload.bids.forEach((b) => (out.push({
+        id: b.bid.id,
+        action: 'Trade for',
+        NFLPlayerId: b.bid.NFLPlayerId,
+        price: b.price,
+        createdAt: b.bid.createdAt,
+      } as TradeItemType)));
+      payload.asks.forEach((a) => (out.push({
+        id: a.ask.id,
+        action: 'Trade away',
+        NFLPlayerId: a.ask.NFLPlayerId,
+        price: a.price,
+        createdAt: a.ask.createdAt,
+      } as TradeItemType)));
+      payload.actions.forEach((a) => (out.push({
+        id: a.id,
+        action: a.EntryActionKind.name,
+        NFLPlayerId: a.NFLPlayerId,
+        price: a.price,
+        createdAt: a.createdAt,
+      } as TradeItemType)));
+      state.trades = out.sort((a: TradeItemType, b: TradeItemType) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
     });
     builder.addMatcher(TradesAPI.endpoints.getTrades.matchRejected, ErrHandler);
   },

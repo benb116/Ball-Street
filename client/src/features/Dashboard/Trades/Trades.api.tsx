@@ -1,9 +1,9 @@
 import BaseAPI from '../../../helpers/api';
-import { TradeAsk, TradeBid } from './Trades.types';
+import { TradeTree } from './Trades.types';
 
 const TradesAPI = BaseAPI.injectEndpoints({
   endpoints: (build) => ({
-    getTrades: build.query<(TradeBid | TradeAsk)[], string>({
+    getTrades: build.query<TradeTree, string>({
       query: (contestID) => `/api/contests/${contestID}/trades`,
       providesTags: ['Trades'],
     }),

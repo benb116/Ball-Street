@@ -21,7 +21,8 @@ export interface OfferType {
   createdAt: string,
   updatedAt: string,
 }
-type OfferCreateType = Optional<OfferType, 'id' | 'protected' | 'filled' | 'cancelled' | 'createdAt' | 'updatedAt'>;
+export type OfferCreateType =
+Optional<OfferType, 'id' | 'protected' | 'filled' | 'cancelled' | 'createdAt' | 'updatedAt'>;
 
 const Offer: ModelDefined<OfferType, OfferCreateType> = sequelize.define('Offer', {
   id: {

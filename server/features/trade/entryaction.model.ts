@@ -1,15 +1,17 @@
-import Sequelize, { DataTypes, ModelDefined } from 'sequelize';
+import Sequelize, { DataTypes, ModelDefined, Optional } from 'sequelize';
 import sequelize from '../../db';
 import EntryActionKind from './entryactionkind.model';
 
 export interface EntryActionType {
+  id: string,
   EntryActionKindId: number,
   UserId: number,
   ContestId: number,
   NFLPlayerId: number,
   price: number,
 }
-type EntryActionCreateType = EntryActionType;
+
+export type EntryActionCreateType = Optional<EntryActionType, 'id'>;
 
 const EntryAction: ModelDefined<EntryActionType, EntryActionCreateType> = sequelize.define('EntryAction', {
   id: {
