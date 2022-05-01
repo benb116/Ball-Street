@@ -4,6 +4,8 @@ import Offer from '../../offer/offer.model';
 import { dv, validate } from '../../util/util';
 import validators from '../../util/util.schema';
 import { ServiceInput } from '../../util/util.service';
+import EntryAction from '../entryaction.model';
+import EntryActionKind from '../entryactionkind.model';
 
 import Trade from '../trade.model';
 
@@ -25,7 +27,7 @@ interface GetUserTradesInput extends ServiceInput {
 async function getUserTrades(req: GetUserTradesInput) {
   const value: GetUserTradesInput = validate(req, schema);
 
-  const allbids = await Trade.findAll({
+  const bids = await Trade.findAll({
     include: [{
       model: Offer,
       as: 'bid',
@@ -35,7 +37,7 @@ async function getUserTrades(req: GetUserTradesInput) {
       },
     }],
   }).then(dv);
-  const allasks = await Trade.findAll({
+  const asks = await Trade.findAll({
     include: [{
       model: Offer,
       as: 'ask',
@@ -45,7 +47,14 @@ async function getUserTrades(req: GetUserTradesInput) {
       },
     }],
   }).then(dv);
-  return allbids.concat(allasks);
+  const actions = await EntryAction.findAll({
+    include: [{ model: EntryActionKind }],
+    where: {
+      ContestId: value.params.contestID,
+      UserId: value.user,
+    },
+  }).then(dv);
+  return { bids, asks, actions };
 }
 
 export default getUserTrades;

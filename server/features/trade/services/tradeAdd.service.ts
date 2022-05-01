@@ -10,6 +10,8 @@ import { ServiceInput } from '../../util/util.service';
 import Entry, { EntryType } from '../../entry/entry.model';
 import NFLGame, { NFLGameType } from '../../nflgame/nflgame.model';
 import NFLPlayer, { NFLPlayerType } from '../../nflplayer/nflplayer.model';
+import EntryAction from '../entryaction.model';
+import { EntryActionKinds } from '../../../config';
 
 const schema = Joi.object({
   user: validators.user,
@@ -122,6 +124,16 @@ async function tradeAdd(req: TradeAddInput, t: Transaction) {
   });
 
   await theentry.save({ transaction: t });
+
+  if (gamedata.phase === 'pre') {
+    await EntryAction.create({
+      EntryActionKindId: EntryActionKinds.Add.id,
+      UserId: value.user,
+      ContestId: value.params.contestID,
+      NFLPlayerId: theplayer,
+      price: tradeprice,
+    }, { transaction: t });
+  }
 
   return theentry;
 }

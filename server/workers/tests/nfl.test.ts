@@ -6,8 +6,9 @@ import yahoo from './yahooData';
 import setPhase from '../nfl/phase.nfl';
 import { FormatInjuryObjects, FindInjuryChanges } from '../nfl/injury.nfl';
 import { EstimateProjection } from '../nfl/stats.nfl';
-// The mock factory returns a mocked function
-jest.mock('../nfl/phase.nfl', () => jest.fn());
+import NFLGame from '../../features/nflgame/nflgame.model';
+import Entry from '../../features/entry/entry.model';
+import { dv } from '../../features/util/util';
 
 type TestNameType = keyof typeof yahoo.games;
 
@@ -98,6 +99,22 @@ describe('NFL worker tests', () => {
     });
   });
 
+  test('Test phase transition', async () => {
+    state.statObj[30175] = { w: '2|23|0|12|0|0|4|1' };
+    await setPhase(23, 'post');
+    const game = await NFLGame.findOne({ where: { HomeId: 23 } }).then(dv);
+    const entry = await Entry.findOne({ where: { ContestId: 2, UserId: 5 } }).then(dv);
+
+    NFLGame.update({ phase: 'mid' }, { where: { HomeId: 23 } });
+    Entry.update({ WR1: 30175, pointtotal: 500 }, { where: { ContestId: 2, UserId: 5 } });
+
+    expect(game.phase).toBe('post');
+    expect(entry).toMatchObject({
+      WR1: null,
+      pointtotal: 830,
+    });
+  });
+
   describe('Test game file update parse', () => {
     const testfiles = Object.keys(yahoo.games) as TestNameType[];
 
@@ -107,12 +124,11 @@ describe('NFL worker tests', () => {
         .map((e) => Number(e[0]));
       test(testname, () => {
         state.timeObj = {};
-        const changedTeams = ParseGameFileUpdate(yahoo.games[testname].data);
+        const [changedTeams, postTeams2] = ParseGameFileUpdate(yahoo.games[testname].data);
         expect(changedTeams).toStrictEqual(yahoo.games[testname].changedTeams);
+        expect(postTeams).toEqual(expect.arrayContaining(postTeams2));
+        expect(postTeams2).toEqual(expect.arrayContaining(postTeams));
         expect(state.timeObj).toStrictEqual(yahoo.games[testname].timeObj);
-        postTeams.forEach((t) => {
-          expect(setPhase).toHaveBeenCalledWith(t, 'post');
-        });
       });
     });
   });
@@ -130,7 +146,6 @@ describe('NFL worker tests', () => {
       active: false, // If this was a new player record, don't show in results
       preprice: null,
       postprice: null,
-      jersey: 0,
     };
     injuryObjects[0] = newInjury1;
     expect(FindInjuryChanges(injuryObjects)).toEqual([newInjury1]);

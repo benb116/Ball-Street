@@ -113,7 +113,6 @@ export function FormatInjuryObjects(raw: string) {
       active: false, // If this was a new player record, don't show in results
       preprice: null,
       postprice: null,
-      jersey: 0,
     };
     acc.push(pObj);
     return acc;
@@ -130,6 +129,5 @@ function GenerateInjuryObject(playerid: number, status: string | null) {
     active: false,
     preprice: null,
     postprice: null,
-    jersey: 0,
   } as Required<NFLPlayerCreateType>;
 }

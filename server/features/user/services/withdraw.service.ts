@@ -8,7 +8,7 @@ import errorHandler, { ServiceInput } from '../../util/util.service';
 
 import sequelize from '../../../db';
 import LedgerEntry, { LedgerEntryCreateType, LedgerEntryType } from '../../ledger/ledgerEntry.model';
-import { LedgerKindTypes } from '../../../config';
+import { LedgerKinds } from '../../../config';
 import User from '../user.model';
 
 const isoOption = {
@@ -56,7 +56,7 @@ async function withdraw(req: WithdrawalInput) {
     const ledgerObj: LedgerEntryCreateType = {
       UserId: value.user,
       ContestId: null,
-      LedgerKindId: LedgerKindTypes.Withdrawal.id,
+      LedgerKindId: LedgerKinds.Withdrawal.id,
       value: value.body.amount,
     };
 

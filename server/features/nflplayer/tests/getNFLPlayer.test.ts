@@ -22,7 +22,6 @@ describe('getNFLPlayer service', () => {
       NFLPositionId: 6,
       NFLTeamId: 1,
       id: 1,
-      jersey: 0,
       name: 'Atlanta Falcons',
       postprice: 700,
       preprice: 1100,

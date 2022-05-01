@@ -68,7 +68,7 @@ describe('util testing', () => {
     }).then(async (e) => {
       // Right after the first row lock, try a second
       // This should wait until first lock is released
-      // Check outside of the try block that new value is received
+      // Check outside of the then block that new value is received
       theentry2 = Entry.findOne({
         where: { UserId: 5, ContestId: 2 },
         transaction: t2,
@@ -99,5 +99,9 @@ describe('util testing', () => {
     // So it should see the new data
     const out = await theentry2;
     expect(out).toBe(100);
+    await t2.commit();
+
+    // Reset record
+    await Entry.update({ pointtotal: 500 }, { where: { UserId: 5, ContestId: 2 } });
   }, 5000);
 });

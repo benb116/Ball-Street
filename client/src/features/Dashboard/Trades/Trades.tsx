@@ -42,7 +42,7 @@ function TradeItem({ tradedata }: { tradedata: TradeItemType }) {
     <div>
       {new Date(tradedata.createdAt).toLocaleString()}
       {' '}
-      {(tradedata.isbid ? 'Added' : 'Dropped')}
+      {(tradedata.action)}
       {' '}
       {(playerData?.name || '')}
       {' for '}
@@ -54,9 +54,9 @@ function TradeItem({ tradedata }: { tradedata: TradeItemType }) {
 TradeItem.propTypes = {
   tradedata: PropTypes.shape({
     id: PropTypes.string.isRequired,
+    action: PropTypes.string.isRequired,
     NFLPlayerId: PropTypes.number.isRequired,
     price: PropTypes.number.isRequired,
-    isbid: PropTypes.bool.isRequired,
     createdAt: PropTypes.string.isRequired,
   }).isRequired,
 };

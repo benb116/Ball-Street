@@ -10,7 +10,7 @@ export interface NFLGameType {
   week: number,
   HomeId: number,
   AwayId: number,
-  phase: string,
+  phase: 'pre' | 'mid' | 'post',
   startTime: number,
 }
 

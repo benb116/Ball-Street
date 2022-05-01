@@ -7,7 +7,6 @@ describe('getNFLPlayers service', () => {
     expect(out[0]).toEqual(expect.objectContaining({
       id: 22,
       name: 'Arizona Cardinals',
-      jersey: 0,
       preprice: 1100,
       postprice: 700,
       NFLPositionId: 6,

@@ -3,12 +3,13 @@ import logger from '../utilities/logger';
 
 import Contest, { ContestCreateType } from '../features/contest/contest.model';
 import Entry from '../features/entry/entry.model';
-import NFLGame from '../features/nflgame/nflgame.model';
-import Offer from '../features/offer/offer.model';
-import Trade from '../features/trade/trade.model';
+import NFLGame, { NFLGameCreateType } from '../features/nflgame/nflgame.model';
+import Offer, { OfferCreateType } from '../features/offer/offer.model';
+import Trade, { TradeCreateType } from '../features/trade/trade.model';
 import User, { UserCreateType } from '../features/user/user.model';
 import LedgerEntry, { LedgerEntryCreateType } from '../features/ledger/ledgerEntry.model';
-import { LedgerKindTypes } from '../config';
+import { EntryActionKinds, LedgerKinds } from '../config';
+import EntryAction, { EntryActionCreateType } from '../features/trade/entryaction.model';
 
 async function PopulateDB() {
   logger.info('Populating DB with initial data');
@@ -36,7 +37,7 @@ async function PopulateDB() {
   const ledgerEntries: LedgerEntryCreateType[] = usrs.map((_u, i) => ({
     id: `16c94b61-3c76-4078-8fbc-67fac7ed26d${i}`,
     UserId: i + 1,
-    LedgerKindId: LedgerKindTypes.Deposit.id,
+    LedgerKindId: LedgerKinds.Deposit.id,
     ContestId: null,
     value: 3000,
   }));
@@ -77,7 +78,7 @@ async function PopulateDB() {
   }, {
     UserId: 3, ContestId: 2, pointtotal: 500, RB1: 31885, WR1: null, WR2: null, K1: 30266, DEF1: null, TE1: 30213,
   }, {
-    UserId: 5, ContestId: 2, pointtotal: 500, RB1: 31885, WR1: null, WR2: null, K1: 30266, DEF1: null, TE1: 30213,
+    UserId: 5, ContestId: 2, pointtotal: 500, RB1: 31885, WR1: 30175, WR2: null, K1: 30266, DEF1: null, TE1: 30213,
   }, {
     UserId: 1, ContestId: 3, pointtotal: 10000, RB1: 31885, WR1: null, WR2: null, K1: 30266, DEF1: 21, TE1: null,
   }, {
@@ -90,7 +91,7 @@ async function PopulateDB() {
   const ledgerEntries2: LedgerEntryCreateType[] = entrs.map((_u, i) => ({
     id: `16c94b61-3c76-4078-8fbc-67fac7ed26b${i}`,
     UserId: _u.UserId,
-    LedgerKindId: LedgerKindTypes['Entry Fee'].id,
+    LedgerKindId: LedgerKinds['Entry Fee'].id,
     ContestId: _u.ContestId,
     value: allcontests[0].buyin,
   }));
@@ -98,13 +99,13 @@ async function PopulateDB() {
   const ledgerEntries3: LedgerEntryCreateType[] = entrs2.map((_u, i) => ({
     id: `16c94b61-3c76-4078-8fbc-67fac7ed26a${i}`,
     UserId: _u.UserId,
-    LedgerKindId: LedgerKindTypes['Entry Fee'].id,
+    LedgerKindId: LedgerKinds['Entry Fee'].id,
     ContestId: _u.ContestId,
     value: allcontests[_u.ContestId - 1].buyin,
   }));
   await LedgerEntry.bulkCreate(ledgerEntries3);
 
-  const offs = [{
+  const offs: OfferCreateType[] = [{
     id: '16c94b61-3c76-4078-8fbc-67fac7ed26c2',
     UserId: 1,
     ContestId: 1,
@@ -159,7 +160,7 @@ async function PopulateDB() {
   }];
   await Offer.bulkCreate(offs);
 
-  const trds = [
+  const trds: TradeCreateType[] = [
     {
       bidId: '16c94b61-3c76-4078-8fbc-67fac7ed26c6',
       askId: '16c94b61-3c76-4078-8fbc-67fac7ed26c4',
@@ -168,7 +169,19 @@ async function PopulateDB() {
   ];
   await Trade.bulkCreate(trds);
 
-  await NFLGame.bulkCreate([
+  const acts: EntryActionCreateType[] = [
+    {
+      id: '16c94b61-3c76-4078-8fbc-67fac7ed26e2',
+      EntryActionKindId: EntryActionKinds.Add.id,
+      UserId: 1,
+      ContestId: 1,
+      NFLPlayerId: 31885,
+      price: 1100,
+    },
+  ];
+  await EntryAction.bulkCreate(acts);
+
+  const games: NFLGameCreateType[] = [
     {
       week: curweek, HomeId: 10, AwayId: 1, startTime: 100,
     },
@@ -217,7 +230,8 @@ async function PopulateDB() {
     {
       week: curweek, HomeId: 22, AwayId: 28, phase: 'pre', startTime: 400,
     },
-  ]);
+  ];
+  await NFLGame.bulkCreate(games);
 }
 
 export default PopulateDB;
