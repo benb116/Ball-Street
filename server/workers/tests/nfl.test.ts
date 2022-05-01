@@ -6,6 +6,9 @@ import yahoo from './yahooData';
 import setPhase from '../nfl/phase.nfl';
 import { FormatInjuryObjects, FindInjuryChanges } from '../nfl/injury.nfl';
 import { EstimateProjection } from '../nfl/stats.nfl';
+import NFLGame from '../../features/nflgame/nflgame.model';
+import Entry from '../../features/entry/entry.model';
+import { dv } from '../../features/util/util';
 
 type TestNameType = keyof typeof yahoo.games;
 
@@ -93,6 +96,22 @@ describe('NFL worker tests', () => {
         expect(phasemap).toStrictEqual(yahoo.games[testname].phasemap);
         expect(gameobjs).toStrictEqual(yahoo.games[testname].gameobjs);
       });
+    });
+  });
+
+  test('Test phase transition', async () => {
+    state.statObj[30175] = { w: '2|23|0|12|0|0|4|1' };
+    await setPhase(23, 'post');
+    const game = await NFLGame.findOne({ where: { HomeId: 23 } }).then(dv);
+    const entry = await Entry.findOne({ where: { ContestId: 2, UserId: 5 } }).then(dv);
+
+    NFLGame.update({ phase: 'mid' }, { where: { HomeId: 23 } });
+    Entry.update({ WR1: 30175, pointtotal: 500 }, { where: { ContestId: 2, UserId: 5 } });
+
+    expect(game.phase).toBe('post');
+    expect(entry).toMatchObject({
+      WR1: null,
+      pointtotal: 830,
     });
   });
 
