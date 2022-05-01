@@ -61,7 +61,7 @@ interface LedgerKindType {
   id: number,
   isCredit: boolean,
 }
-export const LedgerKindTypes: Record<string, LedgerKindType> = {
+export const LedgerKinds: Record<string, LedgerKindType> = {
   Deposit: { id: 1, isCredit: true },
   Withdrawal: { id: 2, isCredit: false },
   'Entry Fee': { id: 3, isCredit: false },

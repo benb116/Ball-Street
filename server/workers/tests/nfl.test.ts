@@ -130,7 +130,6 @@ describe('NFL worker tests', () => {
       active: false, // If this was a new player record, don't show in results
       preprice: null,
       postprice: null,
-      jersey: 0,
     };
     injuryObjects[0] = newInjury1;
     expect(FindInjuryChanges(injuryObjects)).toEqual([newInjury1]);

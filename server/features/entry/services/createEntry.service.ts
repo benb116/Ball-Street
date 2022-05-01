@@ -11,7 +11,7 @@ import Entry, { EntryCreateType } from '../entry.model';
 import sequelize from '../../../db';
 import User from '../../user/user.model';
 import LedgerEntry, { LedgerEntryCreateType } from '../../ledger/ledgerEntry.model';
-import { LedgerKindTypes } from '../../../config';
+import { LedgerKinds } from '../../../config';
 
 const isoOption = {
   // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
@@ -57,7 +57,7 @@ async function createEntry(req: CreateEntryInput) {
     const ledgerObj: LedgerEntryCreateType = {
       UserId: value.user,
       ContestId: thecontest.id,
-      LedgerKindId: LedgerKindTypes['Entry Fee'].id,
+      LedgerKindId: LedgerKinds['Entry Fee'].id,
       value: thecontest.buyin,
     };
 

@@ -10,7 +10,6 @@ import NFLPosition from '../nflposition/nflposition.model';
 export interface NFLPlayerType {
   id: number,
   name: string,
-  jersey?: number | null,
   preprice: number | null,
   postprice: number | null,
   NFLPositionId: number,
@@ -31,10 +30,6 @@ const NFLPlayer: ModelDefined<NFLPlayerType, NFLPlayerCreateType> = sequelize.de
   name: {
     type: DataTypes.STRING,
     allowNull: false,
-  },
-  jersey: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0,
   },
   preprice: { // How much can someone pay to add before games start
     type: DataTypes.INTEGER,

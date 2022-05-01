@@ -1,6 +1,6 @@
 // Set up the database with proper tables and NFL data
 
-import { RosterPosTypes } from '../config';
+import { LedgerKinds, RosterPosTypes } from '../config';
 import teams from '../nflinfo';
 import logger from '../utilities/logger';
 import scrape from './playerscraper';
@@ -35,6 +35,10 @@ async function InitDB() {
   await PriceHistory.sync({ force: true });
   await Trade.sync({ force: true });
 
+  // Create kinds of ledger entries
+  const ledgerkindrecords = Object.keys(LedgerKinds).map((k) => ({ ...LedgerKinds[k], name: k }));
+  await LedgerKind.bulkCreate(ledgerkindrecords);
+
   // Create nfl position DB records
   const nflposrecords = Object.keys(RosterPosTypes).map((p) => ({ ...RosterPosTypes[p], name: p }));
   await NFLPosition.bulkCreate(nflposrecords);
@@ -64,4 +68,4 @@ async function InitDB() {
   await scrape(true);
 }
 
-export default InitDB;
+InitDB();

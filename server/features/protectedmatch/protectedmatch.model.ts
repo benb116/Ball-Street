@@ -21,13 +21,6 @@ const ProtectedMatch: ModelDefined<ProtectedMatchType, ProtectedMatchCreateType>
     references: { model: 'Offers' },
     primaryKey: true,
   },
-}, {
-  indexes: [
-    { // Make it faster to search for offers that aren't filled or cancelled
-      name: 'IX_ProtMatch-Active',
-      fields: ['ContestId', 'NFLPlayerId'],
-    },
-  ],
 });
 
 ProtectedMatch.belongsTo(Offer, { as: 'existing', foreignKey: 'existingId' });
