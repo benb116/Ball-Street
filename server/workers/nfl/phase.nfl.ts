@@ -1,23 +1,23 @@
 // Change the game phase (pre, mid, post)
 import Joi from 'joi';
 import { Op, Sequelize } from 'sequelize';
-
 import type { Literal } from 'sequelize/types/utils.d';
+import type { Logger } from 'winston';
+
 import teams from '../../nflinfo';
 
 import { dv, validate, isPlayerOnRoster } from '../../features/util/util';
 import logger from '../../utilities/logger';
 import { SumPoints } from './dict.nfl';
-
 import state from './state.nfl';
+
+import sequelize from '../../db';
+import { client } from '../../db/redis';
 
 import phaseChange from '../live/channels/phaseChange.channel';
 
-import { client } from '../../db/redis';
-
 import Entry, { EntryType } from '../../features/entry/entry.model';
 import NFLPlayer, { NFLPlayerType } from '../../features/nflplayer/nflplayer.model';
-// import Contest, { ContestType } from '../../features/contest/contest.model';
 import NFLGame from '../../features/nflgame/nflgame.model';
 import getWeekEntries from '../../features/entry/services/getWeekEntries.service';
 import EntryAction, { EntryActionType } from '../../features/trade/entryaction.model';
@@ -108,14 +108,39 @@ async function convertTeamPlayers(teamID: number) {
   }, new Map());
 
   // For each entry with changes, calculate new values (roster and pointtotal) and send atomic update
-  changeMap.forEach((value, key) => {
-    const { UserId, ContestId } = key;
+  const conversionPromises: Promise<void | Logger>[] = [];
+  changeMap.forEach((playermap, entry) => {
+    const { UserId, ContestId } = entry;
+
+    // Build new entry values
     const updatedProps: Record<string, null | Literal> = {};
     let addSum = 0;
-    value.forEach((pID, pos) => { updatedProps[pos] = null; addSum += (statmap[pID] || 0); });
+    const playersConverted: number[] = [];
+    playermap.forEach((pID, pos) => {
+      updatedProps[pos] = null;
+      addSum += (statmap[pID] || 0);
+      playersConverted.push(pID);
+    });
     updatedProps.pointtotal = Sequelize.literal(`pointtotal + ${addSum.toString()}`);
-    Entry.update(updatedProps, { where: { UserId, ContestId } });
+
+    // Write conversion records
+    const entryActions = playersConverted.map((pID) => ({
+      EntryActionKindId: EntryActionKinds.Convert.id,
+      UserId,
+      ContestId,
+      NFLPlayerId: pID,
+      price: (statmap[pID] || 0),
+    } as EntryActionType));
+
+    // Return transaction of the two actions
+    const trans = sequelize.transaction(async (t) => {
+      await Entry.update(updatedProps, { where: { UserId, ContestId }, transaction: t });
+      await EntryAction.bulkCreate(entryActions, { transaction: t });
+    }).catch(logger.error);
+    conversionPromises.push(trans);
   });
+
+  return Promise.all(conversionPromises).then(() => logger.info(`Team ${teamID} conversion complete`));
 }
 
 // Set a player's postprice based on statlines
