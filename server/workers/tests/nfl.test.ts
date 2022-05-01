@@ -6,8 +6,6 @@ import yahoo from './yahooData';
 import setPhase from '../nfl/phase.nfl';
 import { FormatInjuryObjects, FindInjuryChanges } from '../nfl/injury.nfl';
 import { EstimateProjection } from '../nfl/stats.nfl';
-// The mock factory returns a mocked function
-jest.mock('../nfl/phase.nfl', () => jest.fn());
 
 type TestNameType = keyof typeof yahoo.games;
 
@@ -107,12 +105,11 @@ describe('NFL worker tests', () => {
         .map((e) => Number(e[0]));
       test(testname, () => {
         state.timeObj = {};
-        const changedTeams = ParseGameFileUpdate(yahoo.games[testname].data);
+        const [changedTeams, postTeams2] = ParseGameFileUpdate(yahoo.games[testname].data);
         expect(changedTeams).toStrictEqual(yahoo.games[testname].changedTeams);
+        expect(postTeams).toEqual(expect.arrayContaining(postTeams2));
+        expect(postTeams2).toEqual(expect.arrayContaining(postTeams));
         expect(state.timeObj).toStrictEqual(yahoo.games[testname].timeObj);
-        postTeams.forEach((t) => {
-          expect(setPhase).toHaveBeenCalledWith(t, 'post');
-        });
       });
     });
   });

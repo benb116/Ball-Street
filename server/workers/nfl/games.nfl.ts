@@ -151,7 +151,9 @@ async function setGamePhases(phasemap: PhaseMapType) {
 export async function PullAllGames() {
   try {
     const rawGame = await pullGameData();
-    return ParseGameFileUpdate(rawGame.data);
+    const [changedTeams, postTeams] = ParseGameFileUpdate(rawGame.data);
+    postTeams.forEach((t) => setPhase(t, 'post'));
+    return changedTeams;
   } catch (err) {
     logger.error(err);
     return [];
@@ -163,6 +165,7 @@ export function ParseGameFileUpdate(data: string) {
   const rawlines = data.split('\n');
   const gamelines = rawlines.filter((l: string) => l[0] === 'g');
   const changedTeams: number[] = [];
+  const postTeams: number[] = [];
   gamelines.forEach((gameline: string) => {
     const terms = gameline.split('|');
     const team1 = Number(terms[2]);
@@ -177,8 +180,8 @@ export function ParseGameFileUpdate(data: string) {
     if (gameState === 'F') {
       state.timeObj[team1] = 1;
       state.timeObj[team2] = 1;
-      setPhase(team1, 'post');
-      setPhase(team2, 'post');
+      postTeams.push(team1);
+      postTeams.push(team2);
       return;
     }
 
@@ -193,7 +196,7 @@ export function ParseGameFileUpdate(data: string) {
       changedTeams.push(team2);
     }
   });
-  return changedTeams;
+  return [changedTeams, postTeams];
 }
 
 // Calculate time left in the game
