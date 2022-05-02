@@ -13,7 +13,7 @@ async function evalProtected(playerBook: Book, proffer: string, neoffer: string)
   if (!poffer || poffer.cancelled || poffer.filled) {
     logger.info(`Matchee unavailable ${poffer.id}`);
     await playerBook.unmatch(poffer);
-    return false;
+    return;
   }
 
   // Matching offer must not have been cancelled
@@ -23,12 +23,10 @@ async function evalProtected(playerBook: Book, proffer: string, neoffer: string)
   if (!noffer || noffer.cancelled) {
     logger.info(`Matcher unavailable ${noffer.id}`);
     await playerBook.unmatch(poffer);
-    return false;
+    return;
   }
 
-  runMatches(poffer, playerBook);
-
-  return false;
+  await runMatches(poffer, playerBook);
 }
 
 // Find possible matches for a protected offer

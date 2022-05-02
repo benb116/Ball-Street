@@ -60,16 +60,14 @@ function processor(job: OfferJob) {
     playerBook.enqueue(() => { playerBook.add(job.data); });
   }
   // Add an evaluation to the queue
-  playerBook.enqueue(() => { evaluateBook(playerBook); });
+  playerBook.enqueue(async () => { await evaluateBook(playerBook); });
 }
 
 function protectedProcessor(job: ProtMatchJob) {
   logger.info(JSON.stringify(job.data));
   const { ContestId, NFLPlayerId } = job.data;
   const playerBook = getBook(books, ContestId, NFLPlayerId);
-  playerBook.enqueue(() => {
-    evalProtected(playerBook, job.data.existingOffer, job.data.newOffer);
-  });
+  playerBook.enqueue(async () => { await evalProtected(playerBook, job.data.existingOffer, job.data.newOffer); });
 }
 
 // Check the book and iteratively try to execute matches
