@@ -5,13 +5,13 @@ describe('login service', () => {
   test('Valid request returns data', ObjectTest(
     service, { email: 'email1@gmail.com', password: 'password1' },
     {
-      email: 'email1@gmail.com', id: 1, name: 'bot', cash: 1000,
+      email: 'email1@gmail.com', id: 1, name: 'bot', cash: 1000, needsVerification: false,
     },
   ));
 
   test('Needs verification', ObjectTest(
     service, { email: 'email6@gmail.com', password: 'password1' },
-    { needsVerification: true },
+    { needsVerification: true, id: 6 },
   ));
 
   test('Incorrect email returns 401', ErrorTest(

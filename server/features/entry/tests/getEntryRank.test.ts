@@ -19,6 +19,8 @@ describe('getEntryRank service', () => {
       WR2: null,
       pointtotal: 10000,
       rank: 1,
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date),
     },
   ));
 

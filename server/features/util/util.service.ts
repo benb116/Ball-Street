@@ -20,8 +20,8 @@ const isSeqError = (item: unknown): item is SequelizeError => !!(item as Sequeli
 
 export interface ServiceInput {
   user: number,
-  params: Record<string, any>,
-  body: Record<string, any>,
+  params: Record<string, unknown>,
+  body: Record<string, unknown>,
 }
 
 // Handle errors in services

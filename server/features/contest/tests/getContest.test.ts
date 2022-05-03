@@ -5,7 +5,17 @@ describe('getContest service', () => {
   test('Valid request returns data', ObjectTest(
     service, { user: 1, params: { contestID: 1 }, body: {} },
     {
-      budget: 10000, name: 'Ball Street Big One', nflweek: Number(process.env.WEEK), buyin: 2000,
+      id: 1,
+      budget: 10000,
+      name: 'Ball Street Big One',
+      nflweek: Number(process.env.WEEK),
+      buyin: 2000,
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date),
+      entry: {
+        pointtotal: 10000,
+        rank: 1,
+      },
     },
   ));
   test('Missing contestID returns error 400', ErrorTest(

@@ -14,6 +14,8 @@ describe('cancelOffer service', () => {
       isbid: false,
       price: 8000,
       protected: false,
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date),
     },
     'UPDATE "Offers" SET "cancelled"=false WHERE "ContestId"=1 AND "UserId"=1;',
   ));

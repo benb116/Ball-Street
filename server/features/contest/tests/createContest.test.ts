@@ -5,7 +5,13 @@ describe('createContest service', () => {
   test('Valid request returns data', ObjectTest(
     service, { user: 2, params: { }, body: { name: 'New Contest', budget: 10000 } },
     {
-      name: 'New Contest', budget: 10000, nflweek: Number(process.env.WEEK), buyin: 0,
+      id: 4,
+      name: 'New Contest',
+      budget: 10000,
+      nflweek: Number(process.env.WEEK),
+      buyin: 0,
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date),
     },
     'DELETE from "Contests" WHERE "name"=\'New Contest\';',
   ));

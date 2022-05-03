@@ -35,7 +35,7 @@ async function evalProtected(playerBook: Book, proffer: string, neoffer: string)
     return;
   }
 
-  runMatches(poffer, playerBook);
+  await runMatches(poffer, playerBook);
 }
 
 // Find possible matches for a protected offer

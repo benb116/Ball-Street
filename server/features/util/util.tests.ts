@@ -1,9 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Model } from 'sequelize';
 import sequelize from '../../db';
 import { isUError } from './util';
 import { ServiceType } from './util.service';
 
 type ObjectType = Record<string, unknown>;
+
+function dv(inp: Model | Model[] | any) {
+  if (inp.length) return inp.map(dv);
+  if (inp instanceof Model) return inp.toJSON();
+  return inp;
+}
 
 // Functions used in Jest testing
 // Ensures that a service call returns an object with specific properties
@@ -11,7 +18,7 @@ export const ObjectTest = function ObjectTest(
   service: ServiceType, req: unknown, contains: ObjectType, resetQuery = '',
 ) {
   return async () => service(req).then(async (resp: unknown) => {
-    expect(resp).toMatchObject(contains);
+    expect(dv(resp)).toStrictEqual(contains);
     if (resetQuery) await sequelize.query(resetQuery);
   });
 };
@@ -20,9 +27,9 @@ export const ObjectTest = function ObjectTest(
 export const ArrayTest = function ArrayTest(service: ServiceType, req: unknown, items: unknown[]) {
   return async () => service(req).then((resp: unknown) => {
     if (typeof items[0] === 'object') {
-      expect(resp).toMatchObject(items);
+      expect(dv(resp)).toStrictEqual(items);
     } else {
-      expect(resp).toEqual(expect.arrayContaining(items));
+      expect(dv(resp)).toStrictEqual(expect.arrayContaining(items));
     }
   });
 };

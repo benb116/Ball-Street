@@ -9,6 +9,9 @@ describe('withdraw service', () => {
       LedgerKindId: 2,
       UserId: 4,
       value: 300,
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date),
+      id: expect.stringContaining('-'),
     },
     `
       DELETE from "LedgerEntries" WHERE "UserId"=4 AND "value"=300;

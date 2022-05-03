@@ -13,6 +13,8 @@ describe('getNFLPlayer service', () => {
       preprice: 1100,
       active: true,
       injuryStatus: null,
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date),
     },
   ));
 
@@ -27,6 +29,8 @@ describe('getNFLPlayer service', () => {
       preprice: 1100,
       active: true,
       injuryStatus: null,
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date),
     },
   ));
 
