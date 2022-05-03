@@ -4,7 +4,7 @@ import { Op } from 'sequelize';
 
 import { DefaultProtected } from '../../../config';
 import {
-  dv, tobj, validate, uError, isPlayerOnRoster, isOpenRoster,
+  tobj, validate, uError, isPlayerOnRoster, isOpenRoster,
 } from '../../util/util';
 import validators from '../../util/util.schema';
 import errorHandler, { ServiceInput } from '../../util/util.service';
@@ -12,16 +12,12 @@ import errorHandler, { ServiceInput } from '../../util/util.service';
 import sequelize from '../../../db';
 import { queueOptions } from '../../../db/redis';
 
-import Entry, { EntryType } from '../../entry/entry.model';
-import NFLPlayer, { NFLPlayerType } from '../../nflplayer/nflplayer.model';
-import NFLGame, { NFLGameType } from '../../nflgame/nflgame.model';
+import Entry from '../../entry/entry.model';
+import NFLPlayer from '../../nflplayer/nflplayer.model';
+import NFLGame from '../../nflgame/nflgame.model';
 import Offer from '../offer.model';
 
 const offerQueue = new Queue('offer-queue', queueOptions);
-
-const isoOption = {
-  // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
-};
 
 const schema = Joi.object({
   user: validators.user,
@@ -67,7 +63,7 @@ interface CreateOfferInput extends ServiceInput {
 async function createOffer(req: CreateOfferInput) {
   const value: CreateOfferInput = validate(req, schema);
 
-  return sequelize.transaction(isoOption, async (t) => {
+  return sequelize.transaction(async (t) => {
     // Find user's entry
     const theentry = await Entry.findOne({
       where: {
@@ -76,44 +72,43 @@ async function createOffer(req: CreateOfferInput) {
       },
       ...tobj(t),
     });
-    if (!theentry) { uError('No entry found', 404); }
-    const entryData: EntryType = dv(theentry);
+    if (!theentry) { return uError('No entry found', 404); }
 
-    const playerdata: NFLPlayerType = await NFLPlayer.findByPk(value.body.offerobj.nflplayerID, {
+    const playerdata = await NFLPlayer.findByPk(value.body.offerobj.nflplayerID, {
       attributes: ['NFLPositionId', 'NFLTeamId', 'active'],
       transaction: t,
-    }).then(dv);
-    if (!playerdata || !playerdata.active) { uError('Player not found', 404); }
+    });
+    if (!playerdata || !playerdata.active) { return uError('Player not found', 404); }
 
     // Player should be in entry for ask, not for bid
-    const isOnTeam = isPlayerOnRoster(entryData, value.body.offerobj.nflplayerID);
+    const isOnTeam = isPlayerOnRoster(theentry, value.body.offerobj.nflplayerID);
     if (!value.body.offerobj.isbid) {
-      if (!isOnTeam) { uError('Player is not on roster', 404); }
+      if (!isOnTeam) { return uError('Player is not on roster', 404); }
     } else {
-      if (isOnTeam) { uError('Player is on roster already', 409); }
+      if (isOnTeam) { return uError('Player is on roster already', 409); }
 
-      const pts = entryData.pointtotal;
+      const pts = theentry.pointtotal;
       if (value.body.offerobj.price > pts) {
-        uError("User doesn't have enough points to offer", 402);
+        return uError("User doesn't have enough points to offer", 402);
       }
       // Only allow offer if there's currently room on the roster
       // TODO make linked offers? I.e. sell player at market price to make room for other player
-      if (!isOpenRoster(entryData, playerdata.NFLPositionId)) {
-        uError('There are no spots this player could fit into', 409);
+      if (!isOpenRoster(theentry, playerdata.NFLPositionId)) {
+        return uError('There are no spots this player could fit into', 409);
       }
     }
 
     // Get player price and position
-    const gamedata: NFLGameType = await NFLGame.findOne({
+    const gamedata = await NFLGame.findOne({
       where: {
         [Op.or]: [{ HomeId: playerdata.NFLTeamId }, { AwayId: playerdata.NFLTeamId }],
         week: Number(process.env.WEEK),
       },
       transaction: t,
-    }).then(dv);
-    if (!gamedata) uError('Could not find game data for this player', 404);
+    });
+    if (!gamedata) return uError('Could not find game data for this player', 404);
     if (gamedata.phase !== 'mid') {
-      uError("Can't make an offer before or after games", 406);
+      return uError("Can't make an offer before or after games", 406);
     }
 
     return Offer.create({
@@ -126,11 +121,10 @@ async function createOffer(req: CreateOfferInput) {
     }, {
       transaction: t,
     });
+  }).then((offer) => {
+    offerQueue.add(offer);
+    return offer;
   })
-    .then(dv).then((offer) => {
-      offerQueue.add(offer);
-      return offer;
-    })
     .catch(errorHandler({
       default: { message: 'Offer could not be created', status: 500 },
       'IX_Offer-OneActive': { message: 'An offer already exists for this player', status: 406 },

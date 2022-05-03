@@ -9,7 +9,7 @@ import state from './state.nfl';
 
 import injuryUpdate, { InjuryUpdateType } from '../live/channels/injuryUpdate.channel';
 
-import NFLPlayer, { NFLPlayerCreateType, NFLPlayerType } from '../../features/nflplayer/nflplayer.model';
+import NFLPlayer from '../../features/nflplayer/nflplayer.model';
 import yahooData from '../tests/yahooData';
 
 let injuryInited = false;
@@ -36,7 +36,7 @@ function pullInjuryData() {
 
 // Determine which players' injury status has changed
 // If a player is no longer listed on the page, their entry is removed
-export function FindInjuryChanges(injuryObjs: NFLPlayerType[]) {
+export function FindInjuryChanges(injuryObjs: NFLPlayer[]) {
   const newInjObj: typeof state.injObj = {};
   // Find objects that changed/were added
   const changedObjects = injuryObjs.filter((e) => {
@@ -59,7 +59,7 @@ export function FindInjuryChanges(injuryObjs: NFLPlayerType[]) {
   return changedObjects;
 }
 
-async function PublishInjuryChanges(changedInjuries: NFLPlayerType[]) {
+async function PublishInjuryChanges(changedInjuries: NFLPlayer[]) {
   // If any changed, send out an update
   if (changedInjuries.length) {
     const outObj = changedInjuries.reduce((acc, cur) => {
@@ -100,25 +100,15 @@ export function FormatInjuryObjects(raw: string) {
     // Abbrev could be SUSP, which would otherwise be seen as P
     if (statusPreChar !== '>') status = 'O';
 
-    // This is an object that will "upserted" into the players table
-    // So it must have all of the required attributes
-    // But because we will only update the injuryStatus field on duplicate
-    // We can leave all other fields standard
-    const pObj = {
-      id: Number(playerid),
-      injuryStatus: status,
-      name: 'injury',
-      NFLPositionId: 1,
-      NFLTeamId: 1,
-      active: false, // If this was a new player record, don't show in results
-      preprice: null,
-      postprice: null,
-    };
-    acc.push(pObj);
+    acc.push(GenerateInjuryObject(Number(playerid), status));
     return acc;
-  }, [] as Required<NFLPlayerCreateType>[]);
+  }, [] as NFLPlayer[]);
 }
 
+// This is an object that will "upserted" into the players table
+// So it must have all of the required attributes
+// But because we will only update the injuryStatus field on duplicate
+// We can leave all other fields standard
 function GenerateInjuryObject(playerid: number, status: string | null) {
   return {
     id: playerid,
@@ -126,8 +116,8 @@ function GenerateInjuryObject(playerid: number, status: string | null) {
     name: 'injury',
     NFLPositionId: 1,
     NFLTeamId: 1,
-    active: false,
+    active: false, // If this was a new player record, don't show in results
     preprice: null,
     postprice: null,
-  } as Required<NFLPlayerCreateType>;
+  } as NFLPlayer;
 }

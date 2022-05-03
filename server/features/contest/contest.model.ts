@@ -2,20 +2,28 @@
 // Each contest runs over the cource of one NFL Week
 // Players start with a budget of points to spend
 
-import { DataTypes, ModelDefined, Optional } from 'sequelize';
+/* eslint-disable @typescript-eslint/lines-between-class-members */
+import {
+  Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
+} from 'sequelize';
 import sequelize from '../../db';
 
-export interface ContestType {
-  id: number,
-  name: string,
-  nflweek: number,
-  budget: number,
-  buyin: number,
+class Contest extends Model<InferAttributes<Contest>, InferCreationAttributes<Contest>> {
+  declare id: CreationOptional<number>;
+  declare name: string;
+  declare nflweek: number;
+  declare budget: number;
+  declare buyin: number;
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
 }
 
-export type ContestCreateType = Optional<ContestType, 'id'>;
-
-const Contest: ModelDefined<ContestType, ContestCreateType> = sequelize.define('Contest', {
+Contest.init({
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
   name: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -33,6 +41,8 @@ const Contest: ModelDefined<ContestType, ContestCreateType> = sequelize.define('
     allowNull: false,
     defaultValue: 0,
   },
-});
+  createdAt: DataTypes.DATE,
+  updatedAt: DataTypes.DATE,
+}, { sequelize });
 
 export default Contest;

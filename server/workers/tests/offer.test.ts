@@ -107,7 +107,7 @@ async function run() {
         if (!pMap.offer1.done) {
           pMap.offer1.done = true;
           pMap.offer1.res(msg);
-          const out = await createOffer(reqBody(2, 21, true, 400, true)).catch(console.log);
+          const out = await createOffer(reqBody(2, 21, true, 400, true));
           cancelOffer = out.id;
         } else if (!pMap.nonMatch.done) {
           pMap.nonMatch.done = true;

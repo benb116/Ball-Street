@@ -1,18 +1,24 @@
 // Model for an NFL Team
-import { DataTypes, ModelDefined, Optional } from 'sequelize';
+/* eslint-disable @typescript-eslint/lines-between-class-members */
+import {
+  Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
+} from 'sequelize';
 import sequelize from '../../db';
 
-export interface NFLTeamType {
-  id: number,
-  location: string,
-  name: string,
-  fullname: string,
-  abr: string,
+class NFLTeam extends Model<InferAttributes<NFLTeam>, InferCreationAttributes<NFLTeam>> {
+  declare id: number;
+  declare location: string;
+  declare name: string;
+  // get fullName(): NonAttribute<string> { // Philadelphia Eagles
+  //   return `${this.location} ${this.name}`;
+  // }
+  declare fullname: string;
+  declare abr: string;
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
 }
 
-type NFLTeamCreateType = Optional<NFLTeamType, 'id' | 'fullname'>;
-
-const NFLTeam: ModelDefined<NFLTeamType, NFLTeamCreateType> = sequelize.define('NFLTeam', {
+NFLTeam.init({
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -28,7 +34,6 @@ const NFLTeam: ModelDefined<NFLTeamType, NFLTeamCreateType> = sequelize.define('
   fullname: { // Philadelphia Eagles
     type: DataTypes.VIRTUAL,
     get(): string {
-      // @ts-expect-error - Location and name are in model
       return `${this.location} ${this.name}`;
     },
   },
@@ -37,6 +42,8 @@ const NFLTeam: ModelDefined<NFLTeamType, NFLTeamCreateType> = sequelize.define('
     allowNull: false,
     unique: true,
   },
-});
+  createdAt: DataTypes.DATE,
+  updatedAt: DataTypes.DATE,
+}, { sequelize });
 
 export default NFLTeam;

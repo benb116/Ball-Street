@@ -2,7 +2,7 @@
 
 import Joi from 'joi';
 
-import { dv, validate } from '../../util/util';
+import { validate } from '../../util/util';
 import validators from '../../util/util.schema';
 import errorHandler, { ServiceInput } from '../../util/util.service';
 import LedgerEntry from '../ledgerEntry.model';
@@ -41,7 +41,7 @@ function getUserLedger(req: GetUserLedgerInput) {
     include: [
       { model: LedgerKind },
     ],
-  }).then(dv)
+  })
     .catch(errorHandler({
       default: { message: 'Cannot retrieve transactions', status: 500 },
     }));

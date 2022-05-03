@@ -12,19 +12,19 @@ describe('util testing', () => {
   });
 
   test('isPlayerOnRoster', () => {
-    const theentry = {
+    const theentry = new Entry({
       UserId: 3,
       ContestId: 2,
       pointtotal: 500,
       RB1: 31885,
       K1: 30266,
-    };
+    });
     expect(isPlayerOnRoster(theentry, 30266)).toBe('K1');
     expect(isPlayerOnRoster(theentry, 12345)).toBe('');
   });
 
   test('isOpenRoster', () => {
-    const theentry = {
+    const theentry = new Entry({
       UserId: 3,
       ContestId: 2,
       pointtotal: 500,
@@ -32,11 +32,11 @@ describe('util testing', () => {
       RB1: 31885,
       RB2: null,
       K1: 30266,
-    };
+    });
     expect(isOpenRoster(theentry, 5)).toBe(false);
     expect(isOpenRoster(theentry, 1)).toBe('QB1');
     expect(isOpenRoster(theentry, 2)).toBe('RB2');
-    const theentry2 = {
+    const theentry2 = new Entry({
       pointtotal: 4500,
       UserId: 2,
       ContestId: 1,
@@ -50,7 +50,7 @@ describe('util testing', () => {
       FLEX2: null,
       K1: null,
       DEF1: 33,
-    };
+    });
     expect(isOpenRoster(theentry2, 2)).toBe('FLEX2');
   });
 
@@ -68,7 +68,7 @@ describe('util testing', () => {
     }).then(async (e) => {
       // Right after the first row lock, try a second
       // This should wait until first lock is released
-      // Check outside of the then block that new value is received
+      // Check outside of the try block that new value is received
       theentry2 = Entry.findOne({
         where: { UserId: 5, ContestId: 2 },
         transaction: t2,

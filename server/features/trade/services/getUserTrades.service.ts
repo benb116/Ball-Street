@@ -1,7 +1,7 @@
 import Joi from 'joi';
 import Offer from '../../offer/offer.model';
 
-import { dv, validate } from '../../util/util';
+import { validate } from '../../util/util';
 import validators from '../../util/util.schema';
 import { ServiceInput } from '../../util/util.service';
 import EntryAction from '../entryaction.model';
@@ -36,7 +36,7 @@ async function getUserTrades(req: GetUserTradesInput) {
         UserId: value.user,
       },
     }],
-  }).then(dv);
+  });
   const asks = await Trade.findAll({
     include: [{
       model: Offer,
@@ -46,14 +46,14 @@ async function getUserTrades(req: GetUserTradesInput) {
         UserId: value.user,
       },
     }],
-  }).then(dv);
+  });
   const actions = await EntryAction.findAll({
     include: [{ model: EntryActionKind }],
     where: {
       ContestId: value.params.contestID,
       UserId: value.user,
     },
-  }).then(dv);
+  });
   return { bids, asks, actions };
 }
 

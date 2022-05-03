@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-import { dv, validate, uError } from '../../util/util';
+import { validate, uError } from '../../util/util';
 import validators from '../../util/util.schema';
 import { ServiceInput } from '../../util/util.service';
 
@@ -30,8 +30,8 @@ async function getEntry(req: GetEntryInput) {
       UserId: value.user,
       ContestId: value.params.contestID,
     },
-  }).then(dv);
-  if (!theentry) { uError('No entry found', 404); }
+  });
+  if (!theentry) { return uError('No entry found', 404); }
   return theentry;
 }
 

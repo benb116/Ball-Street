@@ -1,15 +1,13 @@
 import Joi from 'joi';
 import { Op, Transaction } from 'sequelize';
 
-import {
-  dv, validate, uError, isPlayerOnRoster,
-} from '../../util/util';
+import { validate, uError, isPlayerOnRoster } from '../../util/util';
 import validators from '../../util/util.schema';
 import { ServiceInput } from '../../util/util.service';
 
-import Entry, { EntryType } from '../../entry/entry.model';
-import NFLGame, { NFLGameType } from '../../nflgame/nflgame.model';
-import NFLPlayer, { NFLPlayerType } from '../../nflplayer/nflplayer.model';
+import Entry from '../../entry/entry.model';
+import NFLGame from '../../nflgame/nflgame.model';
+import NFLPlayer from '../../nflplayer/nflplayer.model';
 import EntryAction from '../entryaction.model';
 import { EntryActionKinds } from '../../../config';
 
@@ -52,27 +50,25 @@ async function tradeDrop(req: TradeDropInput, t: Transaction) {
     lock: t.LOCK.UPDATE,
   });
   if (!theentry) { return uError('No entry found', 404); }
-  const entryValues: EntryType = dv(theentry);
 
   const theplayer = value.body.nflplayerID;
-  const isOnTeam = isPlayerOnRoster(entryValues, theplayer);
+  const isOnTeam = isPlayerOnRoster(theentry, theplayer);
   if (!isOnTeam) { return uError('Player is not on roster', 406); }
-  const newSet: Record<string, null> = {};
-  newSet[isOnTeam] = null;
-  theentry.set(newSet);
+
+  theentry[isOnTeam] = null;
 
   // How much to add to point total
-  const playerdata: NFLPlayerType = await NFLPlayer.findByPk(theplayer).then(dv);
-  if (!playerdata || !playerdata.active) { uError('Player not found', 404); }
+  const playerdata = await NFLPlayer.findByPk(theplayer);
+  if (!playerdata || !playerdata.active) { return uError('Player not found', 404); }
 
   // Get player price and position
-  const gamedata: NFLGameType = await NFLGame.findOne({
+  const gamedata = await NFLGame.findOne({
     where: {
       [Op.or]: [{ HomeId: playerdata.NFLTeamId }, { AwayId: playerdata.NFLTeamId }],
       week: Number(process.env.WEEK),
     },
-  }).then(dv);
-  if (!gamedata) uError('Could not find game data for this player', 404);
+  });
+  if (!gamedata) return uError('Could not find game data for this player', 404);
 
   // Determine price at which to trade
   let tradeprice: number;
@@ -85,9 +81,7 @@ async function tradeDrop(req: TradeDropInput, t: Transaction) {
     tradeprice = playerdata.preprice;
   }
 
-  theentry.set({
-    pointtotal: entryValues.pointtotal += tradeprice,
-  });
+  theentry.pointtotal += tradeprice;
   await theentry.save({ transaction: t });
 
   if (gamedata.phase === 'pre') {

@@ -1,19 +1,23 @@
-import Sequelize, { DataTypes, ModelDefined, Optional } from 'sequelize';
+/* eslint-disable @typescript-eslint/lines-between-class-members */
+import Sequelize, {
+  Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
+} from 'sequelize';
 import sequelize from '../../db';
+
 import EntryActionKind from './entryactionkind.model';
 
-export interface EntryActionType {
-  id: string,
-  EntryActionKindId: number,
-  UserId: number,
-  ContestId: number,
-  NFLPlayerId: number,
-  price: number,
+class EntryAction extends Model<InferAttributes<EntryAction>, InferCreationAttributes<EntryAction>> {
+  declare id: CreationOptional<string>;
+  declare EntryActionKindId: number;
+  declare UserId: number;
+  declare ContestId: number;
+  declare NFLPlayerId: number;
+  declare price: number;
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
 }
 
-export type EntryActionCreateType = Optional<EntryActionType, 'id'>;
-
-const EntryAction: ModelDefined<EntryActionType, EntryActionCreateType> = sequelize.define('EntryAction', {
+EntryAction.init({
   id: {
     type: DataTypes.UUID,
     defaultValue: Sequelize.UUIDV4,
@@ -22,7 +26,7 @@ const EntryAction: ModelDefined<EntryActionType, EntryActionCreateType> = sequel
   EntryActionKindId: { // Kind of action
     type: DataTypes.INTEGER,
     allowNull: false,
-    references: { model: 'EntryActionKinds' },
+    references: { model: EntryActionKind },
   },
   UserId: {
     type: DataTypes.INTEGER,
@@ -40,7 +44,9 @@ const EntryAction: ModelDefined<EntryActionType, EntryActionCreateType> = sequel
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-});
+  createdAt: DataTypes.DATE,
+  updatedAt: DataTypes.DATE,
+}, { sequelize });
 
 EntryAction.belongsTo(EntryActionKind);
 

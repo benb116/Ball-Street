@@ -1,14 +1,17 @@
-import { DataTypes, ModelDefined } from 'sequelize';
+/* eslint-disable @typescript-eslint/lines-between-class-members */
+import {
+  Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
+} from 'sequelize';
 import sequelize from '../../db';
 
-export interface EntryActionKindType {
-  id: number,
-  name: string,
+class EntryActionKind extends Model<InferAttributes<EntryActionKind>, InferCreationAttributes<EntryActionKind>> {
+  declare id: number;
+  declare name: string;
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
 }
-type EntryActionKindCreateType = EntryActionKindType;
 
-const EntryActionKind:
-ModelDefined<EntryActionKindType, EntryActionKindCreateType> = sequelize.define('EntryActionKind', {
+EntryActionKind.init({
   id: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -18,6 +21,8 @@ ModelDefined<EntryActionKindType, EntryActionKindCreateType> = sequelize.define(
     type: DataTypes.STRING,
     allowNull: false,
   },
-});
+  createdAt: DataTypes.DATE,
+  updatedAt: DataTypes.DATE,
+}, { sequelize });
 
 export default EntryActionKind;

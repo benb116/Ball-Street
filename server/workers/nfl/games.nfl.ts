@@ -7,11 +7,12 @@ import state from './state.nfl';
 
 import setPhase from './phase.nfl';
 
-import NFLGame, { NFLGameCreateType } from '../../features/nflgame/nflgame.model';
+import NFLGame from '../../features/nflgame/nflgame.model';
 import yahooData from '../tests/yahooData';
+import { GamePhaseType } from '../../config';
 
 const teamIDs = Object.values(teams).map((t) => t.id, [] as number[]);
-type PhaseMapType = Record<string, 'pre' | 'mid' | 'post' | number>;
+type PhaseMapType = Record<string, GamePhaseType | number>;
 
 // Determine all games and their phases
 export async function InitGameState() {
@@ -58,7 +59,8 @@ export function ParseGameFileInit(data: string) {
       HomeId: homeTeamID,
       AwayId: awayTeamID,
       startTime: starttime,
-    } as NFLGameCreateType;
+      phase: 'post' as GamePhaseType,
+    };
   });
 
   if (phasemaps.length < teamIDs.length / 2) {
@@ -71,14 +73,15 @@ export function ParseGameFileInit(data: string) {
     while (remainteams.length > 1) {
       const team1 = remainteams.shift() as number;
       const team2 = remainteams.shift() as number;
-      phasemap[team1] = 'post';
-      phasemap[team2] = 'post';
+      phasemap[team1] = 'post' as GamePhaseType;
+      phasemap[team2] = 'post' as GamePhaseType;
       gameobjs.push({
         week: currentweek,
         HomeId: team1,
         AwayId: team2,
         startTime: 2000000000,
-      } as NFLGameCreateType);
+        phase: 'post' as GamePhaseType,
+      });
     }
   }
   return { phasemap, gameobjs };
@@ -97,18 +100,18 @@ function CreatePhaseMap(gameline: string) {
 
   switch (gameState) {
     case 'F':
-      phasemap[awayTeamID] = 'post';
-      phasemap[homeTeamID] = 'post';
+      phasemap[awayTeamID] = 'post' as GamePhaseType;
+      phasemap[homeTeamID] = 'post' as GamePhaseType;
       break;
     case 'P':
-      phasemap[awayTeamID] = 'mid';
-      phasemap[homeTeamID] = 'mid';
+      phasemap[awayTeamID] = 'mid' as GamePhaseType;
+      phasemap[homeTeamID] = 'mid' as GamePhaseType;
       break;
     case 'S':
       if (Date.now() / 1000 > starttime) {
         // For some reason, gamestate hasn't updated but it should have
-        phasemap[awayTeamID] = 'mid';
-        phasemap[homeTeamID] = 'mid';
+        phasemap[awayTeamID] = 'mid' as GamePhaseType;
+        phasemap[homeTeamID] = 'mid' as GamePhaseType;
       } else {
         phasemap[awayTeamID] = starttime;
         phasemap[homeTeamID] = starttime;
@@ -129,7 +132,7 @@ async function setGamePhases(phasemap: PhaseMapType) {
   const setPhases = phaseTeams.map((team) => {
     const teamID = Number(team);
     const phase = phasemap[teamID];
-    if (typeof phase === 'number') return setPhase(teamID, 'pre');
+    if (typeof phase === 'number') return setPhase(teamID, 'pre' as GamePhaseType);
     return setPhase(teamID, phase);
   });
   await Promise.all(setPhases);
@@ -139,8 +142,8 @@ async function setGamePhases(phasemap: PhaseMapType) {
     const teamID = Number(team);
     const phase = phasemap[teamID];
     if (typeof phase === 'number') {
-      setTimeout(() => { setPhase(teamID, 'mid'); }, (Number(phase) * 1000 - Date.now()));
-    } else if (phase === 'post') {
+      setTimeout(() => { setPhase(teamID, 'mid' as GamePhaseType); }, (Number(phase) * 1000 - Date.now()));
+    } else if (phase === 'post' as GamePhaseType) {
       state.timeObj[teamID] = 1;
     }
   });
@@ -152,7 +155,7 @@ export async function PullAllGames() {
   try {
     const rawGame = await pullGameData();
     const [changedTeams, postTeams] = ParseGameFileUpdate(rawGame.data);
-    postTeams.forEach((t) => setPhase(t, 'post'));
+    postTeams.forEach((t) => setPhase(t, 'post' as GamePhaseType));
     return changedTeams;
   } catch (err) {
     logger.error(err);

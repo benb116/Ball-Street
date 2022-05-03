@@ -2,7 +2,7 @@
 import WebSocket from 'ws';
 import axios from 'axios';
 import { ProtectionDelay, RefreshTime } from '../../config';
-import { OfferType } from '../../features/offer/offer.model';
+import Offer from '../../features/offer/offer.model';
 import { TestPromiseMap } from '../../features/util/util.tests';
 import { client, rediskeys } from '../../db/redis';
 
@@ -56,7 +56,7 @@ async function cancelOffer(cookie: string) {
     method: 'get',
     url: `http://localhost/app/api/contests/${contestID}/offers/`,
     headers: { cookie },
-  }).then((offers) => offers.data.filter((o: OfferType) => o.NFLPlayerId === 28026));
+  }).then((offers) => offers.data.filter((o: Offer) => o.NFLPlayerId === 28026));
   if (!a.length) { return Promise.resolve(); }
 
   return axios({

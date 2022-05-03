@@ -1,15 +1,15 @@
 // Set up example DB records for use in testing
 import logger from '../utilities/logger';
 
-import Contest, { ContestCreateType } from '../features/contest/contest.model';
+import Contest from '../features/contest/contest.model';
 import Entry from '../features/entry/entry.model';
-import NFLGame, { NFLGameCreateType } from '../features/nflgame/nflgame.model';
-import Offer, { OfferCreateType } from '../features/offer/offer.model';
-import Trade, { TradeCreateType } from '../features/trade/trade.model';
-import User, { UserCreateType } from '../features/user/user.model';
-import LedgerEntry, { LedgerEntryCreateType } from '../features/ledger/ledgerEntry.model';
-import { EntryActionKinds, LedgerKinds } from '../config';
-import EntryAction, { EntryActionCreateType } from '../features/trade/entryaction.model';
+import NFLGame from '../features/nflgame/nflgame.model';
+import Offer from '../features/offer/offer.model';
+import Trade from '../features/trade/trade.model';
+import User from '../features/user/user.model';
+import LedgerEntry from '../features/ledger/ledgerEntry.model';
+import { EntryActionKinds, GamePhaseType, LedgerKinds } from '../config';
+import EntryAction from '../features/trade/entryaction.model';
 
 async function PopulateDB() {
   logger.info('Populating DB with initial data');
@@ -24,7 +24,7 @@ async function PopulateDB() {
     'email6@gmail.com',
   ];
   // hash is password1
-  const userRecords: UserCreateType[] = usrs.map((u) => ({
+  const userRecords = usrs.map((u) => ({
     email: u,
     pwHash: '$2b$10$v3qgumBibz8Uouevm5xeTOFWheNtLVRyLeGqp2tZbfdMJ.iHQtgVq',
     name: 'bot',
@@ -34,7 +34,7 @@ async function PopulateDB() {
   userRecords[5].cash = 0;
   await User.bulkCreate(userRecords);
 
-  const ledgerEntries: LedgerEntryCreateType[] = usrs.map((_u, i) => ({
+  const ledgerEntries = usrs.map((_u, i) => ({
     id: `16c94b61-3c76-4078-8fbc-67fac7ed26d${i}`,
     UserId: i + 1,
     LedgerKindId: LedgerKinds.Deposit.id,
@@ -46,19 +46,19 @@ async function PopulateDB() {
 
   const curweek = Number(process.env.WEEK);
   // Define existing contest
-  const con: ContestCreateType = {
+  const con = {
     name: 'Ball Street Big One',
     budget: 10000,
     nflweek: curweek,
     buyin: 2000,
   };
-  const con2: ContestCreateType = {
+  const con2 = {
     name: 'Private Contest',
     budget: 10000,
     nflweek: curweek,
     buyin: 500,
   };
-  const con3: ContestCreateType = {
+  const con3 = {
     name: 'Public Contest 2',
     budget: 10000,
     nflweek: curweek,
@@ -88,7 +88,7 @@ async function PopulateDB() {
   }];
   await Entry.bulkCreate(entrs);
   await Entry.bulkCreate(entrs2);
-  const ledgerEntries2: LedgerEntryCreateType[] = entrs.map((_u, i) => ({
+  const ledgerEntries2 = entrs.map((_u, i) => ({
     id: `16c94b61-3c76-4078-8fbc-67fac7ed26b${i}`,
     UserId: _u.UserId,
     LedgerKindId: LedgerKinds['Entry Fee'].id,
@@ -96,7 +96,7 @@ async function PopulateDB() {
     value: allcontests[0].buyin,
   }));
   await LedgerEntry.bulkCreate(ledgerEntries2);
-  const ledgerEntries3: LedgerEntryCreateType[] = entrs2.map((_u, i) => ({
+  const ledgerEntries3 = entrs2.map((_u, i) => ({
     id: `16c94b61-3c76-4078-8fbc-67fac7ed26a${i}`,
     UserId: _u.UserId,
     LedgerKindId: LedgerKinds['Entry Fee'].id,
@@ -105,7 +105,7 @@ async function PopulateDB() {
   }));
   await LedgerEntry.bulkCreate(ledgerEntries3);
 
-  const offs: OfferCreateType[] = [{
+  const offs = [{
     id: '16c94b61-3c76-4078-8fbc-67fac7ed26c2',
     UserId: 1,
     ContestId: 1,
@@ -160,7 +160,7 @@ async function PopulateDB() {
   }];
   await Offer.bulkCreate(offs);
 
-  const trds: TradeCreateType[] = [
+  const trds = [
     {
       bidId: '16c94b61-3c76-4078-8fbc-67fac7ed26c6',
       askId: '16c94b61-3c76-4078-8fbc-67fac7ed26c4',
@@ -169,7 +169,7 @@ async function PopulateDB() {
   ];
   await Trade.bulkCreate(trds);
 
-  const acts: EntryActionCreateType[] = [
+  const acts = [
     {
       id: '16c94b61-3c76-4078-8fbc-67fac7ed26e2',
       EntryActionKindId: EntryActionKinds.Add.id,
@@ -181,57 +181,56 @@ async function PopulateDB() {
   ];
   await EntryAction.bulkCreate(acts);
 
-  const games: NFLGameCreateType[] = [
+  await NFLGame.bulkCreate([
     {
-      week: curweek, HomeId: 10, AwayId: 1, startTime: 100,
+      week: curweek, HomeId: 10, AwayId: 1, phase: 'post' as GamePhaseType, startTime: 100,
     },
     {
-      week: curweek, HomeId: 33, AwayId: 2, phase: 'pre', startTime: 400,
+      week: curweek, HomeId: 33, AwayId: 2, phase: 'pre' as GamePhaseType, startTime: 400,
     },
     {
-      week: curweek, HomeId: 29, AwayId: 3, startTime: 100,
+      week: curweek, HomeId: 29, AwayId: 3, phase: 'post' as GamePhaseType, startTime: 100,
     },
     {
-      week: curweek, HomeId: 4, AwayId: 5, startTime: 100,
+      week: curweek, HomeId: 4, AwayId: 5, phase: 'post' as GamePhaseType, startTime: 100,
     },
     {
-      week: curweek, HomeId: 6, AwayId: 7, startTime: 100,
+      week: curweek, HomeId: 6, AwayId: 7, phase: 'post' as GamePhaseType, startTime: 100,
     },
     {
-      week: curweek, HomeId: 8, AwayId: 9, startTime: 100,
+      week: curweek, HomeId: 8, AwayId: 9, phase: 'post' as GamePhaseType, startTime: 100,
     },
     {
-      week: curweek, HomeId: 34, AwayId: 11, startTime: 100,
+      week: curweek, HomeId: 34, AwayId: 11, phase: 'post' as GamePhaseType, startTime: 100,
     },
     {
-      week: curweek, HomeId: 30, AwayId: 12, phase: 'pre', startTime: 400,
+      week: curweek, HomeId: 30, AwayId: 12, phase: 'pre' as GamePhaseType, startTime: 400,
     },
     {
-      week: curweek, HomeId: 15, AwayId: 16, startTime: 100,
+      week: curweek, HomeId: 15, AwayId: 16, phase: 'post' as GamePhaseType, startTime: 100,
     },
     {
-      week: curweek, HomeId: 17, AwayId: 18, phase: 'pre', startTime: 400,
+      week: curweek, HomeId: 17, AwayId: 18, phase: 'pre' as GamePhaseType, startTime: 400,
     },
     {
-      week: curweek, HomeId: 19, AwayId: 20, startTime: 100,
+      week: curweek, HomeId: 19, AwayId: 20, phase: 'post' as GamePhaseType, startTime: 100,
     },
     {
-      week: curweek, HomeId: 13, AwayId: 21, phase: 'mid', startTime: 200,
+      week: curweek, HomeId: 13, AwayId: 21, phase: 'mid' as GamePhaseType, startTime: 200,
     },
     {
-      week: curweek, HomeId: 23, AwayId: 24, phase: 'mid', startTime: 200,
+      week: curweek, HomeId: 23, AwayId: 24, phase: 'mid' as GamePhaseType, startTime: 200,
     },
     {
-      week: curweek, HomeId: 25, AwayId: 26, phase: 'mid', startTime: 200,
+      week: curweek, HomeId: 25, AwayId: 26, phase: 'mid' as GamePhaseType, startTime: 200,
     },
     {
-      week: curweek, HomeId: 14, AwayId: 27, startTime: 100,
+      week: curweek, HomeId: 14, AwayId: 27, phase: 'post' as GamePhaseType, startTime: 100,
     },
     {
-      week: curweek, HomeId: 22, AwayId: 28, phase: 'pre', startTime: 400,
+      week: curweek, HomeId: 22, AwayId: 28, phase: 'pre' as GamePhaseType, startTime: 400,
     },
-  ];
-  await NFLGame.bulkCreate(games);
+  ]);
 }
 
 export default PopulateDB;

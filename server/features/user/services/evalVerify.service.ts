@@ -2,7 +2,7 @@ import Joi from 'joi';
 
 import { verificationTokenLength } from '../../../config';
 
-import { dv, validate, uError } from '../../util/util';
+import { validate, uError } from '../../util/util';
 
 import { rediskeys, client } from '../../../db/redis';
 
@@ -27,10 +27,11 @@ async function evalVerify(req: EvalVerifyInput) {
   const email = await client.GET(rediskeys.emailVer(token));
   if (!email) uError('Email could not be verified', 404);
   client.DEL(rediskeys.emailVer(token));
-  const user = await User.update({ verified: true }, {
+  const usersUpdated = await User.update({ verified: true }, {
     where: { email }, returning: true,
   });
-  const theuser = dv(user[1])[0];
+  if (!usersUpdated[1].length) return uError('No user found', 404);
+  const theuser = usersUpdated[1][0];
   return { id: theuser.id, email: theuser.email, name: theuser.name };
 }
 

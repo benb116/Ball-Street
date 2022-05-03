@@ -1,5 +1,3 @@
-import { dv } from '../../util/util';
-
 import NFLTeam from '../../nflteam/nflteam.model';
 import NFLGame from '../nflgame.model';
 
@@ -17,7 +15,7 @@ async function getNFLGames() {
     where: {
       week: currentweek,
     },
-  }).then(dv);
+  });
 }
 
 export default getNFLGames;

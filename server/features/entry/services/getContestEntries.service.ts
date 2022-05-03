@@ -1,12 +1,12 @@
 import Joi from 'joi';
-import { Roster } from '../../../config';
+import { RosterPositions } from '../../../config';
 import { client, rediskeys } from '../../../db/redis';
 
-import { dv, validate } from '../../util/util';
+import { validate } from '../../util/util';
 import validators from '../../util/util.schema';
 import errorHandler, { ServiceInput } from '../../util/util.service';
 
-import Entry, { EntryType } from '../entry.model';
+import Entry from '../entry.model';
 
 const schema = Joi.object({
   user: validators.user,
@@ -23,16 +23,14 @@ interface GetContestEntriesInput extends ServiceInput {
   body: Record<string, never>
 }
 
-const RosterPositions = Object.keys(Roster);
-
 // Get all entries in a contest
 function getContestEntries(req: GetContestEntriesInput) {
   const value: GetContestEntriesInput = validate(req, schema);
 
-  return Entry.findAll({ where: { ContestId: value.params.contestID } }).then(dv)
+  return Entry.findAll({ where: { ContestId: value.params.contestID } })
     // We want to show the projected totals for each entry, not just current balance.
     // Determine how many points to add to balance based on projections
-    .then(async (out: EntryType[]) => {
+    .then(async (out) => {
       // Get all player proj values
       // Possible improvement: build list of players to get instead of all, use HMGET
       const projMap = await client.HGETALL(rediskeys.projpriceHash());
@@ -43,10 +41,11 @@ function getContestEntries(req: GetContestEntriesInput) {
         const projTotal = RosterPositions.reduce((acc, curPos) => {
           let newTotal = acc;
           const thisPlayer = e[curPos];
-          if (typeof thisPlayer === 'number') newTotal += Number(projMap[thisPlayer]) || 0;
+          if (!thisPlayer) return newTotal;
+          newTotal += Number(projMap[thisPlayer]) || 0;
           return newTotal;
         }, e.pointtotal);
-        return { ...e, projTotal };
+        return { ...e.get(), projTotal };
       });
     })
     .catch(errorHandler({

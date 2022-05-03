@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import { RPosType } from '../../../config';
 
 import sequelize from '../../../db';
 
@@ -7,10 +8,6 @@ import validators from '../../util/util.schema';
 import errorHandler, { ServiceInput } from '../../util/util.service';
 
 import tradeAdd from './tradeAdd.service';
-
-const isoOption = {
-  // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
-};
 
 const schema = Joi.object({
   user: validators.user,
@@ -34,7 +31,7 @@ interface PreTradeAddInput extends ServiceInput {
   },
   body: {
     nflplayerID: number,
-    rosterposition?: string,
+    rosterposition?: RPosType,
     price: never,
   }
 }
@@ -43,7 +40,7 @@ interface PreTradeAddInput extends ServiceInput {
 async function preTradeAdd(req: PreTradeAddInput) {
   const value: PreTradeAddInput = validate(req, schema);
 
-  return sequelize.transaction(isoOption, async (t) => tradeAdd(value, t))
+  return sequelize.transaction(async (t) => tradeAdd(value, t))
     .catch(errorHandler({
       default: { message: 'Could not add player', status: 500 },
     }));
