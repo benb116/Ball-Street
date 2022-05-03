@@ -16,7 +16,7 @@ describe('signup service', () => {
     service, {
       name: 'Ben', email: '1234@gmail.com', password: 'password1', skipVerification: false,
     },
-    { needsVerification: true },
+    { needsVerification: true, id: 8 },
     'DELETE from "Users" WHERE "id"=8',
   ));
 

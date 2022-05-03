@@ -20,7 +20,11 @@ describe('getUserTrades service', () => {
             UserId: 1,
             ContestId: 1,
             NFLPlayerId: 31885,
+            createdAt: expect.any(Date),
+            updatedAt: expect.any(Date),
           },
+          createdAt: expect.any(Date),
+          updatedAt: expect.any(Date),
         },
       ],
       asks: [],
@@ -34,7 +38,11 @@ describe('getUserTrades service', () => {
         EntryActionKind: {
           id: 1,
           name: 'Add',
+          createdAt: expect.any(Date),
+          updatedAt: expect.any(Date),
         },
+        createdAt: expect.any(Date),
+        updatedAt: expect.any(Date),
       }],
     },
   ));

@@ -12,6 +12,10 @@ describe('getUserOffers service', () => {
       isbid: true,
       price: 800,
       filled: false,
+      cancelled: false,
+      protected: false,
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date),
     }],
   ));
 

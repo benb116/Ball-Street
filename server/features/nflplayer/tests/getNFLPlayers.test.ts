@@ -13,6 +13,8 @@ describe('getNFLPlayers service', () => {
       NFLTeamId: 22,
       active: true,
       injuryStatus: null,
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date),
     }));
   });
 });

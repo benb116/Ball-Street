@@ -16,6 +16,8 @@ describe('getNFLGames service', () => {
       phase: 'post',
       startTime: 100,
       week: Number(process.env.WEEK),
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date),
     }, {
       AwayId: 7,
       HomeId: 6,
@@ -28,6 +30,8 @@ describe('getNFLGames service', () => {
       phase: 'post',
       startTime: 100,
       week: Number(process.env.WEEK),
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date),
     }, {
       AwayId: 9,
       HomeId: 8,
@@ -40,6 +44,8 @@ describe('getNFLGames service', () => {
       phase: 'post',
       startTime: 100,
       week: Number(process.env.WEEK),
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date),
     }, {
       AwayId: 1,
       HomeId: 10,
@@ -52,6 +58,8 @@ describe('getNFLGames service', () => {
       phase: 'post',
       startTime: 100,
       week: Number(process.env.WEEK),
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date),
     }, {
       AwayId: 21,
       HomeId: 13,
@@ -64,6 +72,8 @@ describe('getNFLGames service', () => {
       phase: 'mid',
       startTime: 200,
       week: Number(process.env.WEEK),
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date),
     }, {
       AwayId: 27,
       HomeId: 14,
@@ -76,6 +86,8 @@ describe('getNFLGames service', () => {
       phase: 'post',
       startTime: 100,
       week: Number(process.env.WEEK),
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date),
     }, {
       AwayId: 16,
       HomeId: 15,
@@ -88,6 +100,8 @@ describe('getNFLGames service', () => {
       phase: 'post',
       startTime: 100,
       week: Number(process.env.WEEK),
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date),
     }, {
       AwayId: 18,
       HomeId: 17,
@@ -100,6 +114,8 @@ describe('getNFLGames service', () => {
       phase: 'pre',
       startTime: 400,
       week: Number(process.env.WEEK),
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date),
     }, {
       AwayId: 20,
       HomeId: 19,
@@ -112,6 +128,8 @@ describe('getNFLGames service', () => {
       phase: 'post',
       startTime: 100,
       week: Number(process.env.WEEK),
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date),
     }, {
       AwayId: 28,
       HomeId: 22,
@@ -124,6 +142,8 @@ describe('getNFLGames service', () => {
       phase: 'pre',
       startTime: 400,
       week: Number(process.env.WEEK),
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date),
     }, {
       AwayId: 24,
       HomeId: 23,
@@ -136,6 +156,8 @@ describe('getNFLGames service', () => {
       phase: 'mid',
       startTime: 200,
       week: Number(process.env.WEEK),
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date),
     }, {
       AwayId: 26,
       HomeId: 25,
@@ -148,6 +170,8 @@ describe('getNFLGames service', () => {
       phase: 'mid',
       startTime: 200,
       week: Number(process.env.WEEK),
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date),
     }, {
       AwayId: 3,
       HomeId: 29,
@@ -160,6 +184,8 @@ describe('getNFLGames service', () => {
       phase: 'post',
       startTime: 100,
       week: Number(process.env.WEEK),
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date),
     }, {
       AwayId: 12,
       HomeId: 30,
@@ -172,6 +198,8 @@ describe('getNFLGames service', () => {
       phase: 'pre',
       startTime: 400,
       week: Number(process.env.WEEK),
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date),
     }, {
       AwayId: 2,
       HomeId: 33,
@@ -184,6 +212,8 @@ describe('getNFLGames service', () => {
       phase: 'pre',
       startTime: 400,
       week: Number(process.env.WEEK),
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date),
     }, {
       AwayId: 11,
       HomeId: 34,
@@ -196,6 +226,8 @@ describe('getNFLGames service', () => {
       phase: 'post',
       startTime: 100,
       week: Number(process.env.WEEK),
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date),
     }],
   ));
 });

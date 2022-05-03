@@ -11,7 +11,7 @@ export const ObjectTest = function ObjectTest(
   service: ServiceType, req: unknown, contains: ObjectType, resetQuery = '',
 ) {
   return async () => service(req).then(async (resp: unknown) => {
-    expect(resp).toMatchObject(contains);
+    expect(resp).toStrictEqual(contains);
     if (resetQuery) await sequelize.query(resetQuery);
   });
 };
@@ -20,9 +20,9 @@ export const ObjectTest = function ObjectTest(
 export const ArrayTest = function ArrayTest(service: ServiceType, req: unknown, items: unknown[]) {
   return async () => service(req).then((resp: unknown) => {
     if (typeof items[0] === 'object') {
-      expect(resp).toMatchObject(items);
+      expect(resp).toStrictEqual(items);
     } else {
-      expect(resp).toEqual(expect.arrayContaining(items));
+      expect(resp).toStrictEqual(expect.arrayContaining(items));
     }
   });
 };

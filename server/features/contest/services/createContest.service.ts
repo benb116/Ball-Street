@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-import { validate } from '../../util/util';
+import { dv, validate } from '../../util/util';
 import validators from '../../util/util.schema';
 import errorHandler, { ServiceInput } from '../../util/util.service';
 
@@ -50,7 +50,7 @@ async function createContest(req: CreateContestInput) {
     budget: value.body.budget,
     buyin: value.body.buyin,
   };
-  return Contest.create(contestObj).catch(errorHandler({
+  return Contest.create(contestObj).then(dv).catch(errorHandler({
     default: { message: 'Contest could not be created', status: 500 },
   }));
 }

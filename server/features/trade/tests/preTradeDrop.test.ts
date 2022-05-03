@@ -24,6 +24,8 @@ describe('preTradeDrop service', () => {
       WR1: null,
       WR2: null,
       pointtotal: 11100,
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date),
     },
     'UPDATE "Entries" SET "TE1"=30213, "pointtotal"=10000 WHERE "ContestId"=2 AND "UserId"=1;',
   ));

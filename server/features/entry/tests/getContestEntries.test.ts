@@ -18,6 +18,9 @@ describe('getContestEntries service', () => {
       WR1: null,
       WR2: null,
       pointtotal: 10000,
+      projTotal: 10000,
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date),
     },
     {
       ContestId: 1,
@@ -33,6 +36,9 @@ describe('getContestEntries service', () => {
       WR1: null,
       WR2: null,
       pointtotal: 10000,
+      projTotal: 10000,
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date),
     },
     {
       ContestId: 1,
@@ -48,6 +54,9 @@ describe('getContestEntries service', () => {
       WR1: null,
       WR2: null,
       pointtotal: 10000,
+      projTotal: 10000,
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date),
     }],
   ));
 

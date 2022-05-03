@@ -15,6 +15,7 @@ describe('createOffer service', () => {
       },
     },
     {
+      id: expect.stringContaining('-'),
       ContestId: 2,
       NFLPlayerId: 31885,
       UserId: 1,
@@ -23,6 +24,8 @@ describe('createOffer service', () => {
       isbid: false,
       price: 2000,
       protected: false,
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date),
     },
     'DELETE from "Offers" WHERE "ContestId"=2 AND "UserId"=1 AND "NFLPlayerId"=31885;',
   ));
