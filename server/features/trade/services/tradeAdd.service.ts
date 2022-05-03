@@ -131,7 +131,7 @@ async function tradeAdd(req: TradeAddInput, t: Transaction) {
     }, { transaction: t });
   }
 
-  return dv(theentry);
+  return theentry;
 }
 
 export default tradeAdd;

@@ -1,10 +1,12 @@
 import service from '../services/getUserTrades.service';
-import { ErrorTest, ObjectTest } from '../../util/util.tests';
+import { ErrorTest } from '../../util/util.tests';
 
 describe('getUserTrades service', () => {
-  test('Valid request returns data', ObjectTest(
-    service, { user: 1, params: { contestID: 1 }, body: {} },
-    {
+  test('Valid request returns data', async () => {
+    const input = { user: 1, params: { contestID: 1 }, body: {} };
+    const out = await service(input);
+    const { bids, asks, actions } = out;
+    const expectedout = {
       bids: [
         {
           price: 8000,
@@ -44,8 +46,11 @@ describe('getUserTrades service', () => {
         createdAt: expect.any(Date),
         updatedAt: expect.any(Date),
       }],
-    },
-  ));
+    };
+    expect(bids.map((b) => b.toJSON())).toStrictEqual(expectedout.bids);
+    expect(asks.map((b) => b.toJSON())).toStrictEqual(expectedout.asks);
+    expect(actions.map((b) => b.toJSON())).toStrictEqual(expectedout.actions);
+  });
 
   test('Missing contestID returns error 400', ErrorTest(
     service, { user: 2, params: { }, body: {} },

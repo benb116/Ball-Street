@@ -93,7 +93,7 @@ async function tradeDrop(req: TradeDropInput, t: Transaction) {
       price: tradeprice,
     }, { transaction: t });
   }
-  return dv(theentry);
+  return theentry;
 }
 
 export default tradeDrop;
