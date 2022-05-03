@@ -1,19 +1,14 @@
 import Joi from 'joi';
 
-import {
-  dv, validate, uError, tobj,
-} from '../../util/util';
+import { validate, uError, tobj } from '../../util/util';
 import validators from '../../util/util.schema';
 import errorHandler, { ServiceInput } from '../../util/util.service';
 
 import sequelize from '../../../db';
-import LedgerEntry, { LedgerEntryCreateType, LedgerEntryType } from '../../ledger/ledgerEntry.model';
-import { LedgerKinds } from '../../../config';
+import LedgerEntry from '../../ledger/ledgerEntry.model';
 import User from '../user.model';
 
-const isoOption = {
-  // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
-};
+import { LedgerKinds } from '../../../config';
 
 const schema = Joi.object({
   user: validators.user,
@@ -40,29 +35,24 @@ interface WithdrawalInput extends ServiceInput {
 async function withdraw(req: WithdrawalInput) {
   const value: WithdrawalInput = validate(req, schema);
 
-  return sequelize.transaction(isoOption, async (t) => {
+  return sequelize.transaction(async (t) => {
     // Confirm contest is valid and for the current week
 
     const theuser = await User.findOne({ where: { id: value.user }, ...tobj(t) });
     if (!theuser) return uError('No user found', 404);
-    const userValue = dv(theuser);
-    if (userValue.cash < value.body.amount) uError('User has insufficient funds', 402);
+    if (theuser.cash < value.body.amount) uError('User has insufficient funds', 402);
 
-    theuser.set({
-      cash: (userValue.cash - value.body.amount),
-    });
+    theuser.cash -= value.body.amount;
     theuser.save({ transaction: t });
 
-    const ledgerObj: LedgerEntryCreateType = {
+    const ledgerObj = {
       UserId: value.user,
       ContestId: null,
       LedgerKindId: LedgerKinds.Withdrawal.id,
       value: value.body.amount,
     };
 
-    const out: LedgerEntryType = await LedgerEntry.create(ledgerObj, tobj(t)).then(dv);
-
-    return out;
+    return LedgerEntry.create(ledgerObj, tobj(t));
   })
     .catch(errorHandler({
       default: { message: 'Withdrawal could not be completed', status: 500 },

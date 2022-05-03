@@ -1,5 +1,4 @@
 import logger from '../../utilities/logger';
-import { dv } from '../../features/util/util';
 
 import { rediskeys, client } from '../../db/redis';
 
@@ -7,8 +6,8 @@ import priceUpdate from '../live/channels/priceUpdate.channel';
 
 import Book from './book.offer';
 
-import Offer, { OfferType } from '../../features/offer/offer.model';
-import ProtectedMatch, { ProtectedMatchType } from '../../features/protectedmatch/protectedmatch.model';
+import Offer from '../../features/offer/offer.model';
+import ProtectedMatch from '../../features/protectedmatch/protectedmatch.model';
 
 // Access the correct book or make one if necessary
 export function getBook(
@@ -48,7 +47,7 @@ export function getBook(
 async function initializeBook(playerBook: Book) {
   const { contestID, nflplayerID } = playerBook;
   // Should be sorted oldest first since Maps maintain order
-  const sortedOffers: OfferType[] = await Offer.findAll({
+  const sortedOffers = await Offer.findAll({
     where: {
       ContestId: contestID,
       NFLPlayerId: nflplayerID,
@@ -58,10 +57,10 @@ async function initializeBook(playerBook: Book) {
     order: [
       ['createdAt', 'ASC'],
     ],
-  }).then(dv);
+  });
   sortedOffers.forEach((o) => playerBook.add(o));
   // Also add protected matches that have been previously created
-  const protMatches: ProtectedMatchType[] = await ProtectedMatch.findAll({
+  const protMatches = await ProtectedMatch.findAll({
     include: {
       model: Offer,
       as: 'existing',
@@ -70,7 +69,7 @@ async function initializeBook(playerBook: Book) {
         NFLPlayerId: nflplayerID,
       },
     },
-  }).then(dv);
+  });
   protMatches.forEach((m) => {
     // eslint-disable-next-line no-param-reassign
     playerBook.protMatchMap[m.existingId] = m.newId;

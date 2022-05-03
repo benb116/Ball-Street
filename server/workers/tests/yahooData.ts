@@ -11,37 +11,37 @@ export default {
       },
       gameobjs: [
         {
-          AwayId: 12, HomeId: 24, startTime: 1639704000, week: 1,
+          AwayId: 12, HomeId: 24, startTime: 1639704000, week: 1, phase: 'post',
         }, {
-          AwayId: 17, HomeId: 11, startTime: 1639876800, week: 1,
+          AwayId: 17, HomeId: 11, startTime: 1639876800, week: 1, phase: 'post',
         }, {
-          AwayId: 29, HomeId: 2, startTime: 1639936800, week: 1,
+          AwayId: 29, HomeId: 2, startTime: 1639936800, week: 1, phase: 'post',
         }, {
-          AwayId: 22, HomeId: 8, startTime: 1639936800, week: 1,
+          AwayId: 22, HomeId: 8, startTime: 1639936800, week: 1, phase: 'post',
         }, {
-          AwayId: 20, HomeId: 15, startTime: 1639936800, week: 1,
+          AwayId: 20, HomeId: 15, startTime: 1639936800, week: 1, phase: 'post',
         }, {
-          AwayId: 6, HomeId: 19, startTime: 1639936800, week: 1,
+          AwayId: 6, HomeId: 19, startTime: 1639936800, week: 1, phase: 'post',
         }, {
-          AwayId: 10, HomeId: 23, startTime: 1639936800, week: 1,
+          AwayId: 10, HomeId: 23, startTime: 1639936800, week: 1, phase: 'post',
         }, {
-          AwayId: 34, HomeId: 30, startTime: 1639936800, week: 1,
+          AwayId: 34, HomeId: 30, startTime: 1639936800, week: 1, phase: 'post',
         }, {
-          AwayId: 4, HomeId: 7, startTime: 1639947900, week: 1,
+          AwayId: 4, HomeId: 7, startTime: 1639947900, week: 1, phase: 'post',
         }, {
-          AwayId: 1, HomeId: 25, startTime: 1639947900, week: 1,
+          AwayId: 1, HomeId: 25, startTime: 1639947900, week: 1, phase: 'post',
         }, {
-          AwayId: 9, HomeId: 33, startTime: 1639949100, week: 1,
+          AwayId: 9, HomeId: 33, startTime: 1639949100, week: 1, phase: 'post',
         }, {
-          AwayId: 18, HomeId: 27, startTime: 1639963200, week: 1,
+          AwayId: 18, HomeId: 27, startTime: 1639963200, week: 1, phase: 'post',
         }, {
-          AwayId: 13, HomeId: 5, startTime: 1790037600, week: 1,
+          AwayId: 13, HomeId: 5, startTime: 1790037600, week: 1, phase: 'post',
         }, {
-          AwayId: 16, HomeId: 3, startTime: futureDate, week: 1,
+          AwayId: 16, HomeId: 3, startTime: futureDate, week: 1, phase: 'post',
         }, {
-          AwayId: 26, HomeId: 14, startTime: futureDate, week: 1,
+          AwayId: 26, HomeId: 14, startTime: futureDate, week: 1, phase: 'post',
         }, {
-          AwayId: 28, HomeId: 21, startTime: futureDate, week: 1,
+          AwayId: 28, HomeId: 21, startTime: futureDate, week: 1, phase: 'post',
         },
       ],
       changedTeams: [13, 5, 16, 3, 26, 14, 28, 21],
@@ -56,37 +56,37 @@ export default {
       },
       gameobjs: [
         {
-          AwayId: 12, HomeId: 24, startTime: 1639704000, week: 1,
+          AwayId: 12, HomeId: 24, startTime: 1639704000, week: 1, phase: 'post',
         }, {
-          AwayId: 17, HomeId: 11, startTime: 1639876800, week: 1,
+          AwayId: 17, HomeId: 11, startTime: 1639876800, week: 1, phase: 'post',
         }, {
-          AwayId: 29, HomeId: 2, startTime: 1639936800, week: 1,
+          AwayId: 29, HomeId: 2, startTime: 1639936800, week: 1, phase: 'post',
         }, {
-          AwayId: 22, HomeId: 8, startTime: 1639936800, week: 1,
+          AwayId: 22, HomeId: 8, startTime: 1639936800, week: 1, phase: 'post',
         }, {
-          AwayId: 20, HomeId: 15, startTime: 1639936800, week: 1,
+          AwayId: 20, HomeId: 15, startTime: 1639936800, week: 1, phase: 'post',
         }, {
-          AwayId: 6, HomeId: 19, startTime: 1639936800, week: 1,
+          AwayId: 6, HomeId: 19, startTime: 1639936800, week: 1, phase: 'post',
         }, {
-          AwayId: 10, HomeId: 23, startTime: 1639936800, week: 1,
+          AwayId: 10, HomeId: 23, startTime: 1639936800, week: 1, phase: 'post',
         }, {
-          AwayId: 34, HomeId: 30, startTime: 1639936800, week: 1,
+          AwayId: 34, HomeId: 30, startTime: 1639936800, week: 1, phase: 'post',
         }, {
-          AwayId: 4, HomeId: 7, startTime: 1639947900, week: 1,
+          AwayId: 4, HomeId: 7, startTime: 1639947900, week: 1, phase: 'post',
         }, {
-          AwayId: 1, HomeId: 25, startTime: 1639947900, week: 1,
+          AwayId: 1, HomeId: 25, startTime: 1639947900, week: 1, phase: 'post',
         }, {
-          AwayId: 9, HomeId: 33, startTime: 1639949100, week: 1,
+          AwayId: 9, HomeId: 33, startTime: 1639949100, week: 1, phase: 'post',
         }, {
-          AwayId: 18, HomeId: 27, startTime: 1639963200, week: 1,
+          AwayId: 18, HomeId: 27, startTime: 1639963200, week: 1, phase: 'post',
         }, {
-          AwayId: 13, HomeId: 5, startTime: 1640037600, week: 1,
+          AwayId: 13, HomeId: 5, startTime: 1640037600, week: 1, phase: 'post',
         }, {
-          AwayId: 16, HomeId: 3, startTime: futureDate, week: 1,
+          AwayId: 16, HomeId: 3, startTime: futureDate, week: 1, phase: 'post',
         }, {
-          AwayId: 26, HomeId: 14, startTime: futureDate, week: 1,
+          AwayId: 26, HomeId: 14, startTime: futureDate, week: 1, phase: 'post',
         }, {
-          AwayId: 28, HomeId: 21, startTime: futureDate, week: 1,
+          AwayId: 28, HomeId: 21, startTime: futureDate, week: 1, phase: 'post',
         },
       ],
       changedTeams: [13, 5, 16, 3, 26, 14, 28, 21],
@@ -101,52 +101,52 @@ export default {
       },
       gameobjs: [
         {
-          AwayId: 1, HomeId: 2, startTime: 1641146400, week: 1,
+          AwayId: 1, HomeId: 2, startTime: 1641146400, week: 1, phase: 'post',
         },
         {
-          AwayId: 19, HomeId: 3, startTime: 1641146400, week: 1,
+          AwayId: 19, HomeId: 3, startTime: 1641146400, week: 1, phase: 'post',
         },
         {
-          AwayId: 12, HomeId: 4, startTime: 1641146400, week: 1,
+          AwayId: 12, HomeId: 4, startTime: 1641146400, week: 1, phase: 'post',
         },
         {
-          AwayId: 15, HomeId: 10, startTime: 1641146400, week: 1,
+          AwayId: 15, HomeId: 10, startTime: 1641146400, week: 1, phase: 'post',
         },
         {
-          AwayId: 13, HomeId: 11, startTime: 1641146400, week: 1,
+          AwayId: 13, HomeId: 11, startTime: 1641146400, week: 1, phase: 'post',
         },
         {
-          AwayId: 30, HomeId: 17, startTime: 1641146400, week: 1,
+          AwayId: 30, HomeId: 17, startTime: 1641146400, week: 1, phase: 'post',
         },
         {
-          AwayId: 27, HomeId: 20, startTime: 1641146400, week: 1,
+          AwayId: 27, HomeId: 20, startTime: 1641146400, week: 1, phase: 'post',
         },
         {
-          AwayId: 21, HomeId: 28, startTime: 1641146400, week: 1,
+          AwayId: 21, HomeId: 28, startTime: 1641146400, week: 1, phase: 'post',
         },
         {
-          AwayId: 14, HomeId: 33, startTime: 1641146400, week: 1,
+          AwayId: 14, HomeId: 33, startTime: 1641146400, week: 1, phase: 'post',
         },
         {
-          AwayId: 7, HomeId: 24, startTime: 1641157500, week: 1,
+          AwayId: 7, HomeId: 24, startTime: 1641157500, week: 1, phase: 'post',
         },
         {
-          AwayId: 34, HomeId: 25, startTime: 1641157500, week: 1,
+          AwayId: 34, HomeId: 25, startTime: 1641157500, week: 1, phase: 'post',
         },
         {
-          AwayId: 22, HomeId: 6, startTime: 1641158700, week: 1,
+          AwayId: 22, HomeId: 6, startTime: 1641158700, week: 1, phase: 'post',
         },
         {
-          AwayId: 29, HomeId: 18, startTime: 1641158700, week: 1,
+          AwayId: 29, HomeId: 18, startTime: 1641158700, week: 1, phase: 'post',
         },
         {
-          AwayId: 8, HomeId: 26, startTime: 1641158700, week: 1,
+          AwayId: 8, HomeId: 26, startTime: 1641158700, week: 1, phase: 'post',
         },
         {
-          AwayId: 16, HomeId: 9, startTime: 1641172800, week: 1,
+          AwayId: 16, HomeId: 9, startTime: 1641172800, week: 1, phase: 'post',
         },
         {
-          AwayId: 5, HomeId: 23, startTime: 1641258900, week: 1,
+          AwayId: 5, HomeId: 23, startTime: 1641258900, week: 1, phase: 'post',
         },
       ],
       changedTeams: [5, 23],
@@ -161,52 +161,52 @@ export default {
       },
       gameobjs: [
         {
-          AwayId: 1, HomeId: 2, startTime: 1641146400, week: 1,
+          AwayId: 1, HomeId: 2, startTime: 1641146400, week: 1, phase: 'post',
         },
         {
-          AwayId: 19, HomeId: 3, startTime: 1641146400, week: 1,
+          AwayId: 19, HomeId: 3, startTime: 1641146400, week: 1, phase: 'post',
         },
         {
-          AwayId: 12, HomeId: 4, startTime: 1641146400, week: 1,
+          AwayId: 12, HomeId: 4, startTime: 1641146400, week: 1, phase: 'post',
         },
         {
-          AwayId: 15, HomeId: 10, startTime: 1641146400, week: 1,
+          AwayId: 15, HomeId: 10, startTime: 1641146400, week: 1, phase: 'post',
         },
         {
-          AwayId: 13, HomeId: 11, startTime: 1641146400, week: 1,
+          AwayId: 13, HomeId: 11, startTime: 1641146400, week: 1, phase: 'post',
         },
         {
-          AwayId: 30, HomeId: 17, startTime: 1641146400, week: 1,
+          AwayId: 30, HomeId: 17, startTime: 1641146400, week: 1, phase: 'post',
         },
         {
-          AwayId: 27, HomeId: 20, startTime: 1641146400, week: 1,
+          AwayId: 27, HomeId: 20, startTime: 1641146400, week: 1, phase: 'post',
         },
         {
-          AwayId: 21, HomeId: 28, startTime: 1641146400, week: 1,
+          AwayId: 21, HomeId: 28, startTime: 1641146400, week: 1, phase: 'post',
         },
         {
-          AwayId: 14, HomeId: 33, startTime: 1641146400, week: 1,
+          AwayId: 14, HomeId: 33, startTime: 1641146400, week: 1, phase: 'post',
         },
         {
-          AwayId: 7, HomeId: 24, startTime: 1641157500, week: 1,
+          AwayId: 7, HomeId: 24, startTime: 1641157500, week: 1, phase: 'post',
         },
         {
-          AwayId: 34, HomeId: 25, startTime: 1641157500, week: 1,
+          AwayId: 34, HomeId: 25, startTime: 1641157500, week: 1, phase: 'post',
         },
         {
-          AwayId: 22, HomeId: 6, startTime: 1641158700, week: 1,
+          AwayId: 22, HomeId: 6, startTime: 1641158700, week: 1, phase: 'post',
         },
         {
-          AwayId: 29, HomeId: 18, startTime: 1641158700, week: 1,
+          AwayId: 29, HomeId: 18, startTime: 1641158700, week: 1, phase: 'post',
         },
         {
-          AwayId: 8, HomeId: 26, startTime: 1641158700, week: 1,
+          AwayId: 8, HomeId: 26, startTime: 1641158700, week: 1, phase: 'post',
         },
         {
-          AwayId: 16, HomeId: 9, startTime: 1641172800, week: 1,
+          AwayId: 16, HomeId: 9, startTime: 1641172800, week: 1, phase: 'post',
         },
         {
-          AwayId: 5, HomeId: 23, startTime: 1641258900, week: 1,
+          AwayId: 5, HomeId: 23, startTime: 1641258900, week: 1, phase: 'post',
         },
       ],
       changedTeams: [],

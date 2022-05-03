@@ -1,28 +1,23 @@
-// Configuration parameters for the site
-export const CallbackURL: string = (process.env.CALLBACK_URL || '');
-// How long to wait before filling a protected offer
-export const ProtectionDelay = (process.env.NODE_ENV === 'production' ? 30 : 5); // seconds
 // Define NFL positions
-interface NFLPosType {
-  name: string
-  canflex: boolean
-}
-export const NFLPosTypes: Record<number, NFLPosType> = {
+export const NFLPosTypes = {
   1: { name: 'QB', canflex: false },
   2: { name: 'RB', canflex: true },
   3: { name: 'WR', canflex: true },
   4: { name: 'TE', canflex: true },
   5: { name: 'K', canflex: false },
   6: { name: 'DEF', canflex: false },
-};
+} as const;
+export type NFLPosIDType = keyof typeof NFLPosTypes;
+export const NFLPosIDs = Object.keys(NFLPosTypes).map(Number) as NFLPosIDType[];
 
 // Define Roster position types
+export const FlexNFLPositionId = 99;
 interface RosterPosType {
-  id: number
+  id: NFLPosIDType | typeof FlexNFLPositionId
   canflex: boolean
 }
 export const RosterPosTypes: Record<string, RosterPosType> = {
-  FLEX: { id: 0, canflex: false },
+  FLEX: { id: FlexNFLPositionId, canflex: false },
   QB: { id: 1, canflex: NFLPosTypes[1].canflex },
   RB: { id: 2, canflex: NFLPosTypes[2].canflex },
   WR: { id: 3, canflex: NFLPosTypes[3].canflex },
@@ -31,24 +26,30 @@ export const RosterPosTypes: Record<string, RosterPosType> = {
   DEF: { id: 6, canflex: NFLPosTypes[6].canflex },
 };
 // Define all roster positions
-export const Roster: Record<string, number> = {
+export const Roster = {
   QB1: 1,
   RB1: 2,
   RB2: 2,
   WR1: 3,
   WR2: 3,
   TE1: 4,
-  FLEX1: 0,
-  FLEX2: 0,
+  FLEX1: FlexNFLPositionId,
+  FLEX2: FlexNFLPositionId,
   K1: 5,
   DEF1: 6,
-};
-export const FlexNFLPositionId = 99;
-Roster.FLEX1 = FlexNFLPositionId;
-Roster.FLEX2 = FlexNFLPositionId;
-RosterPosTypes.FLEX.id = FlexNFLPositionId;
+} as const;
+export type RPosType = keyof typeof Roster;
+export const RosterPositions = Object.keys(Roster) as RPosType[];
+type ValueOf<T> = T[keyof T];
+export type RosterPosNumType = ValueOf<typeof Roster>;
 
-export const rposList = Object.keys(Roster);
+export const gamePhases = ['pre', 'mid', 'post'] as const;
+export type GamePhaseType = typeof gamePhases[number];
+
+// Configuration parameters for the site
+export const CallbackURL: string = (process.env.CALLBACK_URL || '');
+// How long to wait before filling a protected offer
+export const ProtectionDelay = (process.env.NODE_ENV === 'production' ? 30 : 5); // seconds
 // Are offers protected by default?
 export const DefaultProtected = false;
 // How often to refresh websocket info

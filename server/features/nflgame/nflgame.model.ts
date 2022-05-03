@@ -1,22 +1,26 @@
 // Info about an NFL Game
 // Home team, away team, week #, and start timestamp
 // Also includes a phase to determine whether players can be traded
-import { DataTypes, ModelDefined, Optional } from 'sequelize';
+/* eslint-disable @typescript-eslint/lines-between-class-members */
+import {
+  Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
+} from 'sequelize';
 import sequelize from '../../db';
+import { gamePhases, GamePhaseType } from '../../config';
 
 import NFLTeam from '../nflteam/nflteam.model';
 
-export interface NFLGameType {
-  week: number,
-  HomeId: number,
-  AwayId: number,
-  phase: 'pre' | 'mid' | 'post',
-  startTime: number,
+class NFLGame extends Model<InferAttributes<NFLGame>, InferCreationAttributes<NFLGame>> {
+  declare week: number;
+  declare HomeId: number;
+  declare AwayId: number;
+  declare phase: GamePhaseType;
+  declare startTime: number;
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
 }
 
-export type NFLGameCreateType = Optional<NFLGameType, 'phase'>;
-
-const NFLGame: ModelDefined<NFLGameType, NFLGameCreateType> = sequelize.define('NFLGame', {
+NFLGame.init({
   week: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -38,14 +42,16 @@ const NFLGame: ModelDefined<NFLGameType, NFLGameCreateType> = sequelize.define('
     type: DataTypes.STRING(255),
     defaultValue: 'post',
     validate: {
-      isIn: [['pre', 'mid', 'post']],
+      isIn: [gamePhases],
     },
   },
   startTime: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-});
+  createdAt: DataTypes.DATE,
+  updatedAt: DataTypes.DATE,
+}, { sequelize });
 
 NFLGame.belongsTo(NFLTeam, { as: 'home', foreignKey: 'HomeId' });
 NFLGame.belongsTo(NFLTeam, { as: 'away', foreignKey: 'AwayId' });

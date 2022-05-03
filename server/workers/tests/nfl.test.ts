@@ -8,7 +8,7 @@ import { FormatInjuryObjects, FindInjuryChanges } from '../nfl/injury.nfl';
 import { EstimateProjection } from '../nfl/stats.nfl';
 import NFLGame from '../../features/nflgame/nflgame.model';
 import Entry from '../../features/entry/entry.model';
-import { dv } from '../../features/util/util';
+import NFLPlayer from '../../features/nflplayer/nflplayer.model';
 
 type TestNameType = keyof typeof yahoo.games;
 
@@ -102,17 +102,19 @@ describe('NFL worker tests', () => {
   test('Test phase transition', async () => {
     state.statObj[30175] = { w: '2|23|0|12|0|0|4|1' };
     await setPhase(23, 'post');
-    const game = await NFLGame.findOne({ where: { HomeId: 23 } }).then(dv);
-    const entry = await Entry.findOne({ where: { ContestId: 2, UserId: 5 } }).then(dv);
+    const game = await NFLGame.findOne({ where: { HomeId: 23 } });
+    const entry = await Entry.findOne({ where: { ContestId: 2, UserId: 5 } });
 
-    NFLGame.update({ phase: 'mid' }, { where: { HomeId: 23 } });
-    Entry.update({ WR1: 30175, pointtotal: 500 }, { where: { ContestId: 2, UserId: 5 } });
-
-    expect(game.phase).toBe('post');
-    expect(entry).toMatchObject({
+    const outphase = game?.toJSON().phase;
+    expect(outphase).toBe('post');
+    const outentry = entry?.toJSON();
+    expect(outentry).toMatchObject({
       WR1: null,
       pointtotal: 830,
     });
+
+    NFLGame.update({ phase: 'mid' }, { where: { HomeId: 23 } });
+    Entry.update({ WR1: 30175, pointtotal: 500 }, { where: { ContestId: 2, UserId: 5 } });
   });
 
   describe('Test game file update parse', () => {
@@ -146,7 +148,7 @@ describe('NFL worker tests', () => {
       active: false, // If this was a new player record, don't show in results
       preprice: null,
       postprice: null,
-    };
+    } as NFLPlayer;
     injuryObjects[0] = newInjury1;
     expect(FindInjuryChanges(injuryObjects)).toEqual([newInjury1]);
   });

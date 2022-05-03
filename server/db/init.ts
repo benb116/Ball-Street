@@ -1,6 +1,8 @@
 // Set up the database with proper tables and NFL data
 
-import { EntryActionKinds, LedgerKinds, RosterPosTypes } from '../config';
+import {
+  EntryActionKinds, LedgerKinds, NFLPosIDs, NFLPosIDType, NFLPosTypes, RosterPosTypes,
+} from '../config';
 import teams from '../nflinfo';
 import logger from '../utilities/logger';
 import scrape from './playerscraper';
@@ -48,12 +50,12 @@ async function InitDB() {
   await EntryActionKind.bulkCreate(entryactionkindrecords);
 
   // Create nfl position DB records
-  const nflposrecords = Object.keys(RosterPosTypes).map((p) => ({ ...RosterPosTypes[p], name: p }));
+  const nflposrecords = NFLPosIDs.map((id) => ({ ...NFLPosTypes[id], id }));
   await NFLPosition.bulkCreate(nflposrecords);
 
   // Create nfl team DB records
   const teamrecords = Object.keys(teams).map((t) => {
-    const obj = { ...teams[t], abr: t };
+    const obj = { ...teams[t], abr: t, fullname: `${teams[t].location} ${teams[t].name}` };
     return obj;
   });
   await NFLTeam.bulkCreate(teamrecords);
@@ -64,10 +66,11 @@ async function InitDB() {
     return {
       id: teams[abr].id,
       name: fullname,
-      NFLPositionId: RosterPosTypes.DEF.id,
+      NFLPositionId: RosterPosTypes.DEF.id as NFLPosIDType,
       NFLTeamId: teams[abr].id,
       preprice: 1100,
       postprice: 700,
+      active: true,
     };
   });
   await NFLPlayer.bulkCreate(teamdefrecords);

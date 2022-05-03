@@ -4,7 +4,7 @@
 
 import { Transaction } from 'sequelize';
 
-import { dv, tobj } from '../../features/util/util';
+import { tobj } from '../../features/util/util';
 import logger from '../../utilities/logger';
 
 import sequelize from '../../db';
@@ -15,21 +15,16 @@ import channels from '../live/channels.live';
 import tradeAdd from '../../features/trade/services/tradeAdd.service';
 import tradeDrop from '../../features/trade/services/tradeDrop.service';
 
-import Offer, { OfferType } from '../../features/offer/offer.model';
+import Offer from '../../features/offer/offer.model';
 import Trade from '../../features/trade/trade.model';
 import PriceHistory from '../../features/pricehistory/pricehistory.model';
-
-const isoOption = {
-  // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
-};
 
 const { offerFilled, priceUpdate, offerCancelled } = channels;
 
 // Try to fill the offers or return which one is done
 async function fillOffers(bidid: string, askid: string) {
   logger.info(`begin trade: ${bidid} ${askid}`);
-  const out = sequelize.transaction(isoOption,
-    async (t) => attemptFill(t, bidid, askid));
+  const out = sequelize.transaction(async (t) => attemptFill(t, bidid, askid));
   return out;
 }
 
@@ -42,26 +37,23 @@ async function attemptFill(t: Transaction, bidid: string, askid: string) {
     Offer.findByPk(askid, tobj(t)),
   ]);
 
-  const boffer: OfferType | null = dv(bidoffer);
-  const aoffer: OfferType | null = dv(askoffer);
-
-  if (!boffer || !aoffer) {
-    logger.info(`Offer not found: ${(!boffer ? bidid : askid)}`);
+  if (!bidoffer || !askoffer) {
+    logger.info(`Offer not found: ${(!bidoffer ? bidid : askid)}`);
     return {
-      bid: boffer,
-      ask: aoffer,
+      bid: bidoffer,
+      ask: askoffer,
     };
   }
 
   const resp = {
-    bid: boffer,
-    ask: aoffer,
+    bid: bidoffer,
+    ask: askoffer,
   };
 
-  if (boffer.filled || boffer.cancelled || !boffer.isbid) {
+  if (bidoffer.filled || bidoffer.cancelled || !bidoffer.isbid) {
     isBidClosed = true;
   }
-  if (aoffer.filled || aoffer.cancelled || aoffer.isbid) {
+  if (askoffer.filled || askoffer.cancelled || askoffer.isbid) {
     isAskClosed = true;
   }
   if (isBidClosed || isAskClosed || !bidoffer || !askoffer) {
@@ -69,19 +61,19 @@ async function attemptFill(t: Transaction, bidid: string, askid: string) {
     return resp;
   }
 
-  if (aoffer.price > boffer.price) throw new Error('Price mismatch');
-  if (aoffer.ContestId !== boffer.ContestId) throw new Error('Contest mismatch');
-  if (aoffer.NFLPlayerId !== boffer.NFLPlayerId) throw new Error('Player mismatch');
+  if (askoffer.price > bidoffer.price) throw new Error('Price mismatch');
+  if (askoffer.ContestId !== bidoffer.ContestId) throw new Error('Contest mismatch');
+  if (askoffer.NFLPlayerId !== bidoffer.NFLPlayerId) throw new Error('Player mismatch');
 
-  const biduser = boffer.UserId;
-  const askuser = aoffer.UserId;
-  const nflplayerID = boffer.NFLPlayerId;
+  const biduser = bidoffer.UserId;
+  const askuser = askoffer.UserId;
+  const nflplayerID = bidoffer.NFLPlayerId;
 
-  const price = (boffer.createdAt < aoffer.createdAt ? boffer.price : aoffer.price);
+  const price = (bidoffer.createdAt < askoffer.createdAt ? bidoffer.price : askoffer.price);
 
   const bidreq = {
     user: biduser,
-    params: { contestID: boffer.ContestId },
+    params: { contestID: bidoffer.ContestId },
     body: {
       nflplayerID,
       price,
@@ -89,7 +81,7 @@ async function attemptFill(t: Transaction, bidid: string, askid: string) {
   };
   const askreq = {
     user: askuser,
-    params: { contestID: aoffer.ContestId },
+    params: { contestID: askoffer.ContestId },
     body: {
       nflplayerID,
       price,
@@ -98,21 +90,21 @@ async function attemptFill(t: Transaction, bidid: string, askid: string) {
 
   // Try to fill both
   const bidProm = tradeAdd(bidreq, t)
-    .catch((err) => {
-      logger.warn(`Offer could not be filled: ${boffer.id} - ${err.message}`);
-
-      return Offer.update({ cancelled: true }, { where: { id: boffer.id }, transaction: t })
-        .then(() => offerCancelled.pub(boffer.UserId, boffer.id))
-        .finally(() => false);
+    .catch(async (err) => {
+      logger.warn(`Offer could not be filled: ${bidoffer.id} - ${err.message}`);
+      bidoffer.cancelled = true;
+      await bidoffer.save({ transaction: t });
+      offerCancelled.pub(bidoffer.UserId, bidoffer.id);
+      return false;
     });
 
   const askProm = tradeDrop(askreq, t)
-    .catch((err) => {
-      logger.warn(`Offer could not be filled: ${aoffer.id} - ${err.message}`);
-
-      return Offer.update({ cancelled: true }, { where: { id: aoffer.id }, transaction: t })
-        .then(() => offerCancelled.pub(aoffer.UserId, aoffer.id))
-        .finally(() => false);
+    .catch(async (err) => {
+      logger.warn(`Offer could not be filled: ${askoffer.id} - ${err.message}`);
+      askoffer.cancelled = true;
+      await askoffer.save({ transaction: t });
+      offerCancelled.pub(askoffer.UserId, askoffer.id);
+      return false;
     });
 
   // Check the response
@@ -127,11 +119,8 @@ async function attemptFill(t: Transaction, bidid: string, askid: string) {
     return resp;
   }
   // If both good, commit transaction
-  bidoffer.set({ filled: true });
-  askoffer.set({ filled: true });
-
-  boffer.filled = true;
-  aoffer.filled = true;
+  bidoffer.filled = true;
+  askoffer.filled = true;
 
   await Promise.all([
     bidoffer.save({ transaction: t }),
@@ -141,12 +130,12 @@ async function attemptFill(t: Transaction, bidid: string, askid: string) {
   // Trade completed, record it and notify
 
   const createTrade = Trade.create({
-    bidId: boffer.id,
-    askId: aoffer.id,
+    bidId: bidoffer.id,
+    askId: askoffer.id,
     price,
   }, tobj(t));
 
-  const contestID = boffer.ContestId;
+  const contestID = bidoffer.ContestId;
 
   const createHistory = PriceHistory.create({
     ContestId: contestID,
@@ -158,8 +147,8 @@ async function attemptFill(t: Transaction, bidid: string, askid: string) {
 
   client.HSET(rediskeys.lasttradeHash(contestID), [nflplayerID.toString(), price.toString()]);
   priceUpdate.pub('last', contestID, nflplayerID, price);
-  offerFilled.pub(boffer.UserId, boffer.id);
-  offerFilled.pub(aoffer.UserId, aoffer.id);
+  offerFilled.pub(bidoffer.UserId, bidoffer.id);
+  offerFilled.pub(askoffer.UserId, askoffer.id);
   logger.info(`finish trade - ${price}: ${bidid} ${askid}`);
   return resp;
 }

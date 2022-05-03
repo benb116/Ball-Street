@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-import { dv, validate, uError } from '../../util/util';
+import { validate, uError } from '../../util/util';
 import validators from '../../util/util.schema';
 import { ServiceInput } from '../../util/util.service';
 
@@ -19,8 +19,8 @@ interface GetAccountInput extends ServiceInput {
 
 async function getAccount(req: GetAccountInput) {
   const value: GetAccountInput = validate(req, schema);
-  const theuser = await User.findByPk(value.user).then(dv);
-  if (!theuser) { uError('User not found', 404); }
+  const theuser = await User.findByPk(value.user);
+  if (!theuser) { return uError('User not found', 404); }
   return theuser;
 }
 

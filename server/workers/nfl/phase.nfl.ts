@@ -1,14 +1,15 @@
 // Change the game phase (pre, mid, post)
 import Joi from 'joi';
-import { Op, Sequelize } from 'sequelize';
+import Sequelize, { Op } from 'sequelize';
 import type { Literal } from 'sequelize/types/utils.d';
 import type { Logger } from 'winston';
 
 import teams from '../../nflinfo';
 
-import { dv, validate, isPlayerOnRoster } from '../../features/util/util';
+import { validate, isPlayerOnRoster } from '../../features/util/util';
 import logger from '../../utilities/logger';
 import { SumPoints } from './dict.nfl';
+
 import state from './state.nfl';
 
 import sequelize from '../../db';
@@ -16,12 +17,12 @@ import { client } from '../../db/redis';
 
 import phaseChange from '../live/channels/phaseChange.channel';
 
-import Entry, { EntryType } from '../../features/entry/entry.model';
-import NFLPlayer, { NFLPlayerType } from '../../features/nflplayer/nflplayer.model';
+import Entry from '../../features/entry/entry.model';
+import NFLPlayer from '../../features/nflplayer/nflplayer.model';
 import NFLGame from '../../features/nflgame/nflgame.model';
 import getWeekEntries from '../../features/entry/services/getWeekEntries.service';
-import EntryAction, { EntryActionType } from '../../features/trade/entryaction.model';
-import { EntryActionKinds } from '../../config';
+import EntryAction from '../../features/trade/entryaction.model';
+import { EntryActionKinds, gamePhases, GamePhaseType } from '../../config';
 
 const teamIDs = Object.keys(teams).map((teamAbr) => teams[teamAbr].id);
 const schema = Joi.object({
@@ -34,12 +35,12 @@ const schema = Joi.object({
       'number.less': 'Team ID is invalid',
       'any.required': 'You must be specify a team',
     }),
-  newphase: Joi.string().valid('pre', 'mid', 'post').required(),
+  newphase: Joi.string().valid(...gamePhases).required(),
 });
 
 // Mark a team's phase in the DB, then publish a change to clients
 // If changed to post, then convert players to points
-async function setPhase(teamID: number, newphase: 'pre' | 'mid' | 'post') {
+async function setPhase(teamID: number, newphase: GamePhaseType) {
   const req = { teamID, newphase };
   validate(req, schema);
 
@@ -53,13 +54,13 @@ async function setPhase(teamID: number, newphase: 'pre' | 'mid' | 'post') {
       },
     });
 
+    // Convert players to points if game ended
+    if (newphase === 'post') await convertTeamPlayers(teamID);
+
     // Announce phase change
     phaseChange.pub(teamID, newphase);
     // Delete cache entry
     client.DEL('/nfldata/games');
-
-    // Convert players to points if game ended
-    if (newphase === 'post') await convertTeamPlayers(teamID);
   } catch (error) {
     logger.error(error);
   }
@@ -68,30 +69,28 @@ async function setPhase(teamID: number, newphase: 'pre' | 'mid' | 'post') {
 // Convert all players on a team in all entries to points
 async function convertTeamPlayers(teamID: number) {
   logger.info(`Converting players on team ${teamID}`);
-  const teamPlayers: NFLPlayerType[] = await NFLPlayer.findAll({
+  const teamPlayers = await NFLPlayer.findAll({
     where: {
       NFLTeamId: teamID,
       active: true,
     },
-  }).then(dv);
+  });
 
   // Set postprice in database
   const statplayerObjs = teamPlayers.map(setPostPrice);
-  NFLPlayer.bulkCreate(statplayerObjs, { updateOnDuplicate: ['postprice'] });
+  await NFLPlayer.bulkCreate(statplayerObjs, { updateOnDuplicate: ['postprice'] });
 
   // Build statmap for use in conversion
-  // PlayerID: postprice
   const statmap = statplayerObjs.reduce((acc: Record<string, number>, cur) => {
     if (cur.postprice) acc[cur.id] = cur.postprice;
     return acc;
   }, {});
-
   // Find all of this weeks entries across contests
-  const allEntries: EntryType[] = await getWeekEntries();
+  const allEntries = await getWeekEntries();
 
   // Determine which players on which entries should be converted
   // Map (key: entry, value: Map of roster positions and playerIDs)
-  const changeMap = allEntries.reduce((acc: Map<EntryType, Map<string, number>>, entry) => {
+  const changeMap = allEntries.reduce((acc: Map<Entry, Map<string, number>>, entry) => {
     // map of positions and players to convert
     const entryPlayers: Map<string, number> = new Map();
 
@@ -130,7 +129,7 @@ async function convertTeamPlayers(teamID: number) {
       ContestId,
       NFLPlayerId: pID,
       price: (statmap[pID] || 0),
-    } as EntryActionType));
+    }));
 
     // Return transaction of the two actions
     const trans = sequelize.transaction(async (t) => {
@@ -144,13 +143,13 @@ async function convertTeamPlayers(teamID: number) {
 }
 
 // Set a player's postprice based on statlines
-function setPostPrice(p: NFLPlayerType) {
-  const newp = p;
+function setPostPrice(p: NFLPlayer) {
+  const newp = p.toJSON();
   const playerid = newp.id;
   const stats = state.statObj[playerid];
   const statpoints = (stats ? SumPoints(stats) : 0);
   newp.postprice = statpoints;
-  return p;
+  return newp;
 }
 
 export default setPhase;

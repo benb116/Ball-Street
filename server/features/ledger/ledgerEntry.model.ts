@@ -1,22 +1,26 @@
 // An entry into the global transaction ledger
 
-import Sequelize, { DataTypes, ModelDefined, Optional } from 'sequelize';
+/* eslint-disable @typescript-eslint/lines-between-class-members */
+import Sequelize, {
+  Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
+} from 'sequelize';
 import sequelize from '../../db';
 
 import User from '../user/user.model';
 import Contest from '../contest/contest.model';
 import LedgerKind from './ledgerKind.model';
 
-export interface LedgerEntryType {
-  id: string,
-  UserId: number,
-  ContestId: number | null,
-  value: number,
-  LedgerKindId: number,
+class LedgerEntry extends Model<InferAttributes<LedgerEntry>, InferCreationAttributes<LedgerEntry>> {
+  declare id: CreationOptional<string>;
+  declare UserId: number;
+  declare ContestId: number | null;
+  declare value: number;
+  declare LedgerKindId: number;
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
 }
-export type LedgerEntryCreateType = Optional<LedgerEntryType, 'id'>;
 
-const LedgerEntry: ModelDefined<LedgerEntryType, LedgerEntryCreateType> = sequelize.define('LedgerEntry', {
+LedgerEntry.init({
   id: {
     type: DataTypes.UUID,
     defaultValue: Sequelize.UUIDV4,
@@ -40,7 +44,9 @@ const LedgerEntry: ModelDefined<LedgerEntryType, LedgerEntryCreateType> = sequel
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-});
+  createdAt: DataTypes.DATE,
+  updatedAt: DataTypes.DATE,
+}, { sequelize });
 
 LedgerEntry.belongsTo(User);
 LedgerEntry.belongsTo(Contest);

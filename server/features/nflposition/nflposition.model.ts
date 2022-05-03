@@ -1,19 +1,27 @@
 // Model for an NFL Position (e.g. WR, DEF, not WR1, DEF1)
-import { DataTypes, ModelDefined, Optional } from 'sequelize';
-import sequelize from '../../db';
 
-export interface NFLPositionType {
-  id: number,
-  name: string,
-  canflex: boolean,
+/* eslint-disable @typescript-eslint/lines-between-class-members */
+import {
+  Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
+} from 'sequelize';
+import sequelize from '../../db';
+import { NFLPosIDs, NFLPosIDType } from '../../config';
+
+class NFLPosition extends Model<InferAttributes<NFLPosition>, InferCreationAttributes<NFLPosition>> {
+  declare id: NFLPosIDType;
+  declare name: string;
+  declare canflex: boolean;
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
 }
 
-type NFLPositionCreateType = Optional<NFLPositionType, 'id'>;
-
-const NFLPosition: ModelDefined<NFLPositionType, NFLPositionCreateType> = sequelize.define('NFLPosition', {
+NFLPosition.init({
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
+    validate: {
+      isIn: [NFLPosIDs],
+    },
   },
   name: {
     type: DataTypes.STRING,
@@ -24,6 +32,8 @@ const NFLPosition: ModelDefined<NFLPositionType, NFLPositionCreateType> = sequel
     allowNull: false,
     defaultValue: false,
   },
-});
+  createdAt: DataTypes.DATE,
+  updatedAt: DataTypes.DATE,
+}, { sequelize });
 
 export default NFLPosition;

@@ -6,10 +6,10 @@ import logger from '../../utilities/logger';
 
 import evaluateFn from './evaluate.offer';
 
-import { OfferType } from '../../features/offer/offer.model';
+import Offer from '../../features/offer/offer.model';
 import ProtectedMatch from '../../features/protectedmatch/protectedmatch.model';
 
-type LimitMap = Map<string, OfferType>;
+type LimitMap = Map<string, Offer>;
 type LimitTree = Record<string, LimitMap>;
 
 interface MatcherType {
@@ -80,14 +80,14 @@ class Book {
   }
 
   // Add a function to the book's serial queue
-  enqueue(fn: (inp: unknown) => unknown) {
+  enqueue(fn: ((inp: unknown) => unknown)) {
     this.queue = this.queue.then(fn).catch((err) => {
       logger.error(`Book error: Contest:${this.contestID} Player:${this.nflplayerID}`, err);
     });
   }
 
   // Add an offer to the book
-  add(offer: OfferType) {
+  add(offer: Offer) {
     const { isbid, price } = offer;
     // which tree to add to
     const thetree = this.whichTree(isbid, offer.protected);
@@ -99,7 +99,7 @@ class Book {
   }
 
   // Remove and offer from the book
-  cancel(offer: OfferType) {
+  cancel(offer: Offer) {
     const { isbid, price } = offer;
     const thetree = this.whichTree(isbid, offer.protected);
 
@@ -161,7 +161,7 @@ class Book {
   }
 
   // Find all offers in the book that could match a specific protected offer
-  findProtectedMatches(offer: OfferType) {
+  findProtectedMatches(offer: Offer) {
     const { isbid, price } = offer;
     // Search all unprotected opposite offers
     const thetree = this.whichTree(!isbid, false);
@@ -186,7 +186,7 @@ class Book {
       .map((l) => [...l.entries()])
       .reduce((acc, cur) => [...acc, ...cur], []) // concat all
     // only offers submitted after protected
-      .filter((e) => Date.parse(e[1].createdAt) > Date.parse(offer.createdAt))
+      .filter((e) => e[1].createdAt > offer.createdAt)
       .map((e) => e[1]);
     return [...allMatchingOffers, ...allMatchingPOffers];
   }

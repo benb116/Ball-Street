@@ -8,10 +8,6 @@ import sequelize from '../../../db';
 
 import tradeDrop from './tradeDrop.service';
 
-const isoOption = {
-  // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
-};
-
 const schema = Joi.object({
   user: validators.user,
   params: Joi.object().keys({
@@ -39,7 +35,7 @@ interface PreTradeDropInput extends ServiceInput {
 async function preTradeDrop(req: PreTradeDropInput) {
   const value: PreTradeDropInput = validate(req, schema);
 
-  return sequelize.transaction(isoOption, async (t) => tradeDrop(value, t))
+  return sequelize.transaction(async (t) => tradeDrop(value, t))
     .catch(errorHandler({
       default: { message: 'Could not drop player', status: 500 },
     }));

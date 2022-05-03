@@ -1,20 +1,14 @@
 import Queue from 'bull';
 import Joi from 'joi';
 
-import {
-  dv, tobj, validate, uError,
-} from '../../util/util';
+import { tobj, validate, uError } from '../../util/util';
 import validators from '../../util/util.schema';
 import { ServiceInput } from '../../util/util.service';
 
 import sequelize from '../../../db';
 import { queueOptions } from '../../../db/redis';
 
-import Offer, { OfferType } from '../offer.model';
-
-const isoOption = {
-  // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
-};
+import Offer from '../offer.model';
 
 const offerQueue = new Queue('offer-queue', queueOptions);
 
@@ -45,17 +39,16 @@ async function cancelOffer(req: CancelOfferInput) {
   const value: CancelOfferInput = validate(req, schema);
 
   // Cancel offer, but if it's filled, let user know
-  return sequelize.transaction(isoOption, async (t) => {
-    const o = await Offer.findByPk(value.body.offerID, tobj(t));
-    if (!o) { return uError('No offer found', 404); }
-    const oValue: OfferType = dv(o);
-    if (oValue.UserId !== value.user) { uError('Unauthorized', 403); }
-    if (oValue.filled) { uError('Offer already filled', 406); }
-    if (oValue.cancelled) { uError('Offer already cancelled', 406); }
-    o.set({ cancelled: true });
-    await o.save({ transaction: t });
-    return o;
-  }).then(dv).then((offer) => {
+  return sequelize.transaction(async (t) => {
+    const theoffer = await Offer.findByPk(value.body.offerID, tobj(t));
+    if (!theoffer) { return uError('No offer found', 404); }
+    if (theoffer.UserId !== value.user) { return uError('Unauthorized', 403); }
+    if (theoffer.filled) { return uError('Offer already filled', 406); }
+    if (theoffer.cancelled) { return uError('Offer already cancelled', 406); }
+    theoffer.set({ cancelled: true });
+    await theoffer.save({ transaction: t });
+    return theoffer;
+  }).then((offer) => {
     offerQueue.add(offer);
     return offer;
   });
