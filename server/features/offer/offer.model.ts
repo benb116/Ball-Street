@@ -1,30 +1,30 @@
-import Sequelize, { DataTypes, ModelDefined, Optional } from 'sequelize';
+/* eslint-disable @typescript-eslint/lines-between-class-members */
+import Sequelize, {
+  Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
+} from 'sequelize';
+import sequelize from '../../db';
 
 import { DefaultProtected } from '../../config';
-
-import sequelize from '../../db';
 
 import User from '../user/user.model';
 import Contest from '../contest/contest.model';
 import NFLPlayer from '../nflplayer/nflplayer.model';
 
-export interface OfferType {
-  id: string,
-  isbid: boolean,
-  price: number,
-  protected: boolean,
-  filled: boolean,
-  cancelled: boolean,
-  UserId: number,
-  ContestId: number,
-  NFLPlayerId: number,
-  createdAt: string,
-  updatedAt: string,
+class Offer extends Model<InferAttributes<Offer>, InferCreationAttributes<Offer>> {
+  declare id: CreationOptional<string>;
+  declare isbid: boolean;
+  declare price: number;
+  declare protected: CreationOptional<boolean>;
+  declare filled: CreationOptional<boolean>;
+  declare cancelled: CreationOptional<boolean>;
+  declare UserId: number;
+  declare ContestId: number;
+  declare NFLPlayerId: number;
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
 }
-export type OfferCreateType =
-Optional<OfferType, 'id' | 'protected' | 'filled' | 'cancelled' | 'createdAt' | 'updatedAt'>;
 
-const Offer: ModelDefined<OfferType, OfferCreateType> = sequelize.define('Offer', {
+Offer.init({
   id: {
     type: DataTypes.UUID,
     defaultValue: Sequelize.UUIDV4,
@@ -68,8 +68,10 @@ const Offer: ModelDefined<OfferType, OfferCreateType> = sequelize.define('Offer'
     references: { model: NFLPlayer },
     allowNull: false,
   },
-
+  createdAt: DataTypes.DATE,
+  updatedAt: DataTypes.DATE,
 }, {
+  sequelize,
   indexes: [
     { // Make it faster to search for offers that aren't filled or cancelled
       name: 'IX_Offer-Active',

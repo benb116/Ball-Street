@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import Joi from 'joi';
 
-import { dv, validate, uError } from '../../util/util';
+import { validate, uError } from '../../util/util';
 import validators from '../../util/util.schema';
 import errorHandler from '../../util/util.service';
 
@@ -26,18 +26,20 @@ interface SignupInput {
   skipVerification: boolean,
 }
 
+const saltRounds = 10;
+
 async function signup(req: SignupInput) {
   const value: SignupInput = validate(req, schema);
   const {
     name, email, password, skipVerification,
   } = value;
   try {
-    const salt = await bcrypt.genSalt(10);
+    const salt = await bcrypt.genSalt(saltRounds);
     const hash = await bcrypt.hash(password, salt);
     const theuser = await User.create({
       name, email, pwHash: hash, verified: skipVerification, cash: 0,
-    }).then(dv);
-    if (!theuser) { uError('User could not be created', 500); }
+    });
+    if (!theuser) { return uError('User could not be created', 500); }
     if (!skipVerification) return await genVerify({ id: theuser.id, email: theuser.email });
     return {
       needsVerification: false, id: theuser.id, email: theuser.email, name: theuser.name, cash: theuser.cash,

@@ -6,11 +6,11 @@ import logger from '../../utilities/logger';
 
 import type Book from './book.offer';
 
-import { OfferType } from '../../features/offer/offer.model';
+import Offer from '../../features/offer/offer.model';
 
 export interface MatchPair {
-  bid: OfferType,
-  ask: OfferType
+  bid: Offer,
+  ask: Offer
 }
 
 // Returns with a bid and ask object detailing the offers

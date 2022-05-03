@@ -17,7 +17,7 @@ import { getBook, updateBest } from './offer/util.offer';
 import evalProtected from './offer/protected.offer';
 import Book from './offer/book.offer';
 
-import { OfferType } from '../features/offer/offer.model';
+import Offer from '../features/offer/offer.model';
 import { MatchPair } from './offer/evaluate.offer';
 
 const offerQueue = new Queue('offer-queue', queueOptions);
@@ -35,7 +35,7 @@ offerQueue.process(parallelProcessors, processor);
 protectedQueue.process(parallelProcessors, protectedProcessor);
 
 interface OfferJob {
-  data: OfferType
+  data: Offer
 }
 
 interface ProtMatchType {
@@ -60,16 +60,14 @@ function processor(job: OfferJob) {
     playerBook.enqueue(() => { playerBook.add(job.data); });
   }
   // Add an evaluation to the queue
-  playerBook.enqueue(() => { evaluateBook(playerBook); });
+  playerBook.enqueue(async () => { await evaluateBook(playerBook); });
 }
 
 function protectedProcessor(job: ProtMatchJob) {
   logger.info(JSON.stringify(job.data));
   const { ContestId, NFLPlayerId } = job.data;
   const playerBook = getBook(books, ContestId, NFLPlayerId);
-  playerBook.enqueue(() => {
-    evalProtected(playerBook, job.data.existingOffer, job.data.newOffer);
-  });
+  playerBook.enqueue(async () => { await evalProtected(playerBook, job.data.existingOffer, job.data.newOffer); });
 }
 
 // Check the book and iteratively try to execute matches
@@ -88,7 +86,7 @@ async function evaluateBook(playerBook: Book) {
       }
       oldMatch = { ...match };
       logger.info(`match ${match.bid.id} ${match.ask.id}`);
-      const isBidOld = (Date.parse(match.bid.createdAt) < Date.parse(match.ask.createdAt));
+      const isBidOld = (match.bid.createdAt < match.ask.createdAt);
       const oldOffer = (isBidOld ? match.bid : match.ask);
       const newOffer = (!isBidOld ? match.bid : match.ask);
 
@@ -122,7 +120,7 @@ async function evaluateBook(playerBook: Book) {
 }
 
 // Add a protMatch to the queue and send a ping
-function addToProtectedMatchQueue(eOffer: OfferType, nOffer: OfferType, ContestId: number, NFLPlayerId: number) {
+function addToProtectedMatchQueue(eOffer: Offer, nOffer: Offer, ContestId: number, NFLPlayerId: number) {
   protectedQueue.add({
     existingOffer: eOffer.id,
     newOffer: nOffer.id,

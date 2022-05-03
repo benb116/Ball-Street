@@ -1,21 +1,15 @@
 import Joi from 'joi';
 
-import {
-  dv, validate, uError, tobj,
-} from '../../util/util';
+import { validate, uError, tobj } from '../../util/util';
 import validators from '../../util/util.schema';
 import errorHandler, { ServiceInput } from '../../util/util.service';
 
 import Contest from '../../contest/contest.model';
-import Entry, { EntryCreateType } from '../entry.model';
+import Entry from '../entry.model';
 import sequelize from '../../../db';
 import User from '../../user/user.model';
-import LedgerEntry, { LedgerEntryCreateType } from '../../ledger/ledgerEntry.model';
+import LedgerEntry from '../../ledger/ledgerEntry.model';
 import { LedgerKinds } from '../../../config';
-
-const isoOption = {
-  // isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
-};
 
 const schema = Joi.object({
   user: validators.user,
@@ -36,25 +30,22 @@ interface CreateEntryInput extends ServiceInput {
 async function createEntry(req: CreateEntryInput) {
   const value: CreateEntryInput = validate(req, schema);
 
-  return sequelize.transaction(isoOption, async (t) => {
+  return sequelize.transaction(async (t) => {
     // Confirm contest is valid and for the current week
-    const thecontest = await Contest.findByPk(value.params.contestID).then(dv);
-    if (!thecontest) { uError('No contest found', 404); }
+    const thecontest = await Contest.findByPk(value.params.contestID);
+    if (!thecontest) { return uError('No contest found', 404); }
     const theweek = Number(process.env.WEEK);
-    if (theweek !== thecontest.nflweek) uError('Incorrect week', 406);
+    if (theweek !== thecontest.nflweek) return uError('Incorrect week', 406);
 
     const theuser = await User.findOne({ where: { id: value.user }, ...tobj(t) });
     if (!theuser) return uError('No user found', 404);
-    const userValue = dv(theuser);
 
-    if (userValue.cash < thecontest.buyin) uError('User has insufficient funds', 402);
+    if (theuser.cash < thecontest.buyin) return uError('User has insufficient funds', 402);
 
-    theuser.set({
-      cash: (userValue.cash - thecontest.buyin),
-    });
+    theuser.cash -= thecontest.buyin;
     theuser.save({ transaction: t });
 
-    const ledgerObj: LedgerEntryCreateType = {
+    const ledgerObj = {
       UserId: value.user,
       ContestId: thecontest.id,
       LedgerKindId: LedgerKinds['Entry Fee'].id,
@@ -63,7 +54,7 @@ async function createEntry(req: CreateEntryInput) {
 
     await LedgerEntry.create(ledgerObj, tobj(t));
 
-    const entryObj: EntryCreateType = {
+    const entryObj = {
       UserId: value.user,
       ContestId: value.params.contestID,
       pointtotal: thecontest.budget,

@@ -1,28 +1,28 @@
 // Model for an NFL Player (e.g. Tom Brady)
-import { DataTypes, ModelDefined, Optional } from 'sequelize';
+/* eslint-disable @typescript-eslint/lines-between-class-members */
+import {
+  Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
+} from 'sequelize';
 import sequelize from '../../db';
-
-import { NFLPosTypes } from '../../config';
 
 import NFLTeam from '../nflteam/nflteam.model';
 import NFLPosition from '../nflposition/nflposition.model';
+import { NFLPosIDType } from '../../config';
 
-export interface NFLPlayerType {
-  id: number,
-  name: string,
-  preprice: number | null,
-  postprice: number | null,
-  NFLPositionId: number,
-  NFLTeamId: number,
-  active: boolean,
-  injuryStatus: string | null,
+class NFLPlayer extends Model<InferAttributes<NFLPlayer>, InferCreationAttributes<NFLPlayer>> {
+  declare id: number;
+  declare name: string;
+  declare preprice: number | null;
+  declare postprice: number | null;
+  declare NFLPositionId: NFLPosIDType;
+  declare NFLTeamId: number;
+  declare active: boolean;
+  declare injuryStatus: string | null;
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
 }
 
-const NFLPosIDs = Object.keys(NFLPosTypes);
-
-export type NFLPlayerCreateType = Optional<NFLPlayerType, 'id' | 'active' | 'injuryStatus'>;
-
-const NFLPlayer: ModelDefined<NFLPlayerType, NFLPlayerCreateType> = sequelize.define('NFLPlayer', {
+NFLPlayer.init({
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -43,9 +43,6 @@ const NFLPlayer: ModelDefined<NFLPlayerType, NFLPlayerCreateType> = sequelize.de
     type: DataTypes.INTEGER,
     references: { model: NFLPosition },
     allowNull: false,
-    validate: {
-      isIn: [NFLPosIDs],
-    },
   },
   NFLTeamId: {
     type: DataTypes.INTEGER,
@@ -64,7 +61,10 @@ const NFLPlayer: ModelDefined<NFLPlayerType, NFLPlayerCreateType> = sequelize.de
       isIn: [[null, 'P', 'Q', 'D', 'O']],
     },
   },
+  createdAt: DataTypes.DATE,
+  updatedAt: DataTypes.DATE,
 }, {
+  sequelize,
   indexes: [
     { // Make it faster to search for offers that aren't filled or cancelled
       name: 'IX_NFLPlayer_Active',

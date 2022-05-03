@@ -1,16 +1,20 @@
 // Static table of types for ledger entries
 
-import { DataTypes, ModelDefined, Optional } from 'sequelize';
+/* eslint-disable @typescript-eslint/lines-between-class-members */
+import {
+  Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
+} from 'sequelize';
 import sequelize from '../../db';
 
-export interface LedgerKindType {
-  id: number,
-  name: string,
-  isCredit: boolean,
+class LedgerKind extends Model<InferAttributes<LedgerKind>, InferCreationAttributes<LedgerKind>> {
+  declare id: number;
+  declare name: string;
+  declare isCredit: boolean;
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
 }
-type LedgerKindCreateType = Optional<LedgerKindType, 'id'>;
 
-const LedgerKind: ModelDefined<LedgerKindType, LedgerKindCreateType> = sequelize.define('LedgerKind', {
+LedgerKind.init({
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -23,6 +27,8 @@ const LedgerKind: ModelDefined<LedgerKindType, LedgerKindCreateType> = sequelize
     type: DataTypes.BOOLEAN,
     allowNull: false,
   },
-});
+  createdAt: DataTypes.DATE,
+  updatedAt: DataTypes.DATE,
+}, { sequelize });
 
 export default LedgerKind;

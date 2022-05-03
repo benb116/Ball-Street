@@ -1,9 +1,9 @@
 // Leader worker
 // Calculates live leaderboards
 
-import { Roster } from '../config';
+import { RosterPositions, RPosType } from '../config';
 
-import { dv, onlyUnique } from '../features/util/util';
+import { onlyUnique } from '../features/util/util';
 
 import { rediskeys, client } from '../db/redis';
 
@@ -12,12 +12,10 @@ import getWeekEntries from '../features/entry/services/getWeekEntries.service';
 
 import leaderUpdate from './live/channels/leaderUpdate.channel';
 
-import NFLGame, { NFLGameType } from '../features/nflgame/nflgame.model';
-import { UserType } from '../features/user/user.model';
-import { EntryType } from '../features/entry/entry.model';
+import NFLGame from '../features/nflgame/nflgame.model';
+import Entry from '../features/entry/entry.model';
 
 const { projpriceHash, leaderHash } = rediskeys;
-const rosterPositions = Object.keys(Roster);
 
 // Get player preprice info (used for players without stat info)
 interface PlayerMapItem {
@@ -47,14 +45,17 @@ let phaseHold = false;
 
 async function calculateLeaderboard() {
   // Get current game phases (used to determine which point value to use)
-  const gamelist: NFLGameType[] = await NFLGame.findAll({ where: { week: Number(process.env.WEEK) } }).then(dv);
+  const gamelist = await NFLGame.findAll({ where: { week: Number(process.env.WEEK) } });
   // Are all games in pre or post phase
   interface GameItem {
     phase: string,
     HomeId: number,
     AwayId: number,
   }
-  const newphaseHold = gamelist.reduce((acc: boolean, cur: GameItem) => (acc && cur.phase !== 'mid'), true);
+  const newphaseHold = gamelist.reduce(
+    (acc: boolean, cur: GameItem) => (acc && (cur.phase !== 'mid')),
+    true,
+  );
   // If yes, do one more calc then hold;
   if (phaseHold && newphaseHold) return;
   phaseHold = newphaseHold;
@@ -80,15 +81,14 @@ async function calculateLeaderboard() {
     userID: number,
     total: number,
   }
-  interface EntryWithUser extends EntryType {
-    User: UserType
-  }
+
   // Normalize as objects with balance, roster array, contests and user name
-  const normalizedEntries: EntryWithTotal[] = weekentries.map((e: EntryWithUser) => ({
+  const normalizedEntries: EntryWithTotal[] = weekentries.map((e: Entry) => ({
     balance: e.pointtotal,
-    roster: rosterPositions.reduce((acc: number[], cur: string) => {
+    roster: RosterPositions.reduce((acc: number[], cur: RPosType) => {
       const thePlayer = e[cur];
-      if (typeof thePlayer === 'number') { acc.push(thePlayer); }
+      if (!thePlayer) return acc;
+      acc.push(thePlayer);
       return acc;
     }, []),
     contest: e.ContestId,

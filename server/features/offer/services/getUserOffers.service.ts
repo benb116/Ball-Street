@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-import { dv, validate } from '../../util/util';
+import { validate } from '../../util/util';
 import validators from '../../util/util.schema';
 import errorHandler, { ServiceInput } from '../../util/util.service';
 
@@ -30,7 +30,7 @@ function getUserOffers(req: GetUserOffersInput) {
       filled: false,
       cancelled: false,
     },
-  }).then(dv)
+  })
     .catch(errorHandler({
       default: { message: 'Cannot retrieve offers', status: 500 },
     }));

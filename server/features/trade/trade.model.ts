@@ -1,5 +1,9 @@
-import { DataTypes, ModelDefined } from 'sequelize';
+/* eslint-disable @typescript-eslint/lines-between-class-members */
+import {
+  Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
+} from 'sequelize';
 import sequelize from '../../db';
+
 import Offer from '../offer/offer.model';
 
 export interface TradeType {
@@ -8,25 +12,33 @@ export interface TradeType {
   askId: string,
 }
 export type TradeCreateType = TradeType;
-
-const Trade: ModelDefined<TradeType, TradeCreateType> = sequelize.define('Trade', {
+class Trade extends Model<InferAttributes<Trade>, InferCreationAttributes<Trade>> {
+  declare price: number;
+  declare bidId: string;
+  declare askId: string;
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
+}
+Trade.init({
   price: { // What was the actual price that was traded at
     type: DataTypes.INTEGER,
     allowNull: false,
   },
   bidId: {
     type: DataTypes.UUID,
-    references: { model: 'Offers' },
+    references: { model: Offer },
     allowNull: false,
     primaryKey: true,
   },
   askId: {
     type: DataTypes.UUID,
-    references: { model: 'Offers' },
+    references: { model: Offer },
     allowNull: false,
     primaryKey: true,
   },
-});
+  createdAt: DataTypes.DATE,
+  updatedAt: DataTypes.DATE,
+}, { sequelize });
 
 Trade.belongsTo(Offer, { as: 'bid', foreignKey: 'bidId' });
 Trade.belongsTo(Offer, { as: 'ask', foreignKey: 'askId' });

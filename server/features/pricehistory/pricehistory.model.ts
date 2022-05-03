@@ -1,28 +1,36 @@
-import { DataTypes, ModelDefined } from 'sequelize';
+/* eslint-disable @typescript-eslint/lines-between-class-members */
+import {
+  Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
+} from 'sequelize';
 import sequelize from '../../db';
 
-export interface PriceHistoryType {
-  lastTradePrice: number,
-  ContestId: number,
-  NFLPlayerId: number,
+import Contest from '../contest/contest.model';
+import NFLPlayer from '../nflplayer/nflplayer.model';
+
+class PriceHistory extends Model<InferAttributes<PriceHistory>, InferCreationAttributes<PriceHistory>> {
+  declare lastTradePrice: number;
+  declare ContestId: number;
+  declare NFLPlayerId: number;
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
 }
 
-type PriceHistoryCreateType = PriceHistoryType;
-
-const PriceHistory: ModelDefined<PriceHistoryType, PriceHistoryCreateType> = sequelize.define('PriceHistory', {
+PriceHistory.init({
   lastTradePrice: { // What was the actual price that was traded at
     type: DataTypes.INTEGER,
   },
   ContestId: {
     type: DataTypes.INTEGER,
-    references: { model: 'Contests' },
+    references: { model: Contest },
     allowNull: false,
   },
   NFLPlayerId: {
     type: DataTypes.INTEGER,
-    references: { model: 'NFLPlayers' },
+    references: { model: NFLPlayer },
     allowNull: false,
   },
-});
+  createdAt: DataTypes.DATE,
+  updatedAt: DataTypes.DATE,
+}, { sequelize });
 
 export default PriceHistory;

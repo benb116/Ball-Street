@@ -39,8 +39,7 @@ async function getEntryRank(req: GetEntryRankInput) {
       },
     },
   }).catch(() => -1);
-  theentry.rank = greaterEntries + 1;
-  return theentry;
+  return { ...theentry.get(), rank: greaterEntries + 1 };
 }
 
 export default getEntryRank;

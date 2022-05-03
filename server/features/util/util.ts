@@ -1,22 +1,14 @@
 import { Schema } from 'joi';
-import { Model, Transaction } from 'sequelize';
+import { Transaction } from 'sequelize';
 
-import { FlexNFLPositionId, NFLPosTypes, Roster } from '../../config';
+import {
+  FlexNFLPositionId, NFLPosIDType, NFLPosTypes, Roster, RosterPositions, RPosType,
+} from '../../config';
 
-import { EntryType } from '../entry/entry.model';
-
-const rpos = Object.keys(Roster);
-
-// Clean up the raw response from the database
-export const dv = function dv(input: Model | Model[] | null) : any | any[] | null {
-  if (input === null) { return input; }
-  if (input instanceof Model) { return input.toJSON(); }
-  if (input.length) { return input.map(dv); }
-  return input;
-};
+import Entry from '../entry/entry.model';
 
 // Return whether a player type (number) cannot be put into a specific roster position
-export const isInvalidSpot = function isInvalidSpot(playerType: number, rosterPosName: string) {
+export const isInvalidSpot = function isInvalidSpot(playerType: NFLPosIDType, rosterPosName: RPosType) {
   const rosterType = Roster[rosterPosName];
   if (playerType === rosterType) {
     return false;
@@ -32,13 +24,11 @@ export const isInvalidSpot = function isInvalidSpot(playerType: number, rosterPo
 };
 
 // Is a player on the entry's roster
-export const isPlayerOnRoster = function isPlayerOnRoster(
-  entry: EntryType, playerID: number,
-): string {
-  let res = '';
-  for (let i = 0; i < rpos.length; i++) {
-    if (entry[rpos[i]] === playerID) {
-      res = rpos[i];
+export const isPlayerOnRoster = function isPlayerOnRoster(entry: Entry, playerID: number): RPosType {
+  let res = '' as RPosType;
+  for (let i = 0; i < RosterPositions.length; i++) {
+    if (entry[RosterPositions[i]] === playerID) {
+      res = RosterPositions[i];
       break;
     }
   }
@@ -47,10 +37,10 @@ export const isPlayerOnRoster = function isPlayerOnRoster(
 
 // Could a player type be put into a spot on the roster
 // Is the spot open AND is the player type valid
-export const isOpenRoster = function isOpenRoster(theentry: EntryType, playerType: number) {
-  for (let i = 0; i < rpos.length; i++) {
-    if (theentry[rpos[i]] === null && !isInvalidSpot(playerType, rpos[i])) {
-      return rpos[i];
+export const isOpenRoster = function isOpenRoster(theentry: Entry, playerType: NFLPosIDType) {
+  for (let i = 0; i < RosterPositions.length; i++) {
+    if (theentry[RosterPositions[i]] === null && !isInvalidSpot(playerType, RosterPositions[i])) {
+      return RosterPositions[i];
     }
   }
   return false;

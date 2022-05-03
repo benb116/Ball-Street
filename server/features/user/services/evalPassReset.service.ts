@@ -30,15 +30,15 @@ interface EvalPassResetInput {
 async function evalPassReset(req: EvalPassResetInput) {
   const value: EvalPassResetInput = validate(req, schema);
   const { token, password, confirmPassword } = value;
-  if (OnCompare(password, confirmPassword)) uError('Passwords do not match', 403);
+  if (OnCompare(password, confirmPassword)) return uError('Passwords do not match', 403);
   const email = await client.GET(rediskeys.passReset(token));
-  if (!email) uError('Reset key could not be found, please try again', 404);
+  if (!email) return uError('Reset key could not be found, please try again', 404);
 
   client.DEL(rediskeys.passReset(token));
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash(password, salt);
   const theuser = await User.update({ pwHash: hash }, { where: { email } });
-  if (!theuser) uError('Password could not be changed', 404);
+  if (!theuser) return uError('Password could not be changed', 404);
   // Send email telling user their password has been reset
   return true;
 }
