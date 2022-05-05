@@ -1,24 +1,14 @@
-import React, { useEffect } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
-import { useAppSelector } from '../../app/hooks';
-
-import { userSelector } from './User.slice';
 import { useSignupMutation } from './User.api';
 import { SignupInputType } from './User.types';
 
 const Signup = () => {
   const { register, handleSubmit } = useForm<SignupInputType>();
-  const history = useHistory();
-  const { id } = useAppSelector(userSelector);
-  const [signup] = useSignupMutation();
 
-  useEffect(() => {
-    if (localStorage.getItem('isLoggedIn') === 'true') {
-      history.push('/');
-    }
-  }, [history, id]);
+  const [signup] = useSignupMutation();
 
   return (
     <>

@@ -1,23 +1,14 @@
-import React, { useEffect } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
-import { useAppSelector } from '../../app/hooks';
-
-import { userSelector } from './User.slice';
 import { useForgotMutation } from './User.api';
 import { ForgotType } from './User.types';
 
 const Forgot = () => {
   const { register, handleSubmit } = useForm<ForgotType>();
-  const history = useHistory();
-  const { id } = useAppSelector(userSelector);
 
   const [forgot] = useForgotMutation();
-
-  useEffect(() => {
-    if (localStorage.getItem('isLoggedIn') === 'true') history.push('/');
-  }, [history, id]);
 
   return (
     <>

@@ -12,11 +12,11 @@ import initWS from './ws';
 
 const Dashboard = () => {
   const { contestID } = useParams<{ contestID: string }>();
-
+  if (!contestID) return <></>;
   useEffect(() => {
-    initWS(contestID);
-  }, [contestID]);
   // Init the WS for a specific contest
+    if (contestID) initWS(contestID);
+  }, [contestID]);
 
   return (
     <div
@@ -54,7 +54,7 @@ const Dashboard = () => {
         <Offers />
         <Leaderboard />
       </div>
-      <OfferModal />
+      <OfferModal contestID={contestID} />
     </div>
   );
 };

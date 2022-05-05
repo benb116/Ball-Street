@@ -19,6 +19,8 @@ import { EntryItemType } from '../Dashboard/Entry/Entry.types';
 const Contest = () => {
   const { contestID } = useParams<{ contestID: string }>(); // Get contestID from URL params
 
+  if (!contestID) return <></>;
+
   const thiscontest = useAppSelector(contestSelector); // Get info about this contest
   const thiscontestmyentry = useAppSelector(myEntrySelector);
 
