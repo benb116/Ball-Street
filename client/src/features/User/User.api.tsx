@@ -30,6 +30,7 @@ const UserAPI = BaseAPI.injectEndpoints({
       query: (body) => ({ url: '/auth/resetPasswordToken', method: 'POST', body }),
     }),
     logout: build.mutation<void, void>({ query: () => ({ url: '/auth/logout', method: 'DELETE' }) }),
+    forcelogout: build.mutation<void, void>({ query: () => ({ url: '/auth/forcelogout', method: 'DELETE' }) }),
     deposit: build.mutation<NewLedgerEntryType, DepositWithdrawType>({
       query: (body) => ({ url: '/auth/deposit', method: 'POST', body }),
       invalidatesTags: ['Account', 'Ledger'],
@@ -49,6 +50,7 @@ export const {
   useGetAccountQuery,
   useLoginMutation,
   useLogoutMutation,
+  useForcelogoutMutation,
   useSignupMutation,
   useForgotMutation,
   useResetMutation,
