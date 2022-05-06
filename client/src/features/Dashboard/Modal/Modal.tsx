@@ -1,7 +1,6 @@
 import Modal from 'react-modal';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { useParams } from 'react-router';
 
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 
@@ -26,10 +25,9 @@ interface ModalType {
   protected: boolean
 }
 
-const OfferModal = () => {
+const OfferModal = ({ contestID }: { contestID: string }) => {
   const dispatch = useAppDispatch();
   const { register, handleSubmit } = useForm<ModalType>();
-  const { contestID } = useParams<{ contestID: string }>();
 
   const [createOffer] = useCreateOfferMutation();
 

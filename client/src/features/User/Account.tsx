@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { useAppSelector } from '../../app/hooks';
 
 import {
   useDepositMutation,
@@ -11,26 +11,18 @@ import {
   useGetUserLedgerQuery,
   useWithdrawMutation,
 } from './User.api';
-import { isLoggedInSelector, userSelector } from './User.slice';
+import { userSelector } from './User.slice';
 import { DepositWithdrawType, LedgerEntryJoinedType } from './User.types';
 
 const Account = () => {
   const { register, handleSubmit } = useForm<DepositWithdrawType>();
   const { register: r2, handleSubmit: h2 } = useForm<DepositWithdrawType>();
-  const dispatch = useAppDispatch();
-  const history = useHistory();
 
-  const { email, cash, ledger } = useAppSelector(userSelector);
-  const isLoggedIn = useAppSelector(isLoggedInSelector); // Use localstorage to know if logged in
+  const { cash, ledger } = useAppSelector(userSelector);
 
   const [deposit] = useDepositMutation();
   const [withdraw] = useWithdrawMutation();
   const [forcelogout] = useForcelogoutMutation();
-
-  const loginRed = () => {
-    localStorage.setItem('isLoggedIn', 'false');
-    history.push('/login');
-  };
 
   const [pagenum, setPagenum] = useState(1);
   useGetUserLedgerQuery(pagenum, { refetchOnMountOrArgChange: true });
@@ -45,10 +37,6 @@ const Account = () => {
     body.amount = Math.round(body.amount * 100);
     withdraw(body);
   };
-
-  useEffect(() => {
-    if (!isLoggedIn) loginRed();
-  }, [dispatch, isLoggedIn, email]);
 
   useGetAccountQuery();
 

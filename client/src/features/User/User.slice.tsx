@@ -38,6 +38,7 @@ export const userSlice = createSlice({
     clearState: (state) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       state = defaultState;
+      localStorage.setItem('isLoggedIn', 'false');
     },
   },
   extraReducers: (builder) => {

@@ -1,35 +1,21 @@
-import React, { useEffect } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import React from 'react';
+import { Link, Navigate } from 'react-router-dom';
 
-import { useAppSelector, useAppDispatch } from '../../app/hooks';
+import { useAppSelector } from '../../app/hooks';
 
 import { useGetAccountQuery, useLogoutMutation } from '../User/User.api';
-import { isLoggedInSelector, userSelector } from '../User/User.slice';
+import { userSelector } from '../User/User.slice';
 
 const Home = () => {
-  const dispatch = useAppDispatch();
-  const history = useHistory();
-
-  const { email, cash, name } = useAppSelector(userSelector);
-  const isLoggedIn = useAppSelector(isLoggedInSelector); // Use localstorage to know if logged in
+  const { id, cash, name } = useAppSelector(userSelector);
 
   const [logout] = useLogoutMutation();
-
-  const loginRed = () => {
-    localStorage.setItem('isLoggedIn', 'false');
-    history.push('/login');
-    // In theory people can see this webpage as a landing if they aren't logged in
-  };
-
-  useEffect(() => {
-    if (!isLoggedIn) loginRed();
-  }, [dispatch, isLoggedIn, email]);
 
   useGetAccountQuery();
 
   return (
     <div>
-      {isLoggedIn
+      {id
         ? (
           <>
             <div style={{ marginTop: '10em' }}>
@@ -51,11 +37,7 @@ const Home = () => {
           </>
         )
         : (
-          <>
-            <button onClick={() => { loginRed(); }} className="AppButton" type="button">
-              Log in
-            </button>
-          </>
+          <Navigate to="/login" />
         )}
     </div>
   );

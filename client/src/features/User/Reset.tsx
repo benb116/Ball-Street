@@ -1,24 +1,15 @@
-import React, { useEffect } from 'react';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import React from 'react';
+import { Link, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
-import { useAppSelector } from '../../app/hooks';
-
-import { userSelector } from './User.slice';
 import { useResetMutation } from './User.api';
 import { ResetInputType } from './User.types';
 
 const Reset = () => {
   const { token } = useParams<{ token: string }>();
   const { register, handleSubmit } = useForm<ResetInputType>();
-  const history = useHistory();
-  const { id } = useAppSelector(userSelector);
 
   const [reset] = useResetMutation();
-
-  useEffect(() => {
-    if (localStorage.getItem('isLoggedIn') === 'true') history.push('/');
-  }, [history, id]);
 
   return (
     <>
