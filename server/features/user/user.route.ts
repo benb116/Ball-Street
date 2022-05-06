@@ -15,6 +15,7 @@ import evalPassReset from './services/evalPassReset.service';
 import withdraw from './services/withdraw.service';
 import deposit from './services/deposit.service';
 import getUserLedger from '../ledger/services/getUserLedger.service';
+import forceLogout from './services/forceLogout.service';
 
 const router = express.Router();
 
@@ -128,5 +129,6 @@ router.delete('/logout', authenticate, (req, res) => {
     res.send({ result: 'OK', message: 'Session destroyed' });
   });
 });
+router.delete('/forcelogout', authenticate, routeHandler(forceLogout));
 
 export default router;

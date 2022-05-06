@@ -76,6 +76,11 @@ export const userSlice = createSlice({
       localStorage.setItem('isLoggedIn', 'false');
     });
     builder.addMatcher(UserAPI.endpoints.logout.matchRejected, ErrHandler);
+    builder.addMatcher(UserAPI.endpoints.forcelogout.matchFulfilled, (state) => {
+      state.info = defaultState.info;
+      localStorage.setItem('isLoggedIn', 'false');
+    });
+    builder.addMatcher(UserAPI.endpoints.forcelogout.matchRejected, ErrHandler);
 
     builder.addMatcher(UserAPI.endpoints.getAccount.matchFulfilled, (state, { payload }) => {
       if (!payload) {

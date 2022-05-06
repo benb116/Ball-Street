@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 
 import {
   useDepositMutation,
+  useForcelogoutMutation,
   useGetAccountQuery,
   useGetUserLedgerQuery,
   useWithdrawMutation,
@@ -24,6 +25,7 @@ const Account = () => {
 
   const [deposit] = useDepositMutation();
   const [withdraw] = useWithdrawMutation();
+  const [forcelogout] = useForcelogoutMutation();
 
   const loginRed = () => {
     localStorage.setItem('isLoggedIn', 'false');
@@ -109,6 +111,18 @@ const Account = () => {
           <button className="AppButton" type="submit">Withdraw</button>
         </form>
       </div>
+
+      <button
+        className="SmallButton"
+        type="button"
+        onClick={() => { forcelogout(); }}
+        style={{
+          display: 'block',
+          margin: '0 auto',
+        }}
+      >
+        Force logout this user
+      </button>
 
       <Link className="AppLink" to="/">Home</Link>
 
