@@ -48,9 +48,13 @@ jobs:
 
     - name: Build from Docker-Compose
       run: docker-compose -f docker-compose.yml -f development.yml build
+      env:
+        DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
 
     - name: Launch containers
       run: docker-compose -f docker-compose.yml -f development.yml up -d
+      env:
+        DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
 
     - name: Pull env vars from file
       run: source ./.env
