@@ -43,9 +43,9 @@ const Login = () => {
 
               <button className="AppButton" type="submit">Sign in</button>
             </form>
-            <Link className="AppLink" to="forgot"> Forgot password?</Link>
+            <Link className="AppLink" to="/forgot"> Forgot password?</Link>
 
-            <Link className="AppLink" to="signup">Signup here</Link>
+            <Link className="AppLink" to="/signup">Signup here</Link>
           </div>
         )}
     </>

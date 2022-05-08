@@ -53,7 +53,7 @@ const Signup = () => {
           <button className="AppButton" type="submit">Sign up</button>
         </form>
 
-        <Link className="AppLink" to="login">Log in here</Link>
+        <Link className="AppLink" to="/login">Log in here</Link>
       </div>
     </>
   );

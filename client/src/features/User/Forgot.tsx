@@ -28,7 +28,7 @@ const Forgot = () => {
 
           <button className="AppButton" type="submit">Send link</button>
         </form>
-        <Link className="AppLink" to="login">Log in here</Link>
+        <Link className="AppLink" to="/login">Log in here</Link>
       </div>
     </>
   );
