@@ -19,6 +19,7 @@ services:
             - api
             - live
         volumes:
+            - ./nginx-conf/nginx.conf:/etc/nginx/conf.d/nginx.conf
             - /etc/letsencrypt:/etc/letsencrypt # ssl certs
             - /home/node/app/node_modules
 
