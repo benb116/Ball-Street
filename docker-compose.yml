@@ -8,6 +8,7 @@ services:
             context: .
             dockerfile: ./client/Dockerfile
             target: production # Determine dev or prod
+        image: ${DOCKERHUB_USERNAME}/ball_street:webserver
         container_name: webserver
         restart: always
         ports:
@@ -27,6 +28,7 @@ services:
         build:
             context: .
             dockerfile: ./server/Dockerfile
+        image: ${DOCKERHUB_USERNAME}/ball_street:api
         container_name: api
         env_file: .env
         networks:
@@ -44,6 +46,7 @@ services:
         build:
             context: .
             dockerfile: ./server/Dockerfile
+        image: ${DOCKERHUB_USERNAME}/ball_street:leader
         container_name: leader
         env_file: .env
         networks:
@@ -62,6 +65,7 @@ services:
         build:
             context: .
             dockerfile: ./server/Dockerfile
+        image: ${DOCKERHUB_USERNAME}/ball_street:offer
         container_name: offer
         env_file: .env
         networks:
@@ -80,6 +84,7 @@ services:
         build:
             context: .
             dockerfile: ./server/Dockerfile
+        image: ${DOCKERHUB_USERNAME}/ball_street:live
         container_name: live
         env_file: .env
         networks:
@@ -98,6 +103,7 @@ services:
         build:
             context: .
             dockerfile: ./server/Dockerfile
+        image: ${DOCKERHUB_USERNAME}/ball_street:nfl
         container_name: nfl
         env_file: .env
         networks:
