@@ -6,6 +6,7 @@ services:
     webserver:
         build:
             target: development # Determine dev or prod
+        image: local/ball_street:client
         restart: unless-stopped
         volumes:
             - ./client:/home/node/app
@@ -14,6 +15,7 @@ services:
 
     api:
         command: nodemon --inspect=0.0.0.0:9229 dist/workers/api.worker.js
+        image: local/ball_street:server
         restart: unless-stopped
         ports:
             - 9229:9229
@@ -22,6 +24,7 @@ services:
     
     leader:
         command: nodemon --inspect=0.0.0.0:9230 dist/workers/leader.worker.js
+        image: local/ball_street:server
         restart: unless-stopped
         ports:
             - 9230:9230
@@ -30,6 +33,7 @@ services:
 
     offer:
         command: nodemon --inspect=0.0.0.0:9231 dist/workers/offer.worker.js
+        image: local/ball_street:server
         restart: unless-stopped
         ports:
             - 9231:9231
@@ -38,6 +42,7 @@ services:
 
     live:
         command: nodemon --inspect=0.0.0.0:9232 dist/workers/live.worker.js
+        image: local/ball_street:server
         restart: unless-stopped
         ports:
             - 9232:9232
@@ -46,6 +51,7 @@ services:
 
     nfl:
         command: nodemon --inspect=0.0.0.0:9233 dist/workers/nfl.worker.js
+        image: local/ball_street:server
         restart: unless-stopped
         ports:
             - 9233:9233

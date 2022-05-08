@@ -1,4 +1,4 @@
-name: Run Tests
+name: Lint and Test
 
 on:
   pull_request:
@@ -8,7 +8,7 @@ on:
 
 jobs:
 
-  build:
+  lint-and-test:
 
     runs-on: ubuntu-latest
 
@@ -31,7 +31,7 @@ jobs:
       working-directory: server
       
     - name: Run ESLint - Server
-      run: ./node_modules/.bin/eslint ./ --fix
+      run: ./node_modules/.bin/eslint ./
       working-directory: server
 
     - name: Install client dependencies
@@ -39,7 +39,7 @@ jobs:
       working-directory: client
       
     - name: Run ESLint - Client
-      run: ./node_modules/.bin/eslint ./ --fix
+      run: ./node_modules/.bin/eslint ./
       working-directory: client
 
     - name: Compile Typescript
@@ -48,9 +48,13 @@ jobs:
 
     - name: Build from Docker-Compose
       run: docker-compose -f docker-compose.yml -f development.yml build
+      env:
+        DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
 
     - name: Launch containers
       run: docker-compose -f docker-compose.yml -f development.yml up -d
+      env:
+        DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
 
     - name: Pull env vars from file
       run: source ./.env
