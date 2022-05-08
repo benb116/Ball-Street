@@ -41,8 +41,9 @@ const rosterkey = {
 // Show a specific row in the roster table
 function RosterItem({ playerid, position }: { playerid: number | null, position: RosterPosType }) {
   const dispatch = useAppDispatch();
-
   const { contestID } = useParams<{ contestID: string }>();
+  if (!contestID) return <></>;
+
   const thisplayer = useAppSelector(playerSelector(playerid)); // Pull player info from state
   const theteams = useAppSelector(allTeamsSelector); // Pull team from state
   const rposSelected = useAppSelector(rposSelector); // Get current reordering flags

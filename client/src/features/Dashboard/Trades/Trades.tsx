@@ -12,6 +12,7 @@ import { TradeItemType } from './Trades.types';
 
 const Trades = () => {
   const { contestID } = useParams<{ contestID: string }>();
+  if (!contestID) return <></>;
 
   useGetTradesQuery(contestID);
 

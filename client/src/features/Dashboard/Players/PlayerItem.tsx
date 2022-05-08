@@ -19,6 +19,8 @@ import { useCancelOfferMutation } from '../Offers/Offers.api';
 function PlayerItem({ playerdata }: { playerdata: PlayerItemType }) {
   const dispatch = useAppDispatch();
   const { contestID } = useParams<{ contestID: string }>();
+  if (!contestID) return <></>;
+
   const offers = useAppSelector(offersSelector);
   const theteams = useAppSelector(allTeamsSelector);
 

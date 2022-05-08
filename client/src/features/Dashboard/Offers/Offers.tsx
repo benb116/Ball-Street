@@ -13,6 +13,7 @@ import { OfferItemType } from './Offers.types';
 // Show offers for different players
 const Offers = () => {
   const { contestID } = useParams<{ contestID: string }>();
+  if (!contestID) return <></>;
 
   useGetOffersQuery(contestID);
 
@@ -57,6 +58,8 @@ function OfferItem({ offerdata }: { offerdata: OfferItemType }) {
   const [, setCount] = useState(0); // integer state
 
   const { contestID } = useParams<{ contestID: string }>();
+  if (!contestID) return <></>;
+
   const [cancelOffer] = useCancelOfferMutation();
 
   const playerdata = useAppSelector(playerSelector(offerdata.NFLPlayerId));
