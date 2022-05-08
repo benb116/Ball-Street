@@ -31,7 +31,7 @@ jobs:
       working-directory: server
       
     - name: Run ESLint - Server
-      run: ./node_modules/.bin/eslint ./ --fix
+      run: ./node_modules/.bin/eslint ./
       working-directory: server
 
     - name: Install client dependencies
@@ -39,7 +39,7 @@ jobs:
       working-directory: client
       
     - name: Run ESLint - Client
-      run: ./node_modules/.bin/eslint ./ --fix
+      run: ./node_modules/.bin/eslint ./
       working-directory: client
 
     - name: Compile Typescript
