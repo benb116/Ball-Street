@@ -39,13 +39,14 @@ const Trades = () => {
 function TradeItem({ tradedata }: { tradedata: TradeItemType }) {
   // Pull some info about the nfl player
   const playerData = useAppSelector(playerSelector(tradedata.NFLPlayerId));
+  if (!playerData) return <></>;
   return (
     <div>
       {new Date(tradedata.createdAt).toLocaleString()}
       {' '}
       {(tradedata.action)}
       {' '}
-      {(playerData?.name || '')}
+      {(playerData.name || '')}
       {' for '}
       {(tradedata.price / 100)}
     </div>

@@ -1,4 +1,4 @@
-import express, { Response } from 'express';
+import express, { Request, Response } from 'express';
 
 import { isUError, uError, UError } from '../util/util';
 import routeHandler from '../util/util.route';
@@ -65,9 +65,13 @@ router.post('/signup', async (req, res) => {
   }
 });
 
-router.get('/verify', async (req, res) => {
-  const token: string = req.query.token as string;
-  const inp = { token };
+interface VerifyInputType extends Request {
+  query: {
+    token: string
+  }
+}
+router.get('/verify', async (req: VerifyInputType, res) => {
+  const inp = { token: req.query.token };
   try {
     const user = await evalVerify(inp);
     req.session.user = { id: user.id }; // add to session

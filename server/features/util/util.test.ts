@@ -20,7 +20,7 @@ describe('util testing', () => {
       K1: 30266,
     });
     expect(isPlayerOnRoster(theentry, 30266)).toBe('K1');
-    expect(isPlayerOnRoster(theentry, 12345)).toBe('');
+    expect(isPlayerOnRoster(theentry, 12345)).toBe(false);
   });
 
   test('isOpenRoster', () => {

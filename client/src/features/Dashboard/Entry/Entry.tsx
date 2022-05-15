@@ -10,7 +10,7 @@ import { useGetEntryQuery } from '../../Contests/Contests.api';
 
 import RosterItem from './RosterItem';
 
-import { RosterPosType } from './Entry.types';
+import { RosterPositions } from './Entry.types';
 
 // Display the user's current entry (balance + players)
 const Entry = () => {
@@ -18,7 +18,6 @@ const Entry = () => {
   if (!contestID) return <></>;
 
   const thisentry = useAppSelector(entrySelector);
-  const rpos = Object.keys(thisentry.roster) as RosterPosType[]; // All roster positions
 
   // Initial data pull
   useGetEntryQuery(contestID);
@@ -41,7 +40,7 @@ const Entry = () => {
       <table id="EntryTable">
         <RosterHeader />
         <tbody>
-          {rpos.map((pos) => ( // Create a roster item for each position
+          {RosterPositions.map((pos) => ( // Create a roster item for each position
             <RosterItem
               key={pos}
               position={pos}
@@ -77,7 +76,6 @@ function RosterHeader() {
 // Table footer showing calculated point totals
 function PointTotals() {
   const thisentry = useAppSelector(entrySelector);
-  const rpos = Object.keys(thisentry.roster) as RosterPosType[]; // All roster positions
 
   const rosterPlayerIDs = Object.values(thisentry.roster).filter((p) => p !== null) as number[]; // All playerIDs
   const players = useAppSelector(playersSelector(rosterPlayerIDs)); // Player DB info
@@ -85,7 +83,7 @@ function PointTotals() {
   const theteams = useAppSelector(allTeamsSelector); // Are teams in pre or mid? Show different price as a result
 
   // Sum the stat totals and the projected totals
-  const sum = rpos.reduce((acc, pos) => {
+  const sum = RosterPositions.reduce((acc, pos) => {
     const out = acc;
     const thisplayerID = thisentry.roster[pos];
     const theplayer = players.find((p) => p.id === thisplayerID);

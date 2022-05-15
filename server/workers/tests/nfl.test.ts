@@ -11,6 +11,7 @@ import Entry from '../../features/entry/entry.model';
 import NFLPlayer from '../../features/nflplayer/nflplayer.model';
 
 type TestNameType = keyof typeof yahoo.games;
+const testfiles = Object.keys(yahoo.games) as TestNameType[];
 
 describe('NFL worker tests', () => {
   describe('Test point calculation', () => {
@@ -84,7 +85,6 @@ describe('NFL worker tests', () => {
   });
 
   describe('Test initial game file parse', () => {
-    const testfiles = Object.keys(yahoo.games) as TestNameType[];
     testfiles.forEach((testname) => {
       test(testname, () => {
         yahoo.games[testname].gameobjs = yahoo.games[testname].gameobjs.map((g) => {
@@ -118,8 +118,6 @@ describe('NFL worker tests', () => {
   });
 
   describe('Test game file update parse', () => {
-    const testfiles = Object.keys(yahoo.games) as TestNameType[];
-
     testfiles.forEach((testname) => {
       const postTeams = Object.entries(yahoo.games[testname].phasemap)
         .filter((e) => e[1] === 'post')
@@ -138,8 +136,8 @@ describe('NFL worker tests', () => {
   test('Test injury parsing', async () => {
     const injuryObjects = FormatInjuryObjects(yahoo.injury.data);
     FindInjuryChanges(injuryObjects);
-    expect(injuryObjects).toEqual(yahoo.injury.injuryobjects); // Better way to evaluate than toEqual?
-    const newInjury1 = {
+    expect(injuryObjects.map((o) => o.toJSON())).toEqual(yahoo.injury.injuryobjects); // Better way to evaluate than toEqual?
+    const newInjury1 = new NFLPlayer({
       id: 30996,
       injuryStatus: 'P',
       name: 'injury',
@@ -148,7 +146,7 @@ describe('NFL worker tests', () => {
       active: false, // If this was a new player record, don't show in results
       preprice: null,
       postprice: null,
-    } as NFLPlayer;
+    });
     injuryObjects[0] = newInjury1;
     expect(FindInjuryChanges(injuryObjects)).toEqual([newInjury1]);
   });

@@ -5,8 +5,6 @@ export interface EntryItemType {
 }
 export interface EntryType extends EntryItemType {
   ContestId: number,
-  UserId: number,
-  pointtotal: number,
   createdAt: string,
   updatedAt: string,
   QB1: number | null,
@@ -20,5 +18,32 @@ export interface EntryType extends EntryItemType {
   K1: number | null,
   DEF1: number | null,
 }
-export type RosterType = Omit<EntryType, 'pointtotal' | 'projTotal' | 'UserId' | 'ContestId' | 'createdAt' | 'updatedAt'>;
-export type RosterPosType = keyof RosterType;
+
+export const Roster = {
+  QB1: null,
+  RB1: null,
+  RB2: null,
+  WR1: null,
+  WR2: null,
+  TE1: null,
+  FLEX1: null,
+  FLEX2: null,
+  K1: null,
+  DEF1: null,
+} as const;
+export type RosterPosType = keyof typeof Roster;
+export const RosterPositions = Object.keys(Roster) as RosterPosType[];
+
+export const flexPosID = 99;
+export const rosterkey = {
+  QB1: 1,
+  RB1: 2,
+  RB2: 2,
+  WR1: 3,
+  WR2: 3,
+  TE1: 4,
+  FLEX1: flexPosID,
+  FLEX2: flexPosID,
+  K1: 5,
+  DEF1: 6,
+} as const;

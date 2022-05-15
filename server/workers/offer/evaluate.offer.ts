@@ -55,7 +55,7 @@ function evaluateFn(book: Book) {
   }
 
   // if nothing, return false;
-  return false as const;
+  return false;
 }
 
 function findMatchForBestBid(book: Book) {

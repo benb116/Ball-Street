@@ -1,4 +1,14 @@
-export type NFLPosType = 1 | 2 | 3 | 4 | 5 | 6 | 99;
+export const NFLPosTypes = {
+  1: { name: 'QB', canflex: false },
+  2: { name: 'RB', canflex: true },
+  3: { name: 'WR', canflex: true },
+  4: { name: 'TE', canflex: true },
+  5: { name: 'K', canflex: false },
+  6: { name: 'DEF', canflex: false },
+  99: { name: 'FLEX', canflex: true },
+} as const;
+export type NFLPosType = keyof typeof NFLPosTypes;
+
 export interface PlayerItemType {
   id: number,
   name: string,

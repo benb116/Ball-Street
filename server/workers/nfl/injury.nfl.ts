@@ -110,7 +110,7 @@ export function FormatInjuryObjects(raw: string) {
 // But because we will only update the injuryStatus field on duplicate
 // We can leave all other fields standard
 function GenerateInjuryObject(playerid: number, status: string | null) {
-  return {
+  return new NFLPlayer({
     id: playerid,
     injuryStatus: status,
     name: 'injury',
@@ -119,5 +119,5 @@ function GenerateInjuryObject(playerid: number, status: string | null) {
     active: false, // If this was a new player record, don't show in results
     preprice: null,
     postprice: null,
-  } as NFLPlayer;
+  });
 }

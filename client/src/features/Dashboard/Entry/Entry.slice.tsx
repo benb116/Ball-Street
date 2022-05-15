@@ -5,20 +5,20 @@ import toast from 'react-hot-toast';
 import type { RootState } from '../../../app/store';
 import { ErrHandler } from '../../../helpers/util';
 
-import { EntryType, RosterPosType, RosterType } from './Entry.types';
+import { EntryType, Roster, RosterPosType } from './Entry.types';
 import { NFLPosType } from '../Players/Players.types';
 import EntryAPI from './Entry.api';
 import ContestsAPI from '../../Contests/Contests.api';
 
 interface EntryState {
   balance: number,
-  roster: RosterType | Record<string, never>,
+  roster: Record<RosterPosType, number | null>,
   rposSelected: [NFLPosType | 0, RosterPosType | ''],
 }
 
 const defaultState: EntryState = {
   balance: 0,
-  roster: {},
+  roster: { ...Roster },
   rposSelected: [0, ''], // Used for reordering roster. [NFLPositionID, RosterPosName]
 };
 
@@ -66,7 +66,7 @@ export const entrySlice = createSlice({
 function setEntry(state: EntryState, payload: EntryType) {
   state.balance = payload.pointtotal;
   const {
-    pointtotal, UserId, ContestId, createdAt, updatedAt, ...rost
+    pointtotal, UserId, ContestId, createdAt, updatedAt, projTotal, ...rost
   } = payload;
   state.roster = rost;
   return state;
