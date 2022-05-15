@@ -7,22 +7,13 @@ import PlayersAPI from './Players.api';
 
 import {
   GameItemType,
+  NFLPosTypes,
   PhaseType,
   PlayerItemType,
   PriceMapItemType,
   SortByType,
   TeamMapType,
 } from './Players.types';
-
-export const NFLPosTypes = {
-  1: { name: 'QB', canflex: false },
-  2: { name: 'RB', canflex: true },
-  3: { name: 'WR', canflex: true },
-  4: { name: 'TE', canflex: true },
-  5: { name: 'K', canflex: false },
-  6: { name: 'DEF', canflex: false },
-  99: { name: 'FLEX', canflex: true },
-};
 
 interface FilterType {
   name: string,
@@ -87,11 +78,11 @@ export const playersSlice = createSlice({
       });
       // state = ns;
     },
-    setPhase: (state, { payload }: { payload: { nflTeamID: number, gamePhase: string, } }) => { // Set the phase of a team to a new phase
+    setPhase: (state, { payload }: { payload: { nflTeamID: number, gamePhase: PhaseType, } }) => { // Set the phase of a team to a new phase
       state.gamelist = state.gamelist.map((g) => {
         if (g.HomeId === payload.nflTeamID || g.AwayId === payload.nflTeamID) {
-          g.phase = payload.gamePhase as PhaseType;
-          state.teamMap[payload.nflTeamID].phase = payload.gamePhase as PhaseType; // Update phase for the team specifically too
+          g.phase = payload.gamePhase;
+          state.teamMap[payload.nflTeamID].phase = payload.gamePhase; // Update phase for the team specifically too
         }
         return g;
       });
@@ -131,14 +122,14 @@ export const {
 } = playersSlice.actions;
 
 export const allPlayersSelector = (state: RootState) => (
-  state.players.playerlist.map((p) => ({ ...p, ...state.players.priceMap[p.id] })) as PlayerItemType[]
+  state.players.playerlist.map((p) => ({ ...p, ...state.players.priceMap[p.id] }))
 );
-export const allGamesSelector = (state: RootState) => (state.players.gamelist || [] as GameItemType[]);
-export const allTeamsSelector = (state: RootState) => (state.players.teamMap || {} as TeamMapType);
-export const pricesMapSelector = (state: RootState) => (state.players.priceMap || {} as Record<string, PriceMapItemType>);
+export const allGamesSelector = (state: RootState) => (state.players.gamelist || []);
+export const allTeamsSelector = (state: RootState) => (state.players.teamMap || {});
+export const pricesMapSelector = (state: RootState) => (state.players.priceMap || {});
 export const playerSelector = (playerID: number | null) => (state: RootState) => {
   const { players } = state;
-  return !playerID ? null : players.playerlist.find((p) => p.id === playerID) as PlayerItemType;
+  return !playerID ? null : players.playerlist.find((p) => p.id === playerID);
 };
 export const playersSelector = (playerIDs: number[]) => (state: RootState) => (
   state.players.playerlist.filter((p) => playerIDs.indexOf(p.id) > -1)

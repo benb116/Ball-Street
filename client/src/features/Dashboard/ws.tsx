@@ -4,7 +4,7 @@ import { setPhase, updatePrices, setInjury } from './Players/Players.slice';
 import { removeOffer, alertProtMatch } from './Offers/Offers.slice';
 import { offerFilled } from './Entry/Entry.slice';
 import { updateLeaders } from './Leaderboard/Leaderboard.slice';
-import { PriceMapItemType } from './Players/Players.types';
+import { PhaseType, PriceMapItemType } from './Players/Players.types';
 import { LeaderItemType } from './Leaderboard/Leaderboard.types';
 import API from '../../helpers/api';
 
@@ -101,7 +101,7 @@ function upLead(board: LeaderItemType[]) {
   store.dispatch(updateLeaders(board));
 }
 
-function newPhase(nphase: { nflTeamID: number, gamePhase: string, }) {
+function newPhase(nphase: { nflTeamID: number, gamePhase: PhaseType, }) {
   store.dispatch(setPhase(nphase));
 }
 

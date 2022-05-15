@@ -24,15 +24,13 @@ export const isInvalidSpot = function isInvalidSpot(playerType: NFLPosIDType, ro
 };
 
 // Is a player on the entry's roster
-export const isPlayerOnRoster = function isPlayerOnRoster(entry: Entry, playerID: number): RPosType {
-  let res = '' as RPosType;
+export const isPlayerOnRoster = function isPlayerOnRoster(entry: Entry, playerID: number): RPosType | false {
   for (let i = 0; i < RosterPositions.length; i++) {
     if (entry[RosterPositions[i]] === playerID) {
-      res = RosterPositions[i];
-      break;
+      return RosterPositions[i];
     }
   }
-  return res;
+  return false;
 };
 
 // Could a player type be put into a spot on the roster

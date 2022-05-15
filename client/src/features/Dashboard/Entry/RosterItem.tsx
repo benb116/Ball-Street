@@ -10,7 +10,6 @@ import RenderPrice from '../../../helpers/util';
 
 import {
   allTeamsSelector,
-  NFLPosTypes,
   playerSelector,
   priceMapSelector,
 } from '../Players/Players.slice';
@@ -19,24 +18,10 @@ import { offersSelector } from '../Offers/Offers.slice';
 import { setModal } from '../Modal/Modal.slice';
 import { usePreDropMutation, useReorderRosterMutation } from './Entry.api';
 
-import { RosterPosType } from './Entry.types';
-import { NFLPosType } from '../Players/Players.types';
+import { flexPosID, rosterkey, RosterPosType } from './Entry.types';
+import { NFLPosType, NFLPosTypes } from '../Players/Players.types';
 import { OfferItemType } from '../Offers/Offers.types';
 import { useCancelOfferMutation } from '../Offers/Offers.api';
-
-const flexID = 99;
-const rosterkey = {
-  QB1: 1,
-  RB1: 2,
-  RB2: 2,
-  WR1: 3,
-  WR2: 3,
-  TE1: 4,
-  FLEX1: flexID,
-  FLEX2: flexID,
-  K1: 5,
-  DEF1: 6,
-};
 
 // Show a specific row in the roster table
 function RosterItem({ playerid, position }: { playerid: number | null, position: RosterPosType }) {
@@ -68,7 +53,7 @@ function RosterItem({ playerid, position }: { playerid: number | null, position:
     } else if (thisplayer?.NFLPositionId) {
       dispatch(selectRPos([thisplayer.NFLPositionId, position]));
     } else {
-      dispatch(selectRPos([rosterkey[position] as NFLPosType, position]));
+      dispatch(selectRPos([rosterkey[position], position]));
     }
   };
 
@@ -76,11 +61,11 @@ function RosterItem({ playerid, position }: { playerid: number | null, position:
   const shouldHighlight = () => {
     const selectedType = rposSelected[0];
     if (selectedType === 0) return false; // If flag is not set, then don't
-    const thisType = rosterkey[position] as NFLPosType;
+    const thisType = rosterkey[position];
     if (selectedType === thisType) return true; // If same pos type, can def do it
-    if (selectedType === flexID || thisType === flexID) { // If either is a flex position
-      if (selectedType === flexID && !NFLPosTypes[thisType].canflex) return false; // Can't if non-flex type can't flex
-      if (thisType === flexID && !NFLPosTypes[selectedType].canflex) return false;
+    if (selectedType === flexPosID || thisType === flexPosID) { // If either is a flex position
+      if (selectedType === flexPosID && !NFLPosTypes[thisType].canflex) return false; // Can't if non-flex type can't flex
+      if (thisType === flexPosID && !NFLPosTypes[selectedType].canflex) return false;
       return true;
     }
     return false;

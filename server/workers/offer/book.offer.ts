@@ -38,7 +38,7 @@ class Book {
       Each book has a queue of promises that can be chained to.
       This means that functions can be guaranteed to run sequentially.
       Any operation on a book should be done by "enqueueing" it as a function like so:
-      playerBook.enqueue(() => { doSomething(input); });
+      playerBook.enqueue(async () => { await doSomething(input); });
       That way there will be no race conditions within a single contest+player
       Other race conditions could still occur at the DB,
       but those should be handled by transactions.
@@ -80,14 +80,14 @@ class Book {
   }
 
   // Add a function to the book's serial queue
-  enqueue(fn: ((inp: unknown) => unknown)) {
-    this.queue = this.queue.then(fn).catch((err) => {
+  enqueue(p: Promise<unknown>) {
+    this.queue = this.queue.then(() => p).catch((err) => {
       logger.error(`Book error: Contest:${this.contestID} Player:${this.nflplayerID}`, err);
     });
   }
 
   // Add an offer to the book
-  add(offer: Offer) {
+  async add(offer: Offer) {
     const { isbid, price } = offer;
     // which tree to add to
     const thetree = this.whichTree(isbid, offer.protected);
@@ -99,7 +99,7 @@ class Book {
   }
 
   // Remove and offer from the book
-  cancel(offer: Offer) {
+  async cancel(offer: Offer) {
     const { isbid, price } = offer;
     const thetree = this.whichTree(isbid, offer.protected);
 

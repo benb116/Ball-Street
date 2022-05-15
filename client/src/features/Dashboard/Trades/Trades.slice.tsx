@@ -26,21 +26,21 @@ export const tradesSlice = createSlice({
         NFLPlayerId: b.bid.NFLPlayerId,
         price: b.price,
         createdAt: b.bid.createdAt,
-      } as TradeItemType)));
+      })));
       payload.asks.forEach((a) => (out.push({
         id: a.ask.id,
         action: 'Trade away',
         NFLPlayerId: a.ask.NFLPlayerId,
         price: a.price,
         createdAt: a.ask.createdAt,
-      } as TradeItemType)));
+      })));
       payload.actions.forEach((a) => (out.push({
         id: a.id,
         action: a.EntryActionKind.name,
         NFLPlayerId: a.NFLPlayerId,
         price: a.price,
         createdAt: a.createdAt,
-      } as TradeItemType)));
+      })));
       state.trades = out.sort((a: TradeItemType, b: TradeItemType) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
     });
     builder.addMatcher(TradesAPI.endpoints.getTrades.matchRejected, ErrHandler);

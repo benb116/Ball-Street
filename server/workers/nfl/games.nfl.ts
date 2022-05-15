@@ -11,7 +11,7 @@ import NFLGame from '../../features/nflgame/nflgame.model';
 import yahooData from '../tests/yahooData';
 import { GamePhaseType } from '../../config';
 
-const teamIDs = Object.values(teams).map((t) => t.id, [] as number[]);
+const teamIDs = Object.values(teams).map((t) => t.id, []);
 type PhaseMapType = Record<string, GamePhaseType | number>;
 
 // Determine all games and their phases
