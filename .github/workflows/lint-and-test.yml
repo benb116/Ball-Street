@@ -34,6 +34,10 @@ jobs:
       run: ./node_modules/.bin/eslint ./
       working-directory: server
 
+    - name: Compile Typescript - Server
+      run: ./node_modules/.bin/tsc
+      working-directory: server
+
     - name: Install client dependencies
       run: npm install --production=false # install dev dependencies too
       working-directory: client
@@ -42,9 +46,9 @@ jobs:
       run: ./node_modules/.bin/eslint ./
       working-directory: client
 
-    - name: Compile Typescript
+    - name: Compile Typescript - Client
       run: ./node_modules/.bin/tsc
-      working-directory: server
+      working-directory: client
 
     - name: Build from Docker-Compose
       run: docker-compose -f docker-compose.yml -f development.yml build
