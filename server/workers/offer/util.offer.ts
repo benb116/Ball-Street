@@ -25,7 +25,7 @@ export function getBook(
   // There may be existing offers and matches in the DB, so add them to the book
   // If the book hasn't been inited, try to init
   if (!playerBook.init) {
-    playerBook.enqueue(beginBook(playerBook));
+    playerBook.enqueue(async () => { await beginBook(playerBook); });
   }
   return playerBook;
 }

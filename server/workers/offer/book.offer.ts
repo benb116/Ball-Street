@@ -80,8 +80,8 @@ class Book {
   }
 
   // Add a function to the book's serial queue
-  enqueue(p: Promise<unknown>) {
-    this.queue = this.queue.then(() => p).catch((err) => {
+  enqueue(fn: ((inp: unknown) => unknown)) {
+    this.queue = this.queue.then(fn).catch((err) => {
       logger.error(`Book error: Contest:${this.contestID} Player:${this.nflplayerID}`, err);
     });
   }
