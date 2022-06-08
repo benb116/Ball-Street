@@ -13,11 +13,11 @@ import { OfferItemType } from './Offers.types';
 // Show offers for different players
 const Offers = () => {
   const { contestID } = useParams<{ contestID: string }>();
+  const offers = useAppSelector(offersSelector);
+
   if (!contestID) return <></>;
 
   useGetOffersQuery(contestID);
-
-  const offers = useAppSelector(offersSelector);
 
   return (
     <div
@@ -56,17 +56,16 @@ function OfferItem({ offerdata }: { offerdata: OfferItemType }) {
   // Count is a dummy variable that is updated to cause a rerender
   const [value, setValue] = useState(true); // integer state
   const [, setCount] = useState(0); // integer state
-
+  const teamdata = useAppSelector(allTeamsSelector);
+  const playerdata = useAppSelector(playerSelector(offerdata.NFLPlayerId));
   const { contestID } = useParams<{ contestID: string }>();
-  if (!contestID) return <></>;
 
+  if (!contestID) return <></>;
   const [cancelOffer] = useCancelOfferMutation();
 
-  const playerdata = useAppSelector(playerSelector(offerdata.NFLPlayerId));
   if (!playerdata) {
     return (<span />);
   }
-  const teamdata = useAppSelector(allTeamsSelector);
   const thephase = teamdata[playerdata?.NFLTeamId]?.phase;
   if (thephase !== 'mid') {
     return (<span />);

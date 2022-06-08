@@ -12,11 +12,12 @@ import { TradeItemType } from './Trades.types';
 
 const Trades = () => {
   const { contestID } = useParams<{ contestID: string }>();
+  const trades = useAppSelector(tradesSelector);
+
   if (!contestID) return <></>;
 
   useGetTradesQuery(contestID);
 
-  const trades = useAppSelector(tradesSelector);
   return (
     <div
       style={{

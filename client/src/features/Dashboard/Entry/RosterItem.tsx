@@ -27,7 +27,6 @@ import { useCancelOfferMutation } from '../Offers/Offers.api';
 function RosterItem({ playerid, position }: { playerid: number | null, position: RosterPosType }) {
   const dispatch = useAppDispatch();
   const { contestID } = useParams<{ contestID: string }>();
-  if (!contestID) return <></>;
 
   const thisplayer = useAppSelector(playerSelector(playerid)); // Pull player info from state
   const theteams = useAppSelector(allTeamsSelector); // Pull team from state
@@ -39,6 +38,8 @@ function RosterItem({ playerid, position }: { playerid: number | null, position:
   const [reorder] = useReorderRosterMutation();
   const [preDrop] = usePreDropMutation();
   const [cancelOffer] = useCancelOfferMutation();
+
+  if (!contestID) return <></>;
 
   // When the pos label is clicked, trying to reorder roster
   const reorderClick = () => {

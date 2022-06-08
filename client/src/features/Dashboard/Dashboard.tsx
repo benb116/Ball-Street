@@ -12,11 +12,11 @@ import initWS from './ws';
 
 const Dashboard = () => {
   const { contestID } = useParams<{ contestID: string }>();
-  if (!contestID) return <></>;
   useEffect(() => {
   // Init the WS for a specific contest
     if (contestID) initWS(contestID);
   }, [contestID]);
+  if (!contestID) return <></>;
 
   return (
     <div

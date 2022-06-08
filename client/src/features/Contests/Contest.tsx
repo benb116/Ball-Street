@@ -18,19 +18,18 @@ import { EntryItemType } from '../Dashboard/Entry/Entry.types';
 // Show info about a specific contest and a user's entry
 const Contest = () => {
   const { contestID } = useParams<{ contestID: string }>(); // Get contestID from URL params
-
-  if (!contestID) return <></>;
-
   const thiscontest = useAppSelector(contestSelector); // Get info about this contest
   const thiscontestmyentry = useAppSelector(myEntrySelector);
+
+  // User wants to create an entry in this contest
+  const [createEntry] = useCreateEntryMutation();
+
+  if (!contestID) return <></>;
 
   // Pull data
   useGetContestQuery(contestID);
   useGetEntriesQuery(contestID);
   useGetEntryQuery(contestID);
-
-  // User wants to create an entry in this contest
-  const [createEntry] = useCreateEntryMutation();
 
   if (!thiscontest) {
     return (

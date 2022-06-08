@@ -19,7 +19,6 @@ import { useCancelOfferMutation } from '../Offers/Offers.api';
 function PlayerItem({ playerdata }: { playerdata: PlayerItemType }) {
   const dispatch = useAppDispatch();
   const { contestID } = useParams<{ contestID: string }>();
-  if (!contestID) return <></>;
 
   const offers = useAppSelector(offersSelector);
   const theteams = useAppSelector(allTeamsSelector);
@@ -30,6 +29,8 @@ function PlayerItem({ playerdata }: { playerdata: PlayerItemType }) {
   const [preAdd] = usePreAddMutation();
   const [preDrop] = usePreDropMutation();
   const [cancelOffer] = useCancelOfferMutation();
+
+  if (!contestID) return <></>;
 
   // Player's team info
   const thephase = theteams[playerdata.NFLTeamId].phase;

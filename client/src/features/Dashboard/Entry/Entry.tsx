@@ -15,9 +15,9 @@ import { RosterPositions } from './Entry.types';
 // Display the user's current entry (balance + players)
 const Entry = () => {
   const { contestID } = useParams<{ contestID: string }>();
-  if (!contestID) return <></>;
-
   const thisentry = useAppSelector(entrySelector);
+
+  if (!contestID) return <></>;
 
   // Initial data pull
   useGetEntryQuery(contestID);

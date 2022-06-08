@@ -11,11 +11,9 @@ import { ContestItemType } from './Contests.types';
 
 // Show info about all contests available
 const Contests = () => {
+  useGetContestsQuery();
   const allcontests = useAppSelector(contestsSelector);
   const sortedContests = [...allcontests].sort((a, b) => b.nflweek - a.nflweek);
-
-  // Pull data
-  useGetContestsQuery();
 
   return (
     <>
