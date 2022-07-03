@@ -42,12 +42,12 @@ async function evalProtected(playerBook: Book, proffer: string, neoffer: string)
 async function runMatches(poffer: Offer, playerBook: Book) {
   const ispbid = poffer.isbid;
   // Find all offers that could be matched
-  let matchingOfferIDs = playerBook.findProtectedMatches(poffer);
-  logger.verbose(`Random protected matches ${poffer.id}`);
-  while (matchingOfferIDs.length) {
+  let matchingOffers = playerBook.findProtectedMatches(poffer);
+  logger.verbose(`Random protected matches ${poffer.id}: ${matchingOffers.length}`);
+  while (matchingOffers.length) {
     // Randomly chosen so no incentive to submit first
-    const randomInd = Math.floor(Math.random() * matchingOfferIDs.length);
-    const randomOffer = matchingOfferIDs[randomInd];
+    const randomInd = Math.floor(Math.random() * matchingOffers.length);
+    const randomOffer = matchingOffers[randomInd];
     logger.verbose(`Try to fill ${randomOffer.id}`);
     const bidoffer = (ispbid ? poffer.id : randomOffer.id);
     const askoffer = (!ispbid ? poffer.id : randomOffer.id);
@@ -58,19 +58,19 @@ async function runMatches(poffer: Offer, playerBook: Book) {
     if (!result.bid || result.bid.filled || result.bid.cancelled) {
       if (ispbid) {
         playerBook.cancel(poffer);
-        matchingOfferIDs = [];
+        matchingOffers = [];
       } else {
         playerBook.cancel(randomOffer);
-        matchingOfferIDs.splice(randomInd, 1);
+        matchingOffers.splice(randomInd, 1);
       }
     }
     if (!result.ask || result.ask.filled || result.ask.cancelled) {
       if (!ispbid) {
         playerBook.cancel(poffer);
-        matchingOfferIDs = [];
+        matchingOffers = [];
       } else {
         playerBook.cancel(randomOffer);
-        matchingOfferIDs.splice(randomInd, 1);
+        matchingOffers.splice(randomInd, 1);
       }
     }
   }
