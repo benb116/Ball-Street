@@ -79,14 +79,13 @@ function findMatchForBestBid(book: Book) {
     // Move to the next best price and try again
     if (!bestbidOffer) {
       // eslint-disable-next-line @typescript-eslint/no-loop-func
-      evalbid = Math.min(...bidPrices.filter((p) => p > evalbid));
+      evalbid = Math.max(...bidPrices.filter((p) => p < evalbid));
       // If there are no more left, then exit this loop and go to pbids
-      if (evalbid === Infinity) {
+      if (evalbid === -Infinity) {
         done = true;
         break;
       }
 
-      logger.verbose(`next best bid price: ${evalbid}`);
       bidIterator = book.bid[evalbid].entries();
     } else {
       // We've found the best bid
@@ -146,13 +145,12 @@ function findMatchForBestPBid(book: Book) {
     // Move to the next best price and try again
     if (!bestpbidOffer) {
       // eslint-disable-next-line @typescript-eslint/no-loop-func
-      evalpbid = Math.min(...pbidPrices.filter((p) => p > evalpbid));
+      evalpbid = Math.max(...pbidPrices.filter((p) => p < evalpbid));
       // If there are no more left, then exit
-      if (evalpbid === Infinity) {
+      if (evalpbid === -Infinity) {
         done = true;
         break;
       }
-      logger.verbose(`next best pbid price: ${evalpbid}`);
 
       pbidIterator = book.pbid[evalpbid].entries();
     } else if (!(bestpbidOffer[0] in book.protMatchMap)) {
