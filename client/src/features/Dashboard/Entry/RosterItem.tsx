@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
 
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
-import RenderPrice from '../../../helpers/util';
+import { ActionButton, RenderPrice } from '../../../helpers/util';
 
 import {
   allTeamsSelector,
@@ -58,20 +58,6 @@ function RosterItem({ playerid, position }: { playerid: number | null, position:
     }
   };
 
-  // Should a pos label be highlighted (If a clicked player could be moved there)
-  const shouldHighlight = () => {
-    const selectedType = rposSelected[0];
-    if (selectedType === 0) return false; // If flag is not set, then don't
-    const thisType = rosterkey[position];
-    if (selectedType === thisType) return true; // If same pos type, can def do it
-    if (selectedType === flexPosID || thisType === flexPosID) { // If either is a flex position
-      if (selectedType === flexPosID && !NFLPosTypes[thisType].canflex) return false; // Can't if non-flex type can't flex
-      if (thisType === flexPosID && !NFLPosTypes[selectedType].canflex) return false;
-      return true;
-    }
-    return false;
-  };
-
   // If no player, show an empty row
   if (!thisplayer || !theteams[thisplayer.NFLTeamId]) {
     return (
@@ -79,7 +65,7 @@ function RosterItem({ playerid, position }: { playerid: number | null, position:
         <td
           style={{
             cursor: 'pointer',
-            fontWeight: (shouldHighlight() ? 'bold' : 'normal'),
+            fontWeight: (shouldHighlight(rposSelected[0], position) ? 'bold' : 'normal'),
           }}
           onClick={reorderClick}
         >
@@ -140,9 +126,9 @@ function RosterItem({ playerid, position }: { playerid: number | null, position:
   return (
     <tr data-playerid={thisplayer.id}>
       <td
-        style={
-        { cursor: 'pointer', fontWeight: (shouldHighlight() ? 'bold' : 'normal') }
-        }
+        style={{
+          cursor: 'pointer', fontWeight: (shouldHighlight(rposSelected[0], position) ? 'bold' : 'normal'),
+        }}
         onClick={reorderClick}
       >
         {position}
@@ -169,34 +155,23 @@ function RosterItem({ playerid, position }: { playerid: number | null, position:
   );
 }
 
+// Should a pos label be highlighted (If a clicked player could be moved there)
+function shouldHighlight(selectedType: NFLPosType | 0, position: RosterPosType) {
+  if (selectedType === 0) return false; // If flag is not set, then don't
+  const thisType = rosterkey[position];
+  if (selectedType === thisType) return true; // If same pos type, can def do it
+  if (selectedType === flexPosID || thisType === flexPosID) { // If either is a flex position
+    if (selectedType === flexPosID && !NFLPosTypes[thisType].canflex) return false; // Can't if non-flex type can't flex
+    if (thisType === flexPosID && !NFLPosTypes[selectedType].canflex) return false;
+    return true;
+  }
+  return false;
+}
+
 // Get the name of a position type from it's number
 function posName(posNum: NFLPosType) {
   return `(${NFLPosTypes[posNum].name})`;
 }
-
-// Generic action button that triggers a drop/offer/cancel
-function ActionButton({ thephase, oclick, text }: { thephase: string, oclick: () => void, text: string }) {
-  if (thephase !== 'pre' && thephase !== 'mid') {
-    return (<td />);
-  }
-  return (
-    <td style={{ textAlign: 'center' }}>
-      <button
-        className="ActionButton"
-        onClick={oclick}
-        type="button"
-      >
-        {text}
-      </button>
-    </td>
-  );
-}
-
-ActionButton.propTypes = {
-  thephase: PropTypes.string.isRequired,
-  oclick: PropTypes.func.isRequired,
-  text: PropTypes.string.isRequired,
-};
 
 RosterItem.propTypes = {
   playerid: PropTypes.number,
