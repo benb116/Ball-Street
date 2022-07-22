@@ -3,7 +3,8 @@ import { ErrorTest, ObjectTest } from '../../util/util.tests';
 
 describe('getEntryRank service', () => {
   test('Valid request returns data', ObjectTest(
-    service, { user: 3, params: { contestID: 1 }, body: {} },
+    service,
+    { user: 3, params: { contestID: 1 }, body: {} },
     {
       ContestId: 1,
       DEF1: null,
@@ -25,17 +26,23 @@ describe('getEntryRank service', () => {
   ));
 
   test('Missing contestID returns error 400', ErrorTest(
-    service, { user: 2, params: { }, body: {} },
-    400, 'Please specify a contest',
+    service,
+    { user: 2, params: { }, body: {} },
+    400,
+    'Please specify a contest',
   ));
 
   test('Missing userID returns error 400', ErrorTest(
-    service, { params: { contestID: 1 }, body: {} },
-    400, 'You must be logged in',
+    service,
+    { params: { contestID: 1 }, body: {} },
+    400,
+    'You must be logged in',
   ));
 
   test('Non-existent user+contest returns error 404', ErrorTest(
-    service, { user: 1, params: { contestID: 80 }, body: {} },
-    404, 'No entry found',
+    service,
+    { user: 1, params: { contestID: 80 }, body: {} },
+    404,
+    'No entry found',
   ));
 });

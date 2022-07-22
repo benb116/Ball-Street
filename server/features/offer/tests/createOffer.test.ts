@@ -3,7 +3,8 @@ import { ErrorTest, ObjectTest } from '../../util/util.tests';
 
 describe('createOffer service', () => {
   test('Valid request returns data', ObjectTest(
-    service, {
+    service,
+    {
       user: 1,
       params: { contestID: 2 },
       body: {
@@ -31,7 +32,8 @@ describe('createOffer service', () => {
   ));
 
   test('Duplicate offer returns error 406', ErrorTest(
-    service, {
+    service,
+    {
       user: 2,
       params: { contestID: 2 },
       body: {
@@ -42,11 +44,13 @@ describe('createOffer service', () => {
         },
       },
     },
-    406, 'An offer already exists for this player',
+    406,
+    'An offer already exists for this player',
   ));
 
   test('Insufficient funds returns error 402', ErrorTest(
-    service, {
+    service,
+    {
       user: 1,
       params: { contestID: 2 },
       body: {
@@ -57,11 +61,13 @@ describe('createOffer service', () => {
         },
       },
     },
-    402, "User doesn't have enough points to offer",
+    402,
+    "User doesn't have enough points to offer",
   ));
 
   test('Non-existent player returns 404', ErrorTest(
-    service, {
+    service,
+    {
       user: 1,
       params: { contestID: 2 },
       body: {
@@ -72,11 +78,13 @@ describe('createOffer service', () => {
         },
       },
     },
-    404, 'Player not found',
+    404,
+    'Player not found',
   ));
 
   test('Bid existing returns error 409', ErrorTest(
-    service, {
+    service,
+    {
       user: 1,
       params: { contestID: 2 },
       body: {
@@ -87,11 +95,13 @@ describe('createOffer service', () => {
         },
       },
     },
-    409, 'Player is on roster already',
+    409,
+    'Player is on roster already',
   ));
 
   test('Ask non-existing returns error 404', ErrorTest(
-    service, {
+    service,
+    {
       user: 1,
       params: { contestID: 2 },
       body: {
@@ -102,11 +112,13 @@ describe('createOffer service', () => {
         },
       },
     },
-    404, 'Player is not on roster',
+    404,
+    'Player is not on roster',
   ));
 
   test('No open spots returns error 409', ErrorTest(
-    service, {
+    service,
+    {
       user: 1,
       params: { contestID: 2 },
       body: {
@@ -117,11 +129,13 @@ describe('createOffer service', () => {
         },
       },
     },
-    409, 'There are no spots this player could fit into',
+    409,
+    'There are no spots this player could fit into',
   ));
 
   test('No entry returns error 404', ErrorTest(
-    service, {
+    service,
+    {
       user: 4,
       params: { contestID: 2 },
       body: {
@@ -132,11 +146,13 @@ describe('createOffer service', () => {
         },
       },
     },
-    404, 'No entry found',
+    404,
+    'No entry found',
   ));
 
   test('Missing contestID returns error 400', ErrorTest(
-    service, {
+    service,
+    {
       user: 1,
       params: { },
       body: {
@@ -147,11 +163,13 @@ describe('createOffer service', () => {
         },
       },
     },
-    400, 'Please specify a contest',
+    400,
+    'Please specify a contest',
   ));
 
   test('Missing userID returns error 400', ErrorTest(
-    service, {
+    service,
+    {
       params: { contestID: 2 },
       body: {
         offerobj: {
@@ -161,11 +179,13 @@ describe('createOffer service', () => {
         },
       },
     },
-    400, 'You must be logged in',
+    400,
+    'You must be logged in',
   ));
 
   test('Not mid games returns error 406', ErrorTest(
-    service, {
+    service,
+    {
       user: 2,
       params: { contestID: 2 },
       body: {
@@ -176,6 +196,7 @@ describe('createOffer service', () => {
         },
       },
     },
-    406, "Can't make an offer before or after games",
+    406,
+    "Can't make an offer before or after games",
   ));
 });

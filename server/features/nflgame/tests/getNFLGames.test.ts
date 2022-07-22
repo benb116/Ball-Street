@@ -3,7 +3,8 @@ import { ArrayTest } from '../../util/util.tests';
 
 describe('getNFLGames service', () => {
   test('Valid request returns data', ArrayTest(
-    service, {},
+    service,
+    {},
     [{
       AwayId: 5,
       HomeId: 4,

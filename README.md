@@ -1,5 +1,7 @@
 # Ball Street
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/c7735630fe984accb61476435d196448)](https://app.codacy.com/gh/benb116/Ball-Street?utm_source=github.com&utm_medium=referral&utm_content=benb116/Ball-Street&utm_campaign=Badge_Grade_Settings)
+
 Ball Street is a live-trading weekly fantasy football game. Build an underrated roster before gametime, then trade players while the games take place. Increase your point total as the week progresses.
 
 ## How to play

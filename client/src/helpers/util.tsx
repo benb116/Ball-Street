@@ -1,3 +1,5 @@
+import React from 'react';
+import PropTypes from 'prop-types';
 import { isRejectedWithValue } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
 
@@ -8,8 +10,31 @@ interface ErrType {
   status: number,
 }
 
-const RenderPrice = (price = 0) => (Math.round(price) / 100).toFixed(2);
-// const history = useHistory();
+export const RenderPrice = (price = 0) => (Math.round(price) / 100).toFixed(2);
+
+// Generic action button that triggers a drop/offer/cancel
+export function ActionButton({ thephase, oclick, text }: { thephase: string, oclick: () => void, text: string }) {
+  if (thephase !== 'pre' && thephase !== 'mid') {
+    return (<td />);
+  }
+  return (
+    <td style={{ textAlign: 'center' }}>
+      <button
+        className="ActionButton"
+        onClick={oclick}
+        type="button"
+      >
+        {text}
+      </button>
+    </td>
+  );
+}
+
+ActionButton.propTypes = {
+  thephase: PropTypes.string.isRequired,
+  oclick: PropTypes.func.isRequired,
+  text: PropTypes.string.isRequired,
+};
 
 export const ErrHandler = (_state: unknown, action: { payload: ErrType | unknown }) => {
   if (isRejectedWithValue(action)) {
@@ -21,5 +46,3 @@ export const ErrHandler = (_state: unknown, action: { payload: ErrType | unknown
     toast.error(err.data.error || 'Unknown error');
   }
 };
-
-export default RenderPrice;

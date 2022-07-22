@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link, useParams } from 'react-router-dom';
 
 import { useAppSelector } from '../../app/hooks';
-import RenderPrice from '../../helpers/util';
+import { RenderPrice } from '../../helpers/util';
 
 import { contestSelector, myEntrySelector } from './Contests.slice';
 import {

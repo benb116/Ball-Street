@@ -16,7 +16,7 @@ Maintains an order book in memory for each player in each contest and matches of
 **Leader worker (qty: 1) - [workers/leader.worker.ts](workers/leader.worker.ts)**
 Calculates updating leaderboards for all contests and sends data to websockets.
 
-**NFL worker (qty: 1) - [workers/stats.worker.ts](workers/nfl.worker.js)**
+**NFL worker (qty: 1) - [workers/nfl.worker.ts](workers/nfl.worker.ts)**
 Monitors NFL apis for stats, player, and game updates. Initializes player and game information in the database, then checks for stat changes and game updates. Publishes info for dissemination.
 
 ## Get started in development

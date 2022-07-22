@@ -79,7 +79,5 @@ describe('evalPassReset service', () => {
     }
   });
 
-  test('No token returns validation error', ErrorTest(
-    service, { email: 'abc123' }, 400, 'Token is required',
-  ));
+  test('No token returns validation error', ErrorTest(service, { email: 'abc123' }, 400, 'Token is required'));
 });

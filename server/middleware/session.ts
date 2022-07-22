@@ -30,5 +30,6 @@ export default session({
     sameSite: true,
     secure: (process.env.NODE_ENV === 'production'),
   },
+  // @ts-expect-error client type is fine
   store: new RedisStore({ client, ttl: 86400 }), // 1 day
 });

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { useAppSelector } from '../../../app/hooks';
-import RenderPrice from '../../../helpers/util';
+import { RenderPrice } from '../../../helpers/util';
 
 import { leadersSelector } from './Leaderboard.slice';
 
