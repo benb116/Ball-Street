@@ -86,14 +86,12 @@ function pullPlayerData() {
 
 // Populate the preProjMap
 function pullPreProj() {
-  return getNFLPlayers().then((data) => data.reduce(
-    (acc: Record<string, number>, p) => {
-      if (p.preprice) acc[p.id] = p.preprice;
-      const teamID = p.NFLTeamId;
-      if (!state.teamPlayerMap[teamID]) state.teamPlayerMap[teamID] = [];
-      state.teamPlayerMap[teamID].push(p.id);
-      state.playerTeamMap[p.id] = teamID;
-      return acc;
-    }, {},
-  ));
+  return getNFLPlayers().then((data) => data.reduce((acc: Record<string, number>, p) => {
+    if (p.preprice) acc[p.id] = p.preprice;
+    const teamID = p.NFLTeamId;
+    if (!state.teamPlayerMap[teamID]) state.teamPlayerMap[teamID] = [];
+    state.teamPlayerMap[teamID].push(p.id);
+    state.playerTeamMap[p.id] = teamID;
+    return acc;
+  }, {}));
 }

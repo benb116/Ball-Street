@@ -3,7 +3,8 @@ import { ErrorTest, ObjectTest } from '../../util/util.tests';
 
 describe('createContest service', () => {
   test('Valid request returns data', ObjectTest(
-    service, { user: 2, params: { }, body: { name: 'New Contest', budget: 10000 } },
+    service,
+    { user: 2, params: { }, body: { name: 'New Contest', budget: 10000 } },
     {
       id: 4,
       name: 'New Contest',
@@ -17,12 +18,16 @@ describe('createContest service', () => {
   ));
 
   test('Missing name returns error 400', ErrorTest(
-    service, { user: 2, params: { }, body: { budget: 10000 } },
-    400, 'Please specify a name',
+    service,
+    { user: 2, params: { }, body: { budget: 10000 } },
+    400,
+    'Please specify a name',
   ));
 
   test('Missing budget returns error 400', ErrorTest(
-    service, { user: 2, params: { }, body: { name: 'New Contest 7' } },
-    400, 'Please specify a budget',
+    service,
+    { user: 2, params: { }, body: { name: 'New Contest 7' } },
+    400,
+    'Please specify a budget',
   ));
 });

@@ -42,27 +42,37 @@ describe('createEntry service', () => {
   });
 
   test('Duplicate entry returns error 406', ErrorTest(
-    service, { user: 1, params: { contestID: 2 }, body: {} },
-    406, 'An entry already exists',
+    service,
+    { user: 1, params: { contestID: 2 }, body: {} },
+    406,
+    'An entry already exists',
   ));
 
   test('Insufficient funds returns error 402', ErrorTest(
-    service, { user: 6, params: { contestID: 1 }, body: {} },
-    402, 'User has insufficient funds',
+    service,
+    { user: 6, params: { contestID: 1 }, body: {} },
+    402,
+    'User has insufficient funds',
   ));
 
   test('Missing contestID returns error 400', ErrorTest(
-    service, { user: 1, params: { }, body: {} },
-    400, 'Please specify a contest',
+    service,
+    { user: 1, params: { }, body: {} },
+    400,
+    'Please specify a contest',
   ));
 
   test('Missing userID returns error 400', ErrorTest(
-    service, { params: { contestID: 2 }, body: {} },
-    400, 'You must be logged in',
+    service,
+    { params: { contestID: 2 }, body: {} },
+    400,
+    'You must be logged in',
   ));
 
   test('Non-existent contest returns error 404', ErrorTest(
-    service, { user: 1, params: { contestID: 80 }, body: {} },
-    404, 'No contest found',
+    service,
+    { user: 1, params: { contestID: 80 }, body: {} },
+    404,
+    'No contest found',
   ));
 });
