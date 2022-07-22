@@ -53,12 +53,16 @@ describe('getUserTrades service', () => {
   });
 
   test('Missing contestID returns error 400', ErrorTest(
-    service, { user: 2, params: { }, body: {} },
-    400, 'Please specify a contest',
+    service,
+    { user: 2, params: { }, body: {} },
+    400,
+    'Please specify a contest',
   ));
 
   test('Missing userID returns error 400', ErrorTest(
-    service, { params: { contestID: 2 }, body: {} },
-    400, 'You must be logged in',
+    service,
+    { params: { contestID: 2 }, body: {} },
+    400,
+    'You must be logged in',
   ));
 });

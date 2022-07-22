@@ -36,7 +36,5 @@ describe('forceLogout service', () => {
     expect(check2).toBe(obj2);
   });
 
-  test('Invalid email returns validation error', ErrorTest(
-    service, { }, 400, 'You must be logged in',
-  ));
+  test('Invalid email returns validation error', ErrorTest(service, { }, 400, 'You must be logged in'));
 });

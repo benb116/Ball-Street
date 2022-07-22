@@ -8,9 +8,8 @@ import { client } from '../../../db/redis';
 
 const priceUpdate = {
 
-  pub: function pub(
-    pubtype: string, contestID: number, nflplayerID: number, bestbid: number, bestask: number,
-  ) {
+  // eslint-disable-next-line max-len
+  pub: function pub(pubtype: 'best' | 'last', contestID: number, nflplayerID: number, bestbid: number, bestask: number) {
     if (pubtype === 'best') {
       client.publish('priceUpdate', JSON.stringify({
         contestID,
