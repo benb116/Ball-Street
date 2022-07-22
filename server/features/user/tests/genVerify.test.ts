@@ -18,7 +18,8 @@ describe('genVerify service', () => {
     expect(thettl).toBeGreaterThan(0);
   });
 
-  test('Invalid email returns validation error', ErrorTest(
-    service, { id: 6, email: 'abc123' }, 400, 'Email is invalid',
-  ));
+  test(
+    'Invalid email returns validation error',
+    ErrorTest(service, { id: 6, email: 'abc123' }, 400, 'Email is invalid'),
+  );
 });

@@ -3,7 +3,8 @@ import { ErrorTest, ObjectTest } from '../../util/util.tests';
 
 describe('preTradeAdd service', () => {
   test('Valid request returns data', ObjectTest(
-    service, {
+    service,
+    {
       user: 1,
       params: { contestID: 2 },
       body: {
@@ -32,7 +33,8 @@ describe('preTradeAdd service', () => {
   ));
 
   test('Duplicate add returns error 406', ErrorTest(
-    service, {
+    service,
+    {
       user: 2,
       params: { contestID: 2 },
       body: {
@@ -40,11 +42,13 @@ describe('preTradeAdd service', () => {
         rosterposition: 'RB1',
       },
     },
-    406, 'Player is on roster',
+    406,
+    'Player is on roster',
   ));
 
   test('Preadd with price returns error 400', ErrorTest(
-    service, {
+    service,
+    {
       user: 2,
       params: { contestID: 2 },
       body: {
@@ -53,11 +57,13 @@ describe('preTradeAdd service', () => {
         price: 100,
       },
     },
-    400, 'Price not allowed in pretrade',
+    400,
+    'Price not allowed in pretrade',
   ));
 
   test('Insufficient funds returns error 402', ErrorTest(
-    service, {
+    service,
+    {
       user: 3,
       params: { contestID: 2 },
       body: {
@@ -65,11 +71,13 @@ describe('preTradeAdd service', () => {
         rosterposition: 'FLEX1',
       },
     },
-    402, "User doesn't have enough points",
+    402,
+    "User doesn't have enough points",
   ));
 
   test('Player in spot returns error 406', ErrorTest(
-    service, {
+    service,
+    {
       user: 1,
       params: { contestID: 2 },
       body: {
@@ -77,22 +85,26 @@ describe('preTradeAdd service', () => {
         rosterposition: 'K1',
       },
     },
-    406, 'There is a player in that spot',
+    406,
+    'There is a player in that spot',
   ));
 
   test('No open spots returns error 406', ErrorTest(
-    service, {
+    service,
+    {
       user: 1,
       params: { contestID: 2 },
       body: {
         nflplayerID: 31199,
       },
     },
-    406, 'There are no open spots',
+    406,
+    'There are no open spots',
   ));
 
   test('No entry returns error 404', ErrorTest(
-    service, {
+    service,
+    {
       user: 4,
       params: { contestID: 2 },
       body: {
@@ -100,11 +112,13 @@ describe('preTradeAdd service', () => {
         rosterposition: 'TE1',
       },
     },
-    404, 'No entry found',
+    404,
+    'No entry found',
   ));
 
   test('Missing contestID returns error 400', ErrorTest(
-    service, {
+    service,
+    {
       user: 1,
       params: { },
       body: {
@@ -112,22 +126,26 @@ describe('preTradeAdd service', () => {
         rosterposition: 'TE1',
       },
     },
-    400, 'Please specify a contest',
+    400,
+    'Please specify a contest',
   ));
 
   test('Missing userID returns error 400', ErrorTest(
-    service, {
+    service,
+    {
       params: { contestID: 2 },
       body: {
         nflplayerID: 27648,
         rosterposition: 'TE1',
       },
     },
-    400, 'You must be logged in',
+    400,
+    'You must be logged in',
   ));
 
   test('Not pre games returns error 406', ErrorTest(
-    service, {
+    service,
+    {
       user: 1,
       params: { contestID: 1 },
       body: {
@@ -135,6 +153,7 @@ describe('preTradeAdd service', () => {
         rosterposition: 'TE1',
       },
     },
-    406, "Can't add during or after games",
+    406,
+    "Can't add during or after games",
   ));
 });

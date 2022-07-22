@@ -3,7 +3,8 @@ import { ArrayTest } from '../../util/util.tests';
 
 describe('getContests service', () => {
   test('Valid request for contests returns data', ArrayTest(
-    service, { user: 1, params: { }, body: {} },
+    service,
+    { user: 1, params: { }, body: {} },
     [{
       budget: 10000,
       id: 1,

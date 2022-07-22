@@ -3,7 +3,8 @@ import { ErrorTest, ArrayTest } from '../../util/util.tests';
 
 describe('getContestEntries service', () => {
   test('Valid request returns data', ArrayTest(
-    service, { user: 1, params: { contestID: 1 }, body: {} },
+    service,
+    { user: 1, params: { contestID: 1 }, body: {} },
     [{
       ContestId: 1,
       DEF1: null,
@@ -61,13 +62,17 @@ describe('getContestEntries service', () => {
   ));
 
   test('Missing contestID returns error 400', ErrorTest(
-    service, { user: 2, params: { }, body: {} },
-    400, 'Please specify a contest',
+    service,
+    { user: 2, params: { }, body: {} },
+    400,
+    'Please specify a contest',
   ));
 
   test('Missing userID returns error 400', ErrorTest(
-    service, { params: { contestID: 2 }, body: {} },
-    400, 'You must be logged in',
+    service,
+    { params: { contestID: 2 }, body: {} },
+    400,
+    'You must be logged in',
   ));
 
   test('Non-existent contest returns empty', async () => {
