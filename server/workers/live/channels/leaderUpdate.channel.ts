@@ -12,7 +12,7 @@ const leaderUpdate = {
   },
   // When new leaderboards come in, send out to the correct ws
   sub: async function sub() {
-    const leaderMemo: Record<string, null> = {};
+    const leaderMemo: Record<number, null> = {};
     liveState.contestmap.forEach((thecontestID) => {
       if (!leaderMemo[thecontestID]) {
         leaderMemo[thecontestID] = null;

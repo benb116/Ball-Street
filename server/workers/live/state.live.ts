@@ -1,3 +1,5 @@
+import WebSocket from 'ws';
+
 interface PriceCPItem {
   nflplayerID: number,
   bestbid?: number,
@@ -12,8 +14,8 @@ interface PriceMapType {
 }
 
 const out = {
-  connmap: new Map(), // Which ws connection corresponds to which user
-  contestmap: new Map(), // Which ws connection corresponds to which contest
+  connmap: new Map<number, WebSocket.WebSocket>(), // Which ws connection corresponds to which user
+  contestmap: new Map<WebSocket.WebSocket, number>(), // Which ws connection corresponds to which contest
   priceUpdateMap: {} as PriceMapType, // Keep an account of changes, will be flushed on interval
 };
 
