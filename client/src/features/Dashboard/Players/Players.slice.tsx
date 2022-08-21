@@ -76,7 +76,6 @@ export const playersSlice = createSlice({
         const pm = state.priceMap[p.nflplayerID] || {};
         state.priceMap[p.nflplayerID] = { ...(pm), ...p }; // Overwrite old values
       });
-      // state = ns;
     },
     setPhase: (state, { payload }: { payload: { nflTeamID: number, gamePhase: PhaseType, } }) => { // Set the phase of a team to a new phase
       state.gamelist = state.gamelist.map((g) => {

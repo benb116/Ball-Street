@@ -31,7 +31,7 @@ export const offersSlice = createSlice({
       state.asks = state.asks.filter((o) => o.id !== payload);
     },
     // When a protected match comes in, update the offer's expiration
-    alertProtMatch: (state, { payload }) => {
+    alertProtMatch: (state, { payload }: { payload: { offerID: string, expire: number } }) => {
       state.bids.forEach((o) => {
         if (o.id === payload.offerID) { o.expire = payload.expire; }
       });
