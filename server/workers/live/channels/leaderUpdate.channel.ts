@@ -22,7 +22,9 @@ const leaderUpdate = {
       allContests.map((cID) => leader.get(cID)),
     );
     const leaderMsgMap = allContests.reduce((acc, cur, i) => {
-      acc[cur] = { event: 'leaderboard', leaderboard: allLeaders[i] };
+      const thisLeader = allLeaders[i];
+      if (!thisLeader) return acc;
+      acc[cur] = { event: 'leaderboard', leaderboard: thisLeader };
       return acc;
     }, {} as MessageMapType);
     sendToContests(leaderMsgMap);
