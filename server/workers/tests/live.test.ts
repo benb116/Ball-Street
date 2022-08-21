@@ -4,7 +4,7 @@ import axios from 'axios';
 import { ProtectionDelay, RefreshTime } from '../../config';
 import Offer from '../../features/offer/offer.model';
 import { TestPromiseMap } from '../../features/util/util.tests';
-import { client, rediskeys } from '../../db/redis';
+import bestbid from '../../db/redis/bestbid.redis';
 
 const contestID = 2;
 
@@ -85,8 +85,7 @@ const tests = [
 const pMap = TestPromiseMap(tests);
 
 async function initUsers() {
-  // eslint-disable-next-line max-len
-  await client.HSET(rediskeys.bestbidHash(contestID), ['1', '400', '2', '400', '3', '400', '4', '400', '5', '400', '6', '400', '7', '400', '8', '400', '9', '400', '10', '400', '11', '400']);
+  await Promise.all(Array.from(Array(11).keys()).map((n) => bestbid.set(contestID, n, 400)));
 
   const session1 = await getSessionID('email3@gmail.com');
   const session2 = await getSessionID('email2@gmail.com');

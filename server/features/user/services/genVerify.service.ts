@@ -6,7 +6,7 @@ import { CallbackURL, verificationTimeout, verificationTokenLength } from '../..
 import { validate, uError } from '../../util/util';
 import validators from '../../util/util.schema';
 
-import { client, rediskeys } from '../../../db/redis';
+import emailVer from '../../../db/redis/emailVer.redis';
 
 const schema = Joi.object({
   id: validators.user,
@@ -24,7 +24,7 @@ async function genVerify(req: EvalVerifyInput) {
   const { email, id } = value;
   try {
     const rand = cryptoRandomString({ length: verificationTokenLength, type: 'url-safe' });
-    await client.SET(rediskeys.emailVer(rand), email, { EX: verificationTimeout * 60 });
+    await emailVer.set(rand, email, verificationTimeout * 60);
     return await sendVerificationEmail(id, email, rand);
   } catch (err) {
     return uError('genVerify Error', 406);

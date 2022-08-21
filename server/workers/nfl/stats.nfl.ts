@@ -7,8 +7,9 @@ import state from './state.nfl';
 
 import statUpdate from '../live/channels/statUpdate.channel';
 
-import { client, rediskeys } from '../../db/redis';
 import yahooData from '../tests/yahooData';
+import statprice from '../../db/redis/statprice.redis';
+import projprice from '../../db/redis/projprice.redis';
 
 // Get all latest statlines and filter out ones we don't care about
 export async function GetNewStats() {
@@ -102,15 +103,6 @@ export function EstimateProjection(playerid: number, statpoints: number) {
 
 // Set values in redis and publish an update
 export function SetValues(playerVals: PlayerValType[]) {
-  const statvals = playerVals.reduce((acc, cur) => {
-    acc.push(cur.nflplayerID.toString(), cur.statPrice.toString());
-    return acc;
-  }, [] as string[]);
-  const projvals = playerVals.reduce((acc, cur) => {
-    acc.push(cur.nflplayerID.toString(), cur.projPrice.toString());
-    return acc;
-  }, [] as string[]);
-
   const outobj = playerVals.reduce((acc, cur) => {
     acc[cur.nflplayerID] = {
       nflplayerID: cur.nflplayerID,
@@ -120,7 +112,7 @@ export function SetValues(playerVals: PlayerValType[]) {
     return acc;
   }, {} as Record<string, PlayerValType>);
 
+  statprice.set(playerVals);
+  projprice.set(playerVals);
   if (playerVals.length) statUpdate.pub(outobj);
-  if (statvals.length) client.HSET(rediskeys.statpriceHash(), statvals);
-  if (projvals.length) client.HSET(rediskeys.projpriceHash(), projvals);
 }

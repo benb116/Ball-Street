@@ -1,6 +1,6 @@
 import Joi from 'joi';
 import { RosterPositions } from '../../../config';
-import { client, rediskeys } from '../../../db/redis';
+import projprice from '../../../db/redis/projprice.redis';
 
 import { validate } from '../../util/util';
 import validators from '../../util/util.schema';
@@ -33,7 +33,7 @@ function getContestEntries(req: GetContestEntriesInput) {
     .then(async (out) => {
       // Get all player proj values
       // Possible improvement: build list of players to get instead of all, use HMGET
-      const projMap = await client.HGETALL(rediskeys.projpriceHash());
+      const projMap = await projprice.getall();
       // For each entry
       return out.map((e) => {
         // Calculate the projected total starting with the balance
