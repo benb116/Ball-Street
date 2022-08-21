@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/lines-between-class-members */
 import Sequelize, {
   Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
 } from 'sequelize';

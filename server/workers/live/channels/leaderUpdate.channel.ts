@@ -2,9 +2,8 @@ import liveState from '../state.live'; // Data stored in memory
 
 import { MessageMapType, sendToContests } from '../socket.live';
 
-import { rediskeys, client } from '../../../db/redis';
-
-const { leaderHash } = rediskeys;
+import { client } from '../../../db/redis';
+import leader from '../../../db/redis/leaderboard.redis';
 
 const leaderUpdate = {
   pub: function pub() {
@@ -18,12 +17,12 @@ const leaderUpdate = {
         leaderMemo[thecontestID] = null;
       }
     });
-    const allContests = Object.keys(leaderMemo);
+    const allContests = Object.keys(leaderMemo).map(Number);
     const allLeaders = await Promise.all(
-      allContests.map((cID) => client.GET(leaderHash(Number(cID)))),
+      allContests.map((cID) => leader.get(cID)),
     );
     const leaderMsgMap = allContests.reduce((acc, cur, i) => {
-      acc[cur] = { event: 'leaderboard', leaderboard: JSON.parse(allLeaders[i] || '[]') };
+      acc[cur] = { event: 'leaderboard', leaderboard: allLeaders[i] };
       return acc;
     }, {} as MessageMapType);
     sendToContests(leaderMsgMap);

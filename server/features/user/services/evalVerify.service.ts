@@ -4,9 +4,8 @@ import { verificationTokenLength } from '../../../config';
 
 import { validate, uError } from '../../util/util';
 
-import { rediskeys, client } from '../../../db/redis';
-
 import User from '../user.model';
+import emailVer from '../../../db/redis/emailVer.redis';
 
 const schema = Joi.object({
   token: Joi.string().length(verificationTokenLength).required().messages({
@@ -24,9 +23,9 @@ interface EvalVerifyInput {
 async function evalVerify(req: EvalVerifyInput) {
   const value: EvalVerifyInput = validate(req, schema);
   const { token } = value;
-  const email = await client.GET(rediskeys.emailVer(token));
+  const email = await emailVer.get(token);
   if (!email) return uError('Email could not be verified', 404);
-  client.DEL(rediskeys.emailVer(token));
+  emailVer.del(token);
   const usersUpdated = await User.update({ verified: true }, {
     where: { email }, returning: true,
   });

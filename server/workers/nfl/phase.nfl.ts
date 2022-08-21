@@ -54,13 +54,14 @@ async function setPhase(teamID: number, newphase: GamePhaseType) {
       },
     });
 
-    // Convert players to points if game ended
-    if (newphase === 'post') await convertTeamPlayers(teamID);
-
     // Announce phase change
     phaseChange.pub(teamID, newphase);
+
     // Delete cache entry
     client.DEL('/nfldata/games');
+
+    // Convert players to points if game ended
+    if (newphase === 'post') await convertTeamPlayers(teamID);
   } catch (error) {
     logger.error(error);
   }

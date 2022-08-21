@@ -8,8 +8,6 @@ import { tobj } from '../../features/util/util';
 import logger from '../../utilities/logger';
 
 import sequelize from '../../db';
-import { rediskeys, client } from '../../db/redis';
-
 import channels from '../live/channels.live';
 
 import tradeAdd from '../../features/trade/services/tradeAdd.service';
@@ -18,6 +16,7 @@ import tradeDrop from '../../features/trade/services/tradeDrop.service';
 import Offer from '../../features/offer/offer.model';
 import Trade from '../../features/trade/trade.model';
 import PriceHistory from '../../features/pricehistory/pricehistory.model';
+import lasttrade from '../../db/redis/lasttrade.redis';
 
 const { offerFilled, priceUpdate, offerCancelled } = channels;
 
@@ -145,7 +144,7 @@ async function attemptFill(t: Transaction, bidid: string, askid: string) {
 
   await Promise.all([createTrade, createHistory]);
 
-  client.HSET(rediskeys.lasttradeHash(contestID), [nflplayerID.toString(), price.toString()]);
+  lasttrade.set(contestID, nflplayerID, price);
   priceUpdate.pub('last', contestID, nflplayerID, price);
   offerFilled.pub(bidoffer.UserId, bidoffer.id);
   offerFilled.pub(askoffer.UserId, askoffer.id);

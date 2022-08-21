@@ -6,7 +6,7 @@ import { CallbackURL, verificationTimeout, verificationTokenLength } from '../..
 import { validate, uError } from '../../util/util';
 import validators from '../../util/util.schema';
 
-import { client, rediskeys } from '../../../db/redis';
+import passReset from '../../../db/redis/passReset.redis';
 
 const schema = Joi.object({
   email: validators.email,
@@ -22,7 +22,7 @@ async function genPassReset(req: GenPassResetInput) {
   const { email } = value;
   try {
     const rand = cryptoRandomString({ length: verificationTokenLength, type: 'url-safe' });
-    await client.SET(rediskeys.passReset(rand), email, { EX: verificationTimeout * 60 });
+    await passReset.set(rand, email, verificationTimeout * 60);
     return await sendPassResetEmail(email, rand);
   } catch (err) {
     return uError('genPassReset Error', 406);

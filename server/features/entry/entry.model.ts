@@ -1,6 +1,5 @@
 // A users entry into a contest
 // Stores number of points and which players are on the roster
-/* eslint-disable @typescript-eslint/lines-between-class-members */
 import {
   Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes, NonAttribute,
 } from 'sequelize';

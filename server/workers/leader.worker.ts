@@ -5,8 +5,6 @@ import { RosterPositions, RPosType } from '../config';
 
 import { onlyUnique } from '../features/util/util';
 
-import { rediskeys, client } from '../db/redis';
-
 import getNFLPlayers from '../features/nflplayer/services/getNFLPlayers.service';
 import getWeekEntries from '../features/entry/services/getWeekEntries.service';
 
@@ -14,8 +12,8 @@ import leaderUpdate from './live/channels/leaderUpdate.channel';
 
 import NFLGame from '../features/nflgame/nflgame.model';
 import Entry from '../features/entry/entry.model';
-
-const { projpriceHash, leaderHash } = rediskeys;
+import leader from '../db/redis/leaderboard.redis';
+import projprice from '../db/redis/projprice.redis';
 
 // Get player preprice info (used for players without stat info)
 interface PlayerMapItem {
@@ -103,7 +101,7 @@ async function calculateLeaderboard() {
 
   // Pull latest price info for all contests
   // Build one big price map
-  const priceMap = await client.HGETALL(projpriceHash());
+  const priceMap = await projprice.getall();
   if (!priceMap) return;
   // console.log(priceMap);
 
@@ -143,7 +141,7 @@ async function calculateLeaderboard() {
   contests.forEach((c: number) => {
     const cleader = contestSplit[c];
     cleader.sort((a:LeaderItemType, b:LeaderItemType) => ((a.total < b.total) ? 1 : -1));
-    client.SET(leaderHash(c), JSON.stringify(cleader));
+    leader.set(c, cleader);
   });
 
   // Announce new results

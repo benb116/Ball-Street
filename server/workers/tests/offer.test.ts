@@ -3,9 +3,10 @@ import WebSocket from 'ws';
 import axios from 'axios';
 
 import createOffer from '../../features/offer/services/createOffer.service';
-import { rediskeys, client } from '../../db/redis';
-import { ProtectionDelay, RefreshTime } from '../../config';
 import { TestPromiseMap } from '../../features/util/util.tests';
+import bestbid from '../../db/redis/bestbid.redis';
+import bestask from '../../db/redis/bestask.redis';
+import { ProtectionDelay, RefreshTime } from '../../config';
 
 const contestID = 3;
 
@@ -66,8 +67,8 @@ function initWS(cookie: string) {
 }
 
 async function run() {
-  await client.HSET(rediskeys.bestbidHash(contestID), ['21', '0']);
-  await client.HSET(rediskeys.bestaskHash(contestID), ['21', '0']);
+  await bestbid.set(contestID, 21, 0);
+  await bestask.set(contestID, 21, 0);
 
   const session1 = await getSessionID('email1@gmail.com');
   const ws1 = initWS(session1);

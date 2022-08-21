@@ -74,5 +74,5 @@ jobs:
       run: docker-compose logs
     
     - name: Run tests
-      run: WEEK=14 ../node_modules/.bin/jest --forceExit
-      working-directory: server/dist
+      run: WEEK=14 npm run test
+      working-directory: server

@@ -1,6 +1,7 @@
 import logger from '../../utilities/logger';
 
-import { rediskeys, client } from '../../db/redis';
+import bestbid from '../../db/redis/bestbid.redis';
+import bestask from '../../db/redis/bestask.redis';
 
 import priceUpdate from '../live/channels/priceUpdate.channel';
 
@@ -89,15 +90,15 @@ export function updateBest(playerBook: Book) {
   const bestbids = [playerBook.bestbid, playerBook.bestpbid].filter((e) => e !== null).map(Number);
   const bestasks = [playerBook.bestask, playerBook.bestpask].filter((e) => e !== null).map(Number);
 
-  let bestbid = 0;
-  let bestask = 0;
-  if (bestbids.length === 2) bestbid = Math.max(...bestbids);
-  if (bestbids.length === 1) [bestbid] = bestbids;
-  if (bestasks.length === 2) bestask = Math.min(...bestasks);
-  if (bestasks.length === 1) [bestask] = bestasks;
+  let playerbestbid = 0;
+  let playerbestask = 0;
+  if (bestbids.length === 2) playerbestbid = Math.max(...bestbids);
+  if (bestbids.length === 1) [playerbestbid] = bestbids;
+  if (bestasks.length === 2) playerbestask = Math.min(...bestasks);
+  if (bestasks.length === 1) [playerbestask] = bestasks;
 
-  client.HSET(rediskeys.bestbidHash(contestID), [nflplayerID.toString(), bestbid.toString()]);
-  client.HSET(rediskeys.bestaskHash(contestID), [nflplayerID.toString(), bestask.toString()]);
+  bestbid.set(contestID, nflplayerID, playerbestbid);
+  bestask.set(contestID, nflplayerID, playerbestask);
 
-  priceUpdate.pub('best', contestID, nflplayerID, bestbid, bestask);
+  priceUpdate.pub('best', contestID, nflplayerID, playerbestbid, playerbestask);
 }
