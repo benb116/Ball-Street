@@ -175,7 +175,7 @@ class Book {
       .reduce((acc, cur) => [...acc, ...cur], []) // concat all
       .map((e) => e[1]);
 
-    // Search protected opposite offers that are newer than this offer
+    // Search protected opposite offers that have not been matched
     const theptree = this.whichTree(!isbid, true);
     const allMatchingPPrices = Object.keys(theptree)
       .map(Number)
@@ -184,8 +184,8 @@ class Book {
       .map((p) => theptree[p])
       .map((l) => [...l.entries()])
       .reduce((acc, cur) => [...acc, ...cur], []) // concat all
-    // only offers submitted after protected
-      .filter((e) => e[1].createdAt > offer.createdAt)
+    // only offers that have not been matched
+      .filter((e) => !this.protMatchMap[e[0]])
       .map((e) => e[1]);
     return [...allMatchingOffers, ...allMatchingPOffers];
   }

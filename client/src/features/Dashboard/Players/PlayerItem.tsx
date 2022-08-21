@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
 
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
-import RenderPrice from '../../../helpers/util';
+import { ActionButton, RenderPrice } from '../../../helpers/util';
 
 import { isOnRosterSelector } from '../Entry/Entry.slice';
 import { setModal } from '../Modal/Modal.slice';
@@ -115,30 +115,6 @@ function PlayerItem({ playerdata }: { playerdata: PlayerItemType }) {
     </tr>
   );
 }
-
-// Show correct action button
-function ActionButton({ thephase, oclick, text }: { thephase: string, oclick: () => void, text: string }) {
-  if (thephase !== 'pre' && thephase !== 'mid') {
-    return (<td />);
-  }
-  return (
-    <td style={{ textAlign: 'center', width: '3rem' }}>
-      <button
-        className="ActionButton"
-        onClick={oclick}
-        type="button"
-      >
-        {text}
-      </button>
-    </td>
-  );
-}
-
-ActionButton.propTypes = {
-  thephase: PropTypes.string.isRequired,
-  oclick: PropTypes.func.isRequired,
-  text: PropTypes.string.isRequired,
-};
 
 PlayerItem.propTypes = {
   playerdata: PropTypes.shape({
