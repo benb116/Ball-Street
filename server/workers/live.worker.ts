@@ -11,7 +11,13 @@ import logger from '../utilities/logger';
 import liveState from './live/state.live'; // Data stored in memory
 import channelMap from './live/channels.live';
 
-import { client, subscriber, rediskeys } from '../db/redis';
+import { subscriber } from '../db/redis';
+import leader from '../db/redis/leaderboard.redis';
+import bestbid from '../db/redis/bestbid.redis';
+import bestask from '../db/redis/bestask.redis';
+import lasttrade from '../db/redis/lasttrade.redis';
+import statprice from '../db/redis/statprice.redis';
+import projprice from '../db/redis/projprice.redis';
 
 // All channels that may be used
 
@@ -66,7 +72,7 @@ wss.on('connection', async (ws, request: Request) => {
   ws.send(JSON.stringify({ event: 'priceUpdate', pricedata: await sendLatest(contestID) }));
   ws.send(JSON.stringify({
     event: 'leaderboard',
-    leaderboard: JSON.parse(await client.GET(rediskeys.leaderHash(contestID)) || '[]'),
+    leaderboard: await leader.get(contestID),
   }));
 
   ws.on('close', () => {
@@ -81,20 +87,19 @@ server.listen(process.env.LIVE_PORT, () => {
 
 // Send latest points and stat info
 async function sendLatest(contestID: number) {
-  const stats = client.HGETALL(rediskeys.statpriceHash());
-  const projs = client.HGETALL(rediskeys.projpriceHash());
-  const bbids = client.HGETALL(rediskeys.bestbidHash(contestID));
-  const basks = client.HGETALL(rediskeys.bestaskHash(contestID));
-  const lasts = client.HGETALL(rediskeys.lasttradeHash(contestID));
+  const stats = statprice.getall();
+  const projs = projprice.getall();
+  const bbids = bestbid.getall(contestID);
+  const basks = bestask.getall(contestID);
+  const lasts = lasttrade.getall(contestID);
   return Promise.all([stats, projs, bbids, basks, lasts]).then((out) => {
-    interface ValueOut {
-      [key: string]: string
-    }
-    const statsOut: ValueOut = out[0];
-    const projsOut: ValueOut = out[1];
-    const bbidsOut: ValueOut = out[2];
-    const basksOut: ValueOut = out[3];
-    const lastsOut: ValueOut = out[4];
+    type ValueOut = Record<number, number>;
+
+    const statsOut = out[0];
+    const projsOut = out[1];
+    const bbidsOut = out[2];
+    const basksOut = out[3];
+    const lastsOut = out[4];
 
     interface LatestItem {
       statPrice: number,
@@ -108,22 +113,23 @@ async function sendLatest(contestID: number) {
 
     function buildObj(outobj: ValueOut, label: string) {
       if (outobj) {
-        Object.keys(outobj).forEach((p: string) => {
-          if (!retobj[p]) {
-            retobj[p] = {
+        Object.keys(outobj).forEach((p) => {
+          const np = Number(p);
+          if (!retobj[np]) {
+            retobj[np] = {
               statPrice: 0,
               projPrice: 0,
               bestbid: 0,
               bestask: 0,
               lastprice: 0,
-              nflplayerID: Number(p),
+              nflplayerID: np,
             };
           }
-          if (label === 'statPrice') retobj[p].statPrice = Number(outobj[p]);
-          if (label === 'projPrice') retobj[p].projPrice = Number(outobj[p]);
-          if (label === 'bestbid') retobj[p].bestbid = Number(outobj[p]);
-          if (label === 'bestask') retobj[p].bestask = Number(outobj[p]);
-          if (label === 'lastprice') retobj[p].lastprice = Number(outobj[p]);
+          if (label === 'statPrice') retobj[np].statPrice = Number(outobj[np]);
+          if (label === 'projPrice') retobj[np].projPrice = Number(outobj[np]);
+          if (label === 'bestbid') retobj[np].bestbid = Number(outobj[np]);
+          if (label === 'bestask') retobj[np].bestask = Number(outobj[np]);
+          if (label === 'lastprice') retobj[np].lastprice = Number(outobj[np]);
         });
       }
     }
