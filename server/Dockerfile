@@ -2,7 +2,6 @@
 # Used to build all Node workers
 # Different entrypoints defined in docker compose
 FROM node:16-alpine3.13 as development
-RUN apk --no-cache --virtual build-dependencies add python3 make g++
 # Use non-privileged user and make new folder for files
 USER node 
 RUN mkdir -p /home/node/app/
