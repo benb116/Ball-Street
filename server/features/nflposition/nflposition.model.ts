@@ -1,6 +1,5 @@
 // Model for an NFL Position (e.g. WR, DEF, not WR1, DEF1)
 
-/* eslint-disable @typescript-eslint/lines-between-class-members */
 import {
   Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
 } from 'sequelize';

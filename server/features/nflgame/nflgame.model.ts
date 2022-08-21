@@ -1,7 +1,6 @@
 // Info about an NFL Game
 // Home team, away team, week #, and start timestamp
 // Also includes a phase to determine whether players can be traded
-/* eslint-disable @typescript-eslint/lines-between-class-members */
 import {
   Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
 } from 'sequelize';

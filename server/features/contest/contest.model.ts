@@ -2,7 +2,6 @@
 // Each contest runs over the cource of one NFL Week
 // Players start with a budget of points to spend
 
-/* eslint-disable @typescript-eslint/lines-between-class-members */
 import {
   Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
 } from 'sequelize';
