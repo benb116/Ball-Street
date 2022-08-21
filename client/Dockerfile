@@ -14,6 +14,7 @@ COPY --chown=node:node ./client/package.json ./
 COPY --chown=node:node ./client/package-lock.json ./
 RUN npm install
 
+COPY --chown=node:node ./types ../types
 COPY --chown=node:node ./client ./
 # Prevent warnings and errors from stopping server
 ENV DISABLE_ESLINT_PLUGIN=true
