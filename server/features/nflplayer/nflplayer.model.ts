@@ -1,5 +1,4 @@
 // Model for an NFL Player (e.g. Tom Brady)
-/* eslint-disable @typescript-eslint/lines-between-class-members */
 import {
   Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
 } from 'sequelize';
