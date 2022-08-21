@@ -27,7 +27,7 @@ jobs:
         node-version: '16'
 
     - name: Install server dependencies
-      run: npm install --production=false # install dev dependencies too
+      run: npm install
       working-directory: server
       
     - name: Run ESLint - Server
@@ -39,7 +39,7 @@ jobs:
       working-directory: server
 
     - name: Install client dependencies
-      run: npm install --production=false # install dev dependencies too
+      run: npm install
       working-directory: client
       
     - name: Run ESLint - Client

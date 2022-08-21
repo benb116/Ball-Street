@@ -28,6 +28,7 @@ services:
         build:
             context: .
             dockerfile: ./server/Dockerfile
+            target: production
         image: ${DOCKERHUB_USERNAME}/ball_street:server
         container_name: api
         env_file: .env
@@ -46,6 +47,7 @@ services:
         build:
             context: .
             dockerfile: ./server/Dockerfile
+            target: production
         image: ${DOCKERHUB_USERNAME}/ball_street:server
         container_name: leader
         env_file: .env
@@ -65,6 +67,7 @@ services:
         build:
             context: .
             dockerfile: ./server/Dockerfile
+            target: production
         image: ${DOCKERHUB_USERNAME}/ball_street:server
         container_name: offer
         env_file: .env
@@ -84,6 +87,7 @@ services:
         build:
             context: .
             dockerfile: ./server/Dockerfile
+            target: production
         image: ${DOCKERHUB_USERNAME}/ball_street:server
         container_name: live
         env_file: .env
@@ -102,6 +106,7 @@ services:
         build:
             context: .
             dockerfile: ./server/Dockerfile
+            target: production
         image: ${DOCKERHUB_USERNAME}/ball_street:server
         container_name: nfl
         env_file: .env
