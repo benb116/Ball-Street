@@ -1,5 +1,7 @@
 import { store } from '../../app/store';
 
+import type MessageType from '../../../../types/messages';
+
 import { setPhase, updatePrices, setInjury } from './Players/Players.slice';
 import { removeOffer, alertProtMatch } from './Offers/Offers.slice';
 import { offerFilled } from './Entry/Entry.slice';
@@ -20,7 +22,7 @@ const initWS = (contestID: string) => {
   // Listen for messages
   socket.addEventListener('message', (event) => {
     // console.log('Message from server ', event.data);
-    const msg = JSON.parse(event.data);
+    const msg = JSON.parse(event.data) as MessageType;
     if (Array.isArray(msg)) {
       msg.filter((u) => u).forEach(markPrice);
     } else {

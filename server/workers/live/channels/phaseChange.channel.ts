@@ -7,7 +7,8 @@ const phaseChange = {
     client.publish('phaseChange', JSON.stringify({ nflTeamID, gamePhase }));
   },
   sub: function sub(message: string) {
-    sendToAll({ event: 'phaseChange', phase: JSON.parse(message) });
+    const phase = JSON.parse(message);
+    sendToAll({ event: 'phaseChange', phase });
   },
 };
 

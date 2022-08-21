@@ -1,19 +1,16 @@
+import type { PlayerValType } from '../../../../types/messages/statUpdate.message';
+
 import { sendToAll } from '../socket.live';
 
 import { client } from '../../../db/redis';
 
-export interface StatUpdateType {
-  nflplayerID: number,
-  statPrice: number,
-  projPrice: number,
-}
-
 const statUpdate = {
-  pub: function pub(obj: Record<string, StatUpdateType>) {
+  pub: function pub(obj: Record<number, PlayerValType>) {
     client.publish('statUpdate', JSON.stringify(obj));
   },
   sub: function sub(message: string) {
-    sendToAll({ event: 'statUpdate', pricedata: JSON.parse(message) });
+    const pricedata = JSON.parse(message) as Record<number, PlayerValType>;
+    sendToAll({ event: 'statUpdate', pricedata });
   },
 };
 

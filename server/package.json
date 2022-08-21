@@ -25,6 +25,7 @@
     "winston": "^3.8.1",
     "ws": "^8.8.0"
   },
+  "files": ["../types/messages/*"],
   "scripts": {
     "test": "jest"
   },

@@ -1,5 +1,5 @@
 export interface LeaderItemType {
   id: number,
-  user: number,
+  user: string,
   total: number
 }
