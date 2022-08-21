@@ -7,8 +7,8 @@ import { MessageMapType, sendToContests } from '../socket.live';
 import { client } from '../../../db/redis';
 
 const priceUpdate = {
-  pub: function pub(pubtype: 'best' | 'last', contestID: number, nflplayerID: number, bestbid: number, bestask: number) {
-    if (pubtype === 'best') {
+  pub: function pub(type: 'best' | 'last', contestID: number, nflplayerID: number, bestbid: number, bestask: number) {
+    if (type === 'best') {
       client.publish('priceUpdate', JSON.stringify({
         contestID,
         nflplayerID,
@@ -16,7 +16,7 @@ const priceUpdate = {
         bestask,
       }));
     }
-    if (pubtype === 'last') {
+    if (type === 'last') {
       client.publish('priceUpdate', JSON.stringify({
         contestID,
         nflplayerID,
