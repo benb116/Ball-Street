@@ -3,7 +3,8 @@ import { ErrorTest, ObjectTest } from '../../util/util.tests';
 
 describe('deposit service', () => {
   test('Valid request returns data and creates ledger entry', ObjectTest(
-    service, { user: 4, params: {}, body: { amount: 300 } },
+    service,
+    { user: 4, params: {}, body: { amount: 300 } },
     {
       ContestId: null,
       LedgerKindId: 1,
@@ -20,17 +21,23 @@ describe('deposit service', () => {
   ));
 
   test('Bad value returns error 400', ErrorTest(
-    service, { user: 4, params: {}, body: { amount: -100 } },
-    400, 'Deposit amount must be positive',
+    service,
+    { user: 4, params: {}, body: { amount: -100 } },
+    400,
+    'Deposit amount must be positive',
   ));
 
   test('Missing user returns error 404', ErrorTest(
-    service, { user: 92, params: {}, body: { amount: 100 } },
-    404, 'No user found',
+    service,
+    { user: 92, params: {}, body: { amount: 100 } },
+    404,
+    'No user found',
   ));
 
   test('Missing amount returns error 400', ErrorTest(
-    service, { user: 4, params: {}, body: { } },
-    400, 'Deposit amount is invalid',
+    service,
+    { user: 4, params: {}, body: { } },
+    400,
+    'Deposit amount is invalid',
   ));
 });

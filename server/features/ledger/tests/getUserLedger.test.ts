@@ -3,7 +3,8 @@ import { ErrorTest, ArrayTest } from '../../util/util.tests';
 
 describe('getUserOffers service', () => {
   test('Valid request returns data', ArrayTest(
-    service, { user: 3, params: {}, body: {} },
+    service,
+    { user: 3, params: {}, body: {} },
     [{
       ContestId: 2,
       LedgerKind: {
@@ -70,12 +71,15 @@ describe('getUserOffers service', () => {
   ));
 
   test('Valid page 2 request returns empty', ArrayTest(
-    service, { user: 3, params: { page: 2 }, body: {} },
+    service,
+    { user: 3, params: { page: 2 }, body: {} },
     [],
   ));
 
   test('Missing userID returns error 400', ErrorTest(
-    service, { params: { }, body: {} },
-    400, 'You must be logged in',
+    service,
+    { params: { }, body: {} },
+    400,
+    'You must be logged in',
   ));
 });

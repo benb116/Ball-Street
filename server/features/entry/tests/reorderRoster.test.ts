@@ -3,7 +3,8 @@ import { ErrorTest, ObjectTest } from '../../util/util.tests';
 
 describe('reorderRoster service', () => {
   test('Valid request between same position returns data', ObjectTest(
-    service, { user: 3, params: { contestID: 1 }, body: { pos1: 'RB1', pos2: 'RB2' } },
+    service,
+    { user: 3, params: { contestID: 1 }, body: { pos1: 'RB1', pos2: 'RB2' } },
     {
       ContestId: 1,
       DEF1: null,
@@ -24,7 +25,8 @@ describe('reorderRoster service', () => {
   ));
 
   test('Valid request between FLEX returns data', ObjectTest(
-    service, { user: 3, params: { contestID: 1 }, body: { pos1: 'RB2', pos2: 'FLEX1' } },
+    service,
+    { user: 3, params: { contestID: 1 }, body: { pos1: 'RB2', pos2: 'FLEX1' } },
     {
       ContestId: 1,
       DEF1: null,
@@ -45,12 +47,15 @@ describe('reorderRoster service', () => {
   ));
 
   test('RB from FLEX to WR returns error', ErrorTest(
-    service, { user: 3, params: { contestID: 1 }, body: { pos1: 'FLEX1', pos2: 'WR1' } },
-    406, 'Cannot put that player in that position',
+    service,
+    { user: 3, params: { contestID: 1 }, body: { pos1: 'FLEX1', pos2: 'WR1' } },
+    406,
+    'Cannot put that player in that position',
   ));
 
   test('Reset request returns data', ObjectTest(
-    service, { user: 3, params: { contestID: 1 }, body: { pos1: 'FLEX1', pos2: 'RB1' } },
+    service,
+    { user: 3, params: { contestID: 1 }, body: { pos1: 'FLEX1', pos2: 'RB1' } },
     {
       ContestId: 1,
       DEF1: null,
@@ -71,27 +76,37 @@ describe('reorderRoster service', () => {
   ));
 
   test('Request between disparate positions returns error 406', ErrorTest(
-    service, { user: 3, params: { contestID: 1 }, body: { pos1: 'RB1', pos2: 'QB1' } },
-    406, 'Cannot put that player in that position',
+    service,
+    { user: 3, params: { contestID: 1 }, body: { pos1: 'RB1', pos2: 'QB1' } },
+    406,
+    'Cannot put that player in that position',
   ));
 
   test('Request for non-flex returns error 406', ErrorTest(
-    service, { user: 3, params: { contestID: 1 }, body: { pos1: 'QB1', pos2: 'FLEX1' } },
-    406, 'Cannot put a non-flex player in a flex position',
+    service,
+    { user: 3, params: { contestID: 1 }, body: { pos1: 'QB1', pos2: 'FLEX1' } },
+    406,
+    'Cannot put a non-flex player in a flex position',
   ));
 
   test('Missing contestID returns error 400', ErrorTest(
-    service, { user: 1, params: { }, body: { pos1: 'RB1', pos2: 'FLEX1' } },
-    400, 'Please specify a contest',
+    service,
+    { user: 1, params: { }, body: { pos1: 'RB1', pos2: 'FLEX1' } },
+    400,
+    'Please specify a contest',
   ));
 
   test('Missing userID returns error 400', ErrorTest(
-    service, { params: { contestID: 1 }, body: { pos1: 'RB1', pos2: 'FLEX1' } },
-    400, 'You must be logged in',
+    service,
+    { params: { contestID: 1 }, body: { pos1: 'RB1', pos2: 'FLEX1' } },
+    400,
+    'You must be logged in',
   ));
 
   test('Non-existent contest returns error 404', ErrorTest(
-    service, { user: 1, params: { contestID: 80 }, body: { pos1: 'RB1', pos2: 'FLEX1' } },
-    404, 'No entry found',
+    service,
+    { user: 1, params: { contestID: 80 }, body: { pos1: 'RB1', pos2: 'FLEX1' } },
+    404,
+    'No entry found',
   ));
 });

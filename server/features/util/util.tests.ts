@@ -14,12 +14,10 @@ function dv(inp: Model | Model[] | any) {
 
 // Functions used in Jest testing
 // Ensures that a service call returns an object with specific properties
-export const ObjectTest = function ObjectTest(
-  service: ServiceType, req: unknown, contains: ObjectType, resetQuery = '',
-) {
+export const ObjectTest = function ObjectTest(service: ServiceType, req: unknown, contains: ObjectType, reset = '') {
   return async () => service(req).then(async (resp: unknown) => {
     expect(dv(resp)).toStrictEqual(contains);
-    if (resetQuery) await sequelize.query(resetQuery);
+    if (reset) await sequelize.query(reset);
   });
 };
 
@@ -35,9 +33,7 @@ export const ArrayTest = function ArrayTest(service: ServiceType, req: unknown, 
 };
 
 // Ensures that a service call throws an error with specific status number and message
-export const ErrorTest = function ErrorTest(
-  service: ServiceType, req: unknown, statusNumber: number, message: string,
-) {
+export const ErrorTest = function ErrorTest(service: ServiceType, req: unknown, statusNumber: number, message: string) {
   return async function errortest() {
     try {
       const o = await service(req);
