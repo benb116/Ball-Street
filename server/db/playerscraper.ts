@@ -8,7 +8,7 @@ import NFLPlayer from '../features/nflplayer/nflplayer.model';
 import teams from '../nflinfo';
 
 // eslint-disable-next-line max-len
-const baseurl = (posget: string, weeknum: number) => `https://football.fantasysports.yahoo.com/f1/316236/players?status=ALL&pos=${posget}&cut_type=9&stat1=S_PW_${weeknum}&myteam=1&sort=PTS&sdir=1&count=`;
+const baseurl = (posget: string, weeknum: number) => `https://football.fantasysports.yahoo.com/f1/590922/players?status=ALL&pos=${posget}&cut_type=9&stat1=S_PW_${weeknum}&myteam=1&sort=PTS&sdir=1&count=`;
 const cookie = process.env.YAHOO_COOKIE;
 let currentweek = 3;
 
@@ -64,7 +64,7 @@ async function sendreq(price: boolean, pagenum = 0, posget = 'O') {
         if (['P', 'Q', 'D'].indexOf(injuryStatus) === -1) injuryStatus = 'O';
       }
       // Player object that will be added to DB
-      const outobj = new NFLPlayer({
+      const outobj = {
         id: (posget === 'DEF' ? teams[team.toUpperCase()].id : Number(id)),
         name,
         NFLTeamId: teams[team.toUpperCase()].id,
@@ -73,7 +73,7 @@ async function sendreq(price: boolean, pagenum = 0, posget = 'O') {
         postprice: (price ? 700 : 0),
         active: true,
         injuryStatus,
-      });
+      } as NFLPlayer;
       return outobj;
     }))
     // If player exists in DB, overwrite certain properties
