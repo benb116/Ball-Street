@@ -13,3 +13,4 @@ server/logs/
 coverage/
 dist/
 **/*.DS_Store
+postgres-data/
