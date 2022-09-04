@@ -3,26 +3,24 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import type { RootState } from '../../../app/store';
 
-import { LeaderItemType } from './Leaderboard.types';
-
 interface LeaderState {
-  leaders: LeaderItemType[]
+  projAverage: number
 }
 const defaultState: LeaderState = {
-  leaders: [],
+  projAverage: 0,
 };
 
 export const leaderboardSlice = createSlice({
   name: 'leaderboard',
   initialState: defaultState,
   reducers: {
-    updateLeaders: (state, { payload }: { payload: LeaderItemType[] }) => {
-      state.leaders = (payload || []);
+    updateAverage: (state, { payload }: { payload: number }) => {
+      state.projAverage = payload;
     },
   },
   extraReducers: {},
 });
 
-export const { updateLeaders } = leaderboardSlice.actions;
+export const { updateAverage } = leaderboardSlice.actions;
 
-export const leadersSelector = (state: RootState) => state.leaderboard.leaders;
+export const averageSelector = (state: RootState) => state.leaderboard.projAverage;

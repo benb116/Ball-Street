@@ -8,12 +8,15 @@ import { onlyUnique } from '../features/util/util';
 import getNFLPlayers from '../features/nflplayer/services/getNFLPlayers.service';
 import getWeekEntries from '../features/entry/services/getWeekEntries.service';
 
-import leaderUpdate from './live/channels/leaderUpdate.channel';
+import leaderUpdate from './live/channels/projAvgUpdate.channel';
 
 import NFLGame from '../features/nflgame/nflgame.model';
 import Entry from '../features/entry/entry.model';
-import leader from '../db/redis/leaderboard.redis';
+
 import projprice from '../db/redis/projprice.redis';
+import projAvg from '../db/redis/projAvg.redis';
+
+const average = (array: number[]) => array.reduce((a, b) => a + b) / array.length;
 
 // Get player preprice info (used for players without stat info)
 interface PlayerMapItem {
@@ -40,6 +43,9 @@ let phaseHold = false;
     return acc;
   }, {});
 })();
+
+calculateLeaderboard();
+setInterval(calculateLeaderboard, 10000);
 
 async function calculateLeaderboard() {
   // Get current game phases (used to determine which point value to use)
@@ -120,33 +126,28 @@ async function calculateLeaderboard() {
           return acc;
       }
     }, e.balance);
+
     return { ...e, total };
   });
   // console.log(projTotals);
 
-  interface LeaderItemType {
-    user: string,
-    id: number,
-    total: number,
-  }
   // Bin entries in an array for each contest
-  const contestSplit = projTotals.reduce((acc: Record<string, LeaderItemType[]>, cur) => {
-    if (!acc[cur.contest]) { acc[cur.contest] = []; }
-    acc[cur.contest].push({ user: cur.username, id: cur.userID, total: cur.total });
+  // Also bin all totals for calculation
+  const contestProjTotals = projTotals.reduce((acc: Record<number, number[]>, cur) => {
+    // eslint-disable-next-line no-param-reassign
+    if (!acc[cur.contest]) acc[cur.contest] = [];
+    acc[cur.contest].push(Math.max(0, cur.total));
+
     return acc;
   }, {});
   // console.log(contestSplit);
 
   // For each contest, sort and store
   contests.forEach((c: number) => {
-    const cleader = contestSplit[c];
-    cleader.sort((a:LeaderItemType, b:LeaderItemType) => ((a.total < b.total) ? 1 : -1));
-    leader.set(c, cleader);
+    const avgProjTotal = Math.ceil(average(contestProjTotals[c]));
+    projAvg.set(c, avgProjTotal);
   });
 
   // Announce new results
   leaderUpdate.pub();
 }
-
-calculateLeaderboard();
-setInterval(calculateLeaderboard, 10000);

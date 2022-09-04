@@ -3,9 +3,8 @@ import { store } from '../../app/store';
 import { setPhase, updatePrices, setInjury } from './Players/Players.slice';
 import { removeOffer, alertProtMatch } from './Offers/Offers.slice';
 import { offerFilled } from './Entry/Entry.slice';
-import { updateLeaders } from './Leaderboard/Leaderboard.slice';
+import { updateAverage } from './Leaderboard/Leaderboard.slice';
 import { PhaseType, PriceMapItemType } from './Players/Players.types';
-import { LeaderItemType } from './Leaderboard/Leaderboard.types';
 import API from '../../helpers/api';
 
 // Init WS connection and dispatch actions based on events
@@ -36,8 +35,8 @@ const initWS = (contestID: string) => {
         case 'protectedMatch':
           protMatch(msg);
           break;
-        case 'leaderboard':
-          upLead(msg.leaderboard);
+        case 'contestAvg':
+          upAverage(msg.average);
           break;
         case 'phaseChange':
           newPhase(msg.phase);
@@ -97,8 +96,8 @@ function protMatch({ offerID, expire }: { offerID: string, expire: number }) {
   store.dispatch(alertProtMatch({ offerID, expire }));
 }
 
-function upLead(board: LeaderItemType[]) {
-  store.dispatch(updateLeaders(board));
+function upAverage(average: number) {
+  store.dispatch(updateAverage(average));
 }
 
 function newPhase(nphase: { nflTeamID: number, gamePhase: PhaseType, }) {
