@@ -10,13 +10,13 @@ import OfferModal from './Modal/Modal';
 
 import initWS from './ws';
 
-const Dashboard = () => {
+function Dashboard() {
   const { contestID } = useParams<{ contestID: string }>();
   useEffect(() => {
   // Init the WS for a specific contest
     if (contestID) initWS(contestID);
   }, [contestID]);
-  if (!contestID) return <></>;
+  if (!contestID) return <>No Contest ID</>;
 
   return (
     <div
@@ -57,6 +57,6 @@ const Dashboard = () => {
       <OfferModal contestID={contestID} />
     </div>
   );
-};
+}
 
 export default Dashboard;

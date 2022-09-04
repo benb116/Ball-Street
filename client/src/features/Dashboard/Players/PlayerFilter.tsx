@@ -22,7 +22,7 @@ const debounce = (fn: (a: EventType) => void, ms = 300) => {
 
 // Player list filter
 // Name, Position, Team, Game, Game phase
-const PlayerFilter = () => {
+function PlayerFilter() {
   const dispatch = useAppDispatch();
   const filters = useAppSelector(filterSelector);
   const thegames = useAppSelector(allGamesSelector);
@@ -103,6 +103,6 @@ const PlayerFilter = () => {
       </select>
     </form>
   );
-};
+}
 
 export default PlayerFilter;

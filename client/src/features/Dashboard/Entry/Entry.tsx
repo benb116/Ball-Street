@@ -13,11 +13,11 @@ import RosterItem from './RosterItem';
 import { RosterPositions } from './Entry.types';
 
 // Display the user's current entry (balance + players)
-const Entry = () => {
+function Entry() {
   const { contestID } = useParams<{ contestID: string }>();
   const thisentry = useAppSelector(entrySelector);
 
-  if (!contestID) return <></>;
+  if (!contestID) return <>No Contest ID</>;
 
   // Initial data pull
   useGetEntryQuery(contestID);
@@ -52,7 +52,7 @@ const Entry = () => {
       </table>
     </div>
   );
-};
+}
 
 // Table header for the roster
 function RosterHeader() {
