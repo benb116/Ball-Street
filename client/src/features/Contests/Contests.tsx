@@ -10,25 +10,23 @@ import { useGetContestsQuery } from './Contests.api';
 import { ContestItemType } from './Contests.types';
 
 // Show info about all contests available
-const Contests = () => {
+function Contests() {
   useGetContestsQuery();
   const allcontests = useAppSelector(contestsSelector);
   const sortedContests = [...allcontests].sort((a, b) => b.nflweek - a.nflweek);
 
   return (
-    <>
-      <div style={{ marginTop: '10em' }}>
-        <h2>Contests</h2>
-        <div>
-          {sortedContests
-            .map((contest) => <ContestItem key={contest.id} contestdata={contest} />)}
-        </div>
-        <br />
-        <Link className="AppLink" to="/">Home</Link>
+    <div style={{ marginTop: '10em' }}>
+      <h2>Contests</h2>
+      <div>
+        {sortedContests
+          .map((contest) => <ContestItem key={contest.id} contestdata={contest} />)}
       </div>
-    </>
+      <br />
+      <Link className="AppLink" to="/">Home</Link>
+    </div>
   );
-};
+}
 
 function ContestItem({ contestdata }: { contestdata: ContestItemType }) {
   return (

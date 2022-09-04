@@ -6,7 +6,7 @@ import { useAppSelector } from '../../app/hooks';
 import { useGetAccountQuery, useLogoutMutation } from '../User/User.api';
 import { userSelector } from '../User/User.slice';
 
-const Home = () => {
+function Home() {
   const { id, cash, name } = useAppSelector(userSelector);
 
   const [logout] = useLogoutMutation();
@@ -41,6 +41,6 @@ const Home = () => {
         )}
     </div>
   );
-};
+}
 
 export default Home;

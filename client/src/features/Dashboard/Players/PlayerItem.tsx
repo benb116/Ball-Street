@@ -30,7 +30,7 @@ function PlayerItem({ playerdata }: { playerdata: PlayerItemType }) {
   const [preDrop] = usePreDropMutation();
   const [cancelOffer] = useCancelOfferMutation();
 
-  if (!contestID) return <></>;
+  if (!contestID) return <>No Contest ID</>;
 
   // Player's team info
   const thephase = theteams[playerdata.NFLTeamId].phase;

@@ -9,7 +9,7 @@ import { leadersSelector } from './Leaderboard.slice';
 import { LeaderItemType } from './Leaderboard.types';
 
 // Show leaderboard of entries in the contest
-const Leaderboards = () => {
+function Leaderboards() {
   const leaders = useAppSelector(leadersSelector);
   return (
     <div
@@ -27,7 +27,7 @@ const Leaderboards = () => {
       </div>
     </div>
   );
-};
+}
 
 function LeaderboardItem({ leaderdata }: { leaderdata: LeaderItemType }) {
   return (

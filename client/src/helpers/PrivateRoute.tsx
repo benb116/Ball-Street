@@ -7,14 +7,16 @@ interface Props {
   component: React.ComponentType
 }
 
-const PrivateRoute: React.FC<Props> = ({ component: RouteComponent }) => {
+function PrivateRoute(props: Props) {
   const user = useSelector(userSelector);
 
   if (user.id) {
+    const { component } = props;
+    const RouteComponent = component;
     return <RouteComponent />;
   }
 
   return <Navigate to="/" />;
-};
+}
 
 export default PrivateRoute;
