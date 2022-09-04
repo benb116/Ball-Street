@@ -136,7 +136,7 @@ describe('NFL worker tests', () => {
   test('Test injury parsing', async () => {
     const injuryObjects = FormatInjuryObjects(yahoo.injury.data);
     FindInjuryChanges(injuryObjects);
-    expect(injuryObjects.toEqual(yahoo.injury.injuryobjects); // Better way to evaluate than toEqual?
+    expect(injuryObjects).toEqual(yahoo.injury.injuryobjects); // Better way to evaluate than toEqual?
     const newInjury1 = new NFLPlayer({
       id: 30996,
       injuryStatus: 'P',
