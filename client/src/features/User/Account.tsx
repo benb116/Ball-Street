@@ -14,7 +14,7 @@ import {
 import { userSelector } from './User.slice';
 import { DepositWithdrawType, LedgerEntryJoinedType } from './User.types';
 
-const Account = () => {
+function Account() {
   const { register, handleSubmit } = useForm<DepositWithdrawType>();
   const { register: r2, handleSubmit: h2 } = useForm<DepositWithdrawType>();
 
@@ -116,7 +116,7 @@ const Account = () => {
 
     </>
   );
-};
+}
 
 function LedgerEntry({ entrydata }: { entrydata: LedgerEntryJoinedType }) {
   return (

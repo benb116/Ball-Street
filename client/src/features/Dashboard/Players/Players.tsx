@@ -20,7 +20,7 @@ import PlayerItem from './PlayerItem';
 import { GameItemType, SortByType } from './Players.types';
 
 // Show list of all active players
-const Players = () => {
+function Players() {
   useGetPlayersQuery();
   useGetGamesQuery();
 
@@ -145,7 +145,7 @@ const Players = () => {
       </table>
     </div>
   );
-};
+}
 
 // Header row for player list with clickable column titles
 function ListHeader() {
