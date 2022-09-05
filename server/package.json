@@ -9,7 +9,7 @@
   "dependencies": {
     "axios": "^0.27.2",
     "bcryptjs": "^2.4.3",
-    "bull": "^4.8.5",
+    "bull": "^4.9.0",
     "connect-redis": "^6.1.3",
     "cors": "^2.8.5",
     "crypto-random-string": "^3.3.1",
