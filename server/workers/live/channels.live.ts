@@ -2,7 +2,7 @@
 
 import priceUpdate from './channels/priceUpdate.channel';
 import statUpdate from './channels/statUpdate.channel';
-import leaderUpdate from './channels/leaderUpdate.channel';
+import projAvgUpdate from './channels/projAvgUpdate.channel';
 import protectedMatch from './channels/protectedMatch.channel';
 import offerFilled from './channels/offerFilled.channel';
 import offerCancelled from './channels/offerCancelled.channel';
@@ -17,7 +17,7 @@ interface LiveChannel {
 const channelMap: Record<string, LiveChannel> = {
   priceUpdate,
   statUpdate,
-  leaderUpdate,
+  projAvgUpdate,
   protectedMatch,
   offerFilled,
   offerCancelled,
