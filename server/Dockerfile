@@ -1,7 +1,7 @@
 # Server Dockerfile
 # Used to build all Node workers
 # Different entrypoints defined in docker compose
-FROM node:16-alpine3.13 as development
+FROM node:17-alpine3.13 as development
 # Use non-privileged user and make new folder for files
 USER node 
 RUN mkdir -p /home/node/app/
