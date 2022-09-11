@@ -78,7 +78,7 @@ function PlayerFilter() {
         {thegames.map((g, i) => {
           if (g && g.phase !== 'post') { // Hide games in post
             return (
-              <option key={g.HomeId} value={i}>
+              <option key={`${g.HomeId}-${g.AwayId}`} value={i}>
                 {g.away.abr}
                 {' '}
                 vs.
