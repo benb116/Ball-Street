@@ -48,7 +48,7 @@ const defaultState: PlayerState = {
     phase: '',
     injury: '',
   },
-  sortProp: 'preprice', // current sort metric
+  sortProp: 'projPrice', // current sort metric
   sortDesc: true,
 };
 
