@@ -1,7 +1,8 @@
 import Modal from 'react-modal';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
+import toast from 'react-hot-toast';
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 
 import { modalSelector, modalStatusSelector, closeModal } from './Modal.slice';
@@ -34,20 +35,26 @@ function OfferModal({ contestID }: { contestID: string }) {
   const modalIsOpen = useAppSelector(modalStatusSelector);
   const modalInfo = useAppSelector(modalSelector);
 
-  function afterOpenModal() {
-    // references are now sync'd and can be accessed.
-  }
+  const [userPrice, setUserPrice] = useState((modalInfo.price / 100).toString());
+
+  useEffect(() => {
+    setUserPrice((modalInfo.price / 100).toString());
+  }, [modalInfo, dispatch]);
 
   function close() {
     dispatch(closeModal());
   }
   function handleClick(data: ModalType) {
     // eslint-disable-next-line no-param-reassign
-    data.price *= 100;
+    const thisprice = Number(userPrice) * 100;
+    if (Number.isNaN(thisprice)) {
+      toast.error('Please enter a valid price');
+      return;
+    }
     const offerobj = {
       nflplayerID: modalInfo.nflplayerID,
       isbid: modalInfo.isbid,
-      price: data.price,
+      price: thisprice,
       protected: data.protected,
     };
     createOffer({ contestID, offerobj });
@@ -63,8 +70,6 @@ function OfferModal({ contestID }: { contestID: string }) {
     <div>
       <Modal
         isOpen={modalIsOpen}
-        // eslint-disable-next-line react/jsx-no-bind
-        onAfterOpen={afterOpenModal}
         // eslint-disable-next-line react/jsx-no-bind
         onRequestClose={close}
         style={customStyles}
@@ -91,7 +96,8 @@ function OfferModal({ contestID }: { contestID: string }) {
               borderStyle: 'solid',
             }}
             {...register('price')}
-            defaultValue={Math.floor(modalInfo.price / 100)}
+            value={userPrice}
+            onChange={(e) => setUserPrice(e.target.value)}
           />
           <br />
           <span>🔒 Protected</span>
