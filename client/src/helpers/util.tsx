@@ -41,7 +41,9 @@ export const ErrHandler = (_state: unknown, action: { payload: ErrType | unknown
     const err = (action.payload as ErrType);
     if (err.status === 401) {
       localStorage.setItem('isLoggedIn', 'false');
-      // history.push('/login');
+    }
+    if (err.status === 429) {
+      err.data.error = 'Too many requests. Please wait to continue';
     }
     toast.error(err.data.error || 'Unknown error');
   }

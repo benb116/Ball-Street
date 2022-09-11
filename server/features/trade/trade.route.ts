@@ -1,4 +1,5 @@
 import express from 'express';
+import limited from '../../middleware/rateLimiter';
 import routeHandler from '../util/util.route';
 
 import getUserTrades from './services/getUserTrades.service';
@@ -10,10 +11,12 @@ const router = express.Router({ mergeParams: true });
 // Show a user's trades in a contest
 router.get('/trades', routeHandler(getUserTrades));
 
+const addDropLimiter = limited(20);
+
 // Pre-add a player in a contest
-router.post('/add', routeHandler(preTradeAdd));
+router.post('/add', addDropLimiter, routeHandler(preTradeAdd));
 
 // Pre-drop a player in a contest
-router.post('/drop', routeHandler(preTradeDrop));
+router.post('/drop', addDropLimiter, routeHandler(preTradeDrop));
 
 export default router;

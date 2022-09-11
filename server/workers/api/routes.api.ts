@@ -11,13 +11,14 @@ import offerRouter from '../../features/offer/offer.route';
 import tradeRouter from '../../features/trade/trade.route';
 import nflplayerRouter from '../../features/nflplayer/nflplayer.route';
 import contestRouter from '../../features/contest/contest.route';
+import limited from '../../middleware/rateLimiter';
 
 const router = express.Router();
 const contestsRouter = express.Router({ mergeParams: true });
 const thecontestRouter = express.Router({ mergeParams: true });
 
 // NFLdata is public
-router.use('/nfldata/', nfldataRouter);
+router.use('/nfldata/', limited(20), nfldataRouter);
 
 // For all else, require authentication
 router.use(authenticate);

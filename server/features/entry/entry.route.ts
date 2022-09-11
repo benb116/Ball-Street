@@ -6,6 +6,7 @@ import getContestEntries from './services/getContestEntries.service';
 import getEntry from './services/getEntry.service';
 import createEntry from './services/createEntry.service';
 import reorderRoster from './services/reorderRoster.service';
+import limited from '../../middleware/rateLimiter';
 
 const router = express.Router({ mergeParams: true });
 
@@ -19,6 +20,6 @@ router.get('/entry', routeHandler(getEntry));
 router.post('/entry', routeHandler(createEntry));
 
 // Reorder a roster in an entry
-router.put('/entry', routeHandler(reorderRoster));
+router.put('/entry', limited(20), routeHandler(reorderRoster));
 
 export default router;
