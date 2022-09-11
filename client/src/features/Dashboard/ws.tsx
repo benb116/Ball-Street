@@ -5,7 +5,8 @@ import type MessageType from '../../../../types/messages';
 import { setPhase, updatePrices, setInjury } from './Players/Players.slice';
 import { removeOffer, alertProtMatch } from './Offers/Offers.slice';
 import { offerFilled } from './Entry/Entry.slice';
-import { updateLeaders } from './Leaderboard/Leaderboard.slice';
+import { updateAverage } from './Leaderboard/Leaderboard.slice';
+import { PhaseType, PriceMapItemType } from './Players/Players.types';
 import API from '../../helpers/api';
 
 // Init WS connection and dispatch actions based on events
@@ -28,7 +29,7 @@ const initWS = (contestID: string) => {
     }
     if (msg.event === 'offerCancelled') store.dispatch(removeOffer(msg.offerID));
     if (msg.event === 'protectedMatch') store.dispatch(alertProtMatch(msg));
-    if (msg.event === 'leaderboard') store.dispatch(updateLeaders(msg.leaderboard));
+    if (msg.event === 'contestAvg') store.dispatch(updateAverage(msg.average));
     if (msg.event === 'phaseChange') {
       store.dispatch(setPhase(msg.phase));
       if (msg.phase.gamePhase === 'post') {

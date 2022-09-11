@@ -20,7 +20,7 @@ import PlayerItem from './PlayerItem';
 import { GameItemType, SortByType } from './Players.types';
 
 // Show list of all active players
-const Players = () => {
+function Players() {
   useGetPlayersQuery();
   useGetGamesQuery();
 
@@ -74,35 +74,33 @@ const Players = () => {
       const bPhase = theteams[b.NFLTeamId]?.phase;
 
       const sortBy = sorts.sortProp; // What are we sorting by?
-      let item1;
-      let item2;
       if (sortBy === 'teamAbr') {
-        item1 = theteams[a.NFLTeamId].abr;
-        item2 = theteams[b.NFLTeamId].abr;
-      } else if (sortBy === 'lastprice' || sortBy === 'bestbid' || sortBy === 'bestask') {
-        [item1, item2] = [priceMap[a.id][sortBy], priceMap[b.id][sortBy]]; // Get that property
-      } else {
-        [item1, item2] = [a[sortBy], b[sortBy]]; // Get that property
-        if (sortBy === 'preprice') {
-          if (aPhase !== 'pre') { item1 = a.projPrice; }
-          if (bPhase !== 'pre') { item2 = b.projPrice; }
-        }
-        if (sortBy === 'postprice') {
-          if (aPhase !== 'pre') { item1 = a.statPrice; }
-          if (bPhase !== 'pre') { item2 = b.statPrice; }
-        }
+        return compare(theteams[a.NFLTeamId].abr, theteams[b.NFLTeamId].abr);
       }
+      if (sortBy === 'lastprice' || sortBy === 'bestbid' || sortBy === 'bestask') {
+        const [i1, i2] = [priceMap[a.id]?.[sortBy], priceMap[b.id]?.[sortBy]]; // Get that property
+        return compare(i1 || 0, i2 || 0);
+      }
+      if (sortBy === 'projPrice') {
+        let [item1, item2] = [a[sortBy], b[sortBy]];
+        if (aPhase === 'pre') { item1 = a.preprice; }
+        if (bPhase === 'pre') { item2 = b.preprice; }
+        return compare(item1, item2);
+      }
+      if (sortBy === 'statPrice') {
+        let [item1, item2] = [a[sortBy], b[sortBy]];
+        if (aPhase === 'pre') { item1 = a.postprice; }
+        if (bPhase === 'pre') { item2 = b.postprice; }
+        return compare(item1, item2);
+      }
+      return compare(a[sortBy] || '', b[sortBy] || '');
 
-      // Should flip order?
-      let flip = 1;
-      if (['name', 'posName', 'teamAbr'].indexOf(sortBy) === -1) {
-        // Make numerical comparisons and switch order
-        item1 = Number(item1);
-        item2 = Number(item2);
-        flip = -1;
+      function compare(item1: number | string, item2: typeof item1) {
+        // Should flip order?
+        const flip = Number.isNaN(item1) ? 1 : -1;
+        const out = (item1 || 0) > (item2 || 0); // Compare as boolean
+        return (out ? 1 : -1) * (sorts.sortDesc ? 1 : -1) * flip;
       }
-      const out = (item1 || 0) > (item2 || 0); // Compare as boolean
-      return (out ? 1 : -1) * (sorts.sortDesc ? 1 : -1) * flip;
     });
 
   return (
@@ -145,7 +143,7 @@ const Players = () => {
       </table>
     </div>
   );
-};
+}
 
 // Header row for player list with clickable column titles
 function ListHeader() {
@@ -181,18 +179,18 @@ function ListHeader() {
           {sortProp === 'teamAbr' ? (sortDesc ? '▼' : '▲') : ''}
         </span>
       </th>
-      <th style={{ width: '3rem', cursor: 'pointer', textAlign: 'right' }} onClick={() => { handleClick('preprice'); }}>
+      <th style={{ width: '3rem', cursor: 'pointer', textAlign: 'right' }} onClick={() => { handleClick('projPrice'); }}>
         Proj
         <span style={{ fontSize: '0.5em' }}>
           {' '}
-          {sortProp === 'preprice' ? (sortDesc ? '▼' : '▲') : ''}
+          {sortProp === 'projPrice' ? (sortDesc ? '▼' : '▲') : ''}
         </span>
       </th>
-      <th style={{ width: '3rem', cursor: 'pointer', textAlign: 'right' }} onClick={() => { handleClick('postprice'); }}>
+      <th style={{ width: '3rem', cursor: 'pointer', textAlign: 'right' }} onClick={() => { handleClick('statPrice'); }}>
         Pts
         <span style={{ fontSize: '0.5em' }}>
           {' '}
-          {sortProp === 'postprice' ? (sortDesc ? '▼' : '▲') : ''}
+          {sortProp === 'statPrice' ? (sortDesc ? '▼' : '▲') : ''}
         </span>
       </th>
       <th style={{ width: '2.5rem', cursor: 'pointer', textAlign: 'right' }} onClick={() => { handleClick('lastprice'); }}>

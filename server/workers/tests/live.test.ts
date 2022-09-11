@@ -73,7 +73,7 @@ async function cancelOffer(cookie: string) {
 const tests = [
   'init',
   'open1',
-  'leader',
+  'projAvg',
   'initPrice',
   'offerPrice',
   'cancelPrice',
@@ -108,8 +108,8 @@ async function initUsers() {
       case 'protectedMatch':
         pMap.protMatch.res(msg);
         break;
-      case 'leaderboard':
-        pMap.leader.res(true);
+      case 'contestAvg':
+        pMap.projAvg.res(true);
         break;
       case 'phaseChange':
         break;
@@ -156,7 +156,7 @@ describe('Live server tests', () => {
     expect(data).toBe(true);
   }));
 
-  test('Get leaderboard', () => pMap.leader.prom.then((data) => {
+  test('Get projected average', () => pMap.projAvg.prom.then((data) => {
     expect(data).toBe(true);
   }), 12000);
 

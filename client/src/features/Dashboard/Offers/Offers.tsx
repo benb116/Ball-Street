@@ -11,11 +11,11 @@ import { useCancelOfferMutation, useGetOffersQuery } from './Offers.api';
 import { OfferItemType } from './Offers.types';
 
 // Show offers for different players
-const Offers = () => {
+function Offers() {
   const { contestID } = useParams<{ contestID: string }>();
   const offers = useAppSelector(offersSelector);
 
-  if (!contestID) return <></>;
+  if (!contestID) return null;
 
   useGetOffersQuery(contestID);
 
@@ -48,7 +48,7 @@ const Offers = () => {
       ) : (<div />)}
     </div>
   );
-};
+}
 
 function OfferItem({ offerdata }: { offerdata: OfferItemType }) {
   // Used for protected offer times
@@ -61,10 +61,10 @@ function OfferItem({ offerdata }: { offerdata: OfferItemType }) {
   const { contestID } = useParams<{ contestID: string }>();
   const [cancelOffer] = useCancelOfferMutation();
 
-  if (!contestID) return <></>;
-  if (!playerdata) return <></>;
+  if (!contestID) return null;
+  if (!playerdata) return null;
   const thephase = teamdata[playerdata?.NFLTeamId]?.phase;
-  if (thephase !== 'mid') return <></>;
+  if (thephase !== 'mid') return null;
 
   const oncancelOffer = (oid: string) => {
     cancelOffer({ contestID, offerID: oid });

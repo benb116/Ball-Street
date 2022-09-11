@@ -12,12 +12,12 @@ import liveState from './live/state.live'; // Data stored in memory
 import channelMap from './live/channels.live';
 
 import { subscriber } from '../db/redis';
-import leader from '../db/redis/leaderboard.redis';
 import bestbid from '../db/redis/bestbid.redis';
 import bestask from '../db/redis/bestask.redis';
 import lasttrade from '../db/redis/lasttrade.redis';
 import statprice from '../db/redis/statprice.redis';
 import projprice from '../db/redis/projprice.redis';
+import projAvg from '../db/redis/projAvg.redis';
 
 // All channels that may be used
 
@@ -71,8 +71,8 @@ wss.on('connection', async (ws, request: Request) => {
   // Send starting data
   ws.send(JSON.stringify({ event: 'priceUpdate', pricedata: await sendLatest(contestID) }));
   ws.send(JSON.stringify({
-    event: 'leaderboard',
-    leaderboard: await leader.get(contestID),
+    event: 'contestAvg',
+    average: await projAvg.get(contestID) || 0,
   }));
 
   ws.on('close', () => {

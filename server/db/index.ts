@@ -39,14 +39,19 @@ const sequelize = new Sequelize(
   dbOptions,
 ); // Example for postgres
 
+// Try to connect to DB with exponential backoff
+let backoffDelay = 1;
 async function testDB() {
   try {
     await sequelize.authenticate();
     if (process.env.NODE_ENV !== 'test') {
       logger.info('Database connection has been established successfully.');
     }
+    backoffDelay = 1;
   } catch (error) {
-    logger.error('Unable to connect to the database:', error);
+    backoffDelay *= 2;
+    logger.error(`Unable to connect to the database, retrying in ${backoffDelay} seconds`, error);
+    setTimeout(testDB, backoffDelay * 1000);
   }
 }
 

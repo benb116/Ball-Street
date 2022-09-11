@@ -56,4 +56,4 @@ export interface PriceKeysType {
 export interface PriceMapItemType extends PriceKeysType {
   nflplayerID: number,
 }
-export type SortByType = keyof PlayerItemType | keyof PriceKeysType | 'teamAbr';
+export type SortByType = keyof PriceKeysType | 'name' | 'posName' | 'teamAbr';

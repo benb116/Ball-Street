@@ -25,7 +25,7 @@ interface ModalType {
   protected: boolean
 }
 
-const OfferModal = ({ contestID }: { contestID: string }) => {
+function OfferModal({ contestID }: { contestID: string }) {
   const dispatch = useAppDispatch();
   const { register, handleSubmit } = useForm<ModalType>();
 
@@ -120,6 +120,6 @@ const OfferModal = ({ contestID }: { contestID: string }) => {
       </Modal>
     </div>
   );
-};
+}
 
 export default OfferModal;
