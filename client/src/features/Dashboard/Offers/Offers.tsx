@@ -15,7 +15,7 @@ function Offers() {
   const { contestID } = useParams<{ contestID: string }>();
   const offers = useAppSelector(offersSelector);
 
-  if (!contestID) return <>No Contest ID</>;
+  if (!contestID) return null;
 
   useGetOffersQuery(contestID);
 
@@ -61,10 +61,10 @@ function OfferItem({ offerdata }: { offerdata: OfferItemType }) {
   const { contestID } = useParams<{ contestID: string }>();
   const [cancelOffer] = useCancelOfferMutation();
 
-  if (!contestID) return <>No Contest ID</>;
-  if (!playerdata) return <>No Player Data</>;
+  if (!contestID) return null;
+  if (!playerdata) return null;
   const thephase = teamdata[playerdata?.NFLTeamId]?.phase;
-  if (thephase !== 'mid') return <>Incorrect Phase</>;
+  if (thephase !== 'mid') return null;
 
   const oncancelOffer = (oid: string) => {
     cancelOffer({ contestID, offerID: oid });

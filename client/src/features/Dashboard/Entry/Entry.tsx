@@ -17,7 +17,7 @@ function Entry() {
   const { contestID } = useParams<{ contestID: string }>();
   const thisentry = useAppSelector(entrySelector);
 
-  if (!contestID) return <>No Contest ID</>;
+  if (!contestID) return null;
 
   // Initial data pull
   useGetEntryQuery(contestID);

@@ -39,7 +39,7 @@ function RosterItem({ playerid, position }: { playerid: number | null, position:
   const [preDrop] = usePreDropMutation();
   const [cancelOffer] = useCancelOfferMutation();
 
-  if (!contestID) return <>No Contest ID</>;
+  if (!contestID) return null;
 
   // When the pos label is clicked, trying to reorder roster
   const reorderClick = () => {
