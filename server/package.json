@@ -25,7 +25,9 @@
     "winston": "^3.8.1",
     "ws": "^8.8.1"
   },
-  "files": ["../types/messages/*"],
+  "files": [
+    "../types/*"
+  ],
   "scripts": {
     "test": "jest --maxWorkers=1 --forceExit"
   },

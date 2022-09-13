@@ -3,12 +3,12 @@ import { Link, Navigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
 import { useSignupMutation } from './User.api';
-import { SignupInputType } from './User.types';
 import { userSelector } from './User.slice';
 import { useAppSelector } from '../../app/hooks';
+import { SignupInput } from '../../../../types/api/user.api';
 
 function Signup() {
-  const { register, handleSubmit } = useForm<SignupInputType>();
+  const { register, handleSubmit } = useForm<SignupInput>();
   const { id } = useAppSelector(userSelector);
 
   const [signup] = useSignupMutation();

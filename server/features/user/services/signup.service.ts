@@ -8,6 +8,7 @@ import errorHandler from '../../util/util.service';
 import genVerify from './genVerify.service';
 
 import User from '../user.model';
+import { inputSignup, LoginOutput, SignupInput } from '../../../../types/api/user.api';
 
 const schema = Joi.object({
   name: Joi.string().required().messages({
@@ -18,13 +19,7 @@ const schema = Joi.object({
   password: validators.password,
   skipVerification: Joi.boolean().default(false),
 });
-
-interface SignupInput {
-  name: string,
-  email: string,
-  password: string,
-  skipVerification: boolean,
-}
+validate(inputSignup, schema);
 
 const saltRounds = 10;
 
@@ -43,7 +38,7 @@ async function signup(req: SignupInput) {
     if (!skipVerification) return await genVerify({ id: theuser.id, email: theuser.email });
     return {
       needsVerification: false, id: theuser.id, email: theuser.email, name: theuser.name, cash: theuser.cash,
-    };
+    } as LoginOutput;
   } catch (err) {
     const f = errorHandler({
       default: { message: 'Could not create user', status: 500 },

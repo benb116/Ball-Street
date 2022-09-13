@@ -7,14 +7,12 @@ import { validate, uError } from '../../util/util';
 import validators from '../../util/util.schema';
 
 import passReset from '../../../db/redis/passReset.redis';
+import { GenPassResetInput, inputGenPassReset } from '../../../../types/api/user.api';
 
 const schema = Joi.object({
   email: validators.email,
 });
-
-interface GenPassResetInput {
-  email: string,
-}
+validate(inputGenPassReset, schema);
 
 // Create and send a password reset email
 async function genPassReset(req: GenPassResetInput) {

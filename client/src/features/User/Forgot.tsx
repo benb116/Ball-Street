@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
 import { useForgotMutation } from './User.api';
-import { ForgotType } from './User.types';
+import { GenPassResetInput } from '../../../../types/api/user.api';
 
 function Forgot() {
-  const { register, handleSubmit } = useForm<ForgotType>();
+  const { register, handleSubmit } = useForm<GenPassResetInput>();
 
   const [forgot] = useForgotMutation();
 

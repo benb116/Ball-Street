@@ -7,16 +7,13 @@ import validators from '../../util/util.schema';
 import genVerify from './genVerify.service';
 
 import User from '../user.model';
+import { LoginInput, inputLogin } from '../../../../types/api/user.api';
 
 const schema = Joi.object({
   email: validators.email,
   password: validators.password,
 });
-
-interface LoginInput {
-  email: string,
-  password: string,
-}
+validate(inputLogin, schema);
 
 async function login(req: LoginInput) {
   const value: LoginInput = validate(req, schema);

@@ -8,6 +8,7 @@ import validators from '../../util/util.schema';
 
 import User from '../user.model';
 import passReset from '../../../db/redis/passReset.redis';
+import { EvalPassResetInput, inputEvalPassReset } from '../../../../types/api/user.api';
 
 const schema = Joi.object({
   token: Joi.string().length(verificationTokenLength).required().messages({
@@ -18,12 +19,7 @@ const schema = Joi.object({
   password: validators.password,
   confirmPassword: validators.password,
 });
-
-interface EvalPassResetInput {
-  token: string,
-  password: string,
-  confirmPassword: string,
-}
+validate(inputEvalPassReset, schema);
 
 // Change a user's password
 async function evalPassReset(req: EvalPassResetInput) {
