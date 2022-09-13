@@ -3,7 +3,7 @@
 
 // Pull player data from an API
 import axios from 'axios';
-import { NFLPosIDType, RosterPosTypes } from '../config';
+import { NFLPosIDType, RosterPosKindList, RosterPosKinds } from '../config';
 import NFLPlayer from '../features/nflplayer/nflplayer.model';
 import teams from '../nflinfo';
 
@@ -49,11 +49,20 @@ async function sendreq(price: boolean, pagenum = 0, posget = 'O') {
       const term = (posget === 'DEF' ? 'teams' : 'players');
       const trimfront = playerline
         .split(`<a class="Nowrap name F-link" href="https://sports.yahoo.com/nfl/${term}/`)[1];
+      if (!trimfront) return undefined;
       const [id, idout] = trimfront.split('" target="_blank">');
+      if (!idout) return undefined;
       const [name, nameout] = idout.split('</a> <span class="Fz-xxs">');
+      if (!nameout) return undefined;
       const [team, teamout] = nameout.split(' - ');
+      if (!teamout) return undefined;
       const [pos, posout] = teamout.split('</span> </div>\n        </div>\n        <div class=\"Grid-bind-end\">');
-      const posid = (RosterPosTypes[pos]?.id || RosterPosTypes[pos.split(',')[0]].id || 0); // Could be WR,RB
+      if (!pos) return undefined;
+      const posClean = pos.split(',')[0];
+      if (!posClean) return undefined;
+      if (!RosterPosKindList.includes(posClean)) return undefined;
+
+      const posid = (RosterPosKinds[posClean].id || RosterPosKinds[pos.split(',')[0]].id || 0); // Could be WR,RB
       const preprice = Math.round(Number(posout.split('span class=\"Fw-b\">')[1].split('</span>')[0]) * 100);
       const injout = posout.split('abbr class="F-injury"');
       let injuryStatus = null;

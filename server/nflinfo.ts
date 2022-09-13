@@ -1,10 +1,5 @@
-interface TeamRecord {
-  location: string,
-  name: string,
-  id: number
-}
 // Define NFL teams
-const teams: Record<string, TeamRecord> = {
+const teams = {
   ARI: { location: 'Arizona', name: 'Cardinals', id: 22 },
   ATL: { location: 'Atlanta', name: 'Falcons', id: 1 },
   BAL: { location: 'Baltimore', name: 'Ravens', id: 33 },
@@ -38,5 +33,7 @@ const teams: Record<string, TeamRecord> = {
   TEN: { location: 'Tennessee', name: 'Titans', id: 10 },
   WAS: { location: 'Washington', name: 'Football Team', id: 28 },
 } as const;
+type TeamKind = keyof typeof teams;
+export const teamList = Object.keys(teams) as TeamKind[];
 
 export default teams;
