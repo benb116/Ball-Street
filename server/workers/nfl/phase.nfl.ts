@@ -4,7 +4,7 @@ import Sequelize, { Op } from 'sequelize';
 import type { Literal } from 'sequelize/types/utils.d';
 import type { Logger } from 'winston';
 
-import teams from '../../nflinfo';
+import teams, { teamList } from '../../nflinfo';
 
 import { validate, isPlayerOnRoster } from '../../features/util/util';
 import logger from '../../utilities/logger';
@@ -24,7 +24,7 @@ import getWeekEntries from '../../features/entry/services/getWeekEntries.service
 import EntryAction from '../../features/trade/entryaction.model';
 import { EntryActionKinds, gamePhases, GamePhaseType } from '../../config';
 
-const teamIDs = Object.keys(teams).map((teamAbr) => teams[teamAbr].id);
+const teamIDs = teamList.map((teamAbr) => teams[teamAbr].id);
 const schema = Joi.object({
   teamID: Joi.valid(...teamIDs)
     .required()

@@ -25,7 +25,7 @@ export const RosterPosKinds = {
   K: { id: 5, canflex: NFLPosTypes[5].canflex } as RosterPosType,
   DEF: { id: 6, canflex: NFLPosTypes[6].canflex } as RosterPosType,
 } as const;
-type RosterPosKindType = keyof typeof RosterPosKinds;
+export type RosterPosKindType = keyof typeof RosterPosKinds;
 export const RosterPosKindList = Object.keys(RosterPosKinds) as RosterPosKindType[];
 // Define all roster positions
 export const Roster = {

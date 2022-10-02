@@ -33,7 +33,7 @@ const teams = {
   TEN: { location: 'Tennessee', name: 'Titans', id: 10 },
   WAS: { location: 'Washington', name: 'Football Team', id: 28 },
 } as const;
-type TeamKind = keyof typeof teams;
+export type TeamKind = keyof typeof teams;
 export const teamList = Object.keys(teams) as TeamKind[];
 
 export default teams;
