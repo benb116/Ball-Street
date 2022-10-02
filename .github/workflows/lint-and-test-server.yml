@@ -1,14 +1,16 @@
-name: Lint and Test
+name: Lint and Test - Server
 
 on:
   pull_request:
     branches: [ master ]
+    paths:
+      - 'server/**'
     # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
 
-  lint-and-test:
+  lint-and-test-server:
 
     runs-on: ubuntu-latest
 
@@ -37,18 +39,6 @@ jobs:
     - name: Compile Typescript - Server
       run: ./node_modules/.bin/tsc
       working-directory: server
-
-    - name: Install client dependencies
-      run: npm install
-      working-directory: client
-      
-    - name: Run ESLint - Client
-      run: ./node_modules/.bin/eslint ./
-      working-directory: client
-
-    - name: Compile Typescript - Client
-      run: ./node_modules/.bin/tsc
-      working-directory: client
 
     - name: Build from Docker-Compose
       run: docker-compose -f docker-compose.yml -f development.yml build
