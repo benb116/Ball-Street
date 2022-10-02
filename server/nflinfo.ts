@@ -35,5 +35,7 @@ const teams = {
 } as const;
 export type TeamKind = keyof typeof teams;
 export const teamList = Object.keys(teams) as TeamKind[];
+export const teamIDs = Object.values(teams).map((t) => t.id, []);
+export type TeamIDType = typeof teamIDs[number];
 
 export default teams;

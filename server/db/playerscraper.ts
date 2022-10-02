@@ -38,7 +38,7 @@ async function scrape(price = false) {
 }
 
 // Pull one page of players
-async function sendreq(price: boolean, pagenum = 0, posget = 'O') {
+async function sendreq(setPrice: boolean, pagenum = 0, posget = 'O') {
   // Send request
   return axios.get(baseurl(posget, currentweek) + pagenum * 25, { headers: { cookie: cookie || '' } })
   // Clean up HTML response
@@ -57,23 +57,27 @@ async function sendreq(price: boolean, pagenum = 0, posget = 'O') {
       const [name, nameout] = idout.split('</a> <span class="Fz-xxs">');
       if (!nameout) return undefined;
       const [team, teamout] = nameout.split(' - ');
-      if (!teamout) return undefined;
+      if (!team || !teamout) return undefined;
       const teamAbr = team.toUpperCase() as TeamKind;
       const [pos, posout] = teamout.split('</span> </div>\n        </div>\n        <div class=\"Grid-bind-end\">');
-      if (!pos) return undefined;
+      if (!pos || !posout) return undefined;
       const posClean = pos.split(',')[0] as RosterPosKindType;
       if (!posClean) return undefined;
       if (!RosterPosKindList.includes(posClean)) return undefined;
 
       const posid = (RosterPosKinds[posClean].id || RosterPosKinds[posClean].id || 0); // Could be WR,RB
-      const preprice = Math.round(Number(posout.split('span class=\"Fw-b\">')[1].split('</span>')[0]) * 100);
+
+      const priceString = posout.split('span class=\"Fw-b\">')[1]?.split('</span>')[0];
+
+      const preprice = priceString ? Math.round(Number(priceString) * 100) : null;
       const injout = posout.split('abbr class="F-injury"');
       let injuryStatus = null;
       if (injout.length === 2) {
         // eslint-disable-next-line prefer-destructuring
-        injuryStatus = injout[1].split('>')[1].split('<')[0];
+        injuryStatus = injout[1]?.split('>')[1]?.split('<')[0] as string | undefined;
+        if (!injuryStatus) injuryStatus = null;
         // Make any weird statuses (like NA, or COVID-19) into a simple out
-        if (['P', 'Q', 'D'].indexOf(injuryStatus) === -1) injuryStatus = 'O';
+        else if (['P', 'Q', 'D'].indexOf(injuryStatus) === -1) injuryStatus = 'O';
       }
       // Player object that will be added to DB
       const outobj = {
@@ -81,8 +85,8 @@ async function sendreq(price: boolean, pagenum = 0, posget = 'O') {
         name,
         NFLTeamId: teams[teamAbr].id,
         NFLPositionId: posid as NFLPosIDType,
-        preprice: (price ? 1100 : preprice),
-        postprice: (price ? 700 : 0),
+        preprice: (setPrice ? 1100 : preprice),
+        postprice: (setPrice ? 700 : 0),
         active: true,
         injuryStatus,
       } as NFLPlayer;

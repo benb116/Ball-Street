@@ -148,7 +148,9 @@ async function calculateLeaderboard() {
 
   // For each contest, sort and store
   contests.forEach((c: number) => {
-    const avgProjTotal = Math.ceil(average(contestProjTotals[c]));
+    const contestTotals = contestProjTotals[c];
+    if (!contestTotals) return;
+    const avgProjTotal = Math.ceil(average(contestTotals));
     projAvg.set(c, avgProjTotal);
   });
 
