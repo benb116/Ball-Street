@@ -29,7 +29,7 @@ async function PopulateDB() {
     pwHash: '$2b$10$v3qgumBibz8Uouevm5xeTOFWheNtLVRyLeGqp2tZbfdMJ.iHQtgVq',
     name: 'bot',
     verified: (u !== 'email5@gmail.com' && u !== 'email6@gmail.com'),
-    cash: (u === 'email5@gmail.com' ? 0 : 1000),
+    cash: 1000,
   }));
   await User.bulkCreate(userRecords);
 
@@ -97,7 +97,7 @@ async function PopulateDB() {
     UserId: _u.UserId,
     LedgerKindId: ledgerKinds['Entry Fee'].id,
     ContestId: _u.ContestId,
-    value: allcontests[0].buyin,
+    value: contestMap[1].buyin,
   }));
   await LedgerEntry.bulkCreate(ledgerEntries2);
   const ledgerEntries3 = entrs2.map((_u, i) => ({
@@ -105,7 +105,7 @@ async function PopulateDB() {
     UserId: _u.UserId,
     LedgerKindId: ledgerKinds['Entry Fee'].id,
     ContestId: _u.ContestId,
-    value: contestMap[(_u.ContestId - 1) as CIDType].buyin,
+    value: contestMap[(_u.ContestId) as CIDType].buyin,
   }));
   await LedgerEntry.bulkCreate(ledgerEntries3);
 

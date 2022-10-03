@@ -1,7 +1,7 @@
 import service from '../services/getUserLedger.service';
 import { ErrorTest, ArrayTest } from '../../util/util.tests';
 
-describe('getUserOffers service', () => {
+describe('getUserLedger service', () => {
   test('Valid request returns data', ArrayTest(
     service,
     { user: 3, params: {}, body: {} },
