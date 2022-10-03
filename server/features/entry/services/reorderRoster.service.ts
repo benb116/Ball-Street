@@ -2,13 +2,13 @@ import Joi from 'joi';
 
 import {
   FlexNFLPositionId, NFLPosTypes, Roster, RosterPositions, RPosType,
-} from '../../../config';
+} from '@server/config';
 
-import { tobj, validate, uError } from '../../util/util';
-import errorHandler, { ServiceInput } from '../../util/util.service';
-import validators from '../../util/util.schema';
+import { tobj, validate, uError } from '@util/util';
+import errorHandler, { ServiceInput } from '@util/util.service';
+import validators from '@util/util.schema';
 
-import sequelize from '../../../db';
+import sequelize from '@db';
 import Entry from '../entry.model';
 import NFLPlayer from '../../nflplayer/nflplayer.model';
 

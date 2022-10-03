@@ -4,19 +4,19 @@
 
 import { Transaction } from 'sequelize';
 
-import { tobj } from '../../features/util/util';
+import { tobj } from '@features/util/util';
 import logger from '../../utilities/logger';
 
-import sequelize from '../../db';
+import sequelize from '@db';
 import channels from '../live/channels.live';
 
-import tradeAdd from '../../features/trade/services/tradeAdd.service';
-import tradeDrop from '../../features/trade/services/tradeDrop.service';
+import tradeAdd from '@features/trade/services/tradeAdd.service';
+import tradeDrop from '@features/trade/services/tradeDrop.service';
 
-import Offer from '../../features/offer/offer.model';
-import Trade from '../../features/trade/trade.model';
-import PriceHistory from '../../features/pricehistory/pricehistory.model';
-import lasttrade from '../../db/redis/lasttrade.redis';
+import Offer from '@features/offer/offer.model';
+import Trade from '@features/trade/trade.model';
+import PriceHistory from '@features/pricehistory/pricehistory.model';
+import lasttrade from '@db/redis/lasttrade.redis';
 
 const { offerFilled, priceUpdate, offerCancelled } = channels;
 

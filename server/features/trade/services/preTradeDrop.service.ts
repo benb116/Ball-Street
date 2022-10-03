@@ -1,10 +1,10 @@
 import Joi from 'joi';
 
-import { validate } from '../../util/util';
-import validators from '../../util/util.schema';
-import errorHandler, { ServiceInput } from '../../util/util.service';
+import { validate } from '@util/util';
+import validators from '@util/util.schema';
+import errorHandler, { ServiceInput } from '@util/util.service';
 
-import sequelize from '../../../db';
+import sequelize from '@db';
 
 import tradeDrop from './tradeDrop.service';
 

@@ -1,4 +1,4 @@
-import sequelize from '../../db';
+import sequelize from '@db';
 import Entry from '../entry/entry.model';
 
 import { isInvalidSpot, isPlayerOnRoster, isOpenRoster } from './util';

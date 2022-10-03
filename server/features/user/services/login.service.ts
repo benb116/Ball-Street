@@ -1,8 +1,8 @@
 import bcrypt from 'bcryptjs';
 import Joi from 'joi';
 
-import { validate, uError } from '../../util/util';
-import validators from '../../util/util.schema';
+import { validate, uError } from '@util/util';
+import validators from '@util/util.schema';
 
 import genVerify from './genVerify.service';
 

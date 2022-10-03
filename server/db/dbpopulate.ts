@@ -1,15 +1,15 @@
 // Set up example DB records for use in testing
 import logger from '../utilities/logger';
 
-import Contest from '../features/contest/contest.model';
-import Entry from '../features/entry/entry.model';
-import NFLGame from '../features/nflgame/nflgame.model';
-import Offer from '../features/offer/offer.model';
-import Trade from '../features/trade/trade.model';
-import User from '../features/user/user.model';
-import LedgerEntry from '../features/ledger/ledgerEntry.model';
-import { EntryActionKinds, GamePhaseType, LedgerKinds } from '../config';
-import EntryAction from '../features/trade/entryaction.model';
+import Contest from '@features/contest/contest.model';
+import Entry from '@features/entry/entry.model';
+import NFLGame from '@features/nflgame/nflgame.model';
+import Offer from '@features/offer/offer.model';
+import Trade from '@features/trade/trade.model';
+import User from '@features/user/user.model';
+import LedgerEntry from '@features/ledger/ledgerEntry.model';
+import { EntryActionKinds, GamePhaseType, LedgerKinds } from '@server/config';
+import EntryAction from '@features/trade/entryaction.model';
 
 async function PopulateDB() {
   logger.info('Populating DB with initial data');

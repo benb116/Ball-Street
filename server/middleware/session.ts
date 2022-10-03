@@ -2,7 +2,7 @@ import session from 'express-session';
 import connect from 'connect-redis';
 
 import { createClient } from 'redis';
-import { REDIS_PORT, REDIS_HOST } from '../db/redis';
+import { REDIS_PORT, REDIS_HOST } from '@db/redis';
 
 const connObj = {
   url: `redis://${REDIS_HOST}:${REDIS_PORT}`,

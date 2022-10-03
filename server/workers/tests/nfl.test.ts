@@ -6,9 +6,9 @@ import yahoo from './yahooData';
 import setPhase from '../nfl/phase.nfl';
 import { FormatInjuryObjects, FindInjuryChanges } from '../nfl/injury.nfl';
 import { EstimateProjection } from '../nfl/stats.nfl';
-import NFLGame from '../../features/nflgame/nflgame.model';
-import Entry from '../../features/entry/entry.model';
-import NFLPlayer from '../../features/nflplayer/nflplayer.model';
+import NFLGame from '@features/nflgame/nflgame.model';
+import Entry from '@features/entry/entry.model';
+import NFLPlayer from '@features/nflplayer/nflplayer.model';
 
 type TestNameType = keyof typeof yahoo.games;
 const testfiles = Object.keys(yahoo.games) as TestNameType[];

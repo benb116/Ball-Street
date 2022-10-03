@@ -3,8 +3,8 @@
 
 // Pull player data from an API
 import axios from 'axios';
-import { NFLPosIDType, RosterPosTypes } from '../config';
-import NFLPlayer from '../features/nflplayer/nflplayer.model';
+import { NFLPosIDType, RosterPosTypes } from '@server/config';
+import NFLPlayer from '@features/nflplayer/nflplayer.model';
 import teams from '../nflinfo';
 
 // eslint-disable-next-line max-len

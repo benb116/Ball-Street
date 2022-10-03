@@ -1,6 +1,6 @@
 import express from 'express';
 
-import routeHandler from '../util/util.route';
+import routeHandler from '@util/util.route';
 
 import getNFLGames from '../nflgame/services/getNFLGames.service';
 import getNFLPlayer from './services/getNFLPlayer.service';

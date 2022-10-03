@@ -1,5 +1,5 @@
 import service from '../services/getNFLPlayer.service';
-import { ErrorTest, ObjectTest } from '../../util/util.tests';
+import { ErrorTest, ObjectTest } from '@util/util.tests';
 
 describe('getNFLPlayer service', () => {
   test('Valid request for position player returns data', ObjectTest(

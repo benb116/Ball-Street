@@ -1,4 +1,4 @@
-import logger from '../../utilities/logger';
+import logger from '@server/utilities/logger';
 import { isUError, uError } from './util';
 
 interface ErrorRespType {

@@ -7,9 +7,9 @@ import state from './state.nfl';
 
 import setPhase from './phase.nfl';
 
-import NFLGame from '../../features/nflgame/nflgame.model';
+import NFLGame from '@features/nflgame/nflgame.model';
 import yahooData from '../tests/yahooData';
-import { GamePhaseType } from '../../config';
+import { GamePhaseType } from '@server/config';
 
 const teamIDs = Object.values(teams).map((t) => t.id, []);
 type PhaseMapType = Record<string, GamePhaseType | number>;

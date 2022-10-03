@@ -8,8 +8,8 @@ import state from './state.nfl';
 import statUpdate from '../live/channels/statUpdate.channel';
 
 import yahooData from '../tests/yahooData';
-import statprice from '../../db/redis/statprice.redis';
-import projprice from '../../db/redis/projprice.redis';
+import statprice from '@db/redis/statprice.redis';
+import projprice from '@db/redis/projprice.redis';
 
 // Get all latest statlines and filter out ones we don't care about
 export async function GetNewStats() {

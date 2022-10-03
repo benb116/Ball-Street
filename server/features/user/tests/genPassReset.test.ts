@@ -1,8 +1,8 @@
 import service from '../services/genPassReset.service';
-import { ErrorTest } from '../../util/util.tests';
+import { ErrorTest } from '@util/util.tests';
 
-import { client } from '../../../db/redis';
-import { verificationTokenLength } from '../../../config';
+import { client } from '@db/redis';
+import { verificationTokenLength } from '@server/config';
 
 describe('genPassReset service', () => {
   test('Valid request returns confirmation and redis key', async () => {

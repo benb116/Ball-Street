@@ -1,7 +1,7 @@
 import {
   Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
 } from 'sequelize';
-import sequelize from '../../db';
+import sequelize from '@db';
 
 import Contest from '../contest/contest.model';
 import NFLPlayer from '../nflplayer/nflplayer.model';

@@ -6,23 +6,23 @@ import type { Logger } from 'winston';
 
 import teams from '../../nflinfo';
 
-import { validate, isPlayerOnRoster } from '../../features/util/util';
+import { validate, isPlayerOnRoster } from '@features/util/util';
 import logger from '../../utilities/logger';
 import { SumPoints } from './dict.nfl';
 
 import state from './state.nfl';
 
-import sequelize from '../../db';
-import { client } from '../../db/redis';
+import sequelize from '@db';
+import { client } from '@db/redis';
 
 import phaseChange from '../live/channels/phaseChange.channel';
 
-import Entry from '../../features/entry/entry.model';
-import NFLPlayer from '../../features/nflplayer/nflplayer.model';
-import NFLGame from '../../features/nflgame/nflgame.model';
-import getWeekEntries from '../../features/entry/services/getWeekEntries.service';
-import EntryAction from '../../features/trade/entryaction.model';
-import { EntryActionKinds, gamePhases, GamePhaseType } from '../../config';
+import Entry from '@features/entry/entry.model';
+import NFLPlayer from '@features/nflplayer/nflplayer.model';
+import NFLGame from '@features/nflgame/nflgame.model';
+import getWeekEntries from '@features/entry/services/getWeekEntries.service';
+import EntryAction from '@features/trade/entryaction.model';
+import { EntryActionKinds, gamePhases, GamePhaseType } from '@server/config';
 
 const teamIDs = Object.keys(teams).map((teamAbr) => teams[teamAbr].id);
 const schema = Joi.object({

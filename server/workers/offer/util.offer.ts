@@ -1,14 +1,14 @@
 import logger from '../../utilities/logger';
 
-import bestbid from '../../db/redis/bestbid.redis';
-import bestask from '../../db/redis/bestask.redis';
+import bestbid from '@db/redis/bestbid.redis';
+import bestask from '@db/redis/bestask.redis';
 
 import priceUpdate from '../live/channels/priceUpdate.channel';
 
 import Book from './book.offer';
 
-import Offer from '../../features/offer/offer.model';
-import ProtectedMatch from '../../features/protectedmatch/protectedmatch.model';
+import Offer from '@features/offer/offer.model';
+import ProtectedMatch from '@features/protectedmatch/protectedmatch.model';
 
 // Access the correct book or make one if necessary
 export function getBook(

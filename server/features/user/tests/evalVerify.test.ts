@@ -1,8 +1,8 @@
 import cryptoRandomString from 'crypto-random-string';
 import service from '../services/evalVerify.service';
-import { ErrorTest } from '../../util/util.tests';
-import { verificationTimeout, verificationTokenLength } from '../../../config';
-import emailVer from '../../../db/redis/emailVer.redis';
+import { ErrorTest } from '@util/util.tests';
+import { verificationTimeout, verificationTokenLength } from '@server/config';
+import emailVer from '@db/redis/emailVer.redis';
 
 describe('evalVerify service', () => {
   test('Valid request returns confirmation and redis key', async () => {

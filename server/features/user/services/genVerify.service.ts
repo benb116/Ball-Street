@@ -1,12 +1,12 @@
 import cryptoRandomString from 'crypto-random-string';
 import Joi from 'joi';
 
-import { CallbackURL, verificationTimeout, verificationTokenLength } from '../../../config';
+import { CallbackURL, verificationTimeout, verificationTokenLength } from '@server/config';
 
-import { validate, uError } from '../../util/util';
-import validators from '../../util/util.schema';
+import { validate, uError } from '@util/util';
+import validators from '@util/util.schema';
 
-import emailVer from '../../../db/redis/emailVer.redis';
+import emailVer from '@db/redis/emailVer.redis';
 
 const schema = Joi.object({
   id: validators.user,

@@ -4,11 +4,11 @@
 // Sends out matches to be filled
 import Queue from 'bull';
 
-import { ProtectionDelay } from '../config';
+import { ProtectionDelay } from '@server/config';
 
 import logger from '../utilities/logger';
 
-import { queueOptions } from '../db/redis';
+import { queueOptions } from '@db/redis';
 
 import protectedMatch from './live/channels/protectedMatch.channel';
 
@@ -17,7 +17,7 @@ import { getBook, updateBest } from './offer/util.offer';
 import evalProtected from './offer/protected.offer';
 import Book from './offer/book.offer';
 
-import Offer from '../features/offer/offer.model';
+import Offer from '@features/offer/offer.model';
 import { MatchPair } from './offer/evaluate.offer';
 
 const offerQueue = new Queue('offer-queue', queueOptions);

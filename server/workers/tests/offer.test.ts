@@ -2,11 +2,11 @@
 import WebSocket from 'ws';
 import axios from 'axios';
 
-import createOffer from '../../features/offer/services/createOffer.service';
-import { TestPromiseMap } from '../../features/util/util.tests';
-import bestbid from '../../db/redis/bestbid.redis';
-import bestask from '../../db/redis/bestask.redis';
-import { ProtectionDelay, RefreshTime } from '../../config';
+import createOffer from '@features/offer/services/createOffer.service';
+import { TestPromiseMap } from '@features/util/util.tests';
+import bestbid from '@db/redis/bestbid.redis';
+import bestask from '@db/redis/bestask.redis';
+import { ProtectionDelay, RefreshTime } from '@server/config';
 
 const contestID = 3;
 

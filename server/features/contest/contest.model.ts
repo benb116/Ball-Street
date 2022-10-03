@@ -5,7 +5,7 @@
 import {
   Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
 } from 'sequelize';
-import sequelize from '../../db';
+import sequelize from '@db';
 
 class Contest extends Model<InferAttributes<Contest>, InferCreationAttributes<Contest>> {
   declare id: CreationOptional<number>;

@@ -2,15 +2,15 @@ import Queue from 'bull';
 import Joi from 'joi';
 import { Op } from 'sequelize';
 
-import { DefaultProtected } from '../../../config';
+import { DefaultProtected } from '@server/config';
 import {
   tobj, validate, uError, isPlayerOnRoster, isOpenRoster,
-} from '../../util/util';
-import validators from '../../util/util.schema';
-import errorHandler, { ServiceInput } from '../../util/util.service';
+} from '@util/util';
+import validators from '@util/util.schema';
+import errorHandler, { ServiceInput } from '@util/util.service';
 
-import sequelize from '../../../db';
-import { queueOptions } from '../../../db/redis';
+import sequelize from '@db';
+import { queueOptions } from '@db/redis';
 
 import Entry from '../../entry/entry.model';
 import NFLPlayer from '../../nflplayer/nflplayer.model';

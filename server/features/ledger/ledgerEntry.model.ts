@@ -3,7 +3,7 @@
 import Sequelize, {
   Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
 } from 'sequelize';
-import sequelize from '../../db';
+import sequelize from '@db';
 
 import User from '../user/user.model';
 import Contest from '../contest/contest.model';

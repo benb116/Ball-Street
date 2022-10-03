@@ -2,11 +2,11 @@
 import {
   Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
 } from 'sequelize';
-import sequelize from '../../db';
+import sequelize from '@db';
 
 import NFLTeam from '../nflteam/nflteam.model';
 import NFLPosition from '../nflposition/nflposition.model';
-import { NFLPosIDType } from '../../config';
+import { NFLPosIDType } from '@server/config';
 
 class NFLPlayer extends Model<InferAttributes<NFLPlayer>, InferCreationAttributes<NFLPlayer>> {
   declare id: number;

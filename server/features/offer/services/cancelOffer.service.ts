@@ -1,12 +1,12 @@
 import Queue from 'bull';
 import Joi from 'joi';
 
-import { tobj, validate, uError } from '../../util/util';
-import validators from '../../util/util.schema';
-import { ServiceInput } from '../../util/util.service';
+import { tobj, validate, uError } from '@util/util';
+import validators from '@util/util.schema';
+import { ServiceInput } from '@util/util.service';
 
-import sequelize from '../../../db';
-import { queueOptions } from '../../../db/redis';
+import sequelize from '@db';
+import { queueOptions } from '@db/redis';
 
 import Offer from '../offer.model';
 
