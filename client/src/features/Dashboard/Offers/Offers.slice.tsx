@@ -2,8 +2,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
 
-import type { RootState } from '../../../app/store';
-import { ErrHandler } from '../../../helpers/util';
+import type { RootState } from '@app/store';
+import { ErrHandler } from '@client/helpers/util';
 import OffersAPI from './Offers.api';
 
 import { OfferItemType } from './Offers.types';

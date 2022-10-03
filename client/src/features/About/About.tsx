@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useAppSelector, useAppDispatch } from '../../app/hooks';
+import { useAppSelector, useAppDispatch } from '@app/hooks';
 import { userSelector, clearState } from '../User/User.slice';
 
 function About() {

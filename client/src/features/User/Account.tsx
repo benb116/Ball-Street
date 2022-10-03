@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
-import { useAppSelector } from '../../app/hooks';
+import { useAppSelector } from '@app/hooks';
 
 import {
   useDepositMutation,

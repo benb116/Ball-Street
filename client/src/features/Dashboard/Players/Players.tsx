@@ -1,7 +1,7 @@
 /* eslint-disable no-nested-ternary */
 import React from 'react';
 
-import { useAppSelector, useAppDispatch } from '../../../app/hooks';
+import { useAppSelector, useAppDispatch } from '@app/hooks';
 
 import {
   allPlayersSelector,

@@ -2,8 +2,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
 
-import type { RootState } from '../../app/store';
-import { ErrHandler } from '../../helpers/util';
+import type { RootState } from '@app/store';
+import { ErrHandler } from '@client/helpers/util';
 import UserAPI from './User.api';
 import { LedgerEntryJoinedType } from './User.types';
 

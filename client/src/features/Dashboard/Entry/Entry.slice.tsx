@@ -2,8 +2,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
 
-import type { RootState } from '../../../app/store';
-import { ErrHandler } from '../../../helpers/util';
+import type { RootState } from '@app/store';
+import { ErrHandler } from '@client/helpers/util';
 
 import { EntryType, Roster, RosterPosType } from './Entry.types';
 import { NFLPosType } from '../Players/Players.types';

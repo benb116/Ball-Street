@@ -1,11 +1,11 @@
-import { store } from '../../app/store';
+import { store } from '@app/store';
 
 import { setPhase, updatePrices, setInjury } from './Players/Players.slice';
 import { removeOffer, alertProtMatch } from './Offers/Offers.slice';
 import { offerFilled } from './Entry/Entry.slice';
 import { updateAverage } from './Leaderboard/Leaderboard.slice';
 import { PhaseType, PriceMapItemType } from './Players/Players.types';
-import API from '../../helpers/api';
+import API from '@client/helpers/api';
 
 // Init WS connection and dispatch actions based on events
 const initWS = (contestID: string) => {

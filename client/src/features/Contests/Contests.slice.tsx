@@ -1,9 +1,9 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 
-import type { RootState } from '../../app/store';
+import type { RootState } from '@app/store';
 import ContestsAPI from './Contests.api';
-import { ErrHandler } from '../../helpers/util';
+import { ErrHandler } from '@client/helpers/util';
 
 import { ContestItemType } from './Contests.types';
 import { EntryType, EntryItemType } from '../Dashboard/Entry/Entry.types';

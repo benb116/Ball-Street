@@ -9,7 +9,7 @@ import { contestsSlice } from '../features/Contests/Contests.slice';
 import { modalSlice } from '../features/Dashboard/Modal/Modal.slice';
 import { tradesSlice } from '../features/Dashboard/Trades/Trades.slice';
 
-import API from '../helpers/api';
+import API from '@client/helpers/api';
 
 export const store = configureStore({
   reducer: {

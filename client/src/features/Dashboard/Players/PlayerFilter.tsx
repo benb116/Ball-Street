@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from 'react';
 
-import { useAppSelector, useAppDispatch } from '../../../app/hooks';
+import { useAppSelector, useAppDispatch } from '@app/hooks';
 
 import {
   allGamesSelector,

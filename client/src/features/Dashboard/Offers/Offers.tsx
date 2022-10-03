@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
 
-import { useAppSelector } from '../../../app/hooks';
+import { useAppSelector } from '@app/hooks';
 
 import { allTeamsSelector, playerSelector } from '../Players/Players.slice';
 import { offersSelector } from './Offers.slice';

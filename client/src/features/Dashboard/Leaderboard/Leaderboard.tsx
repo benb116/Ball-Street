@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { useAppSelector } from '../../../app/hooks';
-import { RenderPrice } from '../../../helpers/util';
+import { useAppSelector } from '@app/hooks';
+import { RenderPrice } from '@client/helpers/util';
 
 import { averageSelector } from './Leaderboard.slice';
 

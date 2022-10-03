@@ -1,4 +1,4 @@
-import BaseAPI from '../../helpers/api';
+import BaseAPI from '@client/helpers/api';
 import { ContestItemType } from './Contests.types';
 import { EntryItemType, EntryType } from '../Dashboard/Entry/Entry.types';
 

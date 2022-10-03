@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-import { useAppSelector } from '../../app/hooks';
+import { useAppSelector } from '@app/hooks';
 
 import { contestsSelector } from './Contests.slice';
 import { useGetContestsQuery } from './Contests.api';
