@@ -2,8 +2,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import type { RootState } from '@app/store';
-import ContestsAPI from './Contests.api';
 import { ErrHandler } from '@client/helpers/util';
+import ContestsAPI from './Contests.api';
 
 import { ContestItemType } from './Contests.types';
 import { EntryType, EntryItemType } from '../Dashboard/Entry/Entry.types';

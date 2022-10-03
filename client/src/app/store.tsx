@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
+import API from '@client/helpers/api';
 import { userSlice } from '../features/User/User.slice';
 
 import { entrySlice } from '../features/Dashboard/Entry/Entry.slice';
@@ -8,8 +9,6 @@ import { playersSlice } from '../features/Dashboard/Players/Players.slice';
 import { contestsSlice } from '../features/Contests/Contests.slice';
 import { modalSlice } from '../features/Dashboard/Modal/Modal.slice';
 import { tradesSlice } from '../features/Dashboard/Trades/Trades.slice';
-
-import API from '@client/helpers/api';
 
 export const store = configureStore({
   reducer: {

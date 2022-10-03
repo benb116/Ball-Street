@@ -2,10 +2,10 @@ import React from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
+import { useAppSelector } from '@app/hooks';
 import { useSignupMutation } from './User.api';
 import { SignupInputType } from './User.types';
 import { userSelector } from './User.slice';
-import { useAppSelector } from '@app/hooks';
 
 function Signup() {
   const { register, handleSubmit } = useForm<SignupInputType>();
