@@ -9,8 +9,8 @@ import errorHandler, { ServiceInput } from '@util/util.service';
 import validators from '@util/util.schema';
 
 import sequelize from '@db';
-import Entry from '../entry.model';
 import NFLPlayer from '@features/nflplayer/nflplayer.model';
+import Entry from '../entry.model';
 
 const schema = Joi.object({
   user: validators.user,

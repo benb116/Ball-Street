@@ -8,13 +8,12 @@ import { onlyUnique } from '@features/util/util';
 import getNFLPlayers from '@features/nflplayer/services/getNFLPlayers.service';
 import getWeekEntries from '@features/entry/services/getWeekEntries.service';
 
-import leaderUpdate from './live/channels/projAvgUpdate.channel';
-
 import NFLGame from '@features/nflgame/nflgame.model';
 import Entry from '@features/entry/entry.model';
 
 import projprice from '@db/redis/projprice.redis';
 import projAvg from '@db/redis/projAvg.redis';
+import leaderUpdate from './live/channels/projAvgUpdate.channel';
 
 const average = (array: number[]) => array.reduce((a, b) => a + b) / array.length;
 

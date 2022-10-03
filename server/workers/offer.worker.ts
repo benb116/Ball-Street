@@ -10,6 +10,7 @@ import logger from '@server/utilities/logger';
 
 import { queueOptions } from '@db/redis';
 
+import Offer from '@features/offer/offer.model';
 import protectedMatch from './live/channels/protectedMatch.channel';
 
 import fillOffers from './offer/trader.offer';
@@ -17,7 +18,6 @@ import { getBook, updateBest } from './offer/util.offer';
 import evalProtected from './offer/protected.offer';
 import Book from './offer/book.offer';
 
-import Offer from '@features/offer/offer.model';
 import { MatchPair } from './offer/evaluate.offer';
 
 const offerQueue = new Queue('offer-queue', queueOptions);

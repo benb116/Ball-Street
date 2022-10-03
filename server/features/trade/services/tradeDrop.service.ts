@@ -8,8 +8,8 @@ import { ServiceInput } from '@util/util.service';
 import Entry from '@features/entry/entry.model';
 import NFLGame from '@features/nflgame/nflgame.model';
 import NFLPlayer from '@features/nflplayer/nflplayer.model';
-import EntryAction from '../entryaction.model';
 import { EntryActionKinds } from '@server/config';
+import EntryAction from '../entryaction.model';
 
 const schema = Joi.object({
   user: validators.user,

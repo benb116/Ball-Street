@@ -1,5 +1,5 @@
-import service from '../services/reorderRoster.service';
 import { ErrorTest, ObjectTest } from '@util/util.tests';
+import service from '../services/reorderRoster.service';
 
 describe('reorderRoster service', () => {
   test('Valid request between same position returns data', ObjectTest(

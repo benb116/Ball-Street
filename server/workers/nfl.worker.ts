@@ -6,13 +6,12 @@ import axios from 'axios';
 
 import logger from '@server/utilities/logger';
 
+import scrape from '@db/playerscraper';
+import getNFLPlayers from '@features/nflplayer/services/getNFLPlayers.service';
 import state from './nfl/state.nfl';
 import { InitGameState, PullAllGames } from './nfl/games.nfl';
 import { CalcValues, GetNewStats, SetValues } from './nfl/stats.nfl';
-import scrape from '@db/playerscraper';
 import PullLatestInjuries from './nfl/injury.nfl';
-
-import getNFLPlayers from '@features/nflplayer/services/getNFLPlayers.service';
 
 import yahooData from './tests/yahooData';
 

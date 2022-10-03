@@ -1,5 +1,5 @@
-import service from '../services/signup.service';
 import { ErrorTest, ObjectTest } from '@util/util.tests';
+import service from '../services/signup.service';
 
 describe('signup service', () => {
   test('Valid request returns data without verification', ObjectTest(

@@ -6,9 +6,8 @@ import errorHandler, { ServiceInput } from '@util/util.service';
 
 import sequelize from '@db';
 import LedgerEntry from '@features/ledger/ledgerEntry.model';
-import User from '../user.model';
-
 import { LedgerKinds } from '@server/config';
+import User from '../user.model';
 
 const schema = Joi.object({
   user: validators.user,

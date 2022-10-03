@@ -6,8 +6,8 @@ import { verificationTokenLength } from '@server/config';
 import { validate, uError, OnCompare } from '@util/util';
 import validators from '@util/util.schema';
 
-import User from '../user.model';
 import passReset from '@db/redis/passReset.redis';
+import User from '../user.model';
 
 const schema = Joi.object({
   token: Joi.string().length(verificationTokenLength).required().messages({

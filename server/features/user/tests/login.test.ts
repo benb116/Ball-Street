@@ -1,5 +1,5 @@
-import service from '../services/login.service';
 import { ErrorTest, ObjectTest } from '@util/util.tests';
+import service from '../services/login.service';
 
 describe('login service', () => {
   test('Valid request returns data', ObjectTest(

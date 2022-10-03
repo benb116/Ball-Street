@@ -1,5 +1,5 @@
-import service from '../services/deposit.service';
 import { ErrorTest, ObjectTest } from '@util/util.tests';
+import service from '../services/deposit.service';
 
 describe('deposit service', () => {
   test('Valid request returns data and creates ledger entry', ObjectTest(

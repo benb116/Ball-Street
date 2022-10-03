@@ -5,7 +5,6 @@ import {
 } from '@server/config';
 import teams from '@server/nflinfo';
 import logger from '@server/utilities/logger';
-import scrape from './playerscraper';
 
 import Contest from '@features/contest/contest.model';
 import Entry from '@features/entry/entry.model';
@@ -22,6 +21,7 @@ import LedgerEntry from '@features/ledger/ledgerEntry.model';
 import ProtectedMatch from '@features/protectedmatch/protectedmatch.model';
 import EntryAction from '@features/trade/entryaction.model';
 import EntryActionKind from '@features/trade/entryactionkind.model';
+import scrape from './playerscraper';
 
 async function InitDB() {
   logger.info('Initializing the database');
