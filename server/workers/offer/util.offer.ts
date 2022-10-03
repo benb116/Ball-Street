@@ -1,4 +1,4 @@
-import logger from '../../utilities/logger';
+import logger from '@server/utilities/logger';
 
 import bestbid from '@db/redis/bestbid.redis';
 import bestask from '@db/redis/bestask.redis';

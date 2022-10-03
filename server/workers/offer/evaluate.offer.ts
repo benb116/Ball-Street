@@ -2,7 +2,7 @@
 // Find the match with the highest priority that can be made
 // Returns false for no matches
 
-import logger from '../../utilities/logger';
+import logger from 'utilities/logger';
 
 import type Book from './book.offer';
 

@@ -5,7 +5,7 @@
 import { Transaction } from 'sequelize';
 
 import { tobj } from '@features/util/util';
-import logger from '../../utilities/logger';
+import logger from '@server/utilities/logger';
 
 import sequelize from '@db';
 import channels from '../live/channels.live';

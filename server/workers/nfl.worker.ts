@@ -4,7 +4,7 @@
 
 import axios from 'axios';
 
-import logger from '../utilities/logger';
+import logger from '@server/utilities/logger';
 
 import state from './nfl/state.nfl';
 import { InitGameState, PullAllGames } from './nfl/games.nfl';

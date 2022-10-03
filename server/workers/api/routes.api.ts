@@ -3,7 +3,7 @@
 
 import express from 'express';
 
-import authenticate from '../../middleware/authenticate';
+import authenticate from '@server/middleware/authenticate';
 
 import nfldataRouter from '@features/nflplayer/nfldata.route';
 import entryRouter from '@features/entry/entry.route';

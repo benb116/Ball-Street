@@ -1,5 +1,5 @@
 // Set up example DB records for use in testing
-import logger from '../utilities/logger';
+import logger from '@server/utilities/logger';
 
 import Contest from '@features/contest/contest.model';
 import Entry from '@features/entry/entry.model';

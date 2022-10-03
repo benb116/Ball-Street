@@ -3,8 +3,8 @@
 import {
   EntryActionKinds, LedgerKinds, NFLPosIDs, NFLPosIDType, NFLPosTypes, RosterPosTypes,
 } from '@server/config';
-import teams from '../nflinfo';
-import logger from '../utilities/logger';
+import teams from '@server/nflinfo';
+import logger from '@server/utilities/logger';
 import scrape from './playerscraper';
 
 import Contest from '@features/contest/contest.model';

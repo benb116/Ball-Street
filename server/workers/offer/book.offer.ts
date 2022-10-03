@@ -1,7 +1,7 @@
 // A book is created for every NFLPlayer in each contest
 // It keeps an in-memory store of all offers to consider
 
-import logger from '../../utilities/logger';
+import logger from '@server/utilities/logger';
 
 import evaluateFn from './evaluate.offer';
 

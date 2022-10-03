@@ -4,10 +4,10 @@ import Sequelize, { Op } from 'sequelize';
 import type { Literal } from 'sequelize/types/utils.d';
 import type { Logger } from 'winston';
 
-import teams from '../../nflinfo';
+import teams from '@server/nflinfo';
 
 import { validate, isPlayerOnRoster } from '@features/util/util';
-import logger from '../../utilities/logger';
+import logger from '@server/utilities/logger';
 import { SumPoints } from './dict.nfl';
 
 import state from './state.nfl';

@@ -1,6 +1,6 @@
 import service from '../services/createEntry.service';
 import { ErrorTest } from '@util/util.tests';
-import LedgerEntry from '../../ledger/ledgerEntry.model';
+import LedgerEntry from '@features/ledger/ledgerEntry.model';
 import { LedgerKinds } from '@server/config';
 import sequelize from '@db';
 

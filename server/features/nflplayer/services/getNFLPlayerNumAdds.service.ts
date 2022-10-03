@@ -7,7 +7,7 @@ import { validate } from '@util/util';
 import validators from '@util/util.schema';
 import { ServiceInput } from '@util/util.service';
 
-import Entry from '../../entry/entry.model';
+import Entry from '@features/entry/entry.model';
 
 const schema = Joi.object({
   user: validators.user,

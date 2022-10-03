@@ -1,4 +1,4 @@
-import logger from '../../utilities/logger';
+import logger from '@server/utilities/logger';
 
 import Book from './book.offer';
 import { updateBest } from './util.offer';

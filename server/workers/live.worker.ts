@@ -5,8 +5,8 @@ import WebSocket from 'ws';
 import http from 'http';
 import express, { Request } from 'express';
 
-import session from '../middleware/session';
-import logger from '../utilities/logger';
+import session from '@server/middleware/session';
+import logger from '@server/utilities/logger';
 
 import liveState from './live/state.live'; // Data stored in memory
 import channelMap from './live/channels.live';

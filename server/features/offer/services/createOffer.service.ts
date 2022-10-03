@@ -12,9 +12,9 @@ import errorHandler, { ServiceInput } from '@util/util.service';
 import sequelize from '@db';
 import { queueOptions } from '@db/redis';
 
-import Entry from '../../entry/entry.model';
-import NFLPlayer from '../../nflplayer/nflplayer.model';
-import NFLGame from '../../nflgame/nflgame.model';
+import Entry from '@features/entry/entry.model';
+import NFLPlayer from '@features/nflplayer/nflplayer.model';
+import NFLGame from '@features/nflgame/nflgame.model';
 import Offer from '../offer.model';
 
 const offerQueue = new Queue('offer-queue', queueOptions);

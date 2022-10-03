@@ -6,7 +6,7 @@ import Queue from 'bull';
 
 import { ProtectionDelay } from '@server/config';
 
-import logger from '../utilities/logger';
+import logger from '@server/utilities/logger';
 
 import { queueOptions } from '@db/redis';
 

@@ -5,9 +5,9 @@ import { validate, uError, isPlayerOnRoster } from '@util/util';
 import validators from '@util/util.schema';
 import { ServiceInput } from '@util/util.service';
 
-import Entry from '../../entry/entry.model';
-import NFLGame from '../../nflgame/nflgame.model';
-import NFLPlayer from '../../nflplayer/nflplayer.model';
+import Entry from '@features/entry/entry.model';
+import NFLGame from '@features/nflgame/nflgame.model';
+import NFLPlayer from '@features/nflplayer/nflplayer.model';
 import EntryAction from '../entryaction.model';
 import { EntryActionKinds } from '@server/config';
 

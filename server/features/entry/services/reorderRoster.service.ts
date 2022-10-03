@@ -10,7 +10,7 @@ import validators from '@util/util.schema';
 
 import sequelize from '@db';
 import Entry from '../entry.model';
-import NFLPlayer from '../../nflplayer/nflplayer.model';
+import NFLPlayer from '@features/nflplayer/nflplayer.model';
 
 const schema = Joi.object({
   user: validators.user,

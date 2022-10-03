@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import Offer from '../../offer/offer.model';
+import Offer from '@features/offer/offer.model';
 
 import { validate } from '@util/util';
 import validators from '@util/util.schema';

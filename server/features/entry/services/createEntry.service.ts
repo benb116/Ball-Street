@@ -4,11 +4,11 @@ import { validate, uError, tobj } from '@util/util';
 import validators from '@util/util.schema';
 import errorHandler, { ServiceInput } from '@util/util.service';
 
-import Contest from '../../contest/contest.model';
+import Contest from '@features/contest/contest.model';
 import Entry from '../entry.model';
 import sequelize from '@db';
-import User from '../../user/user.model';
-import LedgerEntry from '../../ledger/ledgerEntry.model';
+import User from '@features/user/user.model';
+import LedgerEntry from '@features/ledger/ledgerEntry.model';
 import { LedgerKinds } from '@server/config';
 
 const schema = Joi.object({

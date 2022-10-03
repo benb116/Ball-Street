@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import logger from '../../utilities/logger';
+import logger from '@server/utilities/logger';
 import { SumPoints, validStatLetters } from './dict.nfl';
 
 import state from './state.nfl';
