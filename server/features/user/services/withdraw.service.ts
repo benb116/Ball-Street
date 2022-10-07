@@ -30,7 +30,7 @@ interface WithdrawalInput extends ServiceInput {
   }
 }
 
-// Create an entry in a contest
+/** Create an entry in a contest */
 async function withdraw(req: WithdrawalInput) {
   const value: WithdrawalInput = validate(req, schema);
 

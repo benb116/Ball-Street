@@ -21,7 +21,7 @@ interface GetEntryInput extends ServiceInput {
   body: Record<string, never>
 }
 
-// Get info for a specific entry
+/** Get info for a specific entry */
 async function getEntry(req: GetEntryInput) {
   const value: GetEntryInput = validate(req, schema);
 

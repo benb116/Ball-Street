@@ -48,6 +48,7 @@ interface ProtMatchJob {
   data: ProtMatchType,
 }
 
+/** Process offers coming on the main queue */
 function processor(job: OfferJob) {
   const { ContestId, NFLPlayerId } = job.data;
   logger.info(JSON.stringify(job.data));
@@ -64,6 +65,7 @@ function processor(job: OfferJob) {
   playerBook.enqueue(async () => { await evaluateBook(playerBook); });
 }
 
+/** Process protected matches whose delay has run out */
 function protectedProcessor(job: ProtMatchJob) {
   logger.info(JSON.stringify(job.data));
   const { ContestId, NFLPlayerId } = job.data;
@@ -72,11 +74,13 @@ function protectedProcessor(job: ProtMatchJob) {
   playerBook.enqueue(async () => { await evalProtected(playerBook, job.data.existingOffer, job.data.newOffer); });
 }
 
-// Check the book and iteratively try to execute matches
-// Operations in this function are not added to the book queue
-// because this function is being run in the queue already.
-// Operations should be done serially
-// so async operations are awaited within this loop
+/**
+ * Check the book and iteratively try to execute matches.
+ * Operations in this function are not added to the book queue
+ * because this function is being run in the queue already.
+ * Operations should be done serially
+ * so async operations are awaited within this loop.
+*/
 async function evaluateBook(playerBook: Book) {
   let match = playerBook.evaluate();
   let oldMatch: false | MatchPair = false;
@@ -121,7 +125,7 @@ async function evaluateBook(playerBook: Book) {
   updateBest(playerBook);
 }
 
-// Add a protMatch to the queue and send a ping
+/** Add a protMatch to the queue and send a ping */
 function addToProtectedMatchQueue(eOffer: Offer, nOffer: Offer, ContestId: number, NFLPlayerId: number) {
   const pm: ProtMatchType = {
     existingOffer: eOffer.id,

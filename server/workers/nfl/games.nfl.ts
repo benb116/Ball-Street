@@ -26,7 +26,7 @@ export async function InitGameState() {
   }
 }
 
-// Get game data (from yahoo or mock data)
+/** Get game data (from yahoo or mock data) */
 function pullGameData() {
   if (Number(process.env.YAHOO_MOCK)) {
     return yahooData.games.gamesMonNightMidgame;
@@ -34,7 +34,7 @@ function pullGameData() {
   return axios.get('https://relay-stream.sports.yahoo.com/nfl/games.txt');
 }
 
-// Parse game info and generate DB records and phase map
+/** Parse game info and generate DB records and phase map */
 export function ParseGameFileInit(data: string) {
   const rawlines = data.split('\n');
   const gamelines = rawlines.filter((l: string) => l[0] === 'g');
@@ -86,7 +86,7 @@ export function ParseGameFileInit(data: string) {
   return { phasemap, gameobjs };
 }
 
-// Create entries in the Phase Map
+/** Create entries in the Phase Map */
 function CreatePhaseMap(gameline: string) {
   const phasemap: PhaseMapType = {};
 
@@ -122,9 +122,11 @@ function CreatePhaseMap(gameline: string) {
   return phasemap;
 }
 
-// Set game phases for each game
-// Schedule phase changes
-// and update the timeObj
+/**
+ * Set game phases for each game
+ * Schedule phase changes
+ * and update the timeObj
+ */
 async function setGamePhases(phasemap: PhaseMapType) {
   // Record phase info in DB
   const setPhases = teamIDs.map((teamID) => {
@@ -146,8 +148,10 @@ async function setGamePhases(phasemap: PhaseMapType) {
   });
 }
 
-// Pull game info and update timefractions
-// timefrac is time elapsed / total game time for use in live projections
+/**
+ * Pull game info and update timefractions.
+ * timefrac is time elapsed / total game time for use in live projections
+ */
 export async function PullAllGames() {
   try {
     const rawGame = await pullGameData();
@@ -160,7 +164,7 @@ export async function PullAllGames() {
   }
 }
 
-// Find games that have changed the time elapsed
+/** Find games that have changed the time elapsed */
 export function ParseGameFileUpdate(data: string) {
   const rawlines = data.split('\n');
   const gamelines = rawlines.filter((l: string) => l[0] === 'g');
@@ -199,7 +203,7 @@ export function ParseGameFileUpdate(data: string) {
   return [changedTeams, postTeams];
 }
 
-// Calculate time left in the game
+/** Calculate time left in the game */
 export function CalculateTimefrac(gameline: string) {
   const terms = gameline.split('|');
 

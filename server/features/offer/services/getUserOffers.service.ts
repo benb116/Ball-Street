@@ -21,6 +21,7 @@ interface GetUserOffersInput extends ServiceInput {
   body: Record<string, never>
 }
 
+/** Get a user's active offers */
 function getUserOffers(req: GetUserOffersInput) {
   const value: GetUserOffersInput = validate(req, schema);
   return Offer.findAll({

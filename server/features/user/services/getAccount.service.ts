@@ -17,6 +17,7 @@ interface GetAccountInput extends ServiceInput {
   body: Record<string, never>,
 }
 
+/** Load a user's account */
 async function getAccount(req: GetAccountInput) {
   const value: GetAccountInput = validate(req, schema);
   const theuser = await User.findByPk(value.user);

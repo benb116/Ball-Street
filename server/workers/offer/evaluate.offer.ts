@@ -12,7 +12,7 @@ export interface MatchPair {
   ask: Offer
 }
 
-// Returns with a bid and ask object detailing the offers
+/** Returns with a bid and ask object detailing the offers */
 function evaluateFn(book: Book) {
   // Get all prices that are being offered
   const bidPrices = Object.entries(book.bid)
@@ -219,7 +219,7 @@ function evaluateFn(book: Book) {
     return Object.keys(book.protMatchMap).find((key) => book.protMatchMap[key] === id);
   }
 
-  // Find the best unmatched ask offer available
+  /** Find the best unmatched ask offer available */
   function bestUnmatchedAsk() {
     let evalask = askPrices[0] || null;
     if (!evalask) return null;
@@ -248,8 +248,10 @@ function evaluateFn(book: Book) {
     return bestAskOffer;
   }
 
-  // Find the best unmatched protected ask offer available
-  // If notMatcher is true, also make sure it is not matched to a pbid
+  /**
+   * Find the best unmatched protected ask offer available
+   * If notMatcher is true, also make sure it is not matched to a pbid
+   */
   function bestUnmatchedProtAsk(notMatcher = false) {
     let evalpask = paskPrices[0] || null;
     if (!evalpask) return null;
@@ -259,7 +261,7 @@ function evaluateFn(book: Book) {
     let bestPAskOffer;
     let pAskIterator = evalpask[1].entries();
     if (evalpask) {
-    // Absolute best protected offer
+      // Absolute best protected offer
       bestPAskOffer = pAskIterator.next().value;
     }
 

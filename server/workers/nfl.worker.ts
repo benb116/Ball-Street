@@ -63,7 +63,7 @@ async function repeat() {
   PullLatestInjuries();
 }
 
-// Populate the playerTeamMap
+/** Populate the playerTeamMap */
 async function createPTMap() {
   const raw = await pullPlayerData();
   const rawlines = raw.data.split('\n');
@@ -85,7 +85,7 @@ function pullPlayerData() {
   return axios.get('https://relay-stream.sports.yahoo.com/nfl/players.txt');
 }
 
-// Populate the preProjMap
+/** Populate the preProjMap */
 function pullPreProj() {
   return getNFLPlayers().then((data) => data.reduce((acc: Record<string, number>, p) => {
     if (p.preprice) acc[p.id] = p.preprice;

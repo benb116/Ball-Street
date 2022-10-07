@@ -26,7 +26,7 @@ interface CreateEntryInput extends ServiceInput {
   body: Record<string, never>
 }
 
-// Create an entry in a contest
+/** Create an entry in a contest */
 async function createEntry(req: CreateEntryInput) {
   const value: CreateEntryInput = validate(req, schema);
 

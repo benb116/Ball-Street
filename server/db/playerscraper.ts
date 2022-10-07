@@ -17,8 +17,7 @@ const baseurl = (posget: string, weeknum: number) => `https://football.fantasysp
 const cookie = process.env.YAHOO_COOKIE;
 let currentweek = 3;
 
-// Pull player info
-// If price, include constant pre- and post-prices
+/** Pull player info. If price, include constant pre- and post-prices */
 async function scrape(price = false) {
   currentweek = Number(process.env.WEEK);
   // Set all existing player records to inactive, will update if duplicated
@@ -40,11 +39,11 @@ async function scrape(price = false) {
   console.log('done');
 }
 
-// Pull one page of players
+/** Pull one page of players */
 async function sendreq(setPrice: boolean, pagenum = 0, posget = 'O') {
   // Send request
   return axios.get(baseurl(posget, currentweek) + pagenum * 25, { headers: { cookie: cookie || '' } })
-  // Clean up HTML response
+    // Clean up HTML response
     .then((res) => res.data.split('<tbody>')[1])
     .then((res) => res.split('</tbody>')[0])
     .then((res) => res.split('</td></tr>'))

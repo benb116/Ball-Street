@@ -20,7 +20,7 @@ import channels from '../live/channels.live';
 
 const { offerFilled, priceUpdate, offerCancelled } = channels;
 
-// Try to fill the offers or return which one is done
+/** Try to fill two offers or return which one is done */
 async function fillOffers(bidid: string, askid: string) {
   logger.info(`begin trade: ${bidid} ${askid}`);
   const out = sequelize.transaction(async (t) => attemptFill(t, bidid, askid));

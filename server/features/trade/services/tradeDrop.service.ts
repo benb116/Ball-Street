@@ -37,6 +37,7 @@ interface TradeDropInput extends ServiceInput {
   }
 }
 
+/** Drop a player within a transaction, but don't commit */
 async function tradeDrop(req: TradeDropInput, t: Transaction) {
   const value: TradeDropInput = validate(req, schema);
 

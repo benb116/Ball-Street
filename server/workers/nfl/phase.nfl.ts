@@ -35,8 +35,10 @@ const schema = Joi.object({
   newphase: Joi.string().valid(...gamePhases).required(),
 });
 
-// Mark a team's phase in the DB, then publish a change to clients
-// If changed to post, then convert players to points
+/**
+ * Mark a team's phase in the DB, then publish a change to clients
+ * If changed to post, then convert players to points
+ */
 async function setPhase(teamID: TeamIDType, newphase: GamePhaseType) {
   const req = { teamID, newphase };
   validate(req, schema);
@@ -64,7 +66,7 @@ async function setPhase(teamID: TeamIDType, newphase: GamePhaseType) {
   }
 }
 
-// Convert all players on a team in all entries to points
+/** Convert all players on a team in all entries to points */
 async function convertTeamPlayers(teamID: number) {
   logger.info(`Converting players on team ${teamID}`);
   const teamPlayers = await NFLPlayer.findAll({
@@ -140,7 +142,7 @@ async function convertTeamPlayers(teamID: number) {
   return Promise.all(conversionPromises).then(() => logger.info(`Team ${teamID} conversion complete`));
 }
 
-// Set a player's postprice based on statlines
+/** Set a player's postprice based on statlines */
 function setPostPrice(p: NFLPlayer) {
   const newp = p.toJSON();
   const playerid = newp.id;

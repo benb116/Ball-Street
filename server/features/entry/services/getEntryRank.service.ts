@@ -1,7 +1,7 @@
 import { Op } from 'sequelize';
 import Joi from 'joi';
 
-import { validate } from '@util/util';
+import { isUError, validate } from '@util/util';
 import validators from '@util/util.schema';
 import { ServiceInput } from '@util/util.service';
 
@@ -24,11 +24,12 @@ interface GetEntryRankInput extends ServiceInput {
   body: Record<string, never>
 }
 
-// Get an entry's rank within a contest
+/** Get an entry's rank within a contest */
 async function getEntryRank(req: GetEntryRankInput) {
   const value: GetEntryRankInput = validate(req, schema);
 
   const theentry = await getEntry(value);
+  if (isUError(theentry)) throw theentry;
   // Count entries with greater point total, then add one
   // If there are three greater, rank is 4
   const greaterEntries = await Entry.count({

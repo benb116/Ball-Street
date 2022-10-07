@@ -43,7 +43,7 @@ interface TradeAddInput extends ServiceInput {
   }
 }
 
-// Add a player within a transaction, but don't commit
+/** Add a player within a transaction, but don't commit */
 async function tradeAdd(req: TradeAddInput, t: Transaction) {
   const value: TradeAddInput = validate(req, schema);
 
