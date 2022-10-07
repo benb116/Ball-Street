@@ -35,7 +35,7 @@ function Players() {
   const thegamefilter = filters.game;
   let thegame: (GameItemType | null) = null;
   if (thegamefilter !== '') {
-    thegame = thegames[Number(thegamefilter)];
+    thegame = thegames[Number(thegamefilter)] || null;
   }
 
   // Run through filters then sorting
@@ -50,19 +50,20 @@ function Players() {
       } else if (p.posName !== filters.posName && filters.posName !== '') return false;
 
       // Team filter
-      if (!theteams[p.NFLTeamId]) return false;
-      if (theteams[p.NFLTeamId].abr !== filters.teamAbr && filters.teamAbr !== '') return false;
+      const playerTeam = theteams[p.NFLTeamId];
+      if (!playerTeam) return false;
+      if (playerTeam.abr !== filters.teamAbr && filters.teamAbr !== '') return false;
 
       // Game filter
       if (
         thegame !== null
-        && theteams[p.NFLTeamId].id !== thegame.HomeId
-        && theteams[p.NFLTeamId].id !== thegame.AwayId
+        && playerTeam.id !== thegame.HomeId
+        && playerTeam.id !== thegame.AwayId
       ) return false;
 
       // Phase filter
-      if (theteams[p.NFLTeamId].phase === 'post') return false;
-      if (theteams[p.NFLTeamId].phase !== filters.phase && filters.phase !== '') return false;
+      if (playerTeam.phase === 'post') return false;
+      if (playerTeam.phase !== filters.phase && filters.phase !== '') return false;
 
       if (filters.injury === 'healthy' && p.injuryStatus) return false;
       if (filters.injury === 'probable' && (p.injuryStatus && p.injuryStatus !== 'P')) return false;
@@ -75,7 +76,10 @@ function Players() {
 
       const sortBy = sorts.sortProp; // What are we sorting by?
       if (sortBy === 'teamAbr') {
-        return compare(theteams[a.NFLTeamId].abr, theteams[b.NFLTeamId].abr);
+        const teamA = theteams[a.NFLTeamId];
+        const teamB = theteams[b.NFLTeamId];
+        if (!teamA || !teamB) return 0;
+        return compare(teamA.abr, teamB.abr);
       }
       if (sortBy === 'lastprice' || sortBy === 'bestbid' || sortBy === 'bestask') {
         const [i1, i2] = [priceMap[a.id]?.[sortBy], priceMap[b.id]?.[sortBy]]; // Get that property

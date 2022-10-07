@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import logger from '../../utilities/logger';
-import teams from '../../nflinfo';
+import { teamIDs, TeamIDType } from '../../nflinfo';
 
 import state from './state.nfl';
 
@@ -11,8 +11,7 @@ import NFLGame from '../../features/nflgame/nflgame.model';
 import yahooData from '../tests/yahooData';
 import { GamePhaseType } from '../../config';
 
-const teamIDs = Object.values(teams).map((t) => t.id, []);
-type PhaseMapType = Record<string, GamePhaseType | number>;
+type PhaseMapType = Partial<Record<TeamIDType, GamePhaseType | number>>;
 
 // Determine all games and their phases
 export async function InitGameState() {
@@ -71,8 +70,8 @@ export function ParseGameFileInit(data: string) {
     if (remainteams.length % 2 !== 0) { logger.error(`Odd number of bye week teams? ${gamelines}`); }
 
     while (remainteams.length > 1) {
-      const team1 = remainteams.shift() as number;
-      const team2 = remainteams.shift() as number;
+      const team1 = remainteams.shift() as TeamIDType;
+      const team2 = remainteams.shift() as TeamIDType;
       phasemap[team1] = 'post' as GamePhaseType;
       phasemap[team2] = 'post' as GamePhaseType;
       gameobjs.push({
@@ -92,8 +91,8 @@ function CreatePhaseMap(gameline: string) {
   const phasemap: PhaseMapType = {};
 
   const terms = gameline.split('|');
-  const awayTeamID = Number(terms[2]);
-  const homeTeamID = Number(terms[3]);
+  const awayTeamID = Number(terms[2]) as TeamIDType;
+  const homeTeamID = Number(terms[3]) as TeamIDType;
 
   const gameState = terms[4]; // F finished, P playing, S not started yet
   const starttime = Number(terms[10]);
@@ -127,19 +126,17 @@ function CreatePhaseMap(gameline: string) {
 // Schedule phase changes
 // and update the timeObj
 async function setGamePhases(phasemap: PhaseMapType) {
-  const phaseTeams = Object.keys(phasemap);
   // Record phase info in DB
-  const setPhases = phaseTeams.map((team) => {
-    const teamID = Number(team);
+  const setPhases = teamIDs.map((teamID) => {
     const phase = phasemap[teamID];
+    if (!phase) return null;
     if (typeof phase === 'number') return setPhase(teamID, 'pre' as GamePhaseType);
     return setPhase(teamID, phase);
   });
   await Promise.all(setPhases);
 
   // Populate timeobj and set up timeouts for "mid" conversions
-  phaseTeams.forEach((team) => {
-    const teamID = Number(team);
+  teamIDs.forEach((teamID) => {
     const phase = phasemap[teamID];
     if (typeof phase === 'number') {
       setTimeout(() => { setPhase(teamID, 'mid' as GamePhaseType); }, (Number(phase) * 1000 - Date.now()));
@@ -155,7 +152,7 @@ export async function PullAllGames() {
   try {
     const rawGame = await pullGameData();
     const [changedTeams, postTeams] = ParseGameFileUpdate(rawGame.data);
-    postTeams.forEach((t) => setPhase(t, 'post' as GamePhaseType));
+    if (postTeams) postTeams.forEach((t) => setPhase(t, 'post' as GamePhaseType));
     return changedTeams;
   } catch (err) {
     logger.error(err);
@@ -167,12 +164,12 @@ export async function PullAllGames() {
 export function ParseGameFileUpdate(data: string) {
   const rawlines = data.split('\n');
   const gamelines = rawlines.filter((l: string) => l[0] === 'g');
-  const changedTeams: number[] = [];
-  const postTeams: number[] = [];
+  const changedTeams: TeamIDType[] = [];
+  const postTeams: TeamIDType[] = [];
   gamelines.forEach((gameline: string) => {
     const terms = gameline.split('|');
-    const team1 = Number(terms[2]);
-    const team2 = Number(terms[3]);
+    const team1 = Number(terms[2]) as TeamIDType;
+    const team2 = Number(terms[3]) as TeamIDType;
 
     // We've already marked this game as done, so end
     if (state.timeObj[team1] === 1) {
@@ -208,7 +205,7 @@ export function CalculateTimefrac(gameline: string) {
 
   // Calculate time left in the game
   const quarter = Number(terms[6]);
-  const time = terms[7].split(':');
+  const time = (terms[7] || '').split(':');
   const isOT = Number(quarter === 5);
   // Calculation should take into account overtime
   const timeElapsed = (

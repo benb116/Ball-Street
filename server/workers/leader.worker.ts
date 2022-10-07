@@ -138,15 +138,18 @@ async function calculateLeaderboard() {
   const contestProjTotals = projTotals.reduce((acc: Record<number, number[]>, cur) => {
     // eslint-disable-next-line no-param-reassign
     if (!acc[cur.contest]) acc[cur.contest] = [];
-    acc[cur.contest].push(Math.max(0, cur.total));
-
+    const thisContest = acc[cur.contest];
+    if (!thisContest) return acc;
+    thisContest.push(Math.max(0, cur.total));
     return acc;
   }, {});
   // console.log(contestSplit);
 
   // For each contest, sort and store
   contests.forEach((c: number) => {
-    const avgProjTotal = Math.ceil(average(contestProjTotals[c]));
+    const contestTotals = contestProjTotals[c];
+    if (!contestTotals) return;
+    const avgProjTotal = Math.ceil(average(contestTotals));
     projAvg.set(c, avgProjTotal);
   });
 

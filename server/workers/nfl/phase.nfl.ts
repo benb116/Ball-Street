@@ -4,7 +4,7 @@ import Sequelize, { Op } from 'sequelize';
 import type { Literal } from 'sequelize/types/utils.d';
 import type { Logger } from 'winston';
 
-import teams from '../../nflinfo';
+import { teamIDs, TeamIDType } from '../../nflinfo';
 
 import { validate, isPlayerOnRoster } from '../../features/util/util';
 import logger from '../../utilities/logger';
@@ -24,7 +24,6 @@ import getWeekEntries from '../../features/entry/services/getWeekEntries.service
 import EntryAction from '../../features/trade/entryaction.model';
 import { EntryActionKinds, gamePhases, GamePhaseType } from '../../config';
 
-const teamIDs = Object.keys(teams).map((teamAbr) => teams[teamAbr].id);
 const schema = Joi.object({
   teamID: Joi.valid(...teamIDs)
     .required()
@@ -40,7 +39,7 @@ const schema = Joi.object({
 
 // Mark a team's phase in the DB, then publish a change to clients
 // If changed to post, then convert players to points
-async function setPhase(teamID: number, newphase: GamePhaseType) {
+async function setPhase(teamID: TeamIDType, newphase: GamePhaseType) {
   const req = { teamID, newphase };
   validate(req, schema);
 
