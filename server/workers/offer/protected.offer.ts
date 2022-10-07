@@ -47,8 +47,8 @@ async function runMatches(poffer: Offer, playerBook: Book) {
   while (matchingOffers.length) {
     // Randomly chosen so no incentive to submit first
     const randomInd = Math.floor(Math.random() * matchingOffers.length);
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const randomOffer = matchingOffers[randomInd]!;
+    const randomOffer = matchingOffers[randomInd];
+    if (!randomOffer) break;
     logger.verbose(`Try to fill ${randomOffer.id}`);
     const bidoffer = (ispbid ? poffer.id : randomOffer.id);
     const askoffer = (!ispbid ? poffer.id : randomOffer.id);

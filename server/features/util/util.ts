@@ -69,8 +69,7 @@ export const isUError = (item: unknown): item is UError => !!(item as UError)?.s
 // Validate an object based on a Joi schema
 export const validate = function validate(input: unknown, schema: Schema) {
   const { value, error } = schema.validate(input);
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  if (error) { uError(error.details[0]!.message, 400); }
+  if (error && error.details[0]) { uError(error.details[0].message, 400); }
   return value;
 };
 
