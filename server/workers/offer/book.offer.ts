@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-// A book is created for every NFLPlayer in each contest
-// It keeps an in-memory store of all offers to consider
-
 import logger from '../../utilities/logger';
 
 import evaluateFn from './evaluate.offer';
@@ -16,6 +12,10 @@ interface MatcherType {
   id: string
 }
 // Inspired by https://web.archive.org/web/20110219163448/http://howtohft.wordpress.com/2011/02/15/how-to-build-a-fast-limit-order-book/
+/**
+ * A book is created for every NFLPlayer in each contest.
+ * It keeps an in-memory store of all offers to consider.
+ */
 class Book {
   contestID: number;
   nflplayerID: number;
@@ -34,7 +34,7 @@ class Book {
     this.contestID = contestID;
     this.nflplayerID = nflPlayerID;
 
-    /*
+    /**
       Each book has a queue of promises that can be chained to.
       This means that functions can be guaranteed to run sequentially.
       Any operation on a book should be done by "enqueueing" it as a function like so:
@@ -79,14 +79,14 @@ class Book {
     this.protMatchMap = {};
   }
 
-  // Add a function to the book's serial queue
+  /** Add a function to the book's serial queue */
   enqueue(fn: ((inp: unknown) => unknown)) {
     this.queue = this.queue.then(fn).catch((err) => {
       logger.error(`Book error: Contest:${this.contestID} Player:${this.nflplayerID}`, err);
     });
   }
 
-  // Add an offer to the book
+  /** Add an offer to the book */
   async add(offer: Offer) {
     const { isbid, price } = offer;
     // which tree to add to
@@ -98,7 +98,7 @@ class Book {
     priceLimit.set(offer.id, offer);
   }
 
-  // Remove and offer from the book
+  /** Remove and offer from the book */
   async cancel(offer: Offer) {
     const { isbid, price } = offer;
     const thetree = this.whichTree(isbid, offer.protected);
@@ -114,8 +114,10 @@ class Book {
     delete this.protMatchMap[offer.id];
   }
 
-  // Mark that a protected offer has been matched
-  // So it doesn't rematch over and over
+  /**
+   * Mark that a protected offer has been matched
+   * So it doesn't rematch over and over
+   */
   async match(matchee: MatcherType, matcher: MatcherType) {
     await ProtectedMatch.create({
       existingId: matchee.id,
@@ -125,8 +127,10 @@ class Book {
     this.protMatchMap[matchee.id] = matcher.id;
   }
 
-  // Mark that a protected offer is no longer matched
-  // So it can be matched again
+  /**
+   * Mark that a protected offer is no longer matched
+   * So it can be matched again
+   */
   async unmatch(matchee: MatcherType) {
     await ProtectedMatch.destroy({
       where: { existingId: matchee.id },
@@ -138,7 +142,7 @@ class Book {
     return evaluateFn(this);
   }
 
-  // Which tree should an offer be added to
+  /** Which tree should an offer be added to */
   whichTree(isbid: boolean, isprotected: boolean): LimitTree {
     const combo = Number(isbid) + 2 * Number(isprotected);
     let thetree = {};
@@ -161,7 +165,7 @@ class Book {
     return thetree;
   }
 
-  // Find all offers in the book that could match a specific protected offer
+  /** Find all offers in the book that could match a specific protected offer */
   findProtectedMatches(offer: Offer) {
     const { isbid, price } = offer;
     // Search all unprotected opposite offers

@@ -23,7 +23,7 @@ interface GetContestEntriesInput extends ServiceInput {
   body: Record<string, never>
 }
 
-// Get all entries in a contest
+/** Get all entries in a contest */
 function getContestEntries(req: GetContestEntriesInput) {
   const value: GetContestEntriesInput = validate(req, schema);
 

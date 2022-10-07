@@ -1,8 +1,3 @@
-// Common route handler function
-// When a request is received, run the specified service function
-// and return the results
-// If there's an error, return the specified status and error message.
-
 import { Request, Response } from 'express';
 
 import { uError, isUError } from './util';
@@ -10,6 +5,12 @@ import { ServiceType } from './util.service';
 
 import { client } from '../../db/redis';
 
+/**
+ * Common route handler function.
+ * When a request is received, run the specified service function
+ * and return the results.
+ * If there's an error, return the specified status and error message.
+ */
 function routeHandler(service: ServiceType, cacheExpiry = 0) {
   return async function routeHandlerInner(req: Request, res: Response) {
     try {
@@ -49,7 +50,7 @@ function cachekey(url: string) {
   return key;
 }
 
-// Strip extraneous info from input
+/** Strip extraneous info from input */
 function stripReq(inp: Request) {
   return {
     user: inp.session?.user?.id || 0,

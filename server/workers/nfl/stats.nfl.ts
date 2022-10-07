@@ -32,14 +32,14 @@ function pullStatData() {
   return axios.get('https://relay-stream.sports.yahoo.com/nfl/stats.txt');
 }
 
-// Allow a statline if it's one of the valid stat categories
+/** Allow a statline if it's one of the valid stat categories */
 function StatType(line: string) {
   const statLetter = line[0];
   if (!statLetter) return false;
   return validStatLetters.indexOf(statLetter) > -1;
 }
 
-// Determine if a statline has changed
+/** Determine if a statline has changed */
 export function UpdateStats(line: string) {
   const terms = line.split('|');
   const stattype = terms[0];
@@ -58,7 +58,7 @@ export function UpdateStats(line: string) {
   return diff;
 }
 
-// Calculate new point values (actual and live projection)
+/** Calculate new point values (actual and live projection) */
 export function CalcValues(statlines: string[] = [], newteamTimes : TeamIDType[] = []) {
   const statPlayers = statlines.map((l: string) => Number(l.split('|')[1]));
   const teamPlayers = newteamTimes.map((t) => state.teamPlayerMap[t]).flat();
@@ -71,7 +71,7 @@ interface PlayerValType {
   statPrice: number,
   projPrice: number,
 }
-// Calculate statpoints and projpoints for players with changed stats
+/** Calculate statpoints and projpoints for players with changed stats */
 function CalcPlayer(playerid: number) {
   // Get a player's stat object
   const stats = (state.statObj[playerid] || {});
@@ -87,7 +87,7 @@ function CalcPlayer(playerid: number) {
   };
 }
 
-// Calculate new live projection for a player
+/** Calculate new live projection for a player */
 export function EstimateProjection(playerid: number, statpoints: number) {
   // Find player's team
   let teamID = state.playerTeamMap[playerid];
@@ -107,7 +107,7 @@ export function EstimateProjection(playerid: number, statpoints: number) {
   return statpoints + timeleft * (state.preProjObj[dbid] || 0);
 }
 
-// Set values in redis and publish an update
+/** Set values in redis and publish an update */
 export function SetValues(playerVals: PlayerValType[]) {
   const outobj = playerVals.reduce((acc, cur) => {
     acc[cur.nflplayerID] = {

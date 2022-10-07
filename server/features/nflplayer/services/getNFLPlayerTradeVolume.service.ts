@@ -23,7 +23,7 @@ interface GetNFLPlayerTradeVolumeInput extends ServiceInput {
   body: Record<string, never>
 }
 
-// How many offers exist for a player in a contest?
+/** How many offers exist for a player in a contest? */
 function getNFLPlayerTradeVolume(req: GetNFLPlayerTradeVolumeInput) {
   const value: GetNFLPlayerTradeVolumeInput = validate(req, schema);
 

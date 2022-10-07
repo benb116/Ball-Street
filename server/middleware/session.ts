@@ -20,6 +20,7 @@ declare module 'express-session' {
   }
 }
 
+/** Session middleware based on redis store */
 export default session({
   secret: process.env.COOKIE_SECRET || 'defaultSecret',
   name: '_ballstreet',

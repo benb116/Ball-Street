@@ -1,5 +1,6 @@
 import { createLogger, format, transports } from 'winston';
 
+/** Common logger functionality. Has info, error, and custom "verbose" */
 const logger = createLogger({
   level: 'info',
   format: format.combine(

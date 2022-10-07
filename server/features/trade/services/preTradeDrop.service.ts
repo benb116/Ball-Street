@@ -31,7 +31,7 @@ interface PreTradeDropInput extends ServiceInput {
   }
 }
 
-// Try to add within a transaction, errors will rollback
+/** Try to drop within a transaction, errors will rollback */
 async function preTradeDrop(req: PreTradeDropInput) {
   const value: PreTradeDropInput = validate(req, schema);
 

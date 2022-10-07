@@ -24,6 +24,7 @@ interface GetUserTradesInput extends ServiceInput {
   body: Record<string, never>
 }
 
+/** Get all of the trades a user has made, including bids, asks, and entry actions */
 async function getUserTrades(req: GetUserTradesInput) {
   const value: GetUserTradesInput = validate(req, schema);
 

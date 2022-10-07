@@ -58,23 +58,23 @@ export interface UError extends Error {
   status: number,
 }
 
-// Custom error function that returns a msg and http status
+/** Custom error function that returns a msg and http status */
 export const uError = function uError(msg: string, status = 500) {
   const uerr: UError = { name: msg, message: msg, status };
   throw uerr;
+  return uerr;
 };
 
 export const isUError = (item: unknown): item is UError => !!(item as UError)?.status;
 
-// Validate an object based on a Joi schema
+/** Validate an object based on a Joi schema */
 export const validate = function validate(input: unknown, schema: Schema) {
   const { value, error } = schema.validate(input);
   if (error && error.details[0]) { uError(error.details[0].message, 400); }
   return value;
 };
 
-// Compare strings in constant time
-// https://snyk.io/blog/node-js-timing-attack-ccc-ctf/
+/** Compare strings in constant time https://snyk.io/blog/node-js-timing-attack-ccc-ctf/  */
 export const OnCompare = function OnCompare(a: string, b: string) {
   let mismatch = 0;
   for (let i = 0; i < a.length; ++i) {
@@ -83,7 +83,8 @@ export const OnCompare = function OnCompare(a: string, b: string) {
   }
   return mismatch;
 };
-// Filter out duplicates
+
+/** Filter out duplicates */
 export const onlyUnique = function onlyUnique(value: unknown, index: number, self: unknown[]) {
   return self.indexOf(value) === index;
 };

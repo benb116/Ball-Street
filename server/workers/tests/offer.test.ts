@@ -8,6 +8,7 @@ import { TestPromiseMap } from '../../features/util/util.tests';
 import bestbid from '../../db/redis/bestbid.redis';
 import bestask from '../../db/redis/bestask.redis';
 import { ProtectionDelay, RefreshTime } from '../../config';
+import { isUError } from '../../features/util/util';
 
 const contestID = 3;
 
@@ -111,6 +112,7 @@ async function run() {
           pMap.offer1!.done = true;
           pMap.offer1!.res(msg);
           const out = await createOffer(reqBody(2, 21, true, 400, true));
+          if (isUError(out)) throw out;
           cancelOffer = out.id;
         } else if (!pMap.nonMatch!.done) {
           pMap.nonMatch!.done = true;

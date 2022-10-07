@@ -24,9 +24,11 @@ export interface ServiceInput {
   body: Record<string, unknown>,
 }
 
-// Handle errors in services
-// Takes a map that determines message and status based on error
-// Passes UErrors through directly.
+/**
+ * Handle errors in services
+ * Takes a map that determines message and status based on error.
+ * Passes UErrors through directly.
+ */
 export default function errorHandler(responseMap: ResponseMapType) {
   return function errorHandlerInner(err: unknown) {
     if (isUError(err)) throw err;

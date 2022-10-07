@@ -19,6 +19,7 @@ interface ForceLogoutInput extends ServiceInput {
   body: Record<string, never>,
 }
 
+/** Force a user to logout by deleting all session info */
 async function forceLogout(req: ForceLogoutInput) {
   const value: ForceLogoutInput = validate(req, schema);
 
