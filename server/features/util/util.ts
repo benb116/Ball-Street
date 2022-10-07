@@ -25,10 +25,9 @@ export const isInvalidSpot = function isInvalidSpot(playerType: NFLPosIDType, ro
 
 // Is a player on the entry's roster
 export const isPlayerOnRoster = function isPlayerOnRoster(entry: Entry, playerID: number): RPosType | false {
-  for (let i = 0; i < RosterPositions.length; i++) {
-    if (entry[RosterPositions[i]] === playerID) {
-      return RosterPositions[i];
-    }
+  // eslint-disable-next-line no-restricted-syntax
+  for (const rpos of RosterPositions) {
+    if (entry[rpos] === playerID) return rpos;
   }
   return false;
 };
@@ -36,9 +35,10 @@ export const isPlayerOnRoster = function isPlayerOnRoster(entry: Entry, playerID
 // Could a player type be put into a spot on the roster
 // Is the spot open AND is the player type valid
 export const isOpenRoster = function isOpenRoster(theentry: Entry, playerType: NFLPosIDType) {
-  for (let i = 0; i < RosterPositions.length; i++) {
-    if (theentry[RosterPositions[i]] === null && !isInvalidSpot(playerType, RosterPositions[i])) {
-      return RosterPositions[i];
+  // eslint-disable-next-line no-restricted-syntax
+  for (const rpos of RosterPositions) {
+    if (theentry[rpos] === null && !isInvalidSpot(playerType, rpos)) {
+      return rpos;
     }
   }
   return false;
@@ -70,7 +70,7 @@ export const isUError = (item: unknown): item is UError => !!(item as UError)?.s
 /** Validate an object based on a Joi schema */
 export const validate = function validate(input: unknown, schema: Schema) {
   const { value, error } = schema.validate(input);
-  if (error) { uError(error.details[0].message, 400); }
+  if (error && error.details[0]) { uError(error.details[0].message, 400); }
   return value;
 };
 

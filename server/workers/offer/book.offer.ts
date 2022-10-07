@@ -5,7 +5,7 @@ import evaluateFn from './evaluate.offer';
 import Offer from '../../features/offer/offer.model';
 import ProtectedMatch from '../../features/protectedmatch/protectedmatch.model';
 
-type LimitMap = Map<string, Offer>;
+export type LimitMap = Map<string, Offer>;
 type LimitTree = Record<string, LimitMap>;
 
 interface MatcherType {
@@ -92,10 +92,10 @@ class Book {
     // which tree to add to
     const thetree = this.whichTree(isbid, offer.protected);
     // If this is the first offer at a price, make a new limit
-    if (!thetree[price]) {
-      thetree[price] = new Map();
-    }
-    thetree[price].set(offer.id, offer);
+    if (!thetree[price]) thetree[price] = new Map();
+    const priceLimit = thetree[price];
+    if (!priceLimit) return;
+    priceLimit.set(offer.id, offer);
   }
 
   /** Remove and offer from the book */
@@ -103,10 +103,11 @@ class Book {
     const { isbid, price } = offer;
     const thetree = this.whichTree(isbid, offer.protected);
 
-    if (!thetree[price]) return;
-    thetree[price].delete(offer.id);
+    const priceLimit = thetree[price];
+    if (!priceLimit) return;
+    priceLimit.delete(offer.id);
     // If the limit price is now empty, delete it
-    if (!thetree[price].size) {
+    if (!priceLimit.size) {
       delete thetree[price];
     }
     // if offer was part of a protected match, delete it
@@ -169,25 +170,18 @@ class Book {
     const { isbid, price } = offer;
     // Search all unprotected opposite offers
     const thetree = this.whichTree(!isbid, false);
-    // Get limits
-    const allMatchingPrices = Object.keys(thetree)
-      .map(Number)
-      .filter((p) => (isbid && p <= price) || (!isbid && p >= price));
     // Get offers
-    const allMatchingOffers = allMatchingPrices
-      .map((p) => thetree[p]) // get limit trees
-      .map((l) => [...l.entries()]) // get offers
+    const allMatchingOffers = Object.entries(thetree)
+      .filter((p) => (isbid && Number(p[0]) <= price) || (!isbid && Number(p[0]) >= price))
+      .map((l) => [...l[1].entries()]) // get offers
       .reduce((acc, cur) => [...acc, ...cur], []) // concat all
       .map((e) => e[1]);
 
     // Search protected opposite offers that have not been matched
     const theptree = this.whichTree(!isbid, true);
-    const allMatchingPPrices = Object.keys(theptree)
-      .map(Number)
-      .filter((p) => (isbid && p <= price) || (!isbid && p >= price));
-    const allMatchingPOffers = allMatchingPPrices
-      .map((p) => theptree[p])
-      .map((l) => [...l.entries()])
+    const allMatchingPOffers = Object.entries(theptree)
+      .filter((p) => (isbid && Number(p[0]) <= price) || (!isbid && Number(p[0]) >= price))
+      .map((l) => [...l[1].entries()])
       .reduce((acc, cur) => [...acc, ...cur], []) // concat all
     // only offers that have not been matched
       .filter((e) => !this.protMatchMap[e[0]])

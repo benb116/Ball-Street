@@ -15,6 +15,7 @@ import PullLatestInjuries from './nfl/injury.nfl';
 import getNFLPlayers from '../features/nflplayer/services/getNFLPlayers.service';
 
 import yahooData from './tests/yahooData';
+import { TeamIDType } from '../nflinfo';
 
 const checkInterval = 10000;
 
@@ -71,7 +72,8 @@ async function createPTMap() {
   return playerlines.reduce((acc: Record<string, number>, line: string) => {
     const terms = line.split('|');
     const playerID = terms[1];
-    const teamID = Number(terms[2]);
+    if (!playerID) return acc;
+    const teamID = Number(terms[2]) as TeamIDType;
     acc[playerID] = teamID;
     return acc;
   }, {});

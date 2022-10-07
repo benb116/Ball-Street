@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import state from '../nfl/state.nfl';
 import { SumPoints } from '../nfl/dict.nfl';
 import { CalculateTimefrac, ParseGameFileInit, ParseGameFileUpdate } from '../nfl/games.nfl';
@@ -80,7 +81,7 @@ describe('NFL worker tests', () => {
     const projvals = [2000, 1120, 1000, 1095, 720, 464, 1200];
 
     pIDs.forEach((p, i) => {
-      test(`${p} projection`, () => { expect(EstimateProjection(p, statpoints[i])).toBe(projvals[i]); });
+      test(`${p} projection`, () => { expect(EstimateProjection(p, statpoints[i]!)).toBe(projvals[i]); });
     });
   });
 
@@ -124,7 +125,7 @@ describe('NFL worker tests', () => {
         .map((e) => Number(e[0]));
       test(testname, () => {
         state.timeObj = {};
-        const [changedTeams, postTeams2] = ParseGameFileUpdate(yahoo.games[testname].data);
+        const [changedTeams, postTeams2] = ParseGameFileUpdate(yahoo.games[testname].data) as [number[], number[]];
         expect(changedTeams).toStrictEqual(yahoo.games[testname].changedTeams);
         expect(postTeams).toEqual(expect.arrayContaining(postTeams2));
         expect(postTeams2).toEqual(expect.arrayContaining(postTeams));

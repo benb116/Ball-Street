@@ -86,19 +86,23 @@ async function PublishInjuryChanges(changedInjuries: NFLPlayer[]) {
 }
 
 export function FormatInjuryObjects(raw: string) {
-  const main = raw.split('<tbody>')[1].split('</tbody')[0];
-
+  const begin = raw.split('<tbody>')[1];
+  if (!begin) return [];
+  const main = begin.split('</tbody')[0];
+  if (!main) return [];
   const units = main.split('</tr>');
 
   return units.reduce((acc, u) => {
     if (!u) return acc;
     const start = u.split('data-ys-playerid="')[1];
+    if (!start) return acc;
     const [playerid, pidout] = start.split('" data-ys-playernote');
-    if (!playerid) return acc;
+    if (!playerid || !pidout) return acc;
     const statusout = pidout.split('</abbr>')[0];
-    let status = statusout[statusout.length - 1];
+    if (!statusout) return acc;
+    let status = statusout[statusout.length - 1] || null;
     const statusPreChar = statusout[statusout.length - 2];
-    if (['P', 'Q', 'D'].indexOf(status) === -1) status = 'O';
+    if (status && ['P', 'Q', 'D'].indexOf(status) === -1) status = 'O';
     // Abbrev could be SUSP, which would otherwise be seen as P
     if (statusPreChar !== '>') status = 'O';
 

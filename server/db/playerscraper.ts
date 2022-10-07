@@ -3,9 +3,11 @@
 
 // Pull player data from an API
 import axios from 'axios';
-import { NFLPosIDType, RosterPosTypes } from '../config';
+import {
+  NFLPosIDType, RosterPosKindList, RosterPosKinds, RosterPosKindType,
+} from '../config';
 import NFLPlayer from '../features/nflplayer/nflplayer.model';
-import teams from '../nflinfo';
+import teams, { TeamKind } from '../nflinfo';
 
 // eslint-disable-next-line max-len
 const baseurl = (posget: string, weeknum: number) => `https://football.fantasysports.yahoo.com/f1/590922/players?status=ALL&pos=${posget}&cut_type=9&stat1=S_PW_${weeknum}&myteam=1&sort=PTS&sdir=1&count=`;
@@ -35,7 +37,7 @@ async function scrape(price = false) {
 }
 
 /** Pull one page of players */
-async function sendreq(price: boolean, pagenum = 0, posget = 'O') {
+async function sendreq(setPrice: boolean, pagenum = 0, posget = 'O') {
   // Send request
   return axios.get(baseurl(posget, currentweek) + pagenum * 25, { headers: { cookie: cookie || '' } })
     // Clean up HTML response
@@ -48,28 +50,42 @@ async function sendreq(price: boolean, pagenum = 0, posget = 'O') {
       const term = (posget === 'DEF' ? 'teams' : 'players');
       const trimfront = playerline
         .split(`<a class="Nowrap name F-link" href="https://sports.yahoo.com/nfl/${term}/`)[1];
+      if (!trimfront) return undefined;
       const [id, idout] = trimfront.split('" target="_blank">');
+      if (!idout) return undefined;
       const [name, nameout] = idout.split('</a> <span class="Fz-xxs">');
+      if (!nameout) return undefined;
       const [team, teamout] = nameout.split(' - ');
+      if (!team || !teamout) return undefined;
+      const teamAbr = team.toUpperCase() as TeamKind;
       const [pos, posout] = teamout.split('</span> </div>\n        </div>\n        <div class=\"Grid-bind-end\">');
-      const posid = (RosterPosTypes[pos]?.id || RosterPosTypes[pos.split(',')[0]].id || 0); // Could be WR,RB
-      const preprice = Math.round(Number(posout.split('span class=\"Fw-b\">')[1].split('</span>')[0]) * 100);
+      if (!pos || !posout) return undefined;
+      const posClean = pos.split(',')[0] as RosterPosKindType;
+      if (!posClean) return undefined;
+      if (!RosterPosKindList.includes(posClean)) return undefined;
+
+      const posid = (RosterPosKinds[posClean].id || RosterPosKinds[posClean].id || 0); // Could be WR,RB
+
+      const priceString = posout.split('span class=\"Fw-b\">')[1]?.split('</span>')[0];
+
+      const preprice = priceString ? Math.round(Number(priceString) * 100) : null;
       const injout = posout.split('abbr class="F-injury"');
       let injuryStatus = null;
       if (injout.length === 2) {
         // eslint-disable-next-line prefer-destructuring
-        injuryStatus = injout[1].split('>')[1].split('<')[0];
+        injuryStatus = injout[1]?.split('>')[1]?.split('<')[0] as string | undefined;
+        if (!injuryStatus) injuryStatus = null;
         // Make any weird statuses (like NA, or COVID-19) into a simple out
-        if (['P', 'Q', 'D'].indexOf(injuryStatus) === -1) injuryStatus = 'O';
+        else if (['P', 'Q', 'D'].indexOf(injuryStatus) === -1) injuryStatus = 'O';
       }
       // Player object that will be added to DB
       const outobj = {
-        id: (posget === 'DEF' ? teams[team.toUpperCase()].id : Number(id)),
+        id: (posget === 'DEF' ? teams[teamAbr].id : Number(id)),
         name,
-        NFLTeamId: teams[team.toUpperCase()].id,
+        NFLTeamId: teams[teamAbr].id,
         NFLPositionId: posid as NFLPosIDType,
-        preprice: (price ? 1100 : preprice),
-        postprice: (price ? 700 : 0),
+        preprice: (setPrice ? 1100 : preprice),
+        postprice: (setPrice ? 700 : 0),
         active: true,
         injuryStatus,
       } as NFLPlayer;

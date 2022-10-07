@@ -1,8 +1,10 @@
+import { TeamIDType } from '../../nflinfo';
+
 const out = {
-  playerTeamMap: {} as Record<number, number>, // PlayerID: TeamID
-  teamPlayerMap: {} as Record<number, number[]>, // TeamID: [PlayerID]
+  playerTeamMap: {} as Record<number, TeamIDType>, // PlayerID: TeamID
+  teamPlayerMap: {} as Record<TeamIDType, number[]>, // TeamID: [PlayerID]
   statObj: {} as Record<string, Record<string, string>>, // PlayerID: StatCat: Statline
-  timeObj: {} as Record<string, number>, // TeamID: Timefrac
+  timeObj: {} as Partial<Record<TeamIDType, number>>, // TeamID: Timefrac
   preProjObj: {} as Record<string, number>, // PlayerID: Pregame projection
   injObj: {} as Record<string, string | null>,
 };

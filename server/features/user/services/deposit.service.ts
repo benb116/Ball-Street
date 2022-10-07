@@ -6,7 +6,7 @@ import errorHandler, { ServiceInput } from '../../util/util.service';
 
 import sequelize from '../../../db';
 import LedgerEntry from '../../ledger/ledgerEntry.model';
-import { LedgerKinds } from '../../../config';
+import { ledgerKinds } from '../../../config';
 import User from '../user.model';
 
 const schema = Joi.object({
@@ -46,7 +46,7 @@ async function deposit(req: DepositInput) {
     const ledgerObj = {
       UserId: value.user,
       ContestId: null,
-      LedgerKindId: LedgerKinds.Deposit.id,
+      LedgerKindId: ledgerKinds.Deposit.id,
       value: value.body.amount,
     };
 
