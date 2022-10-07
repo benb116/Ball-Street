@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 // A book is created for every NFLPlayer in each contest
 // It keeps an in-memory store of all offers to consider
 
@@ -93,7 +92,9 @@ class Book {
     const thetree = this.whichTree(isbid, offer.protected);
     // If this is the first offer at a price, make a new limit
     if (!thetree[price]) thetree[price] = new Map();
-    thetree[price]!.set(offer.id, offer);
+    const priceLimit = thetree[price];
+    if (!priceLimit) return;
+    priceLimit.set(offer.id, offer);
   }
 
   // Remove and offer from the book
@@ -101,10 +102,11 @@ class Book {
     const { isbid, price } = offer;
     const thetree = this.whichTree(isbid, offer.protected);
 
-    if (!thetree[price]) return;
-    thetree[price]!.delete(offer.id);
+    const priceLimit = thetree[price];
+    if (!priceLimit) return;
+    priceLimit.delete(offer.id);
     // If the limit price is now empty, delete it
-    if (!thetree[price]!.size) {
+    if (!priceLimit.size) {
       delete thetree[price];
     }
     // if offer was part of a protected match, delete it

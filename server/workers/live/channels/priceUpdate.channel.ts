@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { RefreshTime } from '../../../config';
 
 import liveState from '../state.live'; // Data stored in memory
@@ -33,12 +32,13 @@ const priceUpdate = {
     } = JSON.parse(message);
     liveState.priceUpdateMap[contestID] = liveState.priceUpdateMap[contestID] || {};
     const contestPriceMap = liveState.priceUpdateMap[contestID];
-    contestPriceMap![nflplayerID] = contestPriceMap![nflplayerID] || { nflplayerID };
-    const contestPlayerPriceMap = contestPriceMap![nflplayerID];
-    if (bestbid !== undefined) contestPlayerPriceMap!.bestbid = bestbid;
-    if (bestask !== undefined) contestPlayerPriceMap!.bestask = bestask;
-    // eslint-disable-next-line max-len
-    if (lastprice !== undefined) contestPlayerPriceMap!.lastprice = lastprice;
+    if (!contestPriceMap) return;
+    contestPriceMap[nflplayerID] = contestPriceMap[nflplayerID] || { nflplayerID };
+    const contestPlayerPriceMap = contestPriceMap[nflplayerID];
+    if (!contestPlayerPriceMap) return;
+    if (bestbid !== undefined) contestPlayerPriceMap.bestbid = bestbid;
+    if (bestask !== undefined) contestPlayerPriceMap.bestask = bestask;
+    if (lastprice !== undefined) contestPlayerPriceMap.lastprice = lastprice;
   },
 };
 
