@@ -1,9 +1,8 @@
-import logger from '../../utilities/logger';
+import logger from '@server/utilities/logger';
 
+import Offer from '@features/offer/offer.model';
+import ProtectedMatch from '@features/protectedmatch/protectedmatch.model';
 import evaluateFn from './evaluate.offer';
-
-import Offer from '../../features/offer/offer.model';
-import ProtectedMatch from '../../features/protectedmatch/protectedmatch.model';
 
 export type LimitMap = Map<string, Offer>;
 type LimitTree = Record<string, LimitMap>;
@@ -16,7 +15,7 @@ interface MatcherType {
  * A book is created for every NFLPlayer in each contest.
  * It keeps an in-memory store of all offers to consider.
  */
-class Book {
+export class Book {
   contestID: number;
   nflplayerID: number;
   queue: Promise<unknown>;
@@ -189,5 +188,3 @@ class Book {
     return [...allMatchingOffers, ...allMatchingPOffers];
   }
 }
-
-export default Book;

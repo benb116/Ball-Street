@@ -1,11 +1,11 @@
 import { QueryTypes } from 'sequelize';
 import Joi from 'joi';
 
-import { validate } from '../../util/util';
-import validators from '../../util/util.schema';
-import { ServiceInput } from '../../util/util.service';
+import { validate } from '@util/util';
+import validators from '@util/util.schema';
+import { ServiceInput } from '@util/util.service';
 
-import sequelize from '../../../db';
+import sequelize from '@db';
 
 const schema = Joi.object({
   user: validators.user,

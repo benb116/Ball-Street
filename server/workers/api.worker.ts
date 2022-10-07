@@ -2,10 +2,10 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 
-import session from '../middleware/session';
-import logger from '../utilities/logger';
+import session from '@server/middleware/session';
+import logger from '@server/utilities/logger';
 
-import userRoute from '../features/user/user.route';
+import userRoute from '@features/user/user.route';
 import apiRoute from './api/routes.api';
 
 const isProduction = process.env.NODE_ENV === 'production';

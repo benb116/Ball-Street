@@ -1,11 +1,11 @@
 import Joi from 'joi';
 
-import { verificationTokenLength } from '../../../config';
+import { verificationTokenLength } from '@server/config';
 
-import { validate, uError } from '../../util/util';
+import { validate, uError } from '@util/util';
 
+import emailVer from '@db/redis/emailVer.redis';
 import User from '../user.model';
-import emailVer from '../../../db/redis/emailVer.redis';
 
 const schema = Joi.object({
   token: Joi.string().length(verificationTokenLength).required().messages({

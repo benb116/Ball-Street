@@ -1,5 +1,5 @@
 import express from 'express';
-import routeHandler from '../util/util.route';
+import routeHandler from '@util/util.route';
 
 import getUserTrades from './services/getUserTrades.service';
 import preTradeAdd from './services/preTradeAdd.service';

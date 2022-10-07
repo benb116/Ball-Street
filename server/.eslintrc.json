@@ -1,41 +1,46 @@
 {
-    "env": {
-        "browser": true,
-        "es2021": true,
-        "jest/globals": true
-    },
-    "extends": [
-        "plugin:security/recommended",
-        "plugin:node/recommended",
-        "airbnb",
-        "airbnb-typescript",
-        "eslint:recommended",
-        "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended"
-    ],
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "ecmaVersion": 2020,
-        "sourceType": "module",
-        "project": ["./tsconfig.json"]
-    },
-    "plugins": [
-        "jest",
-        "node",
-        "security",
-        "@typescript-eslint"
-    ],
-    "rules": {
-        "no-useless-concat": "off",
-        "@typescript-eslint/no-use-before-define": ["error", { "functions": false, "classes": true }],
-        "no-plusplus": [2, { "allowForLoopAfterthoughts": true }],
-        "security/detect-object-injection": "off",
-        "node/no-unsupported-features/es-syntax": ["error", { "ignores": ["modules"] } ],
-        "node/no-missing-import": ["error", {
-            "allowModules": [],
-            "tryExtensions": [".js", ".json", ".node", ".ts"]
-        }],
-        "max-len": ["error", { "code": 120, "tabWidth": 2, "ignoreComments": true }],
-        "@typescript-eslint/lines-between-class-members": "off"
+  "env": {
+      "browser": true,
+      "es2021": true,
+      "jest/globals": true
+  },
+  "extends": [
+      "plugin:security/recommended",
+      "plugin:node/recommended",
+      "airbnb",
+      "airbnb-typescript",
+      "eslint:recommended",
+      "plugin:@typescript-eslint/eslint-recommended",
+      "plugin:@typescript-eslint/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+      "ecmaVersion": 2020,
+      "sourceType": "module",
+      "project": ["./tsconfig.json"]
+  },
+  "plugins": [
+      "jest",
+      "node",
+      "security",
+      "@typescript-eslint"
+  ],
+  "rules": {
+      "no-useless-concat": "off",
+      "@typescript-eslint/no-use-before-define": ["error", { "functions": false, "classes": true }],
+      "no-plusplus": [2, { "allowForLoopAfterthoughts": true }],
+      "security/detect-object-injection": "off",
+      "node/no-unsupported-features/es-syntax": ["error", { "ignores": ["modules"] } ],
+      "node/no-missing-import": "off",
+      "max-len": ["error", { "code": 120, "tabWidth": 2, "ignoreComments": true }],
+      "@typescript-eslint/lines-between-class-members": "off"
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "paths": ["./"],
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
     }
+  }
 }

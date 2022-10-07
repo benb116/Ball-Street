@@ -3,14 +3,14 @@
 // Submit random buy and sell orders from various users
 // Some protected some not
 
-import User from '../../features/user/user.model';
-import Contest from '../../features/contest/contest.model';
-import Entry from '../../features/entry/entry.model';
+import User from '@features/user/user.model';
+import Contest from '@features/contest/contest.model';
+import Entry from '@features/entry/entry.model';
 
-import createOffer from '../../features/offer/services/createOffer.service';
-import Offer from '../../features/offer/offer.model';
-import logger from '../../utilities/logger';
-import getNFLPlayerOfferSummary from '../../features/nflplayer/services/getNFLPlayerOfferSummary.service';
+import createOffer from '@features/offer/services/createOffer.service';
+import Offer from '@features/offer/offer.model';
+import logger from '@server/utilities/logger';
+import getNFLPlayerOfferSummary from '@features/nflplayer/services/getNFLPlayerOfferSummary.service';
 
 const numUsers = 4000;
 

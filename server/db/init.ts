@@ -2,27 +2,33 @@
 
 import {
   EntryActionKindArray,
-  EntryActionKinds, ledgerKindArray, ledgerKinds, NFLPosIDs, NFLPosIDType, NFLPosTypes, RosterPosKinds,
-} from '../config';
-import teams, { teamList } from '../nflinfo';
-import logger from '../utilities/logger';
-import scrape from './playerscraper';
+  EntryActionKinds,
+  ledgerKindArray,
+  ledgerKinds,
+  NFLPosIDs,
+  NFLPosIDType,
+  NFLPosTypes,
+  RosterPosKinds,
+} from '@server/config';
+import teams, { teamList } from '@server/nflinfo';
+import logger from '@server/utilities/logger';
 
-import Contest from '../features/contest/contest.model';
-import Entry from '../features/entry/entry.model';
-import NFLGame from '../features/nflgame/nflgame.model';
-import NFLPlayer from '../features/nflplayer/nflplayer.model';
-import NFLPosition from '../features/nflposition/nflposition.model';
-import NFLTeam from '../features/nflteam/nflteam.model';
-import Offer from '../features/offer/offer.model';
-import PriceHistory from '../features/pricehistory/pricehistory.model';
-import Trade from '../features/trade/trade.model';
-import User from '../features/user/user.model';
-import LedgerKind from '../features/ledger/ledgerKind.model';
-import LedgerEntry from '../features/ledger/ledgerEntry.model';
-import ProtectedMatch from '../features/protectedmatch/protectedmatch.model';
-import EntryAction from '../features/trade/entryaction.model';
-import EntryActionKind from '../features/trade/entryactionkind.model';
+import Contest from '@features/contest/contest.model';
+import Entry from '@features/entry/entry.model';
+import NFLGame from '@features/nflgame/nflgame.model';
+import NFLPlayer from '@features/nflplayer/nflplayer.model';
+import NFLPosition from '@features/nflposition/nflposition.model';
+import NFLTeam from '@features/nflteam/nflteam.model';
+import Offer from '@features/offer/offer.model';
+import PriceHistory from '@features/pricehistory/pricehistory.model';
+import Trade from '@features/trade/trade.model';
+import User from '@features/user/user.model';
+import LedgerKind from '@features/ledger/ledgerKind.model';
+import LedgerEntry from '@features/ledger/ledgerEntry.model';
+import ProtectedMatch from '@features/protectedmatch/protectedmatch.model';
+import EntryAction from '@features/trade/entryaction.model';
+import EntryActionKind from '@features/trade/entryactionkind.model';
+import scrape from '@db/playerscraper';
 
 async function InitDB() {
   logger.info('Initializing the database');

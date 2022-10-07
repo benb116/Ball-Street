@@ -1,8 +1,8 @@
 import Joi from 'joi';
 
-import { validate } from '../../util/util';
-import validators from '../../util/util.schema';
-import errorHandler, { ServiceInput } from '../../util/util.service';
+import { validate } from '@util/util';
+import validators from '@util/util.schema';
+import errorHandler, { ServiceInput } from '@util/util.service';
 import LedgerEntry from '../ledgerEntry.model';
 import LedgerKind from '../ledgerKind.model';
 

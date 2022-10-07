@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { RefreshTime } from '../../../config';
+import { RefreshTime } from '@server/config';
 
+import { client } from '@db/redis';
 import liveState from '../state.live'; // Data stored in memory
 
 import { MessageMapType, sendToContests } from '../socket.live';
-
-import { client } from '../../../db/redis';
 
 const priceUpdate = {
   pub: function pub(type: 'best' | 'last', contestID: number, nflplayerID: number, bestbid: number, bestask?: number) {

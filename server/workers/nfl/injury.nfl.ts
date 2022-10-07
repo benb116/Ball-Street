@@ -3,13 +3,13 @@
 
 import axios from 'axios';
 
-import logger from '../../utilities/logger';
+import logger from '@server/utilities/logger';
 
+import NFLPlayer from '@features/nflplayer/nflplayer.model';
 import state from './state.nfl';
 
 import injuryUpdate, { InjuryUpdateType } from '../live/channels/injuryUpdate.channel';
 
-import NFLPlayer from '../../features/nflplayer/nflplayer.model';
 import yahooData from '../tests/yahooData';
 
 let injuryInited = false;

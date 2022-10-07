@@ -31,11 +31,16 @@
         "no-plusplus": [2, { "allowForLoopAfterthoughts": true }],
         "security/detect-object-injection": "off",
         "node/no-unsupported-features/es-syntax": ["error", { "ignores": ["modules"] } ],
-        "node/no-missing-import": ["error", {
-            "allowModules": [],
-            "tryExtensions": [".js", ".json", ".node", ".ts", ".tsx"]
-        }],
+        "node/no-missing-import": "off",
         "max-len": ["error", { "code": 150, "tabWidth": 2, "ignoreComments": true }],
         "react/jsx-props-no-spreading": "off"
+    },
+    "settings": {
+        "import/resolver": {
+            "node": {
+                "paths": ["./"],
+                "extensions": [".js", ".jsx", ".ts", ".tsx"]
+            }
+        }
     }
 }

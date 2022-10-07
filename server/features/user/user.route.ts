@@ -1,10 +1,10 @@
 import express, { Request, Response } from 'express';
 
-import { isUError, uError, UError } from '../util/util';
-import routeHandler from '../util/util.route';
-import logger from '../../utilities/logger';
+import { isUError, uError, UError } from '@util/util';
+import routeHandler from '@util/util.route';
+import logger from '@server/utilities/logger';
 
-import authenticate from '../../middleware/authenticate';
+import authenticate from '@server/middleware/authenticate';
 
 import signup from './services/signup.service';
 import login from './services/login.service';

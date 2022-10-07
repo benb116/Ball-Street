@@ -2,10 +2,10 @@ import React from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
+import { useAppSelector } from '@app/hooks';
 import { useLoginMutation } from './User.api';
 import { LoginInputType } from './User.types';
 import { userSelector } from './User.slice';
-import { useAppSelector } from '../../app/hooks';
 
 function Login() {
   const { register, handleSubmit } = useForm<LoginInputType>();

@@ -1,15 +1,15 @@
 import axios from 'axios';
 
-import logger from '../../utilities/logger';
-import { teamIDs, TeamIDType } from '../../nflinfo';
+import logger from '@server/utilities/logger';
+import { teamIDs, TeamIDType } from '@server/nflinfo';
 
+import NFLGame from '@features/nflgame/nflgame.model';
+import { GamePhaseType } from '@server/config';
 import state from './state.nfl';
 
 import setPhase from './phase.nfl';
 
-import NFLGame from '../../features/nflgame/nflgame.model';
 import yahooData from '../tests/yahooData';
-import { GamePhaseType } from '../../config';
 
 type PhaseMapType = Partial<Record<TeamIDType, GamePhaseType | number>>;
 

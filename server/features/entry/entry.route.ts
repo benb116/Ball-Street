@@ -1,6 +1,6 @@
 import express from 'express';
 
-import routeHandler from '../util/util.route';
+import routeHandler from '@util/util.route';
 
 import getContestEntries from './services/getContestEntries.service';
 import getEntry from './services/getEntry.service';

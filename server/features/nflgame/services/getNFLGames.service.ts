@@ -1,4 +1,4 @@
-import NFLTeam from '../../nflteam/nflteam.model';
+import NFLTeam from '@features/nflteam/nflteam.model';
 import NFLGame from '../nflgame.model';
 
 /** Get all NFL games */

@@ -1,8 +1,8 @@
+import { ErrorTest } from '@util/util.tests';
+import LedgerEntry from '@features/ledger/ledgerEntry.model';
+import { ledgerKinds } from '@server/config';
+import sequelize from '@db';
 import service from '../services/createEntry.service';
-import { ErrorTest } from '../../util/util.tests';
-import LedgerEntry from '../../ledger/ledgerEntry.model';
-import { ledgerKinds } from '../../../config';
-import sequelize from '../../../db';
 
 describe('createEntry service', () => {
   test('Valid request returns data and creates ledger entry', async () => {

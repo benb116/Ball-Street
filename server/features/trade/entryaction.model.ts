@@ -1,7 +1,7 @@
 import Sequelize, {
   Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
 } from 'sequelize';
-import sequelize from '../../db';
+import sequelize from '@db';
 
 import EntryActionKind from './entryactionkind.model';
 

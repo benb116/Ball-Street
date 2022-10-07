@@ -1,5 +1,5 @@
+import { ArrayTest } from '@util/util.tests';
 import service from '../services/getNFLGames.service';
-import { ArrayTest } from '../../util/util.tests';
 
 describe('getNFLGames service', () => {
   test('Valid request returns data', ArrayTest(

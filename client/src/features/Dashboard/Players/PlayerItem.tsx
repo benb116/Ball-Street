@@ -3,8 +3,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
 
-import { useAppSelector, useAppDispatch } from '../../../app/hooks';
-import { ActionButton, RenderPrice } from '../../../helpers/util';
+import { useAppSelector, useAppDispatch } from '@app/hooks';
+import { ActionButton, RenderPrice } from '@client/helpers/util';
 
 import { isOnRosterSelector } from '../Entry/Entry.slice';
 import { setModal } from '../Modal/Modal.slice';

@@ -1,8 +1,8 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { useAppSelector } from '../../../app/hooks';
-import { RenderPrice } from '../../../helpers/util';
+import { useAppSelector } from '@app/hooks';
+import { RenderPrice } from '@client/helpers/util';
 
 import { allTeamsSelector, playersSelector, pricesMapSelector } from '../Players/Players.slice';
 import { entrySelector } from './Entry.slice';

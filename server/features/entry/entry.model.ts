@@ -1,9 +1,9 @@
 import {
   Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes, NonAttribute,
 } from 'sequelize';
-import sequelize from '../../db';
+import sequelize from '@db';
 
-import { RosterPositions, RPosType } from '../../config';
+import { RosterPositions, RPosType } from '@server/config';
 
 import User from '../user/user.model';
 import Contest from '../contest/contest.model';

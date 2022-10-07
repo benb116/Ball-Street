@@ -1,9 +1,9 @@
 import { Op } from 'sequelize';
 import Joi from 'joi';
 
-import { isUError, validate } from '../../util/util';
-import validators from '../../util/util.schema';
-import { ServiceInput } from '../../util/util.service';
+import { isUError, validate } from '@util/util';
+import validators from '@util/util.schema';
+import { ServiceInput } from '@util/util.service';
 
 import getEntry from './getEntry.service';
 

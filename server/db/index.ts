@@ -3,7 +3,7 @@
 
 import { Sequelize, Transaction } from 'sequelize';
 
-import logger from '../utilities/logger';
+import logger from '@server/utilities/logger';
 import sec from '../secret';
 
 let {

@@ -1,6 +1,5 @@
+import { client } from '@db/redis';
 import { sendToAll } from '../socket.live';
-
-import { client } from '../../../db/redis';
 
 const phaseChange = {
   pub: function pub(nflTeamID: number, gamePhase: string) {

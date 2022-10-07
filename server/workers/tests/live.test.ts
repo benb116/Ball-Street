@@ -2,10 +2,10 @@
 /* eslint-disable no-console */
 import WebSocket from 'ws';
 import axios from 'axios';
-import { ProtectionDelay, RefreshTime } from '../../config';
-import Offer from '../../features/offer/offer.model';
-import { TestPromiseMap } from '../../features/util/util.tests';
-import bestbid from '../../db/redis/bestbid.redis';
+import { ProtectionDelay, RefreshTime } from '@server/config';
+import Offer from '@features/offer/offer.model';
+import { TestPromiseMap } from '@features/util/util.tests';
+import bestbid from '@db/redis/bestbid.redis';
 
 const contestID = 2;
 

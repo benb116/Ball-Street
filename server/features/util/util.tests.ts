@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Model } from 'sequelize';
-import sequelize from '../../db';
+import sequelize from '@db';
 import { isUError } from './util';
 import { ServiceType } from './util.service';
 

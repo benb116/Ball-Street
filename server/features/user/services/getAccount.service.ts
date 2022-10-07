@@ -1,8 +1,8 @@
 import Joi from 'joi';
 
-import { validate, uError } from '../../util/util';
-import validators from '../../util/util.schema';
-import { ServiceInput } from '../../util/util.service';
+import { validate, uError } from '@util/util';
+import validators from '@util/util.schema';
+import { ServiceInput } from '@util/util.service';
 
 import User from '../user.model';
 

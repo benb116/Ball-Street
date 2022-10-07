@@ -1,11 +1,11 @@
 import Joi from 'joi';
-import { RPosType } from '../../../config';
+import { RPosType } from '@server/config';
 
-import sequelize from '../../../db';
+import sequelize from '@db';
 
-import { validate } from '../../util/util';
-import validators from '../../util/util.schema';
-import errorHandler, { ServiceInput } from '../../util/util.service';
+import { validate } from '@util/util';
+import validators from '@util/util.schema';
+import errorHandler, { ServiceInput } from '@util/util.service';
 
 import tradeAdd from './tradeAdd.service';
 

@@ -1,6 +1,6 @@
 import express from 'express';
 
-import routeHandler from '../util/util.route';
+import routeHandler from '@util/util.route';
 
 import getUserOffers from './services/getUserOffers.service';
 import createOffer from './services/createOffer.service';

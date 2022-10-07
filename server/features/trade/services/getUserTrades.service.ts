@@ -1,9 +1,9 @@
 import Joi from 'joi';
-import Offer from '../../offer/offer.model';
+import Offer from '@features/offer/offer.model';
 
-import { validate } from '../../util/util';
-import validators from '../../util/util.schema';
-import { ServiceInput } from '../../util/util.service';
+import { validate } from '@util/util';
+import validators from '@util/util.schema';
+import { ServiceInput } from '@util/util.service';
 import EntryAction from '../entryaction.model';
 import EntryActionKind from '../entryactionkind.model';
 

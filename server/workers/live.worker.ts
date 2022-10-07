@@ -5,19 +5,18 @@ import WebSocket from 'ws';
 import http from 'http';
 import express, { Request } from 'express';
 
-import session from '../middleware/session';
-import logger from '../utilities/logger';
+import session from '@server/middleware/session';
+import logger from '@server/utilities/logger';
 
-import liveState from './live/state.live'; // Data stored in memory
+import { subscriber } from '@db/redis';
+import bestbid from '@db/redis/bestbid.redis';
+import bestask from '@db/redis/bestask.redis';
+import lasttrade from '@db/redis/lasttrade.redis';
+import statprice from '@db/redis/statprice.redis';
+import projprice from '@db/redis/projprice.redis';
+import projAvg from '@db/redis/projAvg.redis';
 import channelMap, { channelTypes } from './live/channels.live';
-
-import { subscriber } from '../db/redis';
-import bestbid from '../db/redis/bestbid.redis';
-import bestask from '../db/redis/bestask.redis';
-import lasttrade from '../db/redis/lasttrade.redis';
-import statprice from '../db/redis/statprice.redis';
-import projprice from '../db/redis/projprice.redis';
-import projAvg from '../db/redis/projAvg.redis';
+import liveState from './live/state.live'; // Data stored in memory
 
 // All channels that may be used
 

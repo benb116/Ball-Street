@@ -1,7 +1,7 @@
 import {
   Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
 } from 'sequelize';
-import sequelize from '../../db';
+import sequelize from '@db';
 
 /**
  * A contest is the collection of entries within which users can trade players.
