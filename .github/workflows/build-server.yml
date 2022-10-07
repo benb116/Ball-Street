@@ -1,0 +1,33 @@
+name: Build and Push - Server
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'server/**'
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build-server:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Create secret file from example
+      run: cp secret.example.ts secret.ts
+      working-directory: server
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Build server image
+      run: docker build . -f ./server/Dockerfile -t ${{ secrets.DOCKERHUB_USERNAME }}/ball_street:server
+
+    - name: Push server image
+      run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/ball_street:server

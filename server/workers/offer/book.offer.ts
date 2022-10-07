@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 // A book is created for every NFLPlayer in each contest
 // It keeps an in-memory store of all offers to consider
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { RefreshTime } from '../../../config';
 
 import liveState from '../state.live'; // Data stored in memory
