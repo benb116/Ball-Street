@@ -62,6 +62,7 @@ export interface UError extends Error {
 export const uError = function uError(msg: string, status = 500) {
   const uerr: UError = { name: msg, message: msg, status };
   throw uerr;
+  return uerr;
 };
 
 export const isUError = (item: unknown): item is UError => !!(item as UError)?.status;

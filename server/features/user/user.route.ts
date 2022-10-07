@@ -34,6 +34,7 @@ router.post('/login', async (req, res) => {
   };
   try {
     const user = await login(inp);
+    if (isUError(user)) throw user;
     if (!user.needsVerification) req.session.user = { id: user.id }; // add to session
     return res.json(user);
   } catch (err) {
@@ -54,6 +55,7 @@ router.post('/signup', async (req, res) => {
   };
   try {
     const user = await signup(inp);
+    if (isUError(user)) throw user;
     if (!user.needsVerification) req.session.user = { id: user.id }; // add to session
     return res.json(user);
   } catch (err) {
@@ -74,6 +76,7 @@ router.get('/verify', async (req: VerifyInputType, res) => {
   const inp = { token: req.query.token };
   try {
     const user = await evalVerify(inp);
+    if (isUError(user)) throw user;
     req.session.user = { id: user.id }; // add to session
     return res.redirect('/verified');
   } catch (err) {
@@ -91,6 +94,7 @@ router.post('/forgot', async (req, res) => {
   };
   try {
     const done = await genPassReset(inp);
+    if (isUError(done)) throw done;
     return res.json({ resetLinkSent: done });
   } catch (err) {
     if (!isUError(err)) {
