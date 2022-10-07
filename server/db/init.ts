@@ -1,9 +1,16 @@
 // Set up the database with proper tables and NFL data
 
 import {
-  EntryActionKinds, LedgerKinds, NFLPosIDs, NFLPosIDType, NFLPosTypes, RosterPosTypes,
+  EntryActionKindArray,
+  EntryActionKinds,
+  ledgerKindArray,
+  ledgerKinds,
+  NFLPosIDs,
+  NFLPosIDType,
+  NFLPosTypes,
+  RosterPosKinds,
 } from '@server/config';
-import teams from '@server/nflinfo';
+import teams, { teamList } from '@server/nflinfo';
 import logger from '@server/utilities/logger';
 
 import Contest from '@features/contest/contest.model';
@@ -21,7 +28,7 @@ import LedgerEntry from '@features/ledger/ledgerEntry.model';
 import ProtectedMatch from '@features/protectedmatch/protectedmatch.model';
 import EntryAction from '@features/trade/entryaction.model';
 import EntryActionKind from '@features/trade/entryactionkind.model';
-import scrape from './playerscraper';
+import scrape from '@db/playerscraper';
 
 async function InitDB() {
   logger.info('Initializing the database');
@@ -42,11 +49,12 @@ async function InitDB() {
   await EntryAction.sync({ force: true });
 
   // Create kinds of ledger entries
-  const ledgerkindrecords = Object.keys(LedgerKinds).map((k) => ({ ...LedgerKinds[k], name: k }));
+  // eslint-disable-next-line max-len
+  const ledgerkindrecords = ledgerKindArray.map((k) => ({ ...ledgerKinds[k], name: k }));
   await LedgerKind.bulkCreate(ledgerkindrecords);
 
   // Create kinds of entry actions
-  const entryactionkindrecords = Object.keys(EntryActionKinds).map((k) => ({ ...EntryActionKinds[k], name: k }));
+  const entryactionkindrecords = EntryActionKindArray.map((k, i) => ({ ...EntryActionKinds[k], name: k, id: i + 1 }));
   await EntryActionKind.bulkCreate(entryactionkindrecords);
 
   // Create nfl position DB records
@@ -54,19 +62,19 @@ async function InitDB() {
   await NFLPosition.bulkCreate(nflposrecords);
 
   // Create nfl team DB records
-  const teamrecords = Object.keys(teams).map((t) => {
+  const teamrecords = teamList.map((t) => {
     const obj = { ...teams[t], abr: t, fullname: `${teams[t].location} ${teams[t].name}` };
     return obj;
   });
   await NFLTeam.bulkCreate(teamrecords);
 
   // Create nfl team DEF player DB records
-  const teamdefrecords = Object.keys(teams).map((abr) => {
+  const teamdefrecords = teamList.map((abr) => {
     const fullname = `${teams[abr].location} ${teams[abr].name}`;
     return {
       id: teams[abr].id,
       name: fullname,
-      NFLPositionId: RosterPosTypes.DEF.id as NFLPosIDType,
+      NFLPositionId: RosterPosKinds.DEF.id as NFLPosIDType,
       NFLTeamId: teams[abr].id,
       preprice: 1100,
       postprice: 700,

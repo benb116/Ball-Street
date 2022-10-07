@@ -59,7 +59,7 @@ function RosterItem({ playerid, position }: { playerid: number | null, position:
   };
 
   // If no player, show an empty row
-  if (!thisplayer || !theteams[thisplayer.NFLTeamId]) {
+  if (!playerid || !thisplayer || !theteams[thisplayer.NFLTeamId] || !priceMap) {
     return (
       <tr>
         <td
@@ -76,13 +76,15 @@ function RosterItem({ playerid, position }: { playerid: number | null, position:
   }
 
   // Pull player's game phase and determine prices to show
-  const thephase = theteams[thisplayer.NFLTeamId].phase;
-  const teamAbr = theteams[thisplayer.NFLTeamId].abr;
-  const dispProj = thephase === 'pre' ? thisplayer.preprice : (priceMap?.projPrice || 0);
-  const dispStat = thephase === 'pre' ? thisplayer.postprice : (priceMap?.statPrice || 0);
-  const dispLast = priceMap?.lastprice ? Math.round(priceMap.lastprice / 100) : '';
-  const dispBid = priceMap?.bestbid ? Math.round(priceMap.bestbid / 100) : '';
-  const dispAsk = priceMap?.bestask ? Math.round(priceMap.bestask / 100) : '';
+  const playerTeam = theteams[thisplayer.NFLTeamId];
+  if (!playerTeam) return null;
+  const thephase = playerTeam.phase;
+  const teamAbr = playerTeam.abr;
+  const dispProj = thephase === 'pre' ? thisplayer.preprice : (priceMap.projPrice || 0);
+  const dispStat = thephase === 'pre' ? thisplayer.postprice : (priceMap.statPrice || 0);
+  const dispLast = priceMap.lastprice ? Math.round(priceMap.lastprice / 100) : '';
+  const dispBid = priceMap.bestbid ? Math.round(priceMap.bestbid / 100) : '';
+  const dispAsk = priceMap.bestask ? Math.round(priceMap.bestask / 100) : '';
 
   // If user drops player (pregame)
   const onpredrop = () => {
@@ -95,7 +97,7 @@ function RosterItem({ playerid, position }: { playerid: number | null, position:
       nflplayerID: thisplayer.id,
       nflplayerName: thisplayer.name,
       isbid: false,
-      price: (priceMap ? Number(priceMap.bestbid || 0) : dispProj),
+      price: (priceMap ? Number(dispAsk || 0) : dispProj),
       protected: true,
     }));
   };

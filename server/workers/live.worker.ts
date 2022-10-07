@@ -15,7 +15,7 @@ import lasttrade from '@db/redis/lasttrade.redis';
 import statprice from '@db/redis/statprice.redis';
 import projprice from '@db/redis/projprice.redis';
 import projAvg from '@db/redis/projAvg.redis';
-import channelMap from './live/channels.live';
+import channelMap, { channelTypes } from './live/channels.live';
 import liveState from './live/state.live'; // Data stored in memory
 
 // All channels that may be used
@@ -23,10 +23,10 @@ import liveState from './live/state.live'; // Data stored in memory
 // Set up redis subscribers
 (async () => {
   await subscriber.connect();
-  Object.keys(channelMap).forEach((c) => {
-    subscriber.subscribe(c, (message, channel) => {
+  channelTypes.forEach((c) => {
+    subscriber.subscribe(c, (message) => {
       // When a message comes in, dispatch it to correct subscriber fn
-      channelMap[channel].sub(message);
+      channelMap[c].sub(message);
     }).catch(logger.error);
   });
 })();
@@ -114,21 +114,22 @@ async function sendLatest(contestID: number) {
       if (outobj) {
         Object.keys(outobj).forEach((p) => {
           const np = Number(p);
-          if (!retobj[np]) {
-            retobj[np] = {
-              statPrice: 0,
-              projPrice: 0,
-              bestbid: 0,
-              bestask: 0,
-              lastprice: 0,
-              nflplayerID: np,
-            };
-          }
-          if (label === 'statPrice') retobj[np].statPrice = Number(outobj[np]);
-          if (label === 'projPrice') retobj[np].projPrice = Number(outobj[np]);
-          if (label === 'bestbid') retobj[np].bestbid = Number(outobj[np]);
-          if (label === 'bestask') retobj[np].bestask = Number(outobj[np]);
-          if (label === 'lastprice') retobj[np].lastprice = Number(outobj[np]);
+          retobj[np] = retobj[np] || {
+            statPrice: 0,
+            projPrice: 0,
+            bestbid: 0,
+            bestask: 0,
+            lastprice: 0,
+            nflplayerID: np,
+          };
+          const playerObj = retobj[np];
+          if (!playerObj) return;
+
+          if (label === 'statPrice') playerObj.statPrice = Number(outobj[np]);
+          if (label === 'projPrice') playerObj.projPrice = Number(outobj[np]);
+          if (label === 'bestbid') playerObj.bestbid = Number(outobj[np]);
+          if (label === 'bestask') playerObj.bestask = Number(outobj[np]);
+          if (label === 'lastprice') playerObj.lastprice = Number(outobj[np]);
         });
       }
     }

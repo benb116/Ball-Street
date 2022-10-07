@@ -1,6 +1,6 @@
 import { ErrorTest } from '@util/util.tests';
 import LedgerEntry from '@features/ledger/ledgerEntry.model';
-import { LedgerKinds } from '@server/config';
+import { ledgerKinds } from '@server/config';
 import sequelize from '@db';
 import service from '../services/createEntry.service';
 
@@ -28,7 +28,7 @@ describe('createEntry service', () => {
     const outLedge = {
       UserId: input.user,
       ContestId: input.params.contestID,
-      LedgerKindId: LedgerKinds['Entry Fee'].id,
+      LedgerKindId: ledgerKinds['Entry Fee'].id,
       value: 500,
     };
     const theLedgerEntry = await LedgerEntry.findOne({ where: outLedge });

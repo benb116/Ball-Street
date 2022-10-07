@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { RefreshTime } from '@server/config';
 
 import { client } from '@db/redis';
@@ -6,7 +7,7 @@ import liveState from '../state.live'; // Data stored in memory
 import { MessageMapType, sendToContests } from '../socket.live';
 
 const priceUpdate = {
-  pub: function pub(type: 'best' | 'last', contestID: number, nflplayerID: number, bestbid: number, bestask: number) {
+  pub: function pub(type: 'best' | 'last', contestID: number, nflplayerID: number, bestbid: number, bestask?: number) {
     if (type === 'best') {
       client.publish('priceUpdate', JSON.stringify({
         contestID,
@@ -29,15 +30,14 @@ const priceUpdate = {
     const {
       contestID, nflplayerID, bestbid, bestask, lastprice,
     } = JSON.parse(message);
-    if (!liveState.priceUpdateMap[contestID]) { liveState.priceUpdateMap[contestID] = {}; }
-    if (!liveState.priceUpdateMap[contestID][nflplayerID]) {
-      liveState.priceUpdateMap[contestID][nflplayerID] = { nflplayerID };
-    }
-
-    if (bestbid !== undefined) liveState.priceUpdateMap[contestID][nflplayerID].bestbid = bestbid;
-    if (bestask !== undefined) liveState.priceUpdateMap[contestID][nflplayerID].bestask = bestask;
+    liveState.priceUpdateMap[contestID] = liveState.priceUpdateMap[contestID] || {};
+    const contestPriceMap = liveState.priceUpdateMap[contestID];
+    contestPriceMap![nflplayerID] = contestPriceMap![nflplayerID] || { nflplayerID };
+    const contestPlayerPriceMap = contestPriceMap![nflplayerID];
+    if (bestbid !== undefined) contestPlayerPriceMap!.bestbid = bestbid;
+    if (bestask !== undefined) contestPlayerPriceMap!.bestask = bestask;
     // eslint-disable-next-line max-len
-    if (lastprice !== undefined) liveState.priceUpdateMap[contestID][nflplayerID].lastprice = lastprice;
+    if (lastprice !== undefined) contestPlayerPriceMap!.lastprice = lastprice;
   },
 };
 

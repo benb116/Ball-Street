@@ -6,7 +6,7 @@ import errorHandler, { ServiceInput } from '@util/util.service';
 
 import sequelize from '@db';
 import LedgerEntry from '@features/ledger/ledgerEntry.model';
-import { LedgerKinds } from '@server/config';
+import { ledgerKinds } from '@server/config';
 import User from '../user.model';
 
 const schema = Joi.object({
@@ -47,7 +47,7 @@ async function withdraw(req: WithdrawalInput) {
     const ledgerObj = {
       UserId: value.user,
       ContestId: null,
-      LedgerKindId: LedgerKinds.Withdrawal.id,
+      LedgerKindId: ledgerKinds.Withdrawal.id,
       value: value.body.amount,
     };
 

@@ -8,7 +8,7 @@ import Contest from '@features/contest/contest.model';
 import sequelize from '@db';
 import User from '@features/user/user.model';
 import LedgerEntry from '@features/ledger/ledgerEntry.model';
-import { LedgerKinds } from '@server/config';
+import { ledgerKinds } from '@server/config';
 import Entry from '../entry.model';
 
 const schema = Joi.object({
@@ -48,7 +48,7 @@ async function createEntry(req: CreateEntryInput) {
     const ledgerObj = {
       UserId: value.user,
       ContestId: thecontest.id,
-      LedgerKindId: LedgerKinds['Entry Fee'].id,
+      LedgerKindId: ledgerKinds['Entry Fee'].id,
       value: thecontest.buyin,
     };
 

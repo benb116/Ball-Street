@@ -1,0 +1,34 @@
+name: Lint and Test - Client
+
+on:
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'client/**'
+    # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+
+  lint-and-test-client:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+        
+    - name: Install client dependencies
+      run: npm install
+      working-directory: client
+      
+    - name: Run ESLint - Client
+      run: ./node_modules/.bin/eslint ./
+      working-directory: client
+
+    - name: Compile Typescript - Client
+      run: ./node_modules/.bin/tsc
+      working-directory: client

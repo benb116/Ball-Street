@@ -5,6 +5,7 @@ import {
 import sequelize from '@db';
 
 import { NFLPosIDType } from '@server/config';
+import { TeamIDType } from '@server/nflinfo';
 import NFLTeam from '../nflteam/nflteam.model';
 import NFLPosition from '../nflposition/nflposition.model';
 
@@ -14,7 +15,7 @@ class NFLPlayer extends Model<InferAttributes<NFLPlayer>, InferCreationAttribute
   declare preprice: number | null;
   declare postprice: number | null;
   declare NFLPositionId: NFLPosIDType;
-  declare NFLTeamId: number;
+  declare NFLTeamId: TeamIDType;
   declare active: boolean;
   declare injuryStatus: string | null;
   declare createdAt: CreationOptional<Date>;

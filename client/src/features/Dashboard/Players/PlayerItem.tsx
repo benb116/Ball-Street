@@ -30,18 +30,20 @@ function PlayerItem({ playerdata }: { playerdata: PlayerItemType }) {
   const [preDrop] = usePreDropMutation();
   const [cancelOffer] = useCancelOfferMutation();
 
-  if (!contestID) return null;
+  if (!contestID || !priceMap) return null;
 
   // Player's team info
-  const thephase = theteams[playerdata.NFLTeamId].phase;
-  const teamAbr = theteams[playerdata.NFLTeamId].abr;
+  const playerTeam = theteams[playerdata.NFLTeamId];
+  if (!playerTeam) return null;
+  const thephase = playerTeam.phase;
+  const teamAbr = playerTeam.abr;
 
   // Show correct price info
-  const dispProj = thephase === 'pre' ? playerdata.preprice : (priceMap?.projPrice || 0);
-  const dispStat = thephase === 'pre' ? playerdata.postprice : (priceMap?.statPrice || 0);
-  const dispLast = priceMap?.lastprice ? Math.round(priceMap.lastprice / 100) : '';
-  const dispBid = priceMap?.bestbid ? Math.round(priceMap.bestbid / 100) : '';
-  const dispAsk = priceMap?.bestask ? Math.round(priceMap.bestask / 100) : '';
+  const dispProj = thephase === 'pre' ? playerdata.preprice : (priceMap.projPrice || 0);
+  const dispStat = thephase === 'pre' ? playerdata.postprice : (priceMap.statPrice || 0);
+  const dispLast = priceMap.lastprice ? Math.round(priceMap.lastprice / 100) : '';
+  const dispBid = priceMap.bestbid ? Math.round(priceMap.bestbid / 100) : '';
+  const dispAsk = priceMap.bestask ? Math.round(priceMap.bestask / 100) : '';
 
   // Player actions
   const onpredrop = () => {
@@ -57,7 +59,7 @@ function PlayerItem({ playerdata }: { playerdata: PlayerItemType }) {
       nflplayerID: playerdata.id,
       nflplayerName: playerdata.name,
       isbid: false,
-      price: (priceMap ? Number(priceMap.bestbid || dispProj) : dispProj),
+      price: (priceMap ? Number(dispBid || dispProj) : dispProj),
       protected: true,
     }));
   };
@@ -67,7 +69,7 @@ function PlayerItem({ playerdata }: { playerdata: PlayerItemType }) {
       nflplayerID: playerdata.id,
       nflplayerName: playerdata.name,
       isbid: true,
-      price: (priceMap ? Number(priceMap.bestask || dispProj) : dispProj),
+      price: (priceMap ? Number(dispAsk || dispProj) : dispProj),
       protected: true,
     }));
   };

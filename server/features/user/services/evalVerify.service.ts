@@ -29,7 +29,7 @@ async function evalVerify(req: EvalVerifyInput) {
   const usersUpdated = await User.update({ verified: true }, {
     where: { email }, returning: true,
   });
-  if (!usersUpdated[1].length) return uError('No user found', 404);
+  if (!usersUpdated[1].length || !usersUpdated[1][0]) return uError('No user found', 404);
   const theuser = usersUpdated[1][0];
   return { id: theuser.id, email: theuser.email, name: theuser.name };
 }
