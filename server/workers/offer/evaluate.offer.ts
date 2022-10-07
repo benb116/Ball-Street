@@ -216,7 +216,7 @@ function evaluateFn(book: Book) {
     }
     return false;
   }
-  
+
   function findMatchee(id: string) {
     return Object.keys(book.protMatchMap).find((key) => book.protMatchMap[key] === id);
   }
@@ -249,11 +249,11 @@ function evaluateFn(book: Book) {
     }
     return bestAskOffer;
   }
-  
-  /** 
+
+  /**
    * Find the best unmatched protected ask offer available
    * If notMatcher is true, also make sure it is not matched to a pbid
-  /*
+   */
   function bestUnmatchedProtAsk(notMatcher = false) {
     let evalpask = paskPrices[0] || null;
     if (!evalpask) return null;
