@@ -24,7 +24,7 @@ interface GetEntryRankInput extends ServiceInput {
   body: Record<string, never>
 }
 
-// Get an entry's rank within a contest
+/** Get an entry's rank within a contest */
 async function getEntryRank(req: GetEntryRankInput) {
   const value: GetEntryRankInput = validate(req, schema);
 

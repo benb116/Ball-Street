@@ -30,7 +30,7 @@ interface DepositInput extends ServiceInput {
   }
 }
 
-// Create an entry in a contest
+/** Create an entry in a contest */
 async function deposit(req: DepositInput) {
   const value: DepositInput = validate(req, schema);
 

@@ -1,4 +1,4 @@
-// Stat categories in the Yahoo file and their letters
+/** Stat categories in the Yahoo file and their letters */
 export const yahooStatMap = {
   r: 'rushing',
   w: 'receiving',
@@ -13,7 +13,7 @@ export const yahooStatMap = {
 };
 export const validStatLetters = Object.keys(yahooStatMap);
 
-// Dot product coefficients for stats in each category
+/** Dot product coefficients for stats in each category */
 export const multiplierTable: Record<string, number[]> = {
   q: [0, 0, 0, 0.04, 4, -1],
   r: [0, 0.1, 6],
@@ -24,7 +24,7 @@ export const multiplierTable: Record<string, number[]> = {
   f: [0, 1, 2, 2, 6, 2, 2, 0, 6, 0, 0, 0, 0, 0, 2, 0],
 };
 
-// Calculate the point total from a player's stats
+/** Calculate the point total from a player's stats */
 export function SumPoints(pstats: Record<string, string>) {
   const categories = Object.keys(pstats);
   const rawpoints = categories.reduce((accPoints, curCat) => {
