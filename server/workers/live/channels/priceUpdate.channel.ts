@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { RefreshTime } from '../../../config';
 
 import liveState from '../state.live'; // Data stored in memory
@@ -48,7 +47,7 @@ setInterval(() => {
   const priceUpdatecIDs = Object.keys(liveState.priceUpdateMap);
 
   const priceMsgMap = priceUpdatecIDs.reduce((acc, cur: string) => {
-    acc[cur] = { event: 'priceUpdate', pricedata: liveState.priceUpdateMap[cur] };
+    acc[cur] = { event: 'priceUpdate', pricedata: liveState.priceUpdateMap[cur] || {} };
     return acc;
   }, {} as MessageMapType);
   liveState.priceUpdateMap = {};

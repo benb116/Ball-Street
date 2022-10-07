@@ -16,7 +16,7 @@ const projAvgUpdate = {
     const allAvgs = await projAvg.get(allContests);
     const avgMsgMap = allContests.reduce((acc, cur, i) => {
       const thisAverage = allAvgs[i];
-      if (thisAverage === null) return acc;
+      if (thisAverage === null || thisAverage === undefined) return acc;
       acc[cur] = { event: 'contestAvg', average: thisAverage };
       return acc;
     }, {} as MessageMapType);
