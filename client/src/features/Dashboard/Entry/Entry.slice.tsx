@@ -27,8 +27,8 @@ export const entrySlice = createSlice({
   initialState: defaultState,
   reducers: {
     clear: (state) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       state = defaultState;
+      return state;
     },
     offerFilled: () => {
       toast.success('Offer filled');

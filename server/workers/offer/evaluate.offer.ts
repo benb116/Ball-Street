@@ -112,7 +112,7 @@ function evaluateFn(book: Book) {
         if (!findMatchee(bestbidOffer[0])) {
         // try to find a un/prot match and return
           bestpaskOffer = bestUnmatchedProtAsk();
-          if (bestpaskOffer && evalbid >= bestpaskOffer[1].price) {
+          if (bestpaskOffer && evalbid[0] >= bestpaskOffer[1].price) {
             logger.verbose('found bid + pask');
             return {
               bid: { ...bestbidOffer[1], protected: false },

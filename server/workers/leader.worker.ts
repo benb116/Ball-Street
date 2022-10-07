@@ -138,10 +138,9 @@ async function calculateLeaderboard() {
   const contestProjTotals = projTotals.reduce((acc: Record<number, number[]>, cur) => {
     // eslint-disable-next-line no-param-reassign
     if (!acc[cur.contest]) acc[cur.contest] = [];
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore: Unreachable code error
-    acc[cur.contest].push(Math.max(0, cur.total));
-
+    const thisContest = acc[cur.contest];
+    if (!thisContest) return acc;
+    thisContest.push(Math.max(0, cur.total));
     return acc;
   }, {});
   // console.log(contestSplit);
