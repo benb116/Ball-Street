@@ -1,7 +1,7 @@
 import logger from '@server/utilities/logger';
 
 import Offer from '@features/offer/offer.model';
-import Book from './book.offer';
+import { Book } from './book.offer';
 import { updateBest } from './util.offer';
 import fillOffers from './trader.offer';
 

@@ -16,7 +16,7 @@ import protectedMatch from './live/channels/protectedMatch.channel';
 import fillOffers from './offer/trader.offer';
 import { getBook, updateBest } from './offer/util.offer';
 import evalProtected from './offer/protected.offer';
-import Book from './offer/book.offer';
+import { Book } from './offer/book.offer';
 
 import { MatchPair } from './offer/evaluate.offer';
 

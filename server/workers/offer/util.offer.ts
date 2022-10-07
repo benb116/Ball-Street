@@ -7,7 +7,7 @@ import Offer from '@features/offer/offer.model';
 import ProtectedMatch from '@features/protectedmatch/protectedmatch.model';
 import priceUpdate from '../live/channels/priceUpdate.channel';
 
-import Book from './book.offer';
+import { Book } from './book.offer';
 
 // Access the correct book or make one if necessary
 export function getBook(
