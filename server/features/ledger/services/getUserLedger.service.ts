@@ -1,5 +1,3 @@
-// Show the recent ledger entries for a user
-
 import Joi from 'joi';
 
 import { validate } from '../../util/util';
@@ -31,6 +29,7 @@ interface GetUserLedgerInput extends ServiceInput {
 // Number of entries per page
 const paginationLimit = 10;
 
+/** Show the recent ledger entries for a user */
 function getUserLedger(req: GetUserLedgerInput) {
   const value: GetUserLedgerInput = validate(req, schema);
   return LedgerEntry.findAll({

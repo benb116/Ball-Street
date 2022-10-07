@@ -21,7 +21,7 @@ const schema = Joi.object({
 });
 validate(inputEvalPassReset, schema);
 
-// Change a user's password
+/** Change a user's password */
 async function evalPassReset(req: EvalPassResetInput) {
   const value: EvalPassResetInput = validate(req, schema);
   const { token, password, confirmPassword } = value;

@@ -24,7 +24,7 @@ interface PlayerMapItem {
   post: number | null,
   team: number
 }
-let playerMap: Record<string, PlayerMapItem>;
+let playerMap: Record<number, PlayerMapItem>;
 // Get game phase information
 let gamePhase: Record<string, string>;
 // State determining whether to check for point changes
@@ -114,14 +114,16 @@ async function calculateLeaderboard() {
   // Sum each entry based on the price map
   const projTotals: EntryWithTotal[] = normalizedEntries.map((e) => {
     const total = e.roster.reduce((acc: number, cur: number) => {
-      const playerPhase = gamePhase[playerMap[cur].team];
+      const playerItem = playerMap[cur];
+      if (!playerItem) return acc;
+      const playerPhase = gamePhase[playerItem.team];
       switch (playerPhase) {
         case 'pre': // preprice
-          return acc + (playerMap[cur].pre || 0);
+          return acc + (playerItem.pre || 0);
         case 'mid': // projprice
           return acc + (Number(priceMap[cur]) || 0);
         case 'post': // projprice or postprice
-          return acc + (Number(priceMap[cur]) || playerMap[cur].post || 0);
+          return acc + (Number(priceMap[cur]) || playerItem.post || 0);
         default:
           return acc;
       }
@@ -136,15 +138,18 @@ async function calculateLeaderboard() {
   const contestProjTotals = projTotals.reduce((acc: Record<number, number[]>, cur) => {
     // eslint-disable-next-line no-param-reassign
     if (!acc[cur.contest]) acc[cur.contest] = [];
-    acc[cur.contest].push(Math.max(0, cur.total));
-
+    const thisContest = acc[cur.contest];
+    if (!thisContest) return acc;
+    thisContest.push(Math.max(0, cur.total));
     return acc;
   }, {});
   // console.log(contestSplit);
 
   // For each contest, sort and store
   contests.forEach((c: number) => {
-    const avgProjTotal = Math.ceil(average(contestProjTotals[c]));
+    const contestTotals = contestProjTotals[c];
+    if (!contestTotals) return;
+    const avgProjTotal = Math.ceil(average(contestTotals));
     projAvg.set(c, avgProjTotal);
   });
 

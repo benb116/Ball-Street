@@ -26,7 +26,7 @@ export default async function PullLatestInjuries() {
   }
 }
 
-// Pull injury data from yahoo or mock data
+/** Pull injury data from yahoo or mock data */
 function pullInjuryData() {
   if (Number(process.env.YAHOO_MOCK)) {
     return yahooData.injury;
@@ -34,8 +34,10 @@ function pullInjuryData() {
   return axios.get('https://football.fantasysports.yahoo.com/f1/injuries');
 }
 
-// Determine which players' injury status has changed
-// If a player is no longer listed on the page, their entry is removed
+/**
+ * Determine which players' injury status has changed
+ * If a player is no longer listed on the page, their entry is removed
+ */
 export function FindInjuryChanges(injuryObjs: NFLPlayer[]) {
   const newInjObj: typeof state.injObj = {};
   // Find objects that changed/were added
@@ -59,8 +61,8 @@ export function FindInjuryChanges(injuryObjs: NFLPlayer[]) {
   return changedObjects;
 }
 
+/** If any changed, send out an update */
 async function PublishInjuryChanges(changedInjuries: NFLPlayer[]) {
-  // If any changed, send out an update
   if (changedInjuries.length) {
     const outObj = changedInjuries.reduce((acc, cur) => {
       if (cur && cur.id) acc[cur.id] = cur.injuryStatus;
@@ -84,19 +86,23 @@ async function PublishInjuryChanges(changedInjuries: NFLPlayer[]) {
 }
 
 export function FormatInjuryObjects(raw: string) {
-  const main = raw.split('<tbody>')[1].split('</tbody')[0];
-
+  const begin = raw.split('<tbody>')[1];
+  if (!begin) return [];
+  const main = begin.split('</tbody')[0];
+  if (!main) return [];
   const units = main.split('</tr>');
 
   return units.reduce((acc, u) => {
     if (!u) return acc;
     const start = u.split('data-ys-playerid="')[1];
+    if (!start) return acc;
     const [playerid, pidout] = start.split('" data-ys-playernote');
-    if (!playerid) return acc;
+    if (!playerid || !pidout) return acc;
     const statusout = pidout.split('</abbr>')[0];
-    let status = statusout[statusout.length - 1];
+    if (!statusout) return acc;
+    let status = statusout[statusout.length - 1] || null;
     const statusPreChar = statusout[statusout.length - 2];
-    if (['P', 'Q', 'D'].indexOf(status) === -1) status = 'O';
+    if (status && ['P', 'Q', 'D'].indexOf(status) === -1) status = 'O';
     // Abbrev could be SUSP, which would otherwise be seen as P
     if (statusPreChar !== '>') status = 'O';
 
@@ -105,10 +111,12 @@ export function FormatInjuryObjects(raw: string) {
   }, [] as NFLPlayer[]);
 }
 
-// This is an object that will "upserted" into the players table
-// So it must have all of the required attributes
-// But because we will only update the injuryStatus field on duplicate
-// We can leave all other fields standard
+/**
+ * This is an object that will "upserted" into the players table
+ * so it must have all of the required attributes.
+ * But because we will only update the injuryStatus field on duplicate
+ * we can leave all other fields standard
+ */
 function GenerateInjuryObject(playerid: number, status: string | null) {
   return ({
     id: playerid,

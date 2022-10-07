@@ -9,12 +9,7 @@ import offerCancelled from './channels/offerCancelled.channel';
 import phaseChange from './channels/phaseChange.channel';
 import injuryUpdate from './channels/injuryUpdate.channel';
 
-interface LiveChannel {
-  sub(message: string): void,
-  pub(...args: unknown[]): void,
-}
-
-const channelMap: Record<string, LiveChannel> = {
+const channelMap = {
   priceUpdate,
   statUpdate,
   projAvgUpdate,
@@ -23,6 +18,9 @@ const channelMap: Record<string, LiveChannel> = {
   offerCancelled,
   phaseChange,
   injuryUpdate,
-};
+} as const;
+
+type ChannelType = keyof typeof channelMap;
+export const channelTypes = Object.keys(channelMap) as ChannelType[];
 
 export default channelMap;

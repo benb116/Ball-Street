@@ -15,6 +15,7 @@ const schema = Joi.object({
 });
 validate(inputLogin, schema);
 
+/** Log a user in and possibly continue verification */
 async function login(req: LoginInput) {
   const value: LoginInput = validate(req, schema);
   const { email, password } = value;

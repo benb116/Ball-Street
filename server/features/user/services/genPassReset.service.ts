@@ -14,7 +14,7 @@ const schema = Joi.object({
 });
 validate(inputGenPassReset, schema);
 
-// Create and send a password reset email
+/** Create and send a password reset email */
 async function genPassReset(req: GenPassResetInput) {
   const value: GenPassResetInput = validate(req, schema);
   const { email } = value;

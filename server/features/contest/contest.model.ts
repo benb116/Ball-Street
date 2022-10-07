@@ -1,12 +1,13 @@
-// A contest is the collection of entries within which users can trade players
-// Each contest runs over the cource of one NFL Week
-// Players start with a budget of points to spend
-
 import {
   Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
 } from 'sequelize';
 import sequelize from '../../db';
 
+/**
+ * A contest is the collection of entries within which users can trade players.
+ * Each contest runs over the cource of one NFL Week.
+ * Players start with a budget of points to spend.
+ */
 class Contest extends Model<InferAttributes<Contest>, InferCreationAttributes<Contest>> {
   declare id: CreationOptional<number>;
   declare name: string;

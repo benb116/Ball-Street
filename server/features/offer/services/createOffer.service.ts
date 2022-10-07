@@ -59,7 +59,7 @@ interface CreateOfferInput extends ServiceInput {
   }
 }
 
-// Create an offer in a contest
+/** Create an offer in a contest */
 async function createOffer(req: CreateOfferInput) {
   const value: CreateOfferInput = validate(req, schema);
 

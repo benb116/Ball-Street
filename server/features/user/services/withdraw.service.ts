@@ -8,7 +8,7 @@ import sequelize from '../../../db';
 import LedgerEntry from '../../ledger/ledgerEntry.model';
 import User from '../user.model';
 
-import { LedgerKinds } from '../../../config';
+import { ledgerKinds } from '../../../config';
 
 const schema = Joi.object({
   user: validators.user,
@@ -31,7 +31,7 @@ interface WithdrawalInput extends ServiceInput {
   }
 }
 
-// Create an entry in a contest
+/** Create an entry in a contest */
 async function withdraw(req: WithdrawalInput) {
   const value: WithdrawalInput = validate(req, schema);
 
@@ -48,7 +48,7 @@ async function withdraw(req: WithdrawalInput) {
     const ledgerObj = {
       UserId: value.user,
       ContestId: null,
-      LedgerKindId: LedgerKinds.Withdrawal.id,
+      LedgerKindId: ledgerKinds.Withdrawal.id,
       value: value.body.amount,
     };
 

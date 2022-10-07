@@ -23,6 +23,7 @@ validate(inputSignup, schema);
 
 const saltRounds = 10;
 
+/** Sign up a user and possibly continue verification */
 async function signup(req: SignupInput) {
   const value: SignupInput = validate(req, schema);
   const {

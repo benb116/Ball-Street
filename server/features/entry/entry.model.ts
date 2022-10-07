@@ -1,5 +1,3 @@
-// A users entry into a contest
-// Stores number of points and which players are on the roster
 import {
   Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes, NonAttribute,
 } from 'sequelize';
@@ -11,11 +9,6 @@ import User from '../user/user.model';
 import Contest from '../contest/contest.model';
 import NFLPlayer from '../nflplayer/nflplayer.model';
 
-// The model has common columns (UserId, ContestId, pointtotal)
-// This script also generates columns based on the set roster in config
-// So it will add a "QB1" column, a "FLEX2" column, etc. All with allowNull = true
-// Those columns store the NFLPlayerId of the player in that roster position
-
 interface RosterModelType {
   type: DataTypes.IntegerDataTypeConstructor,
   references: {
@@ -24,7 +17,7 @@ interface RosterModelType {
   allowNull: boolean,
 }
 
-// Add position columns as defined by config
+/** Add position columns as defined by config */
 const rosterobj = RosterPositions.reduce((acc, p) => {
   acc[p] = {
     type: DataTypes.INTEGER,
@@ -34,6 +27,14 @@ const rosterobj = RosterPositions.reduce((acc, p) => {
   return acc;
 }, {} as Record<RPosType, RosterModelType>);
 
+/**
+ * A users entry into a contest.
+ * Stores number of points and which players are on the roster.
+ * The model has common columns (UserId, ContestId, pointtotal).
+ * This script also generates columns based on the set roster in config,
+ * so it will add a "QB1" column, a "FLEX2" column, etc. All with allowNull = true.
+ * Those columns store the NFLPlayerId of the player in that roster position.
+ */
 class Entry extends Model<InferAttributes<Entry>, InferCreationAttributes<Entry>> {
   declare pointtotal: number;
   declare UserId: number;

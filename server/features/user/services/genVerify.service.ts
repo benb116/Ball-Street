@@ -19,7 +19,7 @@ interface GenVerifyInput {
   email: string,
 }
 
-// Create and send an email verification link
+/** Create and send an email verification link */
 async function genVerify(req: GenVerifyInput) {
   const value: GenVerifyInput = validate(req, schema);
   const { email, id } = value;
