@@ -5,16 +5,21 @@ import Contest from '../../contest/contest.model';
 import LedgerEntry from '../../ledger/ledgerEntry.model';
 import User from '../../user/user.model';
 
-import { tobj, uError } from '../../util/util';
+import { tobj, uError, validate } from '../../util/util';
+import validators from '../../util/util.schema';
 
 import Entry from '../entry.model';
 
 // Pay out prizes to all users with entries in a contest
 // Take fees as defined
-async function payoutContest(contestID:number) {
+async function payoutContest(rawcontestID: number) {
+  const contestID = validate(rawcontestID, validators.contestID);
+
   return sequelize.transaction(async (t) => {
-    const contestBuyIn = await Contest.findByPk(contestID).then((c) => c?.buyin);
-    if (!contestBuyIn) return;
+    const thecontest = await Contest.findByPk(contestID);
+    if (!thecontest) return uError('No contest found', 404);
+    const contestBuyIn = thecontest.buyin;
+    if (!contestBuyIn) return true;
 
     const contestEntries = await Entry.findAll({
       where: {
@@ -35,6 +40,7 @@ async function payoutContest(contestID:number) {
     // Do all awards as one big transaction
     const payoutPromises = contestEntries.map((e) => payoutTransaction(e, t, averagePoints, contestBuyIn));
     await Promise.all(payoutPromises);
+    return true;
   });
 }
 
@@ -50,7 +56,7 @@ async function payoutTransaction(entry: Entry, t: Transaction, averagePoints: nu
 
   const ledgerObjPrize = {
     UserId: entry.UserId,
-    ContestId: null,
+    ContestId: entry.ContestId,
     LedgerKindId: LedgerKinds['Entry Prize'].id,
     value: profit,
   };
@@ -64,7 +70,7 @@ async function payoutTransaction(entry: Entry, t: Transaction, averagePoints: nu
     theuser.cash -= profitFee;
     const ledgerObjFee = {
       UserId: entry.UserId,
-      ContestId: null,
+      ContestId: entry.ContestId,
       LedgerKindId: LedgerKinds['Profit Fee'].id,
       value: profitFee,
     };

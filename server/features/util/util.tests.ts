@@ -77,3 +77,7 @@ export const TestPromiseMap = function TestPromiseMap(labelArray: string[]) {
     return acc;
   }, {} as PromiseMap);
 };
+
+export const uuidMock = expect.stringMatching(
+  /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/,
+);
