@@ -3,7 +3,7 @@ import { LedgerKinds } from '../../../config';
 import LedgerEntry from '../../ledger/ledgerEntry.model';
 import User from '../../user/user.model';
 import { ErrorTest } from '../../util/util.tests';
-import Entry from '../entry.model';
+import Entry from '../../entry/entry.model';
 import service from '../services/payoutContest.service';
 
 const contestID = 4;
