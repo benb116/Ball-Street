@@ -9,7 +9,7 @@ import Entry from '../entry.model';
 import sequelize from '../../../db';
 import User from '../../user/user.model';
 import LedgerEntry from '../../ledger/ledgerEntry.model';
-import { LedgerKinds } from '../../../config';
+import { ledgerKinds } from '../../../config';
 
 const schema = Joi.object({
   user: validators.user,
@@ -26,7 +26,7 @@ interface CreateEntryInput extends ServiceInput {
   body: Record<string, never>
 }
 
-// Create an entry in a contest
+/** Create an entry in a contest */
 async function createEntry(req: CreateEntryInput) {
   const value: CreateEntryInput = validate(req, schema);
 
@@ -48,7 +48,7 @@ async function createEntry(req: CreateEntryInput) {
     const ledgerObj = {
       UserId: value.user,
       ContestId: thecontest.id,
-      LedgerKindId: LedgerKinds['Entry Fee'].id,
+      LedgerKindId: ledgerKinds['Entry Fee'].id,
       value: thecontest.buyin,
     };
 

@@ -24,7 +24,7 @@ function Contest() {
   // User wants to create an entry in this contest
   const [createEntry] = useCreateEntryMutation();
 
-  if (!contestID) return <>No Contest ID</>;
+  if (!contestID) return null;
 
   // Pull data
   useGetContestQuery(contestID);

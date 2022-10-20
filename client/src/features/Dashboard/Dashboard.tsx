@@ -16,7 +16,7 @@ function Dashboard() {
   // Init the WS for a specific contest
     if (contestID) initWS(contestID);
   }, [contestID]);
-  if (!contestID) return <>No Contest ID</>;
+  if (!contestID) return null;
 
   return (
     <div

@@ -34,11 +34,12 @@ export const userSlice = createSlice({
   reducers: {
     set: (state, payload) => {
       state = { ...state, ...payload };
+      return state;
     },
     clearState: (state) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       state = defaultState;
       localStorage.setItem('isLoggedIn', 'false');
+      return state;
     },
   },
   extraReducers: (builder) => {
@@ -92,9 +93,10 @@ export const userSlice = createSlice({
     });
     builder.addMatcher(UserAPI.endpoints.getAccount.matchRejected, (state, resp) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      if (resp.error.message === 'Aborted due to condition callback returning false.') return;
+      if (resp.error.message === 'Aborted due to condition callback returning false.') return state;
       state = defaultState;
       localStorage.setItem('isLoggedIn', 'false');
+      return state;
     });
 
     builder.addMatcher(UserAPI.endpoints.getUserLedger.matchFulfilled, (state, { payload }) => {

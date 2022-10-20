@@ -22,7 +22,8 @@ interface GetContestInput extends ServiceInput {
   },
   body: Record<string, never>
 }
-// Get info for a specific contest
+
+/** Get info for a specific contest */
 async function getContest(req: GetContestInput) {
   const value: GetContestInput = validate(req, schema);
   const thecontest = await Contest.findByPk(value.params.contestID);

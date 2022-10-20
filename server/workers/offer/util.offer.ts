@@ -10,7 +10,7 @@ import Book from './book.offer';
 import Offer from '../../features/offer/offer.model';
 import ProtectedMatch from '../../features/protectedmatch/protectedmatch.model';
 
-// Access the correct book or make one if necessary
+/** Access the correct book or make one if necessary */
 export function getBook(
   books: Record<string, Record<string, Book>>,
   ContestId: number,
@@ -18,11 +18,14 @@ export function getBook(
 ) {
   // eslint-disable-next-line no-param-reassign
   if (!books[ContestId]) { books[ContestId] = {}; }
-  if (!books[ContestId][NFLPlayerId]) {
+  const contestbooks = books[ContestId];
+  if (!contestbooks) return null;
+  if (!contestbooks[NFLPlayerId]) {
     // eslint-disable-next-line no-param-reassign
-    books[ContestId][NFLPlayerId] = new Book(ContestId, NFLPlayerId);
+    contestbooks[NFLPlayerId] = new Book(ContestId, NFLPlayerId);
   }
-  const playerBook = books[ContestId][NFLPlayerId];
+  const playerBook = contestbooks[NFLPlayerId];
+  if (!playerBook) return null;
   // There may be existing offers and matches in the DB, so add them to the book
   // If the book hasn't been inited, try to init
   if (!playerBook.init) {
@@ -31,11 +34,12 @@ export function getBook(
   return playerBook;
 }
 
-// It's possible that the book will been called again before the first init is complete
-// In that case, we don't want to mark the book as init=true until it's ready
-// But we also don't want to have the second call reinit the book
-// So add the init process as an item on the book queue
-// The first will complete, and when the second is attempted, init will be true so exit.
+/** It's possible that the book will been called again before the first init is complete.
+ * In that case, we don't want to mark the book as init=true until it's ready,
+ * but we also don't want to have the second call reinit the book.
+ * So add the init process as an item on the book queue.
+ * The first will complete, and when the second is attempted, init will be true so exit.
+ */
 async function beginBook(playerBook: Book) {
   if (playerBook.init) return Promise.resolve();
   return initializeBook(playerBook)
@@ -48,7 +52,7 @@ async function beginBook(playerBook: Book) {
     });
 }
 
-// Generate the starting book based on existing offers in DB
+/** Generate the starting book based on existing offers in DB */
 async function initializeBook(playerBook: Book) {
   const { contestID, nflplayerID } = playerBook;
   // Should be sorted oldest first since Maps maintain order
@@ -83,7 +87,7 @@ async function initializeBook(playerBook: Book) {
   return true;
 }
 
-// Send out latest price info based on book
+/** Send out latest price info based on book */
 export function updateBest(playerBook: Book) {
   const { contestID, nflplayerID } = playerBook;
 
@@ -93,9 +97,9 @@ export function updateBest(playerBook: Book) {
   let playerbestbid = 0;
   let playerbestask = 0;
   if (bestbids.length === 2) playerbestbid = Math.max(...bestbids);
-  if (bestbids.length === 1) [playerbestbid] = bestbids;
+  if (bestbids.length === 1) playerbestbid = bestbids[0] || 0;
   if (bestasks.length === 2) playerbestask = Math.min(...bestasks);
-  if (bestasks.length === 1) [playerbestask] = bestasks;
+  if (bestasks.length === 1) playerbestask = bestasks[0] || 0;
 
   bestbid.set(contestID, nflplayerID, playerbestbid);
   bestask.set(contestID, nflplayerID, playerbestask);

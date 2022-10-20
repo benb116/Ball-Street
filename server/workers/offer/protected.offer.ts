@@ -6,7 +6,7 @@ import fillOffers from './trader.offer';
 
 import Offer from '../../features/offer/offer.model';
 
-// Try to fill a protected match
+/** Try to fill a protected match */
 async function evalProtected(playerBook: Book, proffer: string, neoffer: string) {
   const poffer = await Offer.findByPk(proffer);
   if (!poffer) {
@@ -38,7 +38,10 @@ async function evalProtected(playerBook: Book, proffer: string, neoffer: string)
   await runMatches(poffer, playerBook);
 }
 
-// Find possible matches for a protected offer
+/**
+ * Find possible matches for a protected offer.
+ * Run through them to try to match with the current one.
+ */
 async function runMatches(poffer: Offer, playerBook: Book) {
   const ispbid = poffer.isbid;
   // Find all offers that could be matched
@@ -48,6 +51,7 @@ async function runMatches(poffer: Offer, playerBook: Book) {
     // Randomly chosen so no incentive to submit first
     const randomInd = Math.floor(Math.random() * matchingOffers.length);
     const randomOffer = matchingOffers[randomInd];
+    if (!randomOffer) break;
     logger.verbose(`Try to fill ${randomOffer.id}`);
     const bidoffer = (ispbid ? poffer.id : randomOffer.id);
     const askoffer = (!ispbid ? poffer.id : randomOffer.id);

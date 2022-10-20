@@ -12,8 +12,10 @@ function dv(inp: Model | Model[] | any) {
   return inp;
 }
 
-// Functions used in Jest testing
-// Ensures that a service call returns an object with specific properties
+/**
+ * Functions used in Jest testing.
+ * Ensures that a service call returns an object with specific properties
+ */
 export const ObjectTest = function ObjectTest(service: ServiceType, req: unknown, contains: ObjectType, reset = '') {
   return async () => service(req).then(async (resp: unknown) => {
     expect(dv(resp)).toStrictEqual(contains);
@@ -21,7 +23,7 @@ export const ObjectTest = function ObjectTest(service: ServiceType, req: unknown
   });
 };
 
-// Ensures that a service call returns an array with specific elements
+/** Ensures that a service call returns an array with specific elements */
 export const ArrayTest = function ArrayTest(service: ServiceType, req: unknown, items: unknown[]) {
   return async () => service(req).then((resp: unknown) => {
     if (typeof items[0] === 'object') {
@@ -32,7 +34,7 @@ export const ArrayTest = function ArrayTest(service: ServiceType, req: unknown, 
   });
 };
 
-// Ensures that a service call throws an error with specific status number and message
+/** Ensures that a service call throws an error with specific status number and message */
 export const ErrorTest = function ErrorTest(service: ServiceType, req: unknown, statusNumber: number, message: string) {
   return async function errortest() {
     try {
@@ -51,11 +53,13 @@ export const ErrorTest = function ErrorTest(service: ServiceType, req: unknown, 
   };
 };
 
-// Creates a series of test-objects for each label passed
-// Each object has a promise that can be resolved or rejected
-// and marked as "done"
-// When the promise is res/rej, a test can be triggered
-// test('Test Name', () => pMap.labelName.prom.then((data) => {});
+/**
+ * Creates a series of test-objects for each label passed
+ * Each object has a promise that can be resolved or rejected
+ * and marked as "done"
+ * When the promise is res/rej, a test can be triggered
+ * test('Test Name', () => pMap.labelName.prom.then((data) => {});
+ */
 export const TestPromiseMap = function TestPromiseMap(labelArray: string[]) {
   interface PromiseMap {
     [key: string]: {

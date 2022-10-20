@@ -41,7 +41,7 @@ interface ReorderRosterInput extends ServiceInput {
   }
 }
 
-// Swap players in positions of an entry
+/** Swap players in positions of an entry */
 async function reorderRoster(req: ReorderRosterInput) {
   const value: ReorderRosterInput = validate(req, schema);
 

@@ -65,11 +65,11 @@ function PlayerFilter() {
       </select>
       <select className="Dropdown" onChange={handleChange} name="teamAbr" value={filters.teamAbr}>
         <option value="">Team</option>
-        {Object.keys(theteams)
-          .sort((a, b) => (theteams[a].abr > theteams[b].abr ? 1 : -1))
-          .map((tid) => {
-            if (theteams[tid].phase === 'post') return null;
-            return <option key={theteams[tid].id} value={theteams[tid].abr}>{theteams[tid].abr}</option>;
+        {Object.values(theteams)
+          .sort((a, b) => (a.abr > b.abr ? 1 : -1))
+          .map((team) => {
+            if (team.phase === 'post') return null;
+            return <option key={team.id} value={team.abr}>{team.abr}</option>;
           })}
       </select>
 
@@ -78,7 +78,7 @@ function PlayerFilter() {
         {thegames.map((g, i) => {
           if (g && g.phase !== 'post') { // Hide games in post
             return (
-              <option key={g.HomeId} value={i}>
+              <option key={`${g.HomeId}-${g.AwayId}`} value={i}>
                 {g.away.abr}
                 {' '}
                 vs.

@@ -16,27 +16,29 @@ interface RosterPosType {
   id: NFLPosIDType | typeof FlexNFLPositionId
   canflex: boolean
 }
-export const RosterPosTypes: Record<string, RosterPosType> = {
-  FLEX: { id: FlexNFLPositionId, canflex: false },
-  QB: { id: 1, canflex: NFLPosTypes[1].canflex },
-  RB: { id: 2, canflex: NFLPosTypes[2].canflex },
-  WR: { id: 3, canflex: NFLPosTypes[3].canflex },
-  TE: { id: 4, canflex: NFLPosTypes[4].canflex },
-  K: { id: 5, canflex: NFLPosTypes[5].canflex },
-  DEF: { id: 6, canflex: NFLPosTypes[6].canflex },
-};
+export const RosterPosKinds = {
+  FLEX: { id: FlexNFLPositionId, canflex: false } as RosterPosType,
+  QB: { id: 1, canflex: NFLPosTypes[1].canflex } as RosterPosType,
+  RB: { id: 2, canflex: NFLPosTypes[2].canflex } as RosterPosType,
+  WR: { id: 3, canflex: NFLPosTypes[3].canflex } as RosterPosType,
+  TE: { id: 4, canflex: NFLPosTypes[4].canflex } as RosterPosType,
+  K: { id: 5, canflex: NFLPosTypes[5].canflex } as RosterPosType,
+  DEF: { id: 6, canflex: NFLPosTypes[6].canflex } as RosterPosType,
+} as const;
+export type RosterPosKindType = keyof typeof RosterPosKinds;
+export const RosterPosKindList = Object.keys(RosterPosKinds) as RosterPosKindType[];
 // Define all roster positions
 export const Roster = {
-  QB1: 1,
-  RB1: 2,
-  RB2: 2,
-  WR1: 3,
-  WR2: 3,
-  TE1: 4,
+  QB1: RosterPosKinds.QB.id,
+  RB1: RosterPosKinds.RB.id,
+  RB2: RosterPosKinds.RB.id,
+  WR1: RosterPosKinds.WR.id,
+  WR2: RosterPosKinds.WR.id,
+  TE1: RosterPosKinds.TE.id,
   FLEX1: FlexNFLPositionId,
   FLEX2: FlexNFLPositionId,
-  K1: 5,
-  DEF1: 6,
+  K1: RosterPosKinds.K.id,
+  DEF1: RosterPosKinds.DEF.id,
 } as const;
 export type RPosType = keyof typeof Roster;
 export const RosterPositions = Object.keys(Roster) as RPosType[];
@@ -59,25 +61,29 @@ export const verificationTimeout = 5; // minutes
 export const verificationTokenLength = 128;
 export const profitFeePercentage = 0.05;
 
-interface LedgerKindType {
+interface LedgerKindInfo {
   id: number,
   isCredit: boolean,
 }
-export const LedgerKinds: Record<string, LedgerKindType> = {
-  Deposit: { id: 1, isCredit: true },
-  Withdrawal: { id: 2, isCredit: false },
-  'Entry Fee': { id: 3, isCredit: false },
-  'Entry Prize': { id: 4, isCredit: true },
-  'Profit Fee': { id: 5, isCredit: false },
-  'Miscellaneous Credit': { id: 6, isCredit: true },
-  'Miscellaneous Debit': { id: 7, isCredit: false },
-};
+export const ledgerKinds = {
+  Deposit: { id: 1, isCredit: true } as LedgerKindInfo,
+  Withdrawal: { id: 2, isCredit: false } as LedgerKindInfo,
+  'Entry Fee': { id: 3, isCredit: false } as LedgerKindInfo,
+  'Entry Prize': { id: 4, isCredit: true } as LedgerKindInfo,
+  'Profit Fee': { id: 5, isCredit: false } as LedgerKindInfo,
+  'Miscellaneous Credit': { id: 6, isCredit: true } as LedgerKindInfo,
+  'Miscellaneous Debit': { id: 7, isCredit: false } as LedgerKindInfo,
+} as const;
+type LedgerKindType = keyof typeof ledgerKinds;
+export const ledgerKindArray = Object.keys(ledgerKinds) as LedgerKindType[];
 
-interface EntryActionKindType {
+interface EntryActionKindInfo {
   id: number,
 }
-export const EntryActionKinds: Record<string, EntryActionKindType> = {
-  Add: { id: 1 },
-  Drop: { id: 2 },
-  Convert: { id: 3 },
-};
+export const EntryActionKinds = {
+  Add: { id: 1 } as EntryActionKindInfo,
+  Drop: { id: 2 } as EntryActionKindInfo,
+  Convert: { id: 3 } as EntryActionKindInfo,
+} as const;
+type EntryActionKindType = keyof typeof EntryActionKinds;
+export const EntryActionKindArray = Object.keys(EntryActionKinds) as EntryActionKindType[];

@@ -44,7 +44,7 @@ async function run() {
     UserId: e.id,
     ContestId: thecontest.id,
     pointtotal: 10000,
-    TE1: (e.id % 2 === 0 ? 29315 : 30142),
+    TE1: (e.id % 2 === 0 ? 33443 : 30157),
   }))).catch(logger.error);
 
   // Create offers
@@ -56,7 +56,7 @@ async function run() {
       },
       body: {
         offerobj: {
-          nflplayerID: 29315, // Player 1
+          nflplayerID: 33443, // Player 1
           isbid: (i % 2 !== 0), // alternate bid/ask
           price: 1000 + Math.round(Math.random() * 10) * 100,
           protected: Math.random() < 0.5, // random is protected
@@ -70,7 +70,7 @@ async function run() {
       },
       body: {
         offerobj: {
-          nflplayerID: 30142,
+          nflplayerID: 30157,
           isbid: (i % 2 === 0),
           price: 1000 + Math.round(Math.random() * 10) * 100,
           protected: Math.random() < 0.5,
@@ -85,7 +85,7 @@ async function run() {
     getNFLPlayerOfferSummary({
       user: 10,
       params: {
-        nflplayerID: 29315,
+        nflplayerID: 33443,
         contestID: thecontest.id,
       },
       body: {},

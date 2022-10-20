@@ -48,7 +48,7 @@ const defaultState: PlayerState = {
     phase: '',
     injury: '',
   },
-  sortProp: 'preprice', // current sort metric
+  sortProp: 'projPrice', // current sort metric
   sortDesc: true,
 };
 
@@ -57,8 +57,8 @@ export const playersSlice = createSlice({
   initialState: defaultState,
   reducers: {
     clear: (state) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       state = defaultState;
+      return state;
     },
     setFilter: (state, { payload }: { payload: { name: FilterNameType, value: string, } }) => {
       state.filter[payload.name] = payload.value;
@@ -82,7 +82,10 @@ export const playersSlice = createSlice({
       state.gamelist = state.gamelist.map((g) => {
         if (g.HomeId === payload.nflTeamID || g.AwayId === payload.nflTeamID) {
           g.phase = payload.gamePhase;
-          state.teamMap[payload.nflTeamID].phase = payload.gamePhase; // Update phase for the team specifically too
+          const thisTeamMap = state.teamMap[payload.nflTeamID];
+          if (thisTeamMap) {
+            thisTeamMap.phase = payload.gamePhase; // Update phase for the team specifically too
+          }
         }
         return g;
       });
@@ -136,7 +139,8 @@ export const playersSelector = (playerIDs: number[]) => (state: RootState) => (
 );
 export const priceMapSelector = (playerID: number | null) => (state: RootState) => {
   const { players } = state;
-  return !playerID ? null : players.priceMap[playerID] || {};
+  if (!playerID) return null;
+  return players.priceMap[playerID];
 };
 
 export const filterSelector = (state: RootState) => state.players.filter;

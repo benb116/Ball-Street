@@ -13,7 +13,10 @@ describe('genVerify service', () => {
     const redisOutput = await client.KEYS('emailVer:*');
     expect(redisOutput.length).toBeGreaterThan(0);
     const thekey = redisOutput[0];
-    expect(redisOutput[0].split('emailVer:')[1].length).toBe(verificationTokenLength);
+    if (!thekey) return;
+    const thetoken = thekey.split('emailVer:')[1];
+    if (!thetoken) return;
+    expect(thetoken.length).toBe(verificationTokenLength);
     const thettl = await client.TTL(thekey).then(Number);
     expect(thettl).toBeGreaterThan(0);
   });

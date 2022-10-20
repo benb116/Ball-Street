@@ -15,6 +15,7 @@ import PullLatestInjuries from './nfl/injury.nfl';
 import getNFLPlayers from '../features/nflplayer/services/getNFLPlayers.service';
 
 import yahooData from './tests/yahooData';
+import { TeamIDType } from '../nflinfo';
 
 const checkInterval = 10000;
 
@@ -63,7 +64,7 @@ async function repeat() {
   PullLatestInjuries();
 }
 
-// Populate the playerTeamMap
+/** Populate the playerTeamMap */
 async function createPTMap() {
   const raw = await pullPlayerData();
   const rawlines = raw.data.split('\n');
@@ -71,7 +72,8 @@ async function createPTMap() {
   return playerlines.reduce((acc: Record<string, number>, line: string) => {
     const terms = line.split('|');
     const playerID = terms[1];
-    const teamID = Number(terms[2]);
+    if (!playerID) return acc;
+    const teamID = Number(terms[2]) as TeamIDType;
     acc[playerID] = teamID;
     return acc;
   }, {});
@@ -84,7 +86,7 @@ function pullPlayerData() {
   return axios.get('https://relay-stream.sports.yahoo.com/nfl/players.txt');
 }
 
-// Populate the preProjMap
+/** Populate the preProjMap */
 function pullPreProj() {
   return getNFLPlayers().then((data) => data.reduce((acc: Record<string, number>, p) => {
     if (p.preprice) acc[p.id] = p.preprice;

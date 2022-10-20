@@ -14,7 +14,7 @@ function Trades() {
   const { contestID } = useParams<{ contestID: string }>();
   const trades = useAppSelector(tradesSelector);
 
-  if (!contestID) return <>No Contest ID</>;
+  if (!contestID) return null;
 
   useGetTradesQuery(contestID);
 
@@ -40,7 +40,7 @@ function Trades() {
 function TradeItem({ tradedata }: { tradedata: TradeItemType }) {
   // Pull some info about the nfl player
   const playerData = useAppSelector(playerSelector(tradedata.NFLPlayerId));
-  if (!playerData) return <>No Player Data</>;
+  if (!playerData) return null;
   return (
     <div>
       {new Date(tradedata.createdAt).toLocaleString()}

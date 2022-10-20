@@ -1,20 +1,19 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { Toaster } from 'react-hot-toast';
 import App from './App';
 import { store } from './app/store';
 import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <App />
-      <Toaster />
-    </Provider>
-  </React.StrictMode>,
-  document.getElementById('root'),
+const rootElement = document.getElementById('root');
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+const root = createRoot(rootElement!);
+root.render(
+  <Provider store={store}>
+    <App />
+    <Toaster />
+  </Provider>,
 );
 
 // If you want your app to work offline and load faster, you can change
