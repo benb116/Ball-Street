@@ -1,5 +1,5 @@
 import { Transaction } from 'sequelize';
-import { LedgerKinds, profitFeePercentage, RosterPositions } from '../../../config';
+import { ledgerKinds, profitFeePercentage, RosterPositions } from '../../../config';
 import sequelize from '../../../db';
 import Contest from '../contest.model';
 import LedgerEntry from '../../ledger/ledgerEntry.model';
@@ -32,7 +32,7 @@ async function payoutContest(rawcontestID: number) {
     // Also confirm that no players remain to be converted to points
     const sumPoints = contestEntries.reduce((acc, cur) => {
       const isValid = RosterPositions.every((rpos) => cur[rpos] === null);
-      if (!isValid) return uError(`Entry has remaining players contest:${cur.ContestId} user:${cur.UserId}`);
+      if (!isValid) throw uError(`Entry has remaining players contest:${cur.ContestId} user:${cur.UserId}`);
       return acc + cur.pointtotal;
     }, 0);
 
@@ -57,7 +57,7 @@ async function payoutTransaction(entry: Entry, t: Transaction, averagePoints: nu
   const ledgerObjPrize = {
     UserId: entry.UserId,
     ContestId: entry.ContestId,
-    LedgerKindId: LedgerKinds['Entry Prize'].id,
+    LedgerKindId: ledgerKinds['Entry Prize'].id,
     value: profit,
   };
 
@@ -71,7 +71,7 @@ async function payoutTransaction(entry: Entry, t: Transaction, averagePoints: nu
     const ledgerObjFee = {
       UserId: entry.UserId,
       ContestId: entry.ContestId,
-      LedgerKindId: LedgerKinds['Profit Fee'].id,
+      LedgerKindId: ledgerKinds['Profit Fee'].id,
       value: profitFee,
     };
 

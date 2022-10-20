@@ -1,5 +1,5 @@
 import { Op } from 'sequelize';
-import { LedgerKinds } from '../../../config';
+import { ledgerKinds } from '../../../config';
 import LedgerEntry from '../../ledger/ledgerEntry.model';
 import User from '../../user/user.model';
 import { ErrorTest } from '../../util/util.tests';
@@ -35,38 +35,38 @@ describe('createEntry service', () => {
       where: {
         UserId: { [Op.in]: [4, 5, 6] },
         ContestId: contestID,
-        LedgerKindId: { [Op.in]: [LedgerKinds['Entry Prize'].id, LedgerKinds['Profit Fee'].id] },
+        LedgerKindId: { [Op.in]: [ledgerKinds['Entry Prize'].id, ledgerKinds['Profit Fee'].id] },
       },
     });
     expect(ledgers.length).toBe(5);
     expect(ledgers).toStrictEqual(expect.arrayContaining([
       expect.objectContaining({
         ContestId: contestID,
-        LedgerKindId: LedgerKinds['Entry Prize'].id,
+        LedgerKindId: ledgerKinds['Entry Prize'].id,
         UserId: 4,
         value: -357,
       }),
       expect.objectContaining({
         ContestId: contestID,
-        LedgerKindId: LedgerKinds['Entry Prize'].id,
+        LedgerKindId: ledgerKinds['Entry Prize'].id,
         UserId: 5,
         value: 71,
       }),
       expect.objectContaining({
         ContestId: contestID,
-        LedgerKindId: LedgerKinds['Profit Fee'].id,
+        LedgerKindId: ledgerKinds['Profit Fee'].id,
         UserId: 5,
         value: 4,
       }),
       expect.objectContaining({
         ContestId: contestID,
-        LedgerKindId: LedgerKinds['Entry Prize'].id,
+        LedgerKindId: ledgerKinds['Entry Prize'].id,
         UserId: 6,
         value: 286,
       }),
       expect.objectContaining({
         ContestId: contestID,
-        LedgerKindId: LedgerKinds['Profit Fee'].id,
+        LedgerKindId: ledgerKinds['Profit Fee'].id,
         UserId: 6,
         value: 14,
       })]));
