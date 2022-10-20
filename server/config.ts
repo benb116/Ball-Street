@@ -59,6 +59,7 @@ export const RefreshTime = 5; // seconds
 // Email verification parameters
 export const verificationTimeout = 5; // minutes
 export const verificationTokenLength = 128;
+export const profitFeePercentage = 0.05;
 
 interface LedgerKindInfo {
   id: number,
@@ -69,8 +70,9 @@ export const ledgerKinds = {
   Withdrawal: { id: 2, isCredit: false } as LedgerKindInfo,
   'Entry Fee': { id: 3, isCredit: false } as LedgerKindInfo,
   'Entry Prize': { id: 4, isCredit: true } as LedgerKindInfo,
-  'Miscellaneous Credit': { id: 5, isCredit: true } as LedgerKindInfo,
-  'Miscellaneous Debit': { id: 6, isCredit: false } as LedgerKindInfo,
+  'Profit Fee': { id: 5, isCredit: false } as LedgerKindInfo,
+  'Miscellaneous Credit': { id: 6, isCredit: true } as LedgerKindInfo,
+  'Miscellaneous Debit': { id: 7, isCredit: false } as LedgerKindInfo,
 } as const;
 type LedgerKindType = keyof typeof ledgerKinds;
 export const ledgerKindArray = Object.keys(ledgerKinds) as LedgerKindType[];

@@ -62,13 +62,20 @@ async function PopulateDB() {
     nflweek: curweek,
     buyin: 500,
   };
+  const con4 = {
+    name: 'Public Contest 3',
+    budget: 10000,
+    nflweek: curweek,
+    buyin: 1000,
+  };
   const contestMap = {
     1: con,
     2: con2,
     3: con3,
+    4: con4,
   } as const;
   type CIDType = keyof typeof contestMap;
-  const allcontests = [con, con2, con3] as const;
+  const allcontests = [con, con2, con3, con4] as const;
   await Contest.bulkCreate(allcontests);
 
   const pubusrs = usrs.slice(0, 3);
@@ -89,6 +96,12 @@ async function PopulateDB() {
     UserId: 2, ContestId: 3, pointtotal: 1500, RB1: 31885, WR1: 32398, WR2: 28026, K1: 30266, DEF1: null, TE1: null,
   }, {
     UserId: 3, ContestId: 3, pointtotal: 500, RB1: 31885, WR1: null, WR2: null, K1: 30266, DEF1: null, TE1: null,
+  }, {
+    UserId: 4, ContestId: 4, pointtotal: 600,
+  }, {
+    UserId: 5, ContestId: 4, pointtotal: 1000,
+  }, {
+    UserId: 6, ContestId: 4, pointtotal: 1200,
   }];
   await Entry.bulkCreate(entrs);
   await Entry.bulkCreate(entrs2);

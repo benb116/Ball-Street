@@ -6,7 +6,7 @@ describe('createContest service', () => {
     service,
     { user: 2, params: { }, body: { name: 'New Contest', budget: 10000 } },
     {
-      id: 4,
+      id: 5,
       name: 'New Contest',
       budget: 10000,
       nflweek: Number(process.env.WEEK),
