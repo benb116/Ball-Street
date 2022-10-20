@@ -23,7 +23,7 @@ describe('createEntry service', () => {
     const finalCash = {
       4: 643,
       5: 1067,
-      6: 272,
+      6: 1272,
     };
     users.forEach((u) => {
       const userID = u.id as 4 | 5 | 6;
