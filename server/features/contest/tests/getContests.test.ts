@@ -29,6 +29,14 @@ describe('getContests service', () => {
       buyin: 500,
       createdAt: expect.any(Date),
       updatedAt: expect.any(Date),
+    }, {
+      budget: 10000,
+      id: 4,
+      name: 'Public Contest 3',
+      nflweek: Number(process.env.WEEK),
+      buyin: 1000,
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date),
     }],
   ));
 });
