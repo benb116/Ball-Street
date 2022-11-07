@@ -23,7 +23,7 @@
     "redis": "^4.3.0",
     "sequelize": "^6.25.3",
     "winston": "^3.8.1",
-    "ws": "^8.8.1"
+    "ws": "^8.11.0"
   },
   "scripts": {
     "test": "jest --maxWorkers=1 --forceExit"
