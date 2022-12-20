@@ -19,6 +19,10 @@ import { TeamIDType } from '../nflinfo';
 
 const checkInterval = 10000;
 
+if (!process.env.WEEK || Number.isNaN(Number(process.env.WEEK))) {
+  throw new Error('No/invalid week number specified in env');
+}
+
 init().then(() => setInterval(repeat, checkInterval));
 
 async function init() {
@@ -27,6 +31,9 @@ async function init() {
   state.playerTeamMap = await createPTMap();
   // If production, pull down players for the week
   if (process.env.NODE_ENV === 'production' && !Number(process.env.YAHOO_MOCK)) {
+    if (!process.env.YAHOO_COOKIE) {
+      throw new Error('No/invalid yahoo cookie specified in env');
+    }
     logger.info('Scraping player data');
     await scrape().catch(logger.error);
   }
@@ -64,7 +71,7 @@ async function repeat() {
   PullLatestInjuries();
 }
 
-/** Populate the playerTeamMap */
+/** Populate the playerTeamMap - PlayerID: TeamID */
 async function createPTMap() {
   const raw = await pullPlayerData();
   const rawlines = raw.data.split('\n');
@@ -86,7 +93,7 @@ function pullPlayerData() {
   return axios.get('https://relay-stream.sports.yahoo.com/nfl/players.txt');
 }
 
-/** Populate the preProjMap */
+/** Populate the preProjMap - PlayerID: Pregame projection */
 function pullPreProj() {
   return getNFLPlayers().then((data) => data.reduce((acc: Record<string, number>, p) => {
     if (p.preprice) acc[p.id] = p.preprice;
