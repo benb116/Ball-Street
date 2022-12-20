@@ -9,7 +9,7 @@ describe('createContest service', () => {
       id: 5,
       name: 'New Contest',
       budget: 10000,
-      nflweek: Number(process.env.WEEK),
+      nflweek: Number(process.env['WEEK']),
       buyin: 0,
       createdAt: expect.any(Date),
       updatedAt: expect.any(Date),

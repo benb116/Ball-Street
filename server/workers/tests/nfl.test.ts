@@ -90,7 +90,7 @@ describe('NFL worker tests', () => {
       test(testname, () => {
         yahoo.games[testname].gameobjs = yahoo.games[testname].gameobjs.map((g) => {
           const ng = { ...g };
-          ng.week = Number(process.env.WEEK);
+          ng.week = Number(process.env['WEEK']);
           return ng;
         });
         const { phasemap, gameobjs } = ParseGameFileInit(yahoo.games[testname].data);

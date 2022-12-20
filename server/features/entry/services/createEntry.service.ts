@@ -34,7 +34,7 @@ async function createEntry(req: CreateEntryInput) {
     // Confirm contest is valid and for the current week
     const thecontest = await Contest.findByPk(value.params.contestID);
     if (!thecontest) { return uError('No contest found', 404); }
-    const theweek = Number(process.env.WEEK);
+    const theweek = Number(process.env['WEEK']);
     if (theweek !== thecontest.nflweek) return uError('Incorrect week', 406);
 
     const theuser = await User.findOne({ where: { id: value.user }, ...tobj(t) });

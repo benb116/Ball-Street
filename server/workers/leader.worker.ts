@@ -49,7 +49,7 @@ setInterval(calculateLeaderboard, 10000);
 
 async function calculateLeaderboard() {
   // Get current game phases (used to determine which point value to use)
-  const gamelist = await NFLGame.findAll({ where: { week: Number(process.env.WEEK) } });
+  const gamelist = await NFLGame.findAll({ where: { week: Number(process.env['WEEK']) } });
   // Are all games in pre or post phase
   interface GameItem {
     phase: string,

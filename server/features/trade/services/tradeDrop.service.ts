@@ -66,7 +66,7 @@ async function tradeDrop(req: TradeDropInput, t: Transaction) {
   const gamedata = await NFLGame.findOne({
     where: {
       [Op.or]: [{ HomeId: playerdata.NFLTeamId }, { AwayId: playerdata.NFLTeamId }],
-      week: Number(process.env.WEEK),
+      week: Number(process.env['WEEK']),
     },
   });
   if (!gamedata) return uError('Could not find game data for this player', 404);

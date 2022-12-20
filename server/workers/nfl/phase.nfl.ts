@@ -51,7 +51,7 @@ async function setPhase(teamID: TeamIDType, newphase: GamePhaseType) {
     await NFLGame.update({ phase: newphase }, {
       where: {
         [Op.or]: [{ HomeId: teamID }, { AwayId: teamID }],
-        week: Number(process.env.WEEK),
+        week: Number(process.env['WEEK']),
       },
     });
 
@@ -122,7 +122,7 @@ async function convertTeamPlayers(teamID: number) {
       addSum += (statmap[pID] || 0);
       playersConverted.push(pID);
     });
-    updatedProps.pointtotal = Sequelize.literal(`pointtotal + ${addSum.toString()}`);
+    updatedProps['pointtotal'] = Sequelize.literal(`pointtotal + ${addSum.toString()}`);
 
     // Write conversion records
     const entryActions = playersConverted.map((pID) => ({

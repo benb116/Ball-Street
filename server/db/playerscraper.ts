@@ -11,12 +11,12 @@ import teams, { TeamKind } from '../nflinfo';
 
 // eslint-disable-next-line max-len
 const baseurl = (posget: string, weeknum: number) => `https://football.fantasysports.yahoo.com/f1/590922/players?status=ALL&pos=${posget}&cut_type=9&stat1=S_PW_${weeknum}&myteam=1&sort=PTS&sdir=1&count=`;
-const cookie = process.env.YAHOO_COOKIE;
+const cookie = process.env['YAHOO_COOKIE'];
 let currentweek = 3;
 
 /** Pull player info. If price, include constant pre- and post-prices */
 async function scrape(price = false) {
-  currentweek = Number(process.env.WEEK);
+  currentweek = Number(process.env['WEEK']);
   // Set all existing player records to inactive, will update if duplicated
   await NFLPlayer.update({ active: false }, { where: { active: true } });
 

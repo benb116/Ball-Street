@@ -26,7 +26,7 @@ export async function GetNewStats() {
 }
 
 function pullStatData() {
-  if (Number(process.env.YAHOO_MOCK)) {
+  if (Number(process.env['YAHOO_MOCK'])) {
     return yahooData.stats.statsMonNightMidgame;
   }
   return axios.get('https://relay-stream.sports.yahoo.com/nfl/stats.txt');

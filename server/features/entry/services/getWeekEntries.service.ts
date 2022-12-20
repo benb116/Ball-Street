@@ -10,7 +10,7 @@ async function getWeekEntries() {
       {
         model: Contest,
         where: {
-          nflweek: Number(process.env.WEEK),
+          nflweek: Number(process.env['WEEK']),
         },
       },
     ],

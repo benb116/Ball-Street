@@ -26,7 +26,7 @@ async function init() {
   logger.info('Creating playerTeamMap');
   state.playerTeamMap = await createPTMap();
   // If production, pull down players for the week
-  if (process.env.NODE_ENV === 'production' && !Number(process.env.YAHOO_MOCK)) {
+  if (process.env['NODE_ENV'] === 'production' && !Number(process.env['YAHOO_MOCK'])) {
     logger.info('Scraping player data');
     await scrape().catch(logger.error);
   }
@@ -80,7 +80,7 @@ async function createPTMap() {
 }
 
 function pullPlayerData() {
-  if (Number(process.env.YAHOO_MOCK)) {
+  if (Number(process.env['YAHOO_MOCK'])) {
     return yahooData.players.playersMonNightMid17;
   }
   return axios.get('https://relay-stream.sports.yahoo.com/nfl/players.txt');

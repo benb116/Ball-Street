@@ -22,14 +22,14 @@ declare module 'express-session' {
 
 /** Session middleware based on redis store */
 export default session({
-  secret: process.env.COOKIE_SECRET || 'defaultSecret',
+  secret: process.env['COOKIE_SECRET'] || 'defaultSecret',
   name: '_ballstreet',
   resave: false,
   saveUninitialized: true,
   cookie: {
     httpOnly: true,
     sameSite: true,
-    secure: (process.env.NODE_ENV === 'production'),
+    secure: (process.env['NODE_ENV'] === 'production'),
   },
   store: new RedisStore({ client, ttl: 86400 }), // 1 day
 });

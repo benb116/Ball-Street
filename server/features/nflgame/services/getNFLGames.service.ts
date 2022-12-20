@@ -3,7 +3,7 @@ import NFLGame from '../nflgame.model';
 
 /** Get all NFL games */
 async function getNFLGames() {
-  const currentweek = Number(process.env.WEEK);
+  const currentweek = Number(process.env['WEEK']);
   return NFLGame.findAll({
     include: [{
       model: NFLTeam,

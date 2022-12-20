@@ -28,7 +28,7 @@ export default async function PullLatestInjuries() {
 
 /** Pull injury data from yahoo or mock data */
 function pullInjuryData() {
-  if (Number(process.env.YAHOO_MOCK)) {
+  if (Number(process.env['YAHOO_MOCK'])) {
     return yahooData.injury;
   }
   return axios.get('https://football.fantasysports.yahoo.com/f1/injuries');

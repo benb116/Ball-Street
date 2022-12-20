@@ -28,7 +28,7 @@ export async function InitGameState() {
 
 /** Get game data (from yahoo or mock data) */
 function pullGameData() {
-  if (Number(process.env.YAHOO_MOCK)) {
+  if (Number(process.env['YAHOO_MOCK'])) {
     return yahooData.games.gamesMonNightMidgame;
   }
   return axios.get('https://relay-stream.sports.yahoo.com/nfl/games.txt');
@@ -38,7 +38,7 @@ function pullGameData() {
 export function ParseGameFileInit(data: string) {
   const rawlines = data.split('\n');
   const gamelines = rawlines.filter((l: string) => l[0] === 'g');
-  const currentweek = (Number(process.env.WEEK) || 0);
+  const currentweek = (Number(process.env['WEEK']) || 0);
 
   // Create a map of team IDs and their gamephases
   const phasemaps = gamelines.map(CreatePhaseMap);

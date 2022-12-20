@@ -42,7 +42,7 @@ async function PopulateDB() {
   }));
   await LedgerEntry.bulkCreate(ledgerEntries);
 
-  const curweek = Number(process.env.WEEK);
+  const curweek = Number(process.env['WEEK']);
   // Define existing contest
   const con = {
     name: 'Ball Street Big One',

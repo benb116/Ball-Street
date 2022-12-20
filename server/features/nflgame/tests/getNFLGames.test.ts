@@ -16,7 +16,7 @@ describe('getNFLGames service', () => {
       }),
       phase: 'post',
       startTime: 100,
-      week: Number(process.env.WEEK),
+      week: Number(process.env['WEEK']),
       createdAt: expect.any(Date),
       updatedAt: expect.any(Date),
     }, {
@@ -30,7 +30,7 @@ describe('getNFLGames service', () => {
       }),
       phase: 'post',
       startTime: 100,
-      week: Number(process.env.WEEK),
+      week: Number(process.env['WEEK']),
       createdAt: expect.any(Date),
       updatedAt: expect.any(Date),
     }, {
@@ -44,7 +44,7 @@ describe('getNFLGames service', () => {
       }),
       phase: 'post',
       startTime: 100,
-      week: Number(process.env.WEEK),
+      week: Number(process.env['WEEK']),
       createdAt: expect.any(Date),
       updatedAt: expect.any(Date),
     }, {
@@ -58,7 +58,7 @@ describe('getNFLGames service', () => {
       }),
       phase: 'post',
       startTime: 100,
-      week: Number(process.env.WEEK),
+      week: Number(process.env['WEEK']),
       createdAt: expect.any(Date),
       updatedAt: expect.any(Date),
     }, {
@@ -72,7 +72,7 @@ describe('getNFLGames service', () => {
       }),
       phase: 'mid',
       startTime: 200,
-      week: Number(process.env.WEEK),
+      week: Number(process.env['WEEK']),
       createdAt: expect.any(Date),
       updatedAt: expect.any(Date),
     }, {
@@ -86,7 +86,7 @@ describe('getNFLGames service', () => {
       }),
       phase: 'post',
       startTime: 100,
-      week: Number(process.env.WEEK),
+      week: Number(process.env['WEEK']),
       createdAt: expect.any(Date),
       updatedAt: expect.any(Date),
     }, {
@@ -100,7 +100,7 @@ describe('getNFLGames service', () => {
       }),
       phase: 'post',
       startTime: 100,
-      week: Number(process.env.WEEK),
+      week: Number(process.env['WEEK']),
       createdAt: expect.any(Date),
       updatedAt: expect.any(Date),
     }, {
@@ -114,7 +114,7 @@ describe('getNFLGames service', () => {
       }),
       phase: 'pre',
       startTime: 400,
-      week: Number(process.env.WEEK),
+      week: Number(process.env['WEEK']),
       createdAt: expect.any(Date),
       updatedAt: expect.any(Date),
     }, {
@@ -128,7 +128,7 @@ describe('getNFLGames service', () => {
       }),
       phase: 'post',
       startTime: 100,
-      week: Number(process.env.WEEK),
+      week: Number(process.env['WEEK']),
       createdAt: expect.any(Date),
       updatedAt: expect.any(Date),
     }, {
@@ -142,7 +142,7 @@ describe('getNFLGames service', () => {
       }),
       phase: 'pre',
       startTime: 400,
-      week: Number(process.env.WEEK),
+      week: Number(process.env['WEEK']),
       createdAt: expect.any(Date),
       updatedAt: expect.any(Date),
     }, {
@@ -156,7 +156,7 @@ describe('getNFLGames service', () => {
       }),
       phase: 'mid',
       startTime: 200,
-      week: Number(process.env.WEEK),
+      week: Number(process.env['WEEK']),
       createdAt: expect.any(Date),
       updatedAt: expect.any(Date),
     }, {
@@ -170,7 +170,7 @@ describe('getNFLGames service', () => {
       }),
       phase: 'mid',
       startTime: 200,
-      week: Number(process.env.WEEK),
+      week: Number(process.env['WEEK']),
       createdAt: expect.any(Date),
       updatedAt: expect.any(Date),
     }, {
@@ -184,7 +184,7 @@ describe('getNFLGames service', () => {
       }),
       phase: 'post',
       startTime: 100,
-      week: Number(process.env.WEEK),
+      week: Number(process.env['WEEK']),
       createdAt: expect.any(Date),
       updatedAt: expect.any(Date),
     }, {
@@ -198,7 +198,7 @@ describe('getNFLGames service', () => {
       }),
       phase: 'pre',
       startTime: 400,
-      week: Number(process.env.WEEK),
+      week: Number(process.env['WEEK']),
       createdAt: expect.any(Date),
       updatedAt: expect.any(Date),
     }, {
@@ -212,7 +212,7 @@ describe('getNFLGames service', () => {
       }),
       phase: 'pre',
       startTime: 400,
-      week: Number(process.env.WEEK),
+      week: Number(process.env['WEEK']),
       createdAt: expect.any(Date),
       updatedAt: expect.any(Date),
     }, {
@@ -226,7 +226,7 @@ describe('getNFLGames service', () => {
       }),
       phase: 'post',
       startTime: 100,
-      week: Number(process.env.WEEK),
+      week: Number(process.env['WEEK']),
       createdAt: expect.any(Date),
       updatedAt: expect.any(Date),
     }],

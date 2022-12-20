@@ -2,8 +2,8 @@
 
 import { createClient } from 'redis';
 
-export const REDIS_HOST = (process.env.REDIS_HOST || 'localhost');
-export const REDIS_PORT = (Number(process.env.REDIS_PORT) || 6379);
+export const REDIS_HOST = (process.env['REDIS_HOST'] || 'localhost');
+export const REDIS_PORT = (Number(process.env['REDIS_PORT']) || 6379);
 
 const connObj = {
   url: `redis://${REDIS_HOST}:${REDIS_PORT}`,

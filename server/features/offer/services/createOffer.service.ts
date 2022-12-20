@@ -102,7 +102,7 @@ async function createOffer(req: CreateOfferInput) {
     const gamedata = await NFLGame.findOne({
       where: {
         [Op.or]: [{ HomeId: playerdata.NFLTeamId }, { AwayId: playerdata.NFLTeamId }],
-        week: Number(process.env.WEEK),
+        week: Number(process.env['WEEK']),
       },
       transaction: t,
     });

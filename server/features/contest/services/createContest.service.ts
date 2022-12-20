@@ -46,7 +46,7 @@ async function createContest(req: CreateContestInput) {
   const value: CreateContestInput = validate(req, schema);
   const contestObj = {
     name: value.body.name,
-    nflweek: Number(process.env.WEEK),
+    nflweek: Number(process.env['WEEK']),
     budget: value.body.budget,
     buyin: value.body.buyin,
   };

@@ -49,9 +49,9 @@ export const gamePhases = ['pre', 'mid', 'post'] as const;
 export type GamePhaseType = typeof gamePhases[number];
 
 // Configuration parameters for the site
-export const CallbackURL: string = (process.env.CALLBACK_URL || '');
+export const CallbackURL: string = (process.env['CALLBACK_URL'] || '');
 // How long to wait before filling a protected offer
-export const ProtectionDelay = (process.env.NODE_ENV === 'production' ? 30 : 5); // seconds
+export const ProtectionDelay = (process.env['NODE_ENV'] === 'production' ? 30 : 5); // seconds
 // Are offers protected by default?
 export const DefaultProtected = false;
 // How often to refresh websocket info
