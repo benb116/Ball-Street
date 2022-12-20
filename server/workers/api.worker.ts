@@ -10,6 +10,11 @@ import apiRoute from './api/routes.api';
 
 const isProduction = process.env.NODE_ENV === 'production';
 logger.info(`NODE_ENV = ${process.env.NODE_ENV}, isProduction = ${isProduction}`);
+
+if (!process.env.WEEK || Number.isNaN(Number(process.env.WEEK))) {
+  throw new Error('No/invalid week number specified in env');
+}
+
 const app = express();
 
 app.use(cors());
