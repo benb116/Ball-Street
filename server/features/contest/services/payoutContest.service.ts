@@ -10,8 +10,7 @@ import validators from '../../util/util.schema';
 
 import Entry from '../../entry/entry.model';
 
-// Pay out prizes to all users with entries in a contest
-// Take fees as defined
+/** Pay out prizes to all users with entries in a contest. Take fees as defined */
 async function payoutContest(rawcontestID: number) {
   const contestID = validate(rawcontestID, validators.contestID);
 
@@ -44,7 +43,7 @@ async function payoutContest(rawcontestID: number) {
   });
 }
 
-// For a given user/entry, determine prize, adjust balance, and add ledger entries
+/** For a given user/entry, determine prize, adjust balance, and add ledger entries */
 async function payoutTransaction(entry: Entry, t: Transaction, averagePoints: number, contestBuyIn: number) {
   const entryFraction = entry.pointtotal / averagePoints;
   const grossPayout = Math.round(entryFraction * contestBuyIn);
