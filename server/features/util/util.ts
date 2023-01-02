@@ -3,7 +3,7 @@ import { Transaction } from 'sequelize';
 
 import {
   FlexNFLPositionId, NFLPosIDType, NFLPosTypes, Roster, RosterPositions, RPosType,
-} from '../../config';
+} from '../../../types/rosterinfo';
 
 import Entry from '../entry/entry.model';
 

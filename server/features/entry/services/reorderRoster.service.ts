@@ -2,7 +2,7 @@ import Joi from 'joi';
 
 import {
   FlexNFLPositionId, NFLPosTypes, Roster, RosterPositions, RPosType,
-} from '../../../config';
+} from '../../../../types/rosterinfo';
 
 import { tobj, validate, uError } from '../../util/util';
 import errorHandler, { ServiceInput } from '../../util/util.service';

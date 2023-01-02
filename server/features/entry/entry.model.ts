@@ -3,7 +3,7 @@ import {
 } from 'sequelize';
 import sequelize from '../../db';
 
-import { RosterPositions, RPosType } from '../../config';
+import { RosterPositions, RPosType } from '../../../types/rosterinfo';
 
 import User from '../user/user.model';
 import Contest from '../contest/contest.model';

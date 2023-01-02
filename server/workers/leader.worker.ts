@@ -1,7 +1,7 @@
 // Leader worker
 // Calculates live leaderboards
 
-import { RosterPositions, RPosType } from '../config';
+import { RosterPositions, RPosType } from '../../types/rosterinfo';
 
 import { onlyUnique } from '../features/util/util';
 

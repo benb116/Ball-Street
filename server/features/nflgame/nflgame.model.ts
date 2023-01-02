@@ -5,7 +5,7 @@ import {
   Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes, NonAttribute, Association,
 } from 'sequelize';
 import sequelize from '../../db';
-import { gamePhases, GamePhaseType } from '../../config';
+import { gamePhases, GamePhaseType } from '../../../types/rosterinfo';
 
 import NFLTeam from '../nflteam/nflteam.model';
 

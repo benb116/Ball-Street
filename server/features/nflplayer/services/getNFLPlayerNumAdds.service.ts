@@ -1,7 +1,7 @@
 import { Op } from 'sequelize';
 import Joi from 'joi';
 
-import { Roster } from '../../../config';
+import { Roster } from '../../../../types/rosterinfo';
 
 import { validate } from '../../util/util';
 import validators from '../../util/util.schema';

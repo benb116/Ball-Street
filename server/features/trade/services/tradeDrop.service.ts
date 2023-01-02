@@ -9,7 +9,7 @@ import Entry from '../../entry/entry.model';
 import NFLGame from '../../nflgame/nflgame.model';
 import NFLPlayer from '../../nflplayer/nflplayer.model';
 import EntryAction from '../entryaction.model';
-import { EntryActionKinds } from '../../../config';
+import { EntryActionKinds } from '../../../../types/rosterinfo';
 
 const schema = Joi.object({
   user: validators.user,

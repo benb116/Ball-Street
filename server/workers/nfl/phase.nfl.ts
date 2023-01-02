@@ -22,7 +22,7 @@ import NFLPlayer from '../../features/nflplayer/nflplayer.model';
 import NFLGame from '../../features/nflgame/nflgame.model';
 import getWeekEntries from '../../features/entry/services/getWeekEntries.service';
 import EntryAction from '../../features/trade/entryaction.model';
-import { EntryActionKinds, gamePhases, GamePhaseType } from '../../config';
+import { EntryActionKinds, gamePhases, GamePhaseType } from '../../../types/rosterinfo';
 
 const schema = Joi.object({
   teamID: Joi.valid(...teamIDs)

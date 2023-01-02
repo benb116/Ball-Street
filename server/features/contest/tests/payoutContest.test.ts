@@ -1,5 +1,5 @@
 import { Op } from 'sequelize';
-import { ledgerKinds } from '../../../config';
+import { ledgerKinds } from '../../../../types/rosterinfo';
 import LedgerEntry from '../../ledger/ledgerEntry.model';
 import User from '../../user/user.model';
 import { ErrorTest } from '../../util/util.tests';

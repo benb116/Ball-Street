@@ -1,5 +1,6 @@
 import { Transaction } from 'sequelize';
-import { ledgerKinds, profitFeePercentage, RosterPositions } from '../../../config';
+import { profitFeePercentage } from '../../../config';
+import { ledgerKinds, RosterPositions } from '../../../../types/rosterinfo';
 import sequelize from '../../../db';
 import Contest from '../contest.model';
 import LedgerEntry from '../../ledger/ledgerEntry.model';

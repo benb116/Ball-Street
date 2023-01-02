@@ -8,7 +8,7 @@ import Offer from '../features/offer/offer.model';
 import Trade from '../features/trade/trade.model';
 import User from '../features/user/user.model';
 import LedgerEntry from '../features/ledger/ledgerEntry.model';
-import { EntryActionKinds, GamePhaseType, ledgerKinds } from '../config';
+import { EntryActionKinds, GamePhaseType, ledgerKinds } from '../../types/rosterinfo';
 import EntryAction from '../features/trade/entryaction.model';
 
 async function PopulateDB() {

@@ -1,7 +1,7 @@
 import service from '../services/createEntry.service';
 import { ErrorTest } from '../../util/util.tests';
 import LedgerEntry from '../../ledger/ledgerEntry.model';
-import { ledgerKinds } from '../../../config';
+import { ledgerKinds } from '../../../../types/rosterinfo';
 import sequelize from '../../../db';
 
 describe('createEntry service', () => {

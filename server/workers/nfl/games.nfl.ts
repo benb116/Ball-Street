@@ -9,7 +9,7 @@ import setPhase from './phase.nfl';
 
 import NFLGame from '../../features/nflgame/nflgame.model';
 import yahooData from '../tests/yahooData';
-import { GamePhaseType } from '../../config';
+import { GamePhaseType } from '../../../types/rosterinfo';
 
 type PhaseMapType = Partial<Record<TeamIDType, GamePhaseType | number>>;
 

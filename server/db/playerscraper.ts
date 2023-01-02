@@ -5,7 +5,7 @@
 import axios from 'axios';
 import {
   NFLPosIDType, RosterPosKindList, RosterPosKinds, RosterPosKindType,
-} from '../config';
+} from '../../types/rosterinfo';
 import NFLPlayer from '../features/nflplayer/nflplayer.model';
 import teams, { TeamKind } from '../../types/nflinfo';
 

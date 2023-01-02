@@ -8,7 +8,7 @@ import sequelize from '../../../db';
 import LedgerEntry from '../../ledger/ledgerEntry.model';
 import User from '../user.model';
 
-import { ledgerKinds } from '../../../config';
+import { ledgerKinds } from '../../../../types/rosterinfo';
 import { DepositWithdrawInput, DepositWithdrawType, LedgerEntryType } from '../../../../types/api/account.api';
 
 const bodySchema = Joi.object({

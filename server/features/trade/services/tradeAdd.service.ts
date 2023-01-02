@@ -11,7 +11,7 @@ import Entry from '../../entry/entry.model';
 import NFLGame from '../../nflgame/nflgame.model';
 import NFLPlayer from '../../nflplayer/nflplayer.model';
 import EntryAction from '../entryaction.model';
-import { EntryActionKinds, RosterPositions, RPosType } from '../../../config';
+import { EntryActionKinds, RosterPositions, RPosType } from '../../../../types/rosterinfo';
 
 const schema = Joi.object({
   user: validators.user,

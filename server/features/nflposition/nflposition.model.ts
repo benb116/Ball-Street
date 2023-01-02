@@ -4,7 +4,7 @@ import {
   Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
 } from 'sequelize';
 import sequelize from '../../db';
-import { NFLPosIDs, NFLPosIDType } from '../../config';
+import { NFLPosIDs, NFLPosIDType } from '../../../types/rosterinfo';
 
 class NFLPosition extends Model<InferAttributes<NFLPosition>, InferCreationAttributes<NFLPosition>> {
   declare id: NFLPosIDType;

@@ -9,7 +9,7 @@ import Entry from '../entry.model';
 import sequelize from '../../../db';
 import User from '../../user/user.model';
 import LedgerEntry from '../../ledger/ledgerEntry.model';
-import { ledgerKinds } from '../../../config';
+import { ledgerKinds } from '../../../../types/rosterinfo';
 import { EntryType } from '../../../../types/api/entry.api';
 
 const schema = Joi.object({
