@@ -43,7 +43,7 @@ async function sendreq(setPrice: boolean, pagenum = 0, posget = 'O') {
     // Clean up HTML response
     .then((res) => res.data.split('<tbody>')[1])
     .then((res) => res.split('</tbody>')[0])
-    .then((res) => res.split('</td></tr>'))
+    .then((res) => res.split('</td></tr><tr'))
     .then((out) => out.filter((o: string) => o.length))
     .then((out) => out.map((playerline: string) => {
       // Pull out info
@@ -91,6 +91,7 @@ async function sendreq(setPrice: boolean, pagenum = 0, posget = 'O') {
       } as NFLPlayer;
       return outobj;
     }))
+    .then((objs) => objs.filter((o: NFLPlayer) => o))
     // If player exists in DB, overwrite certain properties
     .then((objs) => NFLPlayer
       .bulkCreate(objs, { updateOnDuplicate: ['preprice', 'postprice', 'NFLTeamId', 'active', 'injuryStatus'] }));
