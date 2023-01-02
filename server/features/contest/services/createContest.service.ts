@@ -5,6 +5,7 @@ import validators from '../../util/util.schema';
 import errorHandler, { ServiceInput } from '../../util/util.service';
 
 import Contest from '../contest.model';
+import type { ContestItemType } from '../../../../types/api/contest.api';
 
 const schema = Joi.object({
   user: validators.user,
@@ -42,7 +43,7 @@ interface CreateContestInput extends ServiceInput {
 }
 
 /** Create a new contest (to be used by admin) */
-async function createContest(req: CreateContestInput) {
+async function createContest(req: CreateContestInput): Promise<ContestItemType> {
   const value: CreateContestInput = validate(req, schema);
   const contestObj = {
     name: value.body.name,

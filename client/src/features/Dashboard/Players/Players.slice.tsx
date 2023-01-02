@@ -5,15 +5,15 @@ import type { RootState } from '../../../app/store';
 import { ErrHandler } from '../../../helpers/util';
 import PlayersAPI from './Players.api';
 
-import {
+import type {
   GameItemType,
-  NFLPosTypes,
   PhaseType,
   PlayerItemType,
   PriceMapItemType,
   SortByType,
   TeamMapType,
-} from './Players.types';
+} from '../../../../../types/api/player.api';
+import { NFLPosTypes } from '../../../helpers/config';
 
 interface FilterType {
   name: string,

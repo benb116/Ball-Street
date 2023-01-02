@@ -1,4 +1,4 @@
-import { TeamIDType } from '../../nflinfo';
+import { TeamIDType } from '../../../types/nflinfo';
 
 const out = {
   playerTeamMap: {} as Record<number, TeamIDType>, // PlayerID: TeamID

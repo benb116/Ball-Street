@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import { EntryType } from '../../../../types/api/entry.api';
 import { RosterPositions } from '../../../config';
 import projprice from '../../../db/redis/projprice.redis';
 
@@ -10,9 +11,7 @@ import Entry from '../entry.model';
 
 const schema = Joi.object({
   user: validators.user,
-  params: Joi.object().keys({
-    contestID: validators.contestID,
-  }).required(),
+  params: Joi.object().keys({ contestID: validators.contestID }).required(),
   body: validators.noObj,
 });
 
@@ -24,7 +23,7 @@ interface GetContestEntriesInput extends ServiceInput {
 }
 
 /** Get all entries in a contest */
-function getContestEntries(req: GetContestEntriesInput) {
+function getContestEntries(req: GetContestEntriesInput): Promise<EntryType[]> {
   const value: GetContestEntriesInput = validate(req, schema);
 
   return Entry.findAll({ where: { ContestId: value.params.contestID } })

@@ -18,13 +18,14 @@ import { offersSelector } from '../Offers/Offers.slice';
 import { setModal } from '../Modal/Modal.slice';
 import { usePreDropMutation, useReorderRosterMutation } from './Entry.api';
 
-import { flexPosID, rosterkey, RosterPosType } from './Entry.types';
-import { NFLPosType, NFLPosTypes } from '../Players/Players.types';
-import { OfferItemType } from '../Offers/Offers.types';
+import { flexPosID, NFLPosTypes } from '../../../helpers/config';
+import type { NFLPosType } from '../../../../../types/api/player.api';
+import type { OfferItemType } from '../../../../../types/api/offer.api';
 import { useCancelOfferMutation } from '../Offers/Offers.api';
+import { Roster, RPosType } from '../../../../../types/rosterinfo';
 
 // Show a specific row in the roster table
-function RosterItem({ playerid, position }: { playerid: number | null, position: RosterPosType }) {
+function RosterItem({ playerid, position }: { playerid: number | null, position: RPosType }) {
   const dispatch = useAppDispatch();
   const { contestID } = useParams<{ contestID: string }>();
 
@@ -54,7 +55,7 @@ function RosterItem({ playerid, position }: { playerid: number | null, position:
     } else if (thisplayer?.NFLPositionId) {
       dispatch(selectRPos([thisplayer.NFLPositionId, position]));
     } else {
-      dispatch(selectRPos([rosterkey[position], position]));
+      dispatch(selectRPos([Roster[position], position]));
     }
   };
 
@@ -97,7 +98,7 @@ function RosterItem({ playerid, position }: { playerid: number | null, position:
       nflplayerID: thisplayer.id,
       nflplayerName: thisplayer.name,
       isbid: false,
-      price: (priceMap ? Number(dispAsk || 0) : dispProj),
+      price: (priceMap ? Number(dispAsk || 0) : dispProj || 0),
       protected: true,
     }));
   };
@@ -158,9 +159,9 @@ function RosterItem({ playerid, position }: { playerid: number | null, position:
 }
 
 // Should a pos label be highlighted (If a clicked player could be moved there)
-function shouldHighlight(selectedType: NFLPosType | 0, position: RosterPosType) {
+function shouldHighlight(selectedType: NFLPosType | 0, position: RPosType) {
   if (selectedType === 0) return false; // If flag is not set, then don't
-  const thisType = rosterkey[position];
+  const thisType = Roster[position];
   if (selectedType === thisType) return true; // If same pos type, can def do it
   if (selectedType === flexPosID || thisType === flexPosID) { // If either is a flex position
     if (selectedType === flexPosID && !NFLPosTypes[thisType].canflex) return false; // Can't if non-flex type can't flex

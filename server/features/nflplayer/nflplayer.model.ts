@@ -7,7 +7,7 @@ import sequelize from '../../db';
 import NFLTeam from '../nflteam/nflteam.model';
 import NFLPosition from '../nflposition/nflposition.model';
 import { NFLPosIDType } from '../../config';
-import { TeamIDType } from '../../nflinfo';
+import { TeamIDType } from '../../../types/nflinfo';
 
 class NFLPlayer extends Model<InferAttributes<NFLPlayer>, InferCreationAttributes<NFLPlayer>> {
   declare id: number;

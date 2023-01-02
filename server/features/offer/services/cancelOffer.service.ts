@@ -9,6 +9,7 @@ import sequelize from '../../../db';
 import { queueOptions } from '../../../db/redis';
 
 import Offer from '../offer.model';
+import type { OfferItemType } from '../../../../types/api/offer.api';
 
 const offerQueue = new Queue('offer-queue', queueOptions);
 
@@ -35,7 +36,7 @@ interface CancelOfferInput extends ServiceInput {
 }
 
 /** Cancel an existing offer */
-async function cancelOffer(req: CancelOfferInput) {
+async function cancelOffer(req: CancelOfferInput): Promise<OfferItemType> {
   const value: CancelOfferInput = validate(req, schema);
 
   // Cancel offer, but if it's filled, let user know

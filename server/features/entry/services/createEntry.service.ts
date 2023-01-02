@@ -10,12 +10,11 @@ import sequelize from '../../../db';
 import User from '../../user/user.model';
 import LedgerEntry from '../../ledger/ledgerEntry.model';
 import { ledgerKinds } from '../../../config';
+import { EntryType } from '../../../../types/api/entry.api';
 
 const schema = Joi.object({
   user: validators.user,
-  params: Joi.object().keys({
-    contestID: validators.contestID,
-  }).required(),
+  params: Joi.object().keys({ contestID: validators.contestID }).required(),
   body: validators.noObj,
 });
 
@@ -27,7 +26,7 @@ interface CreateEntryInput extends ServiceInput {
 }
 
 /** Create an entry in a contest */
-async function createEntry(req: CreateEntryInput) {
+async function createEntry(req: CreateEntryInput): Promise<EntryType> {
   const value: CreateEntryInput = validate(req, schema);
 
   return sequelize.transaction(async (t) => {

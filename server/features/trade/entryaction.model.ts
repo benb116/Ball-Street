@@ -1,5 +1,5 @@
 import Sequelize, {
-  Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
+  Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes, NonAttribute, Association,
 } from 'sequelize';
 import sequelize from '../../db';
 
@@ -14,6 +14,11 @@ class EntryAction extends Model<InferAttributes<EntryAction>, InferCreationAttri
   declare price: number;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
+
+  declare EntryActionKind?: NonAttribute<EntryActionKind>;
+  declare static associations: {
+    EntryActionKind: Association<EntryAction, EntryActionKind>;
+  };
 }
 
 EntryAction.init({

@@ -5,12 +5,11 @@ import validators from '../../util/util.schema';
 import errorHandler, { ServiceInput } from '../../util/util.service';
 
 import Offer from '../offer.model';
+import type { OfferItemType } from '../../../../types/api/offer.api';
 
 const schema = Joi.object({
   user: validators.user,
-  params: Joi.object().keys({
-    contestID: validators.contestID,
-  }).required(),
+  params: Joi.object().keys({ contestID: validators.contestID }).required(),
   body: validators.noObj,
 });
 
@@ -22,7 +21,7 @@ interface GetUserOffersInput extends ServiceInput {
 }
 
 /** Get a user's active offers */
-function getUserOffers(req: GetUserOffersInput) {
+function getUserOffers(req: GetUserOffersInput): Promise<OfferItemType[]> {
   const value: GetUserOffersInput = validate(req, schema);
   return Offer.findAll({
     where: {

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import logger from '../../utilities/logger';
-import { teamIDs, TeamIDType } from '../../nflinfo';
+import { teamIDs, TeamIDType } from '../../../types/nflinfo';
 
 import state from './state.nfl';
 

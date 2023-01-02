@@ -9,7 +9,7 @@ interface TradeBidType {
   bid: {
     NFLPlayerId: number,
     isbid: boolean
-    createdAt: string
+    createdAt: Date
     id: string,
   },
 }
@@ -18,7 +18,7 @@ interface TradeAskType {
   ask: {
     NFLPlayerId: number,
     isbid: boolean
-    createdAt: string
+    createdAt: Date
     id: string,
   },
 }
@@ -34,7 +34,7 @@ interface EntryActionType {
     id: number,
     name: string,
   },
-  createdAt: string
+  createdAt: Date
 }
 
 export interface TradeItemType {
@@ -42,5 +42,5 @@ export interface TradeItemType {
   action: string,
   NFLPlayerId: number,
   price: number,
-  createdAt: string,
+  createdAt: Date,
 }

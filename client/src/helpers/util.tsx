@@ -10,7 +10,7 @@ interface ErrType {
   status: number,
 }
 
-export const RenderPrice = (price = 0) => (Math.round(price) / 100).toFixed(2);
+export const RenderPrice = (price: number | null = 0) => (Math.round(price || 0) / 100).toFixed(2);
 
 // Generic action button that triggers a drop/offer/cancel
 export function ActionButton({ thephase, oclick, text }: { thephase: string, oclick: () => void, text: string }) {

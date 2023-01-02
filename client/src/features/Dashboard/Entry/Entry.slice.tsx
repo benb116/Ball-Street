@@ -5,10 +5,11 @@ import toast from 'react-hot-toast';
 import type { RootState } from '../../../app/store';
 import { ErrHandler } from '../../../helpers/util';
 
-import { EntryType, Roster, RosterPosType } from './Entry.types';
-import { NFLPosType } from '../Players/Players.types';
+import type { EntryType } from '../../../../../types/api/entry.api';
+import type { NFLPosType } from '../../../../../types/api/player.api';
 import EntryAPI from './Entry.api';
 import ContestsAPI from '../../Contests/Contests.api';
+import { Roster, RosterPosType } from '../../../helpers/config';
 
 interface EntryState {
   balance: number,

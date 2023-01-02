@@ -17,7 +17,7 @@ import { useGetPlayersQuery, useGetGamesQuery } from './Players.api';
 import PlayerFilter from './PlayerFilter';
 import PlayerItem from './PlayerItem';
 
-import { GameItemType, SortByType } from './Players.types';
+import type { GameItemType, SortByType } from '../../../../../types/api/player.api';
 
 // Show list of all active players
 function Players() {
@@ -86,15 +86,15 @@ function Players() {
         return compare(i1 || 0, i2 || 0);
       }
       if (sortBy === 'projPrice') {
-        let [item1, item2] = [a[sortBy], b[sortBy]];
-        if (aPhase === 'pre') { item1 = a.preprice; }
-        if (bPhase === 'pre') { item2 = b.preprice; }
+        let [item1, item2] = [priceMap[a.id]?.[sortBy] || 0, priceMap[b.id]?.[sortBy] || 0]; // Get that property
+        if (aPhase === 'pre') { item1 = a.preprice || 0; }
+        if (bPhase === 'pre') { item2 = b.preprice || 0; }
         return compare(item1, item2);
       }
       if (sortBy === 'statPrice') {
-        let [item1, item2] = [a[sortBy], b[sortBy]];
-        if (aPhase === 'pre') { item1 = a.postprice; }
-        if (bPhase === 'pre') { item2 = b.postprice; }
+        let [item1, item2] = [priceMap[a.id]?.[sortBy] || 0, priceMap[b.id]?.[sortBy] || 0]; // Get that property
+        if (aPhase === 'pre') { item1 = a.postprice || 0; }
+        if (bPhase === 'pre') { item2 = b.postprice || 0; }
         return compare(item1, item2);
       }
       return compare(a[sortBy] || '', b[sortBy] || '');

@@ -4,7 +4,7 @@ import {
   EntryActionKindArray,
   EntryActionKinds, ledgerKindArray, ledgerKinds, NFLPosIDs, NFLPosIDType, NFLPosTypes, RosterPosKinds,
 } from '../config';
-import teams, { teamList } from '../nflinfo';
+import teams, { teamList } from '../../types/nflinfo';
 import logger from '../utilities/logger';
 import scrape from './playerscraper';
 

@@ -9,8 +9,7 @@ import { entrySelector } from './Entry.slice';
 import { useGetEntryQuery } from '../../Contests/Contests.api';
 
 import RosterItem from './RosterItem';
-
-import { RosterPositions } from './Entry.types';
+import { RosterPositions } from '../../../helpers/config';
 
 // Display the user's current entry (balance + players)
 function Entry() {

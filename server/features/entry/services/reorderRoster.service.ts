@@ -11,24 +11,26 @@ import validators from '../../util/util.schema';
 import sequelize from '../../../db';
 import Entry from '../entry.model';
 import NFLPlayer from '../../nflplayer/nflplayer.model';
+import { reorderInput, EntryType } from '../../../../types/api/entry.api';
+
+const bodySchema = Joi.object().keys({
+  pos1: Joi.string().trim().valid(...RosterPositions).required()
+    .messages({
+      'string.base': 'First position is invalid',
+      'any.required': 'Please specify a first position',
+    }),
+  pos2: Joi.string().trim().valid(...RosterPositions).required()
+    .messages({
+      'string.base': 'Second position is invalid',
+      'any.required': 'Please specify a second position',
+    }),
+}).required();
+validate(reorderInput, bodySchema);
 
 const schema = Joi.object({
   user: validators.user,
-  params: Joi.object().keys({
-    contestID: validators.contestID,
-  }).required(),
-  body: Joi.object().keys({
-    pos1: Joi.string().trim().valid(...RosterPositions).required()
-      .messages({
-        'string.base': 'First position is invalid',
-        'any.required': 'Please specify a first position',
-      }),
-    pos2: Joi.string().trim().valid(...RosterPositions).required()
-      .messages({
-        'string.base': 'Second position is invalid',
-        'any.required': 'Please specify a second position',
-      }),
-  }).required(),
+  params: Joi.object().keys({ contestID: validators.contestID }).required(),
+  body: bodySchema,
 });
 
 interface ReorderRosterInput extends ServiceInput {
@@ -42,7 +44,7 @@ interface ReorderRosterInput extends ServiceInput {
 }
 
 /** Swap players in positions of an entry */
-async function reorderRoster(req: ReorderRosterInput) {
+async function reorderRoster(req: ReorderRosterInput): Promise<EntryType> {
   const value: ReorderRosterInput = validate(req, schema);
 
   return sequelize.transaction(async (t) => {

@@ -4,14 +4,13 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { RootState } from '../../app/store';
 import ContestsAPI from './Contests.api';
 import { ErrHandler } from '../../helpers/util';
-
-import { ContestItemType } from './Contests.types';
-import { EntryType, EntryItemType } from '../Dashboard/Entry/Entry.types';
+import type { ContestItemType } from '../../../../types/api/contest.api';
+import type { EntryType } from '../../../../types/api/entry.api';
 
 interface ContestsState {
   allcontests: ContestItemType[],
   thiscontest: ContestItemType | null,
-  thiscontestentries: EntryItemType[],
+  thiscontestentries: EntryType[],
   thiscontestmyentry: EntryType | null,
 }
 const defaultState: ContestsState = {

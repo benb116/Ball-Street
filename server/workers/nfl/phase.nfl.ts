@@ -4,7 +4,7 @@ import Sequelize, { Op } from 'sequelize';
 import type { Literal } from 'sequelize/types/utils.d';
 import type { Logger } from 'winston';
 
-import { teamIDs, TeamIDType } from '../../nflinfo';
+import { teamIDs, TeamIDType } from '../../../types/nflinfo';
 
 import { validate, isPlayerOnRoster } from '../../features/util/util';
 import logger from '../../utilities/logger';

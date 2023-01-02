@@ -2,7 +2,7 @@
 // Home team, away team, week #, and start timestamp
 // Also includes a phase to determine whether players can be traded
 import {
-  Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
+  Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes, NonAttribute, Association,
 } from 'sequelize';
 import sequelize from '../../db';
 import { gamePhases, GamePhaseType } from '../../config';
@@ -17,6 +17,13 @@ class NFLGame extends Model<InferAttributes<NFLGame>, InferCreationAttributes<NF
   declare startTime: number;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
+
+  declare home?: NonAttribute<NFLTeam>;
+  declare away?: NonAttribute<NFLTeam>;
+  declare static associations: {
+    home: Association<NFLGame, NFLTeam>;
+    away: Association<NFLGame, NFLTeam>;
+  };
 }
 
 NFLGame.init({

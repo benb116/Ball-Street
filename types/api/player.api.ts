@@ -9,6 +9,8 @@ export const NFLPosTypes = {
 } as const;
 export type NFLPosType = keyof typeof NFLPosTypes;
 
+
+
 export interface PlayerItemType {
   id: number,
   name: string,
@@ -16,11 +18,9 @@ export interface PlayerItemType {
   NFLTeamId: number,
   NFLPositionId: NFLPosType,
   injuryStatus?: string | null,
-  preprice: number,
-  postprice: number,
-  projPrice: number,
-  statPrice: number,
-  NFLTeam: {
+  preprice: number | null,
+  postprice: number | null, 
+  NFLTeam?: {
     gamePhase: string,
   },
 }

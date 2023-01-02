@@ -1,5 +1,5 @@
 import {
-  Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
+  Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes, NonAttribute, Association,
 } from 'sequelize';
 import sequelize from '../../db';
 
@@ -17,6 +17,13 @@ class Trade extends Model<InferAttributes<Trade>, InferCreationAttributes<Trade>
   declare askId: string;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
+
+  declare bid?: NonAttribute<Offer>;
+  declare ask?: NonAttribute<Offer>;
+  declare static associations: {
+    bid: Association<Trade, Offer>;
+    ask: Association<Trade, Offer>;
+  };
 }
 Trade.init({
   price: { // What was the actual price that was traded at

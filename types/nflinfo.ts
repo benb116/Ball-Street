@@ -29,6 +29,7 @@ const teams = {
   SF: { location: 'San Francisco', name: '49ers', id: 25 },
   SEA: { location: 'Seattle', name: 'Seahawks', id: 26 },
   LAR: { location: 'Los Angeles', name: 'Rams', id: 14 },
+  
   TB: { location: 'Tampa Bay', name: 'Buccaneers', id: 27 },
   TEN: { location: 'Tennessee', name: 'Titans', id: 10 },
   WAS: { location: 'Washington', name: 'Football Team', id: 28 },

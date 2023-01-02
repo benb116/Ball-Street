@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import { EntryType } from '../../../../types/api/entry.api';
 
 import { validate, uError } from '../../util/util';
 import validators from '../../util/util.schema';
@@ -8,9 +9,7 @@ import Entry from '../entry.model';
 
 const schema = Joi.object({
   user: validators.user,
-  params: Joi.object().keys({
-    contestID: validators.contestID,
-  }).required(),
+  params: Joi.object().keys({ contestID: validators.contestID }).required(),
   body: validators.noObj,
 });
 
@@ -22,7 +21,7 @@ interface GetEntryInput extends ServiceInput {
 }
 
 /** Get info for a specific entry */
-async function getEntry(req: GetEntryInput) {
+async function getEntry(req: GetEntryInput): Promise<EntryType> {
   const value: GetEntryInput = validate(req, schema);
 
   const theentry = await Entry.findOne({

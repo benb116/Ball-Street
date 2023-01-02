@@ -1,24 +1,3 @@
-export interface EntryItemType {
-  UserId: number,
-  pointtotal: number,
-  projTotal?: number,
-}
-export interface EntryType extends EntryItemType {
-  ContestId: number,
-  createdAt: string,
-  updatedAt: string,
-  QB1: number | null,
-  RB1: number | null,
-  RB2: number | null,
-  WR1: number | null,
-  WR2: number | null,
-  TE1: number | null,
-  FLEX1: number | null,
-  FLEX2: number | null,
-  K1: number | null,
-  DEF1: number | null,
-}
-
 export const Roster = {
   QB1: null,
   RB1: null,
@@ -46,4 +25,14 @@ export const rosterkey = {
   FLEX2: flexPosID,
   K1: 5,
   DEF1: 6,
+} as const;
+
+export const NFLPosTypes = {
+  1: { name: 'QB', canflex: false },
+  2: { name: 'RB', canflex: true },
+  3: { name: 'WR', canflex: true },
+  4: { name: 'TE', canflex: true },
+  5: { name: 'K', canflex: false },
+  6: { name: 'DEF', canflex: false },
+  99: { name: 'FLEX', canflex: true },
 } as const;

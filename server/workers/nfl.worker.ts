@@ -15,7 +15,7 @@ import PullLatestInjuries from './nfl/injury.nfl';
 import getNFLPlayers from '../features/nflplayer/services/getNFLPlayers.service';
 
 import yahooData from './tests/yahooData';
-import { TeamIDType } from '../nflinfo';
+import { TeamIDType } from '../../types/nflinfo';
 
 const checkInterval = 10000;
 
@@ -97,7 +97,7 @@ function pullPlayerData() {
 function pullPreProj() {
   return getNFLPlayers().then((data) => data.reduce((acc: Record<string, number>, p) => {
     if (p.preprice) acc[p.id] = p.preprice;
-    const teamID = p.NFLTeamId;
+    const teamID = p.NFLTeamId as TeamIDType;
     if (!state.teamPlayerMap[teamID]) state.teamPlayerMap[teamID] = [];
     state.teamPlayerMap[teamID].push(p.id);
     state.playerTeamMap[p.id] = teamID;

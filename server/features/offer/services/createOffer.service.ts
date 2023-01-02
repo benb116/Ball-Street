@@ -16,14 +16,13 @@ import Entry from '../../entry/entry.model';
 import NFLPlayer from '../../nflplayer/nflplayer.model';
 import NFLGame from '../../nflgame/nflgame.model';
 import Offer from '../offer.model';
+import type { OfferItemType } from '../../../../types/api/offer.api';
 
 const offerQueue = new Queue('offer-queue', queueOptions);
 
 const schema = Joi.object({
   user: validators.user,
-  params: Joi.object().keys({
-    contestID: validators.contestID,
-  }).required(),
+  params: Joi.object().keys({ contestID: validators.contestID }).required(),
   body: Joi.object().keys({
     offerobj: Joi.object().keys({
       nflplayerID: validators.nflplayerID,
@@ -60,7 +59,7 @@ interface CreateOfferInput extends ServiceInput {
 }
 
 /** Create an offer in a contest */
-async function createOffer(req: CreateOfferInput) {
+async function createOffer(req: CreateOfferInput): Promise<OfferItemType> {
   const value: CreateOfferInput = validate(req, schema);
 
   return sequelize.transaction(async (t) => {

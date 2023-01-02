@@ -8,27 +8,25 @@ import sequelize from '../../../db';
 
 import tradeDrop from './tradeDrop.service';
 
+import { preTradeInput, PreTradeInputType } from '../../../../types/api/entry.api';
+
+const bodySchema = Joi.object().keys({
+  nflplayerID: validators.nflplayerID,
+  price: Joi.any().forbidden().messages({ 'any.unknown': 'Price not allowed in pretrade' }),
+}).required();
+validate(preTradeInput, bodySchema);
+
 const schema = Joi.object({
   user: validators.user,
-  params: Joi.object().keys({
-    contestID: validators.contestID,
-  }).required(),
-  body: Joi.object().keys({
-    nflplayerID: validators.nflplayerID,
-    price: Joi.any().forbidden().messages({
-      'any.unknown': 'Price not allowed in pretrade',
-    }),
-  }).required(),
+  params: Joi.object().keys({ contestID: validators.contestID }).required(),
+  body: bodySchema,
 });
 
 interface PreTradeDropInput extends ServiceInput {
   params: {
     contestID: number,
   },
-  body: {
-    nflplayerID: number,
-    price: never,
-  }
+  body: PreTradeInputType
 }
 
 /** Try to drop within a transaction, errors will rollback */

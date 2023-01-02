@@ -15,9 +15,7 @@ import { EntryActionKinds, RosterPositions, RPosType } from '../../../config';
 
 const schema = Joi.object({
   user: validators.user,
-  params: Joi.object().keys({
-    contestID: validators.contestID,
-  }).required(),
+  params: Joi.object().keys({ contestID: validators.contestID }).required(),
   body: Joi.object().keys({
     nflplayerID: validators.nflplayerID,
     price: Joi.number().integer().greater(0).optional()

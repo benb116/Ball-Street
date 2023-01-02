@@ -7,7 +7,7 @@ import {
   NFLPosIDType, RosterPosKindList, RosterPosKinds, RosterPosKindType,
 } from '../config';
 import NFLPlayer from '../features/nflplayer/nflplayer.model';
-import teams, { TeamKind } from '../nflinfo';
+import teams, { TeamKind } from '../../types/nflinfo';
 
 // eslint-disable-next-line max-len
 const baseurl = (posget: string, weeknum: number) => `https://football.fantasysports.yahoo.com/f1/590922/players?status=ALL&pos=${posget}&cut_type=9&stat1=S_PW_${weeknum}&myteam=1&sort=PTS&sdir=1&count=`;

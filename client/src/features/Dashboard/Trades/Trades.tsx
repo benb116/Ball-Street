@@ -8,7 +8,7 @@ import { playerSelector } from '../Players/Players.slice';
 import { tradesSelector } from './Trades.slice';
 import { useGetTradesQuery } from './Trades.api';
 
-import { TradeItemType } from './Trades.types';
+import type { TradeItemType } from '../../../../../types/api/trade.api';
 
 function Trades() {
   const { contestID } = useParams<{ contestID: string }>();

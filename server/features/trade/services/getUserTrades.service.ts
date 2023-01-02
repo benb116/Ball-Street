@@ -9,11 +9,11 @@ import EntryActionKind from '../entryactionkind.model';
 
 import Trade from '../trade.model';
 
+import type { TradeTree } from '../../../../types/api/trade.api';
+
 const schema = Joi.object({
   user: validators.user,
-  params: Joi.object().keys({
-    contestID: validators.contestID,
-  }).required(),
+  params: Joi.object().keys({ contestID: validators.contestID }).required(),
   body: validators.noObj,
 });
 
@@ -28,7 +28,7 @@ interface GetUserTradesInput extends ServiceInput {
 async function getUserTrades(req: GetUserTradesInput) {
   const value: GetUserTradesInput = validate(req, schema);
 
-  const bids = await Trade.findAll({
+  const bids = Trade.findAll({
     include: [{
       model: Offer,
       as: 'bid',
@@ -38,7 +38,7 @@ async function getUserTrades(req: GetUserTradesInput) {
       },
     }],
   });
-  const asks = await Trade.findAll({
+  const asks = Trade.findAll({
     include: [{
       model: Offer,
       as: 'ask',
@@ -48,14 +48,16 @@ async function getUserTrades(req: GetUserTradesInput) {
       },
     }],
   });
-  const actions = await EntryAction.findAll({
+  const actions = EntryAction.findAll({
     include: [{ model: EntryActionKind }],
     where: {
       ContestId: value.params.contestID,
       UserId: value.user,
     },
   });
-  return { bids, asks, actions };
+
+  return Promise.all([bids, asks, actions])
+    .then((out) => ({ bids: out[0], asks: out[1], actions: out[2] } as TradeTree));
 }
 
 export default getUserTrades;

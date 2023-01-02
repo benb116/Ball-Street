@@ -1,3 +1,4 @@
+import { GameItemType } from '../../../../types/api/player.api';
 import NFLTeam from '../../nflteam/nflteam.model';
 import NFLGame from '../nflgame.model';
 
@@ -15,7 +16,7 @@ async function getNFLGames() {
     where: {
       week: currentweek,
     },
-  });
+  }) as Promise<GameItemType[]>;
 }
 
 export default getNFLGames;
