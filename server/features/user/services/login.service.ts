@@ -7,7 +7,7 @@ import validators from '../../util/util.schema';
 import genVerify from './genVerify.service';
 
 import User from '../user.model';
-import { LoginInput, inputLogin } from '../../../../types/api/user.api';
+import { LoginInput, inputLogin, LoginOutput } from '../../../../types/api/user.api';
 
 const schema = Joi.object({
   email: validators.email,
@@ -29,7 +29,7 @@ async function login(req: LoginInput) {
   }
   return {
     needsVerification: false, id: theuser.id, email: theuser.email, name: theuser.name, cash: theuser.cash,
-  };
+  } as LoginOutput;
 }
 
 export default login;

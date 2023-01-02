@@ -13,7 +13,7 @@ export interface LoginOutput {
 }
 
 export interface GenVerifyOutput {
-  needsVerification: true, 
+  needsVerification: true,
   id: number
 }
 
@@ -21,7 +21,7 @@ export const inputSignup = {
   name: 'name',
   email: 'email@email.com',
   password: 'password',
-  skipVerification: false,
+  skipVerification: false as const,
 }
 export type SignupInput = typeof inputSignup;
 
