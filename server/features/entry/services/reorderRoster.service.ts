@@ -34,9 +34,7 @@ const schema = Joi.object({
 });
 
 interface ReorderRosterInput extends ServiceInput {
-  params: {
-    contestID: number,
-  },
+  params: { contestID: number },
   body: {
     pos1: RPosType,
     pos2: RPosType,

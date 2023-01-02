@@ -23,9 +23,7 @@ const schema = Joi.object({
 });
 
 interface PreTradeAddInput extends ServiceInput {
-  params: {
-    contestID: number,
-  },
+  params: { contestID: number },
   body: PreTradeInputType
 }
 

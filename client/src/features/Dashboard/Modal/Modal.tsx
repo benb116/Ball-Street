@@ -57,7 +57,7 @@ function OfferModal({ contestID }: { contestID: string }) {
       price: thisprice,
       protected: data.protected,
     };
-    createOffer({ contestID, offerobj });
+    createOffer({ contestID, ...offerobj });
     close();
   }
 

@@ -31,9 +31,7 @@ const schema = Joi.object({
 });
 
 interface TradeAddInput extends ServiceInput {
-  params: {
-    contestID: number,
-  },
+  params: { contestID: number },
   body: {
     nflplayerID: number,
     rosterposition?: RPosType,

@@ -16,9 +16,7 @@ const schema = Joi.object({
 });
 
 interface GetContestInput extends ServiceInput {
-  params: {
-    contestID: number,
-  },
+  params: { contestID: number },
   body: Record<string, never>
 }
 
