@@ -19,8 +19,11 @@ import statprice from '../db/redis/statprice.redis';
 import projprice from '../db/redis/projprice.redis';
 import projAvg from '../db/redis/projAvg.redis';
 
-// All channels that may be used
+if (!process.env.LIVE_PORT || Number.isNaN(Number(process.env.LIVE_PORT))) {
+  throw new Error('No/invalid Live Port specified in env');
+}
 
+// All channels that may be used
 // Set up redis subscribers
 (async () => {
   await subscriber.connect();
