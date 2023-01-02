@@ -18,7 +18,7 @@ import projAvg from '../db/redis/projAvg.redis';
 
 const average = (array: number[]) => array.reduce((a, b) => a + b) / array.length;
 
-if (!process.env.WEEK || Number.isNaN(Number(process.env.WEEK))) {
+if (!process.env['WEEK'] || Number.isNaN(Number(process.env['WEEK']))) {
   throw new Error('No/invalid week number specified in env');
 }
 

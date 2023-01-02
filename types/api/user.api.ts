@@ -31,7 +31,7 @@ export const inputGenPassReset = {
 export type GenPassResetInput = typeof inputGenPassReset;
 
 export const inputEvalPassReset = {
-  token: 'abc123',
+  token: 'tlbgbwreqlppzxdyrhrvahyitvditdtmkichbjznchpjmmbanhpozrdvoyxldjzxohtbyvgisfnrtpairqcwqwtljxeuaxgouwcyetiqwctwupidmmmfzkssfganqswi',
   password: 'password',
   confirmPassword: 'password',
 }

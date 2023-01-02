@@ -19,7 +19,7 @@ import statprice from '../db/redis/statprice.redis';
 import projprice from '../db/redis/projprice.redis';
 import projAvg from '../db/redis/projAvg.redis';
 
-if (!process.env.LIVE_PORT || Number.isNaN(Number(process.env.LIVE_PORT))) {
+if (!process.env['LIVE_PORT'] || Number.isNaN(Number(process.env['LIVE_PORT']))) {
   throw new Error('No/invalid Live Port specified in env');
 }
 

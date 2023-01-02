@@ -9,6 +9,7 @@ import LedgerEntry from '../../ledger/ledgerEntry.model';
 import User from '../user.model';
 
 import { ledgerKinds } from '../../../config';
+import { DepositWithdrawType, LedgerEntryType } from '../../../../types/api/account.api';
 
 const schema = Joi.object({
   user: validators.user,
@@ -26,13 +27,11 @@ const schema = Joi.object({
 
 interface WithdrawalInput extends ServiceInput {
   params: Record<string, never>,
-  body: {
-    amount: number,
-  }
+  body: DepositWithdrawType
 }
 
 /** Create an entry in a contest */
-async function withdraw(req: WithdrawalInput) {
+async function withdraw(req: WithdrawalInput): Promise<LedgerEntryType> {
   const value: WithdrawalInput = validate(req, schema);
 
   return sequelize.transaction(async (t) => {
@@ -40,7 +39,7 @@ async function withdraw(req: WithdrawalInput) {
 
     const theuser = await User.findOne({ where: { id: value.user }, ...tobj(t) });
     if (!theuser) throw uError('No user found', 404);
-    if (theuser.cash < value.body.amount) uError('User has insufficient funds', 402);
+    if (theuser.cash < value.body.amount) throw uError('User has insufficient funds', 402);
 
     theuser.cash -= value.body.amount;
     theuser.save({ transaction: t });

@@ -19,7 +19,7 @@ import { TeamIDType } from '../nflinfo';
 
 const checkInterval = 10000;
 
-if (!process.env.WEEK || Number.isNaN(Number(process.env.WEEK))) {
+if (!process.env['WEEK'] || Number.isNaN(Number(process.env['WEEK']))) {
   throw new Error('No/invalid week number specified in env');
 }
 

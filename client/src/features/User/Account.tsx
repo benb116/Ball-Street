@@ -12,7 +12,7 @@ import {
   useWithdrawMutation,
 } from './User.api';
 import { userSelector } from './User.slice';
-import { DepositWithdrawType, LedgerEntryJoinedType } from './User.types';
+import { DepositWithdrawType, LedgerEntryJoinedKindType } from '../../../../types/api/account.api';
 
 function Account() {
   const { register, handleSubmit } = useForm<DepositWithdrawType>();
@@ -58,7 +58,7 @@ function Account() {
             <th style={{ width: '10em' }}>Description</th>
             <th style={{ width: '5em' }}>Amount</th>
           </tr>
-          {ledger.map((entry) => <LedgerEntry key={entry.id} entrydata={entry} />)}
+          {ledger.sort((a, b) => +a.createdAt - +b.createdAt).map((entry) => <LedgerEntry key={entry.id} entrydata={entry} />)}
         </table>
         Page
         {' '}
@@ -118,7 +118,7 @@ function Account() {
   );
 }
 
-function LedgerEntry({ entrydata }: { entrydata: LedgerEntryJoinedType }) {
+function LedgerEntry({ entrydata }: { entrydata: LedgerEntryJoinedKindType }) {
   return (
     <tr>
       <td>

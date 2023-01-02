@@ -1,11 +1,11 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
+import { LedgerEntryJoinedKindType } from '../../../../types/api/account.api';
 
 import type { RootState } from '../../app/store';
 import { ErrHandler } from '../../helpers/util';
 import UserAPI from './User.api';
-import { LedgerEntryJoinedType } from './User.types';
 
 interface UserState {
   info: {
@@ -13,7 +13,7 @@ interface UserState {
     email: string,
     name: string,
     cash: number,
-    ledger: LedgerEntryJoinedType[]
+    ledger: LedgerEntryJoinedKindType[]
   },
   redirect: string,
 }

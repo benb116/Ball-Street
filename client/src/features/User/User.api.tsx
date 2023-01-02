@@ -12,16 +12,12 @@ import {
 import {
   AccountOutput,
   DepositWithdrawType,
-  LedgerEntryJoinedType,
+  LedgerEntryJoinedKindType,
   NewLedgerEntryType,
 } from '../../../../types/api/account.api';
 
 const UserAPI = BaseAPI.injectEndpoints({
   endpoints: (build) => ({
-    getAccount: build.query<AccountOutput, void>({
-      query: () => '/auth/account',
-      providesTags: ['Account'],
-    }),
     signup: build.mutation<LoginOutput | GenVerifyOutput, SignupInput>({
       query: (body) => ({ url: '/auth/signup', method: 'POST', body }),
     }),
@@ -35,6 +31,10 @@ const UserAPI = BaseAPI.injectEndpoints({
       query: (body) => ({ url: '/auth/resetPasswordToken', method: 'POST', body }),
     }),
 
+    getAccount: build.query<AccountOutput, void>({
+      query: () => '/api/user/account',
+      providesTags: ['Account'],
+    }),
     logout: build.mutation<void, void>({ query: () => ({ url: '/api/user/logout', method: 'DELETE' }) }),
     forcelogout: build.mutation<void, void>({ query: () => ({ url: '/api/user/forcelogout', method: 'DELETE' }) }),
     deposit: build.mutation<NewLedgerEntryType, DepositWithdrawType>({
@@ -45,7 +45,7 @@ const UserAPI = BaseAPI.injectEndpoints({
       query: (body) => ({ url: '/api/user/withdraw', method: 'POST', body }),
       invalidatesTags: ['Account', 'Ledger'],
     }),
-    getUserLedger: build.query<LedgerEntryJoinedType[], number>({
+    getUserLedger: build.query<LedgerEntryJoinedKindType[], number>({
       query: (pagenum) => `/api/user/ledger/${pagenum}`,
       providesTags: ['Ledger'],
     }),

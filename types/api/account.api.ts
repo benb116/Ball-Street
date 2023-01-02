@@ -4,20 +4,22 @@ export interface AccountOutput {
   name: string,
   cash: number,
 }
-export interface LedgerEntryJoinedType {
+export interface LedgerEntryType {
   id: string,
   UserId: number,
   ContestId: number | null,
   value: number,
   LedgerKindId: number,
+  createdAt: Date,
+}
+export interface LedgerEntryJoinedKindType extends LedgerEntryType {
   LedgerKind: {
     id: number,
     isCredit: boolean,
     name: string,
-  },
-  createdAt: string,
+  }
 }
-export interface NewLedgerEntryType extends LedgerEntryJoinedType {
+export interface NewLedgerEntryType extends LedgerEntryJoinedKindType {
   User: {
     cash: number
   }
