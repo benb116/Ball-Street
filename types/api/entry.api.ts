@@ -22,16 +22,19 @@ export interface EntryType extends EntryItemType {
   DEF1: number | null,
 }
 
+const contestInput = {
+  contestID: '1'
+}
 export const preTradeInput = {
-  contestID: '1',
   nflplayerID: 123,
   price: undefined,
 }
 export type PreTradeInputType = typeof preTradeInput
+export type PreTradeQueryType = PreTradeInputType & typeof contestInput
 
 export const reorderInput = {
-  contestID: '1',
   pos1: 'RB1' as RPosType,
   pos2: 'RB2' as RPosType,
 }
 export type ReorderInputType = typeof reorderInput
+export type ReorderQueryType = ReorderInputType & typeof contestInput

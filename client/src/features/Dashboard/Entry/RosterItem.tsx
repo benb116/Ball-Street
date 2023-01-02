@@ -18,11 +18,12 @@ import { offersSelector } from '../Offers/Offers.slice';
 import { setModal } from '../Modal/Modal.slice';
 import { usePreDropMutation, useReorderRosterMutation } from './Entry.api';
 
-import { flexPosID, NFLPosTypes } from '../../../helpers/config';
-import type { NFLPosType } from '../../../../../types/api/player.api';
+import {
+  FlexNFLPositionId, NFLPosIDType, NFLPosTypes, Roster, RosterPosIDType,
+} from '../../../helpers/config';
 import type { OfferItemType } from '../../../../../types/api/offer.api';
 import { useCancelOfferMutation } from '../Offers/Offers.api';
-import { Roster, RPosType } from '../../../../../types/rosterinfo';
+import type { RPosType } from '../../../../../types/rosterinfo';
 
 // Show a specific row in the roster table
 function RosterItem({ playerid, position }: { playerid: number | null, position: RPosType }) {
@@ -159,20 +160,20 @@ function RosterItem({ playerid, position }: { playerid: number | null, position:
 }
 
 // Should a pos label be highlighted (If a clicked player could be moved there)
-function shouldHighlight(selectedType: NFLPosType | 0, position: RPosType) {
+function shouldHighlight(selectedType: RosterPosIDType | 0, position: RPosType) {
   if (selectedType === 0) return false; // If flag is not set, then don't
   const thisType = Roster[position];
   if (selectedType === thisType) return true; // If same pos type, can def do it
-  if (selectedType === flexPosID || thisType === flexPosID) { // If either is a flex position
-    if (selectedType === flexPosID && !NFLPosTypes[thisType].canflex) return false; // Can't if non-flex type can't flex
-    if (thisType === flexPosID && !NFLPosTypes[selectedType].canflex) return false;
+  if (selectedType === FlexNFLPositionId || thisType === FlexNFLPositionId) { // If either is a flex position
+    if (selectedType === FlexNFLPositionId && thisType !== FlexNFLPositionId && !NFLPosTypes[thisType].canflex) return false; // Can't if non-flex type can't flex
+    if (thisType === FlexNFLPositionId && selectedType !== FlexNFLPositionId && !NFLPosTypes[selectedType].canflex) return false;
     return true;
   }
   return false;
 }
 
 // Get the name of a position type from it's number
-function posName(posNum: NFLPosType) {
+function posName(posNum: NFLPosIDType) {
   return `(${NFLPosTypes[posNum].name})`;
 }
 

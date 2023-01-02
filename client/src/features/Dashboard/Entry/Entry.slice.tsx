@@ -6,15 +6,14 @@ import type { RootState } from '../../../app/store';
 import { ErrHandler } from '../../../helpers/util';
 
 import type { EntryType } from '../../../../../types/api/entry.api';
-import type { NFLPosType } from '../../../../../types/api/player.api';
 import EntryAPI from './Entry.api';
 import ContestsAPI from '../../Contests/Contests.api';
-import { Roster, RosterPosType } from '../../../helpers/config';
+import { Roster, RPosType, RosterPosIDType } from '../../../helpers/config';
 
 interface EntryState {
   balance: number,
-  roster: Record<RosterPosType, number | null>,
-  rposSelected: [NFLPosType | 0, RosterPosType | ''],
+  roster: Record<RPosType, number | null>,
+  rposSelected: [RosterPosIDType | 0, RPosType | ''],
 }
 
 const defaultState: EntryState = {
@@ -34,7 +33,7 @@ export const entrySlice = createSlice({
     offerFilled: () => {
       toast.success('Offer filled');
     },
-    selectRPos: (state, { payload }: { payload: [NFLPosType | 0, RosterPosType | ''] }) => {
+    selectRPos: (state, { payload }: { payload: [RosterPosIDType | 0, RPosType | ''] }) => {
       // If current state is 0, nothing is currently selected.
       // This is the first click, so set the state
       if (state.rposSelected[0] === 0) {

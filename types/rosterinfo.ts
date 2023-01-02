@@ -41,8 +41,6 @@ export const Roster = {
 } as const;
 export type RPosType = keyof typeof Roster;
 export const RosterPositions = Object.keys(Roster) as RPosType[];
-type ValueOf<T> = T[keyof T];
-export type RosterPosNumType = ValueOf<typeof Roster>;
 
 export const gamePhases = ['pre', 'mid', 'post'] as const;
 export type GamePhaseType = typeof gamePhases[number];
@@ -52,8 +50,8 @@ interface LedgerKindInfo {
   isCredit: boolean,
 }
 export const ledgerKinds = {
-  Deposit: { id: 1, isCredit: true } as LedgerKindInfo,
-  Withdrawal: { id: 2, isCredit: false } as LedgerKindInfo,
+  'Deposit': { id: 1, isCredit: true } as LedgerKindInfo,
+  'Withdrawal': { id: 2, isCredit: false } as LedgerKindInfo,
   'Entry Fee': { id: 3, isCredit: false } as LedgerKindInfo,
   'Entry Prize': { id: 4, isCredit: true } as LedgerKindInfo,
   'Profit Fee': { id: 5, isCredit: false } as LedgerKindInfo,
