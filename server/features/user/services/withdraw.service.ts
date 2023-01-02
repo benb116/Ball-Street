@@ -9,20 +9,22 @@ import LedgerEntry from '../../ledger/ledgerEntry.model';
 import User from '../user.model';
 
 import { ledgerKinds } from '../../../config';
-import { DepositWithdrawType, LedgerEntryType } from '../../../../types/api/account.api';
+import { DepositWithdrawInput, DepositWithdrawType, LedgerEntryType } from '../../../../types/api/account.api';
 
+const bodySchema = Joi.object({
+  amount: Joi.number().integer().greater(0).required()
+    .messages({
+      'number.base': 'Withdrawal amount is invalid',
+      'number.integer': 'Withdrawal amount is invalid',
+      'number.greater': 'Withdrawal amount must be positive',
+      'any.required': 'Withdrawal amount is invalid',
+    }),
+});
+validate(DepositWithdrawInput, bodySchema);
 const schema = Joi.object({
   user: validators.user,
   params: validators.noObj,
-  body: {
-    amount: Joi.number().integer().greater(0).required()
-      .messages({
-        'number.base': 'Withdrawal amount is invalid',
-        'number.integer': 'Withdrawal amount is invalid',
-        'number.greater': 'Withdrawal amount must be positive',
-        'any.required': 'Withdrawal amount is invalid',
-      }),
-  },
+  body: bodySchema,
 });
 
 interface WithdrawalInput extends ServiceInput {

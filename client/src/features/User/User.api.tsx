@@ -13,7 +13,7 @@ import {
   AccountOutput,
   DepositWithdrawType,
   LedgerEntryJoinedKindType,
-  NewLedgerEntryType,
+  LedgerEntryType,
 } from '../../../../types/api/account.api';
 
 const UserAPI = BaseAPI.injectEndpoints({
@@ -37,11 +37,11 @@ const UserAPI = BaseAPI.injectEndpoints({
     }),
     logout: build.mutation<void, void>({ query: () => ({ url: '/api/user/logout', method: 'DELETE' }) }),
     forcelogout: build.mutation<void, void>({ query: () => ({ url: '/api/user/forcelogout', method: 'DELETE' }) }),
-    deposit: build.mutation<NewLedgerEntryType, DepositWithdrawType>({
+    deposit: build.mutation<LedgerEntryType, DepositWithdrawType>({
       query: (body) => ({ url: '/api/user/deposit', method: 'POST', body }),
       invalidatesTags: ['Account', 'Ledger'],
     }),
-    withdraw: build.mutation<NewLedgerEntryType, DepositWithdrawType>({
+    withdraw: build.mutation<LedgerEntryType, DepositWithdrawType>({
       query: (body) => ({ url: '/api/user/withdraw', method: 'POST', body }),
       invalidatesTags: ['Account', 'Ledger'],
     }),

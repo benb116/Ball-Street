@@ -53,12 +53,14 @@ function Account() {
       <div id="Transactions" style={{ display: 'inline-block', verticalAlign: 'top', margin: '3em' }}>
         <h4>Transactions</h4>
         <table>
-          <tr>
-            <th style={{ width: '15em' }}>Date</th>
-            <th style={{ width: '10em' }}>Description</th>
-            <th style={{ width: '5em' }}>Amount</th>
-          </tr>
-          {ledger.sort((a, b) => +a.createdAt - +b.createdAt).map((entry) => <LedgerEntry key={entry.id} entrydata={entry} />)}
+          <tbody>
+            <tr>
+              <th style={{ width: '15em' }}>Date</th>
+              <th style={{ width: '10em' }}>Description</th>
+              <th style={{ width: '5em' }}>Amount</th>
+            </tr>
+            {ledger.map((entry) => <LedgerEntry key={entry.id} entrydata={entry} />)}
+          </tbody>
         </table>
         Page
         {' '}

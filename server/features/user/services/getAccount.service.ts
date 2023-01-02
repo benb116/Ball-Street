@@ -19,11 +19,11 @@ interface GetAccountInput extends ServiceInput {
 }
 
 /** Load a user's account */
-async function getAccount(req: GetAccountInput) {
+async function getAccount(req: GetAccountInput): Promise<AccountOutput> {
   const value: GetAccountInput = validate(req, schema);
   const theuser = await User.findByPk(value.user);
   if (!theuser) { throw uError('User not found', 404); }
-  return theuser as AccountOutput;
+  return theuser;
 }
 
 export default getAccount;

@@ -7,7 +7,9 @@ import validators from '../../util/util.schema';
 import genVerify from './genVerify.service';
 
 import User from '../user.model';
-import { LoginInput, inputLogin, LoginOutput } from '../../../../types/api/user.api';
+import {
+  LoginInput, inputLogin, LoginOutput, GenVerifyOutput,
+} from '../../../../types/api/user.api';
 
 const schema = Joi.object({
   email: validators.email,
@@ -16,7 +18,7 @@ const schema = Joi.object({
 validate(inputLogin, schema);
 
 /** Log a user in and possibly continue verification */
-async function login(req: LoginInput) {
+async function login(req: LoginInput): Promise<LoginOutput | GenVerifyOutput> {
   const value: LoginInput = validate(req, schema);
   const { email, password } = value;
 
@@ -29,7 +31,7 @@ async function login(req: LoginInput) {
   }
   return {
     needsVerification: false, id: theuser.id, email: theuser.email, name: theuser.name, cash: theuser.cash,
-  } as LoginOutput;
+  };
 }
 
 export default login;

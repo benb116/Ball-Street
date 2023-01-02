@@ -8,7 +8,9 @@ import errorHandler from '../../util/util.service';
 import genVerify from './genVerify.service';
 
 import User from '../user.model';
-import { inputSignup, LoginOutput, SignupInput } from '../../../../types/api/user.api';
+import {
+  GenVerifyOutput, inputSignup, LoginOutput, SignupInput,
+} from '../../../../types/api/user.api';
 
 const schema = Joi.object({
   name: Joi.string().required().messages({
@@ -24,7 +26,7 @@ validate(inputSignup, schema);
 const saltRounds = 10;
 
 /** Sign up a user and possibly continue verification */
-async function signup(req: SignupInput) {
+async function signup(req: SignupInput): Promise<LoginOutput | GenVerifyOutput> {
   const value: SignupInput = validate(req, schema);
   const {
     name, email, password, skipVerification,
@@ -39,7 +41,7 @@ async function signup(req: SignupInput) {
     if (!skipVerification) return await genVerify({ id: theuser.id, email: theuser.email });
     return {
       needsVerification: false, id: theuser.id, email: theuser.email, name: theuser.name, cash: theuser.cash,
-    } as LoginOutput;
+    };
   } catch (err) {
     const f = errorHandler({
       default: { message: 'Could not create user', status: 500 },

@@ -19,11 +19,6 @@ export interface LedgerEntryJoinedKindType extends LedgerEntryType {
     name: string,
   }
 }
-export interface NewLedgerEntryType extends LedgerEntryJoinedKindType {
-  User: {
-    cash: number
-  }
-}
 export const DepositWithdrawInput = {
   amount: 1
 }
