@@ -23,7 +23,7 @@ async function genPassReset(req: GenPassResetInput) {
     await passReset.set(rand, email, verificationTimeout * 60);
     return await sendPassResetEmail(email, rand);
   } catch (err) {
-    return uError('genPassReset Error', 406);
+    throw uError('genPassReset Error', 406);
   }
 }
 

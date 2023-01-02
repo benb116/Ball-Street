@@ -31,7 +31,7 @@ async function getEntry(req: GetEntryInput) {
       ContestId: value.params.contestID,
     },
   });
-  if (!theentry) { return uError('No entry found', 404); }
+  if (!theentry) { throw uError('No entry found', 404); }
   return theentry;
 }
 

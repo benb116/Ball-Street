@@ -17,7 +17,7 @@ async function payoutContest(rawcontestID: number) {
 
   return sequelize.transaction(async (t) => {
     const thecontest = await Contest.findByPk(contestID);
-    if (!thecontest) return uError('No contest found', 404);
+    if (!thecontest) throw uError('No contest found', 404);
     const contestBuyIn = thecontest.buyin;
     if (!contestBuyIn) return true;
 
@@ -50,7 +50,7 @@ async function payoutTransaction(entry: Entry, t: Transaction, averagePoints: nu
   const grossPayout = Math.round(entryFraction * contestBuyIn);
   const profit = grossPayout - contestBuyIn;
   const theuser = await User.findOne({ where: { id: entry.UserId }, ...tobj(t) });
-  if (!theuser) return uError('No user found', 404);
+  if (!theuser) throw uError('No user found', 404);
 
   theuser.cash += profit;
 

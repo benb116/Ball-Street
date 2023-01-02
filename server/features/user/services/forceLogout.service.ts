@@ -40,7 +40,7 @@ async function forceLogout(req: ForceLogoutInput) {
     return true;
   } catch (error) {
     logger.error(error);
-    return uError('Could not force logout', 500);
+    throw uError('Could not force logout', 500);
   }
 }
 

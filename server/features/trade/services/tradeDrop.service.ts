@@ -50,17 +50,17 @@ async function tradeDrop(req: TradeDropInput, t: Transaction) {
     transaction: t,
     lock: t.LOCK.UPDATE,
   });
-  if (!theentry) { return uError('No entry found', 404); }
+  if (!theentry) { throw uError('No entry found', 404); }
 
   const theplayer = value.body.nflplayerID;
   const isOnTeam = isPlayerOnRoster(theentry, theplayer);
-  if (!isOnTeam) { return uError('Player is not on roster', 406); }
+  if (!isOnTeam) { throw uError('Player is not on roster', 406); }
 
   theentry[isOnTeam] = null;
 
   // How much to add to point total
   const playerdata = await NFLPlayer.findByPk(theplayer);
-  if (!playerdata || !playerdata.active) { return uError('Player not found', 404); }
+  if (!playerdata || !playerdata.active) { throw uError('Player not found', 404); }
 
   // Get player price and position
   const gamedata = await NFLGame.findOne({
@@ -69,16 +69,16 @@ async function tradeDrop(req: TradeDropInput, t: Transaction) {
       week: Number(process.env['WEEK']),
     },
   });
-  if (!gamedata) return uError('Could not find game data for this player', 404);
+  if (!gamedata) throw uError('Could not find game data for this player', 404);
 
   // Determine price at which to trade
   let tradeprice: number;
   if (value.body.price) {
-    if (gamedata.phase !== 'mid') return uError("Can't trade before or after games", 406);
+    if (gamedata.phase !== 'mid') throw uError("Can't trade before or after games", 406);
     tradeprice = value.body.price;
   } else {
-    if (gamedata.phase !== 'pre') return uError("Can't drop during or after games", 406);
-    if (!playerdata.preprice) return uError('Player has no preprice', 500);
+    if (gamedata.phase !== 'pre') throw uError("Can't drop during or after games", 406);
+    if (!playerdata.preprice) throw uError('Player has no preprice', 500);
     tradeprice = playerdata.preprice;
   }
 

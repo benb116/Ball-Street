@@ -72,29 +72,29 @@ async function createOffer(req: CreateOfferInput) {
       },
       ...tobj(t),
     });
-    if (!theentry) { return uError('No entry found', 404); }
+    if (!theentry) { throw uError('No entry found', 404); }
 
     const playerdata = await NFLPlayer.findByPk(value.body.offerobj.nflplayerID, {
       attributes: ['NFLPositionId', 'NFLTeamId', 'active'],
       transaction: t,
     });
-    if (!playerdata || !playerdata.active) { return uError('Player not found', 404); }
+    if (!playerdata || !playerdata.active) { throw uError('Player not found', 404); }
 
     // Player should be in entry for ask, not for bid
     const isOnTeam = isPlayerOnRoster(theentry, value.body.offerobj.nflplayerID);
     if (!value.body.offerobj.isbid) {
-      if (!isOnTeam) { return uError('Player is not on roster', 404); }
+      if (!isOnTeam) { throw uError('Player is not on roster', 404); }
     } else {
-      if (isOnTeam) { return uError('Player is on roster already', 409); }
+      if (isOnTeam) { throw uError('Player is on roster already', 409); }
 
       const pts = theentry.pointtotal;
       if (value.body.offerobj.price > pts) {
-        return uError("User doesn't have enough points to offer", 402);
+        throw uError("User doesn't have enough points to offer", 402);
       }
       // Only allow offer if there's currently room on the roster
       // TODO make linked offers? I.e. sell player at market price to make room for other player
       if (!isOpenRoster(theentry, playerdata.NFLPositionId)) {
-        return uError('There are no spots this player could fit into', 409);
+        throw uError('There are no spots this player could fit into', 409);
       }
     }
 
@@ -106,9 +106,9 @@ async function createOffer(req: CreateOfferInput) {
       },
       transaction: t,
     });
-    if (!gamedata) return uError('Could not find game data for this player', 404);
+    if (!gamedata) throw uError('Could not find game data for this player', 404);
     if (gamedata.phase !== 'mid') {
-      return uError("Can't make an offer before or after games", 406);
+      throw uError("Can't make an offer before or after games", 406);
     }
 
     return Offer.create({

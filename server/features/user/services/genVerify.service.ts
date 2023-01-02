@@ -28,7 +28,7 @@ async function genVerify(req: GenVerifyInput) {
     await emailVer.set(rand, email, verificationTimeout * 60);
     return await sendVerificationEmail(id, email, rand) as GenVerifyOutput;
   } catch (err) {
-    return uError('genVerify Error', 406);
+    throw uError('genVerify Error', 406);
   }
 }
 

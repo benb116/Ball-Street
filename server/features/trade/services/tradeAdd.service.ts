@@ -56,28 +56,28 @@ async function tradeAdd(req: TradeAddInput, t: Transaction) {
     transaction: t,
     lock: t.LOCK.UPDATE,
   });
-  if (!theentry) { return uError('No entry found', 404); }
+  if (!theentry) { throw uError('No entry found', 404); }
 
   // Determine if user already has player on roster
   const theplayer = value.body.nflplayerID;
   const isOnTeam = isPlayerOnRoster(theentry, theplayer);
-  if (isOnTeam) { return uError('Player is on roster', 406); }
+  if (isOnTeam) { throw uError('Player is on roster', 406); }
 
   const pts = theentry.pointtotal;
   // console.log("POINTS", pts);
 
   // Get player price and position
   const playerdata = await NFLPlayer.findByPk(theplayer);
-  if (!playerdata || !playerdata.active) { return uError('Player not found', 404); }
+  if (!playerdata || !playerdata.active) { throw uError('Player not found', 404); }
 
   const playerType = playerdata.NFLPositionId;
   if (value.body.rosterposition) { // If a roster position was specified
     // Is it a valid one?
     const isinvalid = isInvalidSpot(playerType, value.body.rosterposition);
-    if (isinvalid) { return uError(isinvalid, 406); }
+    if (isinvalid) { throw uError(isinvalid, 406); }
     // Is it an empty one?
     if (theentry[value.body.rosterposition] !== null) {
-      return uError('There is a player in that spot', 406);
+      throw uError('There is a player in that spot', 406);
     }
     const newSet: Record<string, number> = {};
     newSet[value.body.rosterposition] = theplayer;
@@ -86,7 +86,7 @@ async function tradeAdd(req: TradeAddInput, t: Transaction) {
     // Find an open spot
     const isOpen = isOpenRoster(theentry, playerType);
     if (!isOpen) {
-      return uError('There are no open spots', 406);
+      throw uError('There are no open spots', 406);
     }
     theentry[isOpen] = theplayer;
   }
@@ -98,16 +98,16 @@ async function tradeAdd(req: TradeAddInput, t: Transaction) {
       week: Number(process.env['WEEK']),
     },
   });
-  if (!gamedata) return uError('Could not find game data for this player', 404);
+  if (!gamedata) throw uError('Could not find game data for this player', 404);
 
   // Determine price at which to trade
   let tradeprice: number;
   if (!value.body.price) {
-    if (gamedata.phase !== 'pre') uError("Can't add during or after games", 406);
-    if (!playerdata.preprice) return uError('Player has no preprice', 500);
+    if (gamedata.phase !== 'pre') throw uError("Can't add during or after games", 406);
+    if (!playerdata.preprice) throw uError('Player has no preprice', 500);
     tradeprice = playerdata.preprice;
   } else if (gamedata.phase !== 'mid') {
-    return uError("Can't trade before or after games", 406);
+    throw uError("Can't trade before or after games", 406);
   } else {
     tradeprice = value.body.price;
   }

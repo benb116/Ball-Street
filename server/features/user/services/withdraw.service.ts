@@ -39,7 +39,7 @@ async function withdraw(req: WithdrawalInput) {
     // Confirm contest is valid and for the current week
 
     const theuser = await User.findOne({ where: { id: value.user }, ...tobj(t) });
-    if (!theuser) return uError('No user found', 404);
+    if (!theuser) throw uError('No user found', 404);
     if (theuser.cash < value.body.amount) uError('User has insufficient funds', 402);
 
     theuser.cash -= value.body.amount;

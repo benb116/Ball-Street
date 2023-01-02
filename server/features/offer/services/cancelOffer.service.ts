@@ -41,10 +41,10 @@ async function cancelOffer(req: CancelOfferInput) {
   // Cancel offer, but if it's filled, let user know
   return sequelize.transaction(async (t) => {
     const theoffer = await Offer.findByPk(value.body.offerID, tobj(t));
-    if (!theoffer) { return uError('No offer found', 404); }
-    if (theoffer.UserId !== value.user) { return uError('Unauthorized', 403); }
-    if (theoffer.filled) { return uError('Offer already filled', 406); }
-    if (theoffer.cancelled) { return uError('Offer already cancelled', 406); }
+    if (!theoffer) { throw uError('No offer found', 404); }
+    if (theoffer.UserId !== value.user) { throw uError('Unauthorized', 403); }
+    if (theoffer.filled) { throw uError('Offer already filled', 406); }
+    if (theoffer.cancelled) { throw uError('Offer already cancelled', 406); }
     theoffer.set({ cancelled: true });
     await theoffer.save({ transaction: t });
     return theoffer;

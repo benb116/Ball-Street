@@ -21,9 +21,9 @@ async function login(req: LoginInput) {
   const { email, password } = value;
 
   const theuser = await User.scope('withPassword').findOne({ where: { email } });
-  if (!theuser) { return uError('Wrong username or password', 401); }
+  if (!theuser) { throw uError('Wrong username or password', 401); }
   const match = await bcrypt.compare(password, theuser.pwHash);
-  if (!match) { return uError('Wrong username or password', 401); }
+  if (!match) { throw uError('Wrong username or password', 401); }
   if (!theuser.verified) {
     return genVerify({ id: theuser.id, email });
   }

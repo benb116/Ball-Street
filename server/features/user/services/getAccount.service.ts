@@ -22,7 +22,7 @@ interface GetAccountInput extends ServiceInput {
 async function getAccount(req: GetAccountInput) {
   const value: GetAccountInput = validate(req, schema);
   const theuser = await User.findByPk(value.user);
-  if (!theuser) { return uError('User not found', 404); }
+  if (!theuser) { throw uError('User not found', 404); }
   return theuser as AccountOutput;
 }
 

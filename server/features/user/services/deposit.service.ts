@@ -38,7 +38,7 @@ async function deposit(req: DepositInput) {
     // Confirm contest is valid and for the current week
 
     const theuser = await User.findOne({ where: { id: value.user }, ...tobj(t) });
-    if (!theuser) return uError('No user found', 404);
+    if (!theuser) throw uError('No user found', 404);
 
     theuser.cash += value.body.amount;
     theuser.save({ transaction: t });
