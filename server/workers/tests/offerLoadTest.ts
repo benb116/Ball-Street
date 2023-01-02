@@ -55,12 +55,10 @@ async function run() {
         contestID: thecontest.id,
       },
       body: {
-        offerobj: {
-          nflplayerID: 33443, // Player 1
-          isbid: (i % 2 !== 0), // alternate bid/ask
-          price: 1000 + Math.round(Math.random() * 10) * 100,
-          protected: Math.random() < 0.5, // random is protected
-        },
+        nflplayerID: 33443, // Player 1
+        isbid: (i % 2 !== 0), // alternate bid/ask
+        price: 1000 + Math.round(Math.random() * 10) * 100,
+        protected: Math.random() < 0.5, // random is protected
       },
     }).catch(logger.error);
     createOffer({
@@ -69,12 +67,10 @@ async function run() {
         contestID: thecontest.id,
       },
       body: {
-        offerobj: {
-          nflplayerID: 30157,
-          isbid: (i % 2 === 0),
-          price: 1000 + Math.round(Math.random() * 10) * 100,
-          protected: Math.random() < 0.5,
-        },
+        nflplayerID: 30157,
+        isbid: (i % 2 === 0),
+        price: 1000 + Math.round(Math.random() * 10) * 100,
+        protected: Math.random() < 0.5,
       },
     }).catch(logger.error);
   }

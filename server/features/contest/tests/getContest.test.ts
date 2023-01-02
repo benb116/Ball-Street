@@ -14,6 +14,7 @@ describe('getContest service', () => {
       createdAt: expect.any(Date),
       updatedAt: expect.any(Date),
       entry: {
+        UserId: 1,
         pointtotal: 10000,
         rank: 1,
       },

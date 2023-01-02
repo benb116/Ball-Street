@@ -29,7 +29,7 @@ async function getEntry(req: GetEntryInput): Promise<EntryType> {
     },
   });
   if (!theentry) { throw uError('No entry found', 404); }
-  return theentry;
+  return theentry.toJSON();
 }
 
 export default getEntry;

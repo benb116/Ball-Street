@@ -38,12 +38,10 @@ function createOffer(cookie: string, isbid: boolean, price: number, isprotected:
     method: 'post',
     url: `http://localhost/app/api/contests/${contestID}/offer/`,
     data: {
-      offerobj: {
-        nflplayerID: 28026,
-        isbid,
-        price,
-        protected: isprotected,
-      },
+      nflplayerID: 28026,
+      isbid,
+      price,
+      protected: isprotected,
     },
     headers: { cookie },
   }).catch((err) => {

@@ -33,12 +33,10 @@ function reqBody(user = 1, nflplayerID = 21, isbid = false, price = 500, isProte
       contestID,
     },
     body: {
-      offerobj: {
-        nflplayerID,
-        isbid,
-        price,
-        protected: isProtected,
-      },
+      nflplayerID,
+      isbid,
+      price,
+      protected: isProtected,
     },
   };
 }
