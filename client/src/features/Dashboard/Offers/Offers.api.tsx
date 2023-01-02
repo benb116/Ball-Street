@@ -1,13 +1,13 @@
 import BaseAPI from '../../../helpers/api';
-import type { OfferItemType, OfferObj } from '../../../../../types/api/offer.api';
+import type { OfferItemType, CreateOfferQueryType, CancelOfferQueryType } from '../../../../../types/api/offer.api';
 
 const OffersAPI = BaseAPI.injectEndpoints({
   endpoints: (build) => ({
     getOffers: build.query<OfferItemType[], string>({ query: (contestID) => `/api/contests/${contestID}/offers` }),
-    createOffer: build.mutation<OfferItemType, { contestID: string, offerobj: OfferObj }>({
+    createOffer: build.mutation<OfferItemType, CreateOfferQueryType>({
       query: ({ contestID, ...body }) => ({ url: `/api/contests/${contestID}/offer`, method: 'POST', body }),
     }),
-    cancelOffer: build.mutation<OfferItemType, { contestID: string, offerID: string }>({
+    cancelOffer: build.mutation<OfferItemType, CancelOfferQueryType>({
       query: ({ contestID, ...body }) => ({ url: `/api/contests/${contestID}/offer`, method: 'DELETE', body }),
     }),
   }),

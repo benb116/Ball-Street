@@ -16,46 +16,38 @@ import Entry from '../../entry/entry.model';
 import NFLPlayer from '../../nflplayer/nflplayer.model';
 import NFLGame from '../../nflgame/nflgame.model';
 import Offer from '../offer.model';
-import type { OfferItemType } from '../../../../types/api/offer.api';
+import { createOfferInput, CreateOfferInputType, OfferItemType } from '../../../../types/api/offer.api';
 
 const offerQueue = new Queue('offer-queue', queueOptions);
+
+const bodySchema = Joi.object().keys({
+  nflplayerID: validators.nflplayerID,
+  isbid: Joi.boolean().required().messages({
+    'boolean.base': 'Offer type is invalid',
+    'any.required': 'Please specify bid or ask',
+  }),
+  price: Joi.number().integer().greater(0).multiple(100)
+    .required()
+    .messages({
+      'number.base': 'Price is invalid',
+      'number.integer': 'Price is invalid',
+      'number.greater': 'Price must be greater than 0',
+      'number.multiple': 'Price must be a whole number',
+      'any.required': 'Please specify a price',
+    }),
+  protected: Joi.boolean().optional(),
+}).required();
+validate(createOfferInput, bodySchema);
 
 const schema = Joi.object({
   user: validators.user,
   params: Joi.object().keys({ contestID: validators.contestID }).required(),
-  body: Joi.object().keys({
-    offerobj: Joi.object().keys({
-      nflplayerID: validators.nflplayerID,
-      isbid: Joi.boolean().required().messages({
-        'boolean.base': 'Offer type is invalid',
-        'any.required': 'Please specify bid or ask',
-      }),
-      price: Joi.number().integer().greater(0).multiple(100)
-        .required()
-        .messages({
-          'number.base': 'Price is invalid',
-          'number.integer': 'Price is invalid',
-          'number.greater': 'Price must be greater than 0',
-          'number.multiple': 'Price must be a whole number',
-          'any.required': 'Please specify a price',
-        }),
-      protected: Joi.boolean().optional(),
-    }).required(),
-  }).required(),
+  body: bodySchema,
 });
 
 interface CreateOfferInput extends ServiceInput {
-  params: {
-    contestID: number,
-  },
-  body: {
-    offerobj: {
-      nflplayerID: number,
-      isbid: boolean,
-      price: number,
-      protected?: boolean
-    }
-  }
+  params: { contestID: number },
+  body: CreateOfferInputType
 }
 
 /** Create an offer in a contest */
@@ -73,21 +65,21 @@ async function createOffer(req: CreateOfferInput): Promise<OfferItemType> {
     });
     if (!theentry) { throw uError('No entry found', 404); }
 
-    const playerdata = await NFLPlayer.findByPk(value.body.offerobj.nflplayerID, {
+    const playerdata = await NFLPlayer.findByPk(value.body.nflplayerID, {
       attributes: ['NFLPositionId', 'NFLTeamId', 'active'],
       transaction: t,
     });
     if (!playerdata || !playerdata.active) { throw uError('Player not found', 404); }
 
     // Player should be in entry for ask, not for bid
-    const isOnTeam = isPlayerOnRoster(theentry, value.body.offerobj.nflplayerID);
-    if (!value.body.offerobj.isbid) {
+    const isOnTeam = isPlayerOnRoster(theentry, value.body.nflplayerID);
+    if (!value.body.isbid) {
       if (!isOnTeam) { throw uError('Player is not on roster', 404); }
     } else {
       if (isOnTeam) { throw uError('Player is on roster already', 409); }
 
       const pts = theentry.pointtotal;
-      if (value.body.offerobj.price > pts) {
+      if (value.body.price > pts) {
         throw uError("User doesn't have enough points to offer", 402);
       }
       // Only allow offer if there's currently room on the roster
@@ -113,10 +105,10 @@ async function createOffer(req: CreateOfferInput): Promise<OfferItemType> {
     return Offer.create({
       UserId: value.user,
       ContestId: value.params.contestID,
-      NFLPlayerId: value.body.offerobj.nflplayerID,
-      isbid: value.body.offerobj.isbid,
-      price: value.body.offerobj.price,
-      protected: value.body.offerobj.protected || DefaultProtected,
+      NFLPlayerId: value.body.nflplayerID,
+      isbid: value.body.isbid,
+      price: value.body.price,
+      protected: value.body.protected || DefaultProtected,
     }, {
       transaction: t,
     });

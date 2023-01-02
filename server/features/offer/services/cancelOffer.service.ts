@@ -9,30 +9,28 @@ import sequelize from '../../../db';
 import { queueOptions } from '../../../db/redis';
 
 import Offer from '../offer.model';
-import type { OfferItemType } from '../../../../types/api/offer.api';
+import { cancelOfferInput, CancelOfferInputType, OfferItemType } from '../../../../types/api/offer.api';
 
 const offerQueue = new Queue('offer-queue', queueOptions);
 
+const bodySchema = Joi.object().keys({
+  offerID: Joi.string().trim().required().messages({
+    'string.base': 'Offer ID is invalid',
+    'any.required': 'Please specify a offer',
+  }),
+}).required();
+validate(cancelOfferInput, bodySchema);
 const schema = Joi.object({
   user: validators.user,
   params: Joi.object().keys({
     contestID: Joi.number().optional(),
   }).required(),
-  body: Joi.object().keys({
-    offerID: Joi.string().trim().required().messages({
-      'string.base': 'Offer ID is invalid',
-      'any.required': 'Please specify a offer',
-    }),
-  }).required(),
+  body: bodySchema,
 });
 
 interface CancelOfferInput extends ServiceInput {
-  params: {
-    contestID: number,
-  },
-  body: {
-    offerID: string,
-  }
+  params: { contestID: number },
+  body: CancelOfferInputType
 }
 
 /** Cancel an existing offer */

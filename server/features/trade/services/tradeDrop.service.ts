@@ -26,9 +26,7 @@ const schema = Joi.object({
 });
 
 interface TradeDropInput extends ServiceInput {
-  params: {
-    contestID: number,
-  },
+  params: { contestID: number },
   body: {
     nflplayerID: number,
     price?: number,
