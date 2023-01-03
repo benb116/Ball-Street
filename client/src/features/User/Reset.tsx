@@ -1,6 +1,6 @@
 import React from 'react';
-import { Link, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { Link, useParams } from 'react-router-dom';
 
 import { useResetMutation } from './User.api';
 import { ResetInputType } from './User.types';

@@ -1,12 +1,13 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 
-import type { RootState } from '../../app/store';
-import ContestsAPI from './Contests.api';
 import { ErrHandler } from '../../helpers/util';
+import { EntryItemType, EntryType } from '../Dashboard/Entry/Entry.types';
 
+import ContestsAPI from './Contests.api';
 import { ContestItemType } from './Contests.types';
-import { EntryType, EntryItemType } from '../Dashboard/Entry/Entry.types';
+
+import type { RootState } from '../../app/store';
 
 interface ContestsState {
   allcontests: ContestItemType[],

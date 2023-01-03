@@ -2,7 +2,6 @@ import React from 'react';
 import { Link, Navigate } from 'react-router-dom';
 
 import { useAppSelector } from '../../app/hooks';
-
 import { useGetAccountQuery, useLogoutMutation } from '../User/User.api';
 import { userSelector } from '../User/User.slice';
 

@@ -1,22 +1,20 @@
 /* eslint-disable no-nested-ternary */
 import React from 'react';
 
-import { useAppSelector, useAppDispatch } from '../../../app/hooks';
-
-import {
-  allPlayersSelector,
-  filterSelector,
-  sortSelector,
-  setSort,
-  allTeamsSelector,
-  allGamesSelector,
-  pricesMapSelector,
-} from './Players.slice';
-import { useGetPlayersQuery, useGetGamesQuery } from './Players.api';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 
 import PlayerFilter from './PlayerFilter';
 import PlayerItem from './PlayerItem';
-
+import { useGetGamesQuery, useGetPlayersQuery } from './Players.api';
+import {
+  allGamesSelector,
+  allPlayersSelector,
+  allTeamsSelector,
+  filterSelector,
+  pricesMapSelector,
+  setSort,
+  sortSelector,
+} from './Players.slice';
 import { GameItemType, SortByType } from './Players.types';
 
 // Show list of all active players

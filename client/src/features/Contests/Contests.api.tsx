@@ -1,6 +1,7 @@
 import BaseAPI from '../../helpers/api';
-import { ContestItemType } from './Contests.types';
 import { EntryItemType, EntryType } from '../Dashboard/Entry/Entry.types';
+
+import { ContestItemType } from './Contests.types';
 
 const ContestsAPI = BaseAPI.injectEndpoints({
   endpoints: (build) => ({

@@ -1,4 +1,5 @@
 import BaseAPI from '../../../helpers/api';
+
 import { EntryType } from './Entry.types';
 
 const EntryAPI = BaseAPI.injectEndpoints({

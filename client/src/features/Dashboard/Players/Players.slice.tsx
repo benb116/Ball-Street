@@ -1,10 +1,9 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 
-import type { RootState } from '../../../app/store';
 import { ErrHandler } from '../../../helpers/util';
-import PlayersAPI from './Players.api';
 
+import PlayersAPI from './Players.api';
 import {
   GameItemType,
   NFLPosTypes,
@@ -14,6 +13,8 @@ import {
   SortByType,
   TeamMapType,
 } from './Players.types';
+
+import type { RootState } from '../../../app/store';
 
 interface FilterType {
   name: string,

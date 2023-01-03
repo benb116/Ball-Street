@@ -1,10 +1,12 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 
-import type { RootState } from '../../../app/store';
 import { ErrHandler } from '../../../helpers/util';
+
 import TradesAPI from './Trades.api';
 import { TradeItemType } from './Trades.types';
+
+import type { RootState } from '../../../app/store';
 
 interface TradesState {
   trades: TradeItemType[],

@@ -1,4 +1,5 @@
 import BaseAPI from '../../helpers/api';
+
 import {
   AccountType,
   DepositWithdrawType,

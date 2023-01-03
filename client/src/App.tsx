@@ -1,26 +1,25 @@
 import React from 'react';
 import {
   BrowserRouter,
-  Routes,
-  Route,
   Navigate,
+  Route,
+  Routes,
 } from 'react-router-dom';
 
 import './App.css';
 
 import { useAppSelector } from './app/hooks';
-import { isLoggedInSelector } from './features/User/User.slice';
-
-import Home from './features/Home/Home';
-import Login from './features/User/Login';
-import Signup from './features/User/Signup';
-import Forgot from './features/User/Forgot';
-import Verified from './features/Home/Verified';
-import Reset from './features/User/Reset';
-import Account from './features/User/Account';
-import Contests from './features/Contests/Contests';
 import Contest from './features/Contests/Contest';
+import Contests from './features/Contests/Contests';
 import Dashboard from './features/Dashboard/Dashboard';
+import Home from './features/Home/Home';
+import Verified from './features/Home/Verified';
+import Account from './features/User/Account';
+import Forgot from './features/User/Forgot';
+import Login from './features/User/Login';
+import Reset from './features/User/Reset';
+import Signup from './features/User/Signup';
+import { isLoggedInSelector } from './features/User/User.slice';
 
 function App() {
   return (

@@ -3,14 +3,12 @@ import { useParams } from 'react-router-dom';
 
 import { useAppSelector } from '../../../app/hooks';
 import { RenderPrice } from '../../../helpers/util';
-
-import { allTeamsSelector, playersSelector, pricesMapSelector } from '../Players/Players.slice';
-import { entrySelector } from './Entry.slice';
 import { useGetEntryQuery } from '../../Contests/Contests.api';
+import { allTeamsSelector, playersSelector, pricesMapSelector } from '../Players/Players.slice';
 
-import RosterItem from './RosterItem';
-
+import { entrySelector } from './Entry.slice';
 import { RosterPositions } from './Entry.types';
+import RosterItem from './RosterItem';
 
 // Display the user's current entry (balance + players)
 function Entry() {

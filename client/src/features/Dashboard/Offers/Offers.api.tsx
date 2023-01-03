@@ -1,4 +1,5 @@
 import BaseAPI from '../../../helpers/api';
+
 import { OfferItemType, OfferObj } from './Offers.types';
 
 const OffersAPI = BaseAPI.injectEndpoints({

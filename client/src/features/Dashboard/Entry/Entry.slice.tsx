@@ -2,13 +2,14 @@
 import { createSlice } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
 
-import type { RootState } from '../../../app/store';
 import { ErrHandler } from '../../../helpers/util';
-
-import { EntryType, Roster, RosterPosType } from './Entry.types';
-import { NFLPosType } from '../Players/Players.types';
-import EntryAPI from './Entry.api';
 import ContestsAPI from '../../Contests/Contests.api';
+import { NFLPosType } from '../Players/Players.types';
+
+import EntryAPI from './Entry.api';
+import { EntryType, Roster, RosterPosType } from './Entry.types';
+
+import type { RootState } from '../../../app/store';
 
 interface EntryState {
   balance: number,

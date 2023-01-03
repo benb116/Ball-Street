@@ -1,4 +1,5 @@
 import BaseAPI from '../../../helpers/api';
+
 import { TradeTree } from './Trades.types';
 
 const TradesAPI = BaseAPI.injectEndpoints({
