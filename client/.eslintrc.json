@@ -4,6 +4,9 @@
         "es2021": true,
         "jest/globals": true
     },
+    "globals": {
+        "JSX": true
+    },
     "extends": [
         "plugin:security/recommended",
         "plugin:node/recommended",
