@@ -1,16 +1,14 @@
 import Joi from 'joi';
 
 import {
-  FlexNFLPositionId, NFLPosTypes, Roster, RosterPositions, RPosType,
+  FlexNFLPositionId, NFLPosTypes, RPosType, Roster, RosterPositions,
 } from '../../../config';
-
-import { tobj, validate, uError } from '../../util/util';
-import errorHandler, { ServiceInput } from '../../util/util.service';
-import validators from '../../util/util.schema';
-
 import sequelize from '../../../db';
-import Entry from '../entry.model';
 import NFLPlayer from '../../nflplayer/nflplayer.model';
+import { tobj, uError, validate } from '../../util/util';
+import validators from '../../util/util.schema';
+import errorHandler, { ServiceInput } from '../../util/util.service';
+import Entry from '../entry.model';
 
 const schema = Joi.object({
   user: validators.user,

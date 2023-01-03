@@ -1,6 +1,6 @@
 {
     "env": {
-        "browser": true,
+        "node": true,
         "es2021": true,
         "jest/globals": true
     },
@@ -11,7 +11,9 @@
         "airbnb-typescript",
         "eslint:recommended",
         "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended"
+        "plugin:@typescript-eslint/recommended",
+        "eslint:recommended"
+
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -23,7 +25,8 @@
         "jest",
         "node",
         "security",
-        "@typescript-eslint"
+        "@typescript-eslint",
+        "prettier"
     ],
     "rules": {
         "no-useless-concat": "off",
@@ -36,6 +39,40 @@
             "tryExtensions": [".js", ".json", ".node", ".ts"]
         }],
         "max-len": ["error", { "code": 120, "tabWidth": 2, "ignoreComments": true }],
-        "@typescript-eslint/lines-between-class-members": "off"
+        "@typescript-eslint/lines-between-class-members": "off",
+        "sort-imports": [
+            "error",
+            {
+              "ignoreCase": false,
+              "ignoreDeclarationSort": true, // don"t want to sort import lines, use eslint-plugin-import instead
+              "ignoreMemberSort": false,
+              "memberSyntaxSortOrder": ["none", "all", "multiple", "single"],
+              "allowSeparatedGroups": true
+            }
+        ],
+        // turn on errors for missing imports
+        "import/no-unresolved": "error",
+        // "import/no-named-as-default-member": "off",
+        "import/order": [
+            "warn",
+            {
+                "groups": [
+                    ["builtin", "external"], 
+                    "internal", 
+                    "parent", 
+                    "sibling",
+                    "index", 
+                    "unknown",
+                    "type"
+                ],
+                "newlines-between": "always",
+                "alphabetize": {
+                    /* sort in ascending order. Options: ["ignore", "asc", "desc"] */
+                    "order": "asc",
+                    /* ignore case. Options: [true, false] */
+                    "caseInsensitive": true
+                }
+            }
+        ]
     }
 }

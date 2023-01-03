@@ -2,11 +2,10 @@
 // Find the match with the highest priority that can be made
 // Returns false for no matches
 
+import Offer from '../../features/offer/offer.model';
 import logger from '../../utilities/logger';
 
 import type Book from './book.offer';
-
-import Offer from '../../features/offer/offer.model';
 import type { LimitMap } from './book.offer';
 
 export interface MatchPair {

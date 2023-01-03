@@ -1,6 +1,5 @@
-import { sendToAll } from '../socket.live';
-
 import { client } from '../../../db/redis';
+import { sendToAll } from '../socket.live';
 
 export interface InjuryUpdateType {
   [key: string]: string | null

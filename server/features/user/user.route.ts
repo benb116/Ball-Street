@@ -1,21 +1,20 @@
 import express, { Request, Response } from 'express';
 
-import { isUError, uError, UError } from '../util/util';
-import routeHandler from '../util/util.route';
-import logger from '../../utilities/logger';
-
 import authenticate from '../../middleware/authenticate';
-
-import signup from './services/signup.service';
-import login from './services/login.service';
-import getAccount from './services/getAccount.service';
-import evalVerify from './services/evalVerify.service';
-import genPassReset from './services/genPassReset.service';
-import evalPassReset from './services/evalPassReset.service';
-import withdraw from './services/withdraw.service';
-import deposit from './services/deposit.service';
+import logger from '../../utilities/logger';
 import getUserLedger from '../ledger/services/getUserLedger.service';
+import { UError, isUError, uError } from '../util/util';
+import routeHandler from '../util/util.route';
+
+import deposit from './services/deposit.service';
+import evalPassReset from './services/evalPassReset.service';
+import evalVerify from './services/evalVerify.service';
 import forceLogout from './services/forceLogout.service';
+import genPassReset from './services/genPassReset.service';
+import getAccount from './services/getAccount.service';
+import login from './services/login.service';
+import signup from './services/signup.service';
+import withdraw from './services/withdraw.service';
 
 const router = express.Router();
 

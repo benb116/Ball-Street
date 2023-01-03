@@ -1,9 +1,9 @@
 /* eslint-disable no-restricted-syntax */
 import { SessionData } from 'express-session';
 import Joi from 'joi';
+
 import { client } from '../../../db/redis';
 import logger from '../../../utilities/logger';
-
 import { uError, validate } from '../../util/util';
 import validators from '../../util/util.schema';
 import { ServiceInput } from '../../util/util.service';

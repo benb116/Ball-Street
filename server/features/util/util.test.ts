@@ -1,7 +1,7 @@
 import sequelize from '../../db';
 import Entry from '../entry/entry.model';
 
-import { isInvalidSpot, isPlayerOnRoster, isOpenRoster } from './util';
+import { isInvalidSpot, isOpenRoster, isPlayerOnRoster } from './util';
 
 describe('util testing', () => {
   test('isInvalidSpot', () => {

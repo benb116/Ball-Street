@@ -1,7 +1,6 @@
-import service from '../services/forceLogout.service';
-import { ErrorTest } from '../../util/util.tests';
-
 import { client } from '../../../db/redis';
+import { ErrorTest } from '../../util/util.tests';
+import service from '../services/forceLogout.service';
 
 describe('forceLogout service', () => {
   test('Valid request returns confirmation and redis key', async () => {

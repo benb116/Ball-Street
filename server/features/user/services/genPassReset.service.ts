@@ -2,11 +2,9 @@ import cryptoRandomString from 'crypto-random-string';
 import Joi from 'joi';
 
 import { CallbackURL, verificationTimeout, verificationTokenLength } from '../../../config';
-
-import { validate, uError } from '../../util/util';
-import validators from '../../util/util.schema';
-
 import passReset from '../../../db/redis/passReset.redis';
+import { uError, validate } from '../../util/util';
+import validators from '../../util/util.schema';
 
 const schema = Joi.object({
   email: validators.email,

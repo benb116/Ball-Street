@@ -1,15 +1,14 @@
 import Joi from 'joi';
 
-import { validate, uError, tobj } from '../../util/util';
+import { ledgerKinds } from '../../../config';
+import sequelize from '../../../db';
+import Contest from '../../contest/contest.model';
+import LedgerEntry from '../../ledger/ledgerEntry.model';
+import User from '../../user/user.model';
+import { tobj, uError, validate } from '../../util/util';
 import validators from '../../util/util.schema';
 import errorHandler, { ServiceInput } from '../../util/util.service';
-
-import Contest from '../../contest/contest.model';
 import Entry from '../entry.model';
-import sequelize from '../../../db';
-import User from '../../user/user.model';
-import LedgerEntry from '../../ledger/ledgerEntry.model';
-import { ledgerKinds } from '../../../config';
 
 const schema = Joi.object({
   user: validators.user,

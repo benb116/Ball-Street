@@ -1,17 +1,16 @@
 import Joi from 'joi';
 import { Op, Transaction } from 'sequelize';
 
-import {
-  validate, uError, isPlayerOnRoster, isOpenRoster, isInvalidSpot,
-} from '../../util/util';
-import validators from '../../util/util.schema';
-import { ServiceInput } from '../../util/util.service';
-
+import { EntryActionKinds, RPosType, RosterPositions } from '../../../config';
 import Entry from '../../entry/entry.model';
 import NFLGame from '../../nflgame/nflgame.model';
 import NFLPlayer from '../../nflplayer/nflplayer.model';
+import {
+  isInvalidSpot, isOpenRoster, isPlayerOnRoster, uError, validate,
+} from '../../util/util';
+import validators from '../../util/util.schema';
+import { ServiceInput } from '../../util/util.service';
 import EntryAction from '../entryaction.model';
-import { EntryActionKinds, RosterPositions, RPosType } from '../../../config';
 
 const schema = Joi.object({
   user: validators.user,

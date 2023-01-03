@@ -1,12 +1,11 @@
 import bcrypt from 'bcryptjs';
 import Joi from 'joi';
 
-import { validate, uError } from '../../util/util';
+import { uError, validate } from '../../util/util';
 import validators from '../../util/util.schema';
+import User from '../user.model';
 
 import genVerify from './genVerify.service';
-
-import User from '../user.model';
 
 const schema = Joi.object({
   email: validators.email,

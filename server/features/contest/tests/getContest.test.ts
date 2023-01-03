@@ -1,5 +1,5 @@
-import service from '../services/getContest.service';
 import { ErrorTest, ObjectTest } from '../../util/util.tests';
+import service from '../services/getContest.service';
 
 describe('getContest service', () => {
   test('Valid request returns data', ObjectTest(

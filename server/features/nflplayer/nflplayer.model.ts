@@ -1,13 +1,13 @@
 // Model for an NFL Player (e.g. Tom Brady)
 import {
-  Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
+  CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model,
 } from 'sequelize';
-import sequelize from '../../db';
 
-import NFLTeam from '../nflteam/nflteam.model';
-import NFLPosition from '../nflposition/nflposition.model';
 import { NFLPosIDType } from '../../config';
+import sequelize from '../../db';
 import { TeamIDType } from '../../nflinfo';
+import NFLPosition from '../nflposition/nflposition.model';
+import NFLTeam from '../nflteam/nflteam.model';
 
 class NFLPlayer extends Model<InferAttributes<NFLPlayer>, InferCreationAttributes<NFLPlayer>> {
   declare id: number;

@@ -1,10 +1,11 @@
 // Model for an NFL Position (e.g. WR, DEF, not WR1, DEF1)
 
 import {
-  Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
+  CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model,
 } from 'sequelize';
+
+import { NFLPosIDType, NFLPosIDs } from '../../config';
 import sequelize from '../../db';
-import { NFLPosIDs, NFLPosIDType } from '../../config';
 
 class NFLPosition extends Model<InferAttributes<NFLPosition>, InferCreationAttributes<NFLPosition>> {
   declare id: NFLPosIDType;

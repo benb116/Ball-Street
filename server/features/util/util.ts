@@ -2,9 +2,8 @@ import { Schema } from 'joi';
 import { Transaction } from 'sequelize';
 
 import {
-  FlexNFLPositionId, NFLPosIDType, NFLPosTypes, Roster, RosterPositions, RPosType,
+  FlexNFLPositionId, NFLPosIDType, NFLPosTypes, RPosType, Roster, RosterPositions,
 } from '../../config';
-
 import Entry from '../entry/entry.model';
 
 // Return whether a player type (number) cannot be put into a specific roster position
@@ -62,7 +61,6 @@ export interface UError extends Error {
 export const uError = function uError(msg: string, status = 500) {
   const uerr: UError = { name: msg, message: msg, status };
   throw uerr;
-  return uerr;
 };
 
 export const isUError = (item: unknown): item is UError => !!(item as UError)?.status;

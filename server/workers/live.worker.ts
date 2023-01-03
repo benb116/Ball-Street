@@ -1,23 +1,22 @@
 // Websocket server worker
 // Subscribe to redis updates and push out to clients
 
-import WebSocket from 'ws';
-import http from 'http';
 import express, { Request } from 'express';
+import http from 'http';
+import WebSocket from 'ws';
 
+import { subscriber } from '../db/redis';
+import bestask from '../db/redis/bestask.redis';
+import bestbid from '../db/redis/bestbid.redis';
+import lasttrade from '../db/redis/lasttrade.redis';
+import projAvg from '../db/redis/projAvg.redis';
+import projprice from '../db/redis/projprice.redis';
+import statprice from '../db/redis/statprice.redis';
 import session from '../middleware/session';
 import logger from '../utilities/logger';
 
-import liveState from './live/state.live'; // Data stored in memory
 import channelMap, { channelTypes } from './live/channels.live';
-
-import { subscriber } from '../db/redis';
-import bestbid from '../db/redis/bestbid.redis';
-import bestask from '../db/redis/bestask.redis';
-import lasttrade from '../db/redis/lasttrade.redis';
-import statprice from '../db/redis/statprice.redis';
-import projprice from '../db/redis/projprice.redis';
-import projAvg from '../db/redis/projAvg.redis';
+import liveState from './live/state.live'; // Data stored in memory
 
 if (!process.env.LIVE_PORT || Number.isNaN(Number(process.env.LIVE_PORT))) {
   throw new Error('No/invalid Live Port specified in env');

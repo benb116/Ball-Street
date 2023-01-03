@@ -3,8 +3,8 @@
 
 import { Sequelize, Transaction } from 'sequelize';
 
-import logger from '../utilities/logger';
 import sec from '../secret';
+import logger from '../utilities/logger';
 
 let {
   DB_USER,

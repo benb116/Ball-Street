@@ -1,6 +1,5 @@
-import { sendToUser } from '../socket.live';
-
 import { client } from '../../../db/redis';
+import { sendToUser } from '../socket.live';
 
 const offerFilled = {
   pub: function pub(userID: number, offerID: string) {

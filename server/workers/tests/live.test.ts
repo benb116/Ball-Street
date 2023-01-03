@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable no-console */
-import WebSocket from 'ws';
 import axios from 'axios';
+import WebSocket from 'ws';
+
 import { ProtectionDelay, RefreshTime } from '../../config';
+import bestbid from '../../db/redis/bestbid.redis';
 import Offer from '../../features/offer/offer.model';
 import { TestPromiseMap } from '../../features/util/util.tests';
-import bestbid from '../../db/redis/bestbid.redis';
 
 const contestID = 2;
 

@@ -1,8 +1,8 @@
 import {
-  Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
+  CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model,
 } from 'sequelize';
-import sequelize from '../../db';
 
+import sequelize from '../../db';
 import Offer from '../offer/offer.model';
 
 class ProtectedMatch extends Model<InferAttributes<ProtectedMatch>, InferCreationAttributes<ProtectedMatch>> {

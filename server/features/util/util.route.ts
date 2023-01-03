@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 
-import { uError, isUError } from './util';
-import { ServiceType } from './util.service';
-
 import { client } from '../../db/redis';
+
+import { isUError, uError } from './util';
+import { ServiceType } from './util.service';
 
 /**
  * Common route handler function.

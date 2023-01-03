@@ -1,13 +1,12 @@
 import Sequelize, {
-  Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
+  CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model,
 } from 'sequelize';
-import sequelize from '../../db';
 
 import { DefaultProtected } from '../../config';
-
-import User from '../user/user.model';
+import sequelize from '../../db';
 import Contest from '../contest/contest.model';
 import NFLPlayer from '../nflplayer/nflplayer.model';
+import User from '../user/user.model';
 
 class Offer extends Model<InferAttributes<Offer>, InferCreationAttributes<Offer>> {
   declare id: CreationOptional<string>;

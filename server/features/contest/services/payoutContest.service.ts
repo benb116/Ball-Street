@@ -1,14 +1,13 @@
 import { Transaction } from 'sequelize';
-import { ledgerKinds, profitFeePercentage, RosterPositions } from '../../../config';
+
+import { RosterPositions, ledgerKinds, profitFeePercentage } from '../../../config';
 import sequelize from '../../../db';
-import Contest from '../contest.model';
+import Entry from '../../entry/entry.model';
 import LedgerEntry from '../../ledger/ledgerEntry.model';
 import User from '../../user/user.model';
-
 import { tobj, uError, validate } from '../../util/util';
 import validators from '../../util/util.schema';
-
-import Entry from '../../entry/entry.model';
+import Contest from '../contest.model';
 
 /** Pay out prizes to all users with entries in a contest. Take fees as defined */
 async function payoutContest(rawcontestID: number) {
@@ -31,7 +30,7 @@ async function payoutContest(rawcontestID: number) {
     // Also confirm that no players remain to be converted to points
     const sumPoints = contestEntries.reduce((acc, cur) => {
       const isValid = RosterPositions.every((rpos) => cur[rpos] === null);
-      if (!isValid) throw uError(`Entry has remaining players contest:${cur.ContestId} user:${cur.UserId}`);
+      if (!isValid) return uError(`Entry has remaining players contest:${cur.ContestId} user:${cur.UserId}`);
       return acc + cur.pointtotal;
     }, 0);
 

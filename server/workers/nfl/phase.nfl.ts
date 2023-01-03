@@ -1,28 +1,25 @@
 // Change the game phase (pre, mid, post)
 import Joi from 'joi';
 import Sequelize, { Op } from 'sequelize';
-import type { Literal } from 'sequelize/types/utils.d';
-import type { Logger } from 'winston';
 
-import { teamIDs, TeamIDType } from '../../nflinfo';
-
-import { validate, isPlayerOnRoster } from '../../features/util/util';
-import logger from '../../utilities/logger';
-import { SumPoints } from './dict.nfl';
-
-import state from './state.nfl';
-
+import { EntryActionKinds, GamePhaseType, gamePhases } from '../../config';
 import sequelize from '../../db';
 import { client } from '../../db/redis';
-
+import Entry from '../../features/entry/entry.model';
+import getWeekEntries from '../../features/entry/services/getWeekEntries.service';
+import NFLGame from '../../features/nflgame/nflgame.model';
+import NFLPlayer from '../../features/nflplayer/nflplayer.model';
+import EntryAction from '../../features/trade/entryaction.model';
+import { isPlayerOnRoster, validate } from '../../features/util/util';
+import { TeamIDType, teamIDs } from '../../nflinfo';
+import logger from '../../utilities/logger';
 import phaseChange from '../live/channels/phaseChange.channel';
 
-import Entry from '../../features/entry/entry.model';
-import NFLPlayer from '../../features/nflplayer/nflplayer.model';
-import NFLGame from '../../features/nflgame/nflgame.model';
-import getWeekEntries from '../../features/entry/services/getWeekEntries.service';
-import EntryAction from '../../features/trade/entryaction.model';
-import { EntryActionKinds, gamePhases, GamePhaseType } from '../../config';
+import { SumPoints } from './dict.nfl';
+import state from './state.nfl';
+
+import type { Literal } from 'sequelize/types/utils.d';
+import type { Logger } from 'winston';
 
 const schema = Joi.object({
   teamID: Joi.valid(...teamIDs)

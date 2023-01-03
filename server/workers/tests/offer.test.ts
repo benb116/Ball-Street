@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable no-console */
-import WebSocket from 'ws';
 import axios from 'axios';
+import WebSocket from 'ws';
 
-import createOffer from '../../features/offer/services/createOffer.service';
-import { TestPromiseMap } from '../../features/util/util.tests';
-import bestbid from '../../db/redis/bestbid.redis';
-import bestask from '../../db/redis/bestask.redis';
 import { ProtectionDelay, RefreshTime } from '../../config';
+import bestask from '../../db/redis/bestask.redis';
+import bestbid from '../../db/redis/bestbid.redis';
+import createOffer from '../../features/offer/services/createOffer.service';
 import { isUError } from '../../features/util/util';
+import { TestPromiseMap } from '../../features/util/util.tests';
 
 const contestID = 3;
 

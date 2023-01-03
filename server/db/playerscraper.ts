@@ -3,8 +3,9 @@
 
 // Pull player data from an API
 import axios from 'axios';
+
 import {
-  NFLPosIDType, RosterPosKindList, RosterPosKinds, RosterPosKindType,
+  NFLPosIDType, RosterPosKindList, RosterPosKindType, RosterPosKinds,
 } from '../config';
 import NFLPlayer from '../features/nflplayer/nflplayer.model';
 import teams, { TeamKind } from '../nflinfo';

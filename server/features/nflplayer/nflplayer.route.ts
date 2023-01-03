@@ -2,10 +2,10 @@ import express from 'express';
 
 import routeHandler from '../util/util.route';
 
-import getNFLPlayerOfferSummary from './services/getNFLPlayerOfferSummary.service';
-import getNFLPlayerTradeVolume from './services/getNFLPlayerTradeVolume.service';
 import getNFLPlayerNumAdds from './services/getNFLPlayerNumAdds.service';
+import getNFLPlayerOfferSummary from './services/getNFLPlayerOfferSummary.service';
 import getNFLPlayerPriceHistory from './services/getNFLPlayerPriceHistory.service';
+import getNFLPlayerTradeVolume from './services/getNFLPlayerTradeVolume.service';
 
 const router = express.Router({ mergeParams: true });
 

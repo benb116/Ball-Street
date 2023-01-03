@@ -2,11 +2,11 @@
 // Home team, away team, week #, and start timestamp
 // Also includes a phase to determine whether players can be traded
 import {
-  Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
+  CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model,
 } from 'sequelize';
-import sequelize from '../../db';
-import { gamePhases, GamePhaseType } from '../../config';
 
+import { GamePhaseType, gamePhases } from '../../config';
+import sequelize from '../../db';
 import NFLTeam from '../nflteam/nflteam.model';
 
 class NFLGame extends Model<InferAttributes<NFLGame>, InferCreationAttributes<NFLGame>> {

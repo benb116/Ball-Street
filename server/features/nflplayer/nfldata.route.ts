@@ -1,8 +1,8 @@
 import express from 'express';
 
+import getNFLGames from '../nflgame/services/getNFLGames.service';
 import routeHandler from '../util/util.route';
 
-import getNFLGames from '../nflgame/services/getNFLGames.service';
 import getNFLPlayer from './services/getNFLPlayer.service';
 import getNFLPlayers from './services/getNFLPlayers.service';
 

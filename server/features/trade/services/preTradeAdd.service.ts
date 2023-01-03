@@ -1,8 +1,7 @@
 import Joi from 'joi';
+
 import { RPosType } from '../../../config';
-
 import sequelize from '../../../db';
-
 import { validate } from '../../util/util';
 import validators from '../../util/util.schema';
 import errorHandler, { ServiceInput } from '../../util/util.service';

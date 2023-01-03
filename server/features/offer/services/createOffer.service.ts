@@ -3,18 +3,16 @@ import Joi from 'joi';
 import { Op } from 'sequelize';
 
 import { DefaultProtected } from '../../../config';
+import sequelize from '../../../db';
+import { queueOptions } from '../../../db/redis';
+import Entry from '../../entry/entry.model';
+import NFLGame from '../../nflgame/nflgame.model';
+import NFLPlayer from '../../nflplayer/nflplayer.model';
 import {
-  tobj, validate, uError, isPlayerOnRoster, isOpenRoster,
+  isOpenRoster, isPlayerOnRoster, tobj, uError, validate,
 } from '../../util/util';
 import validators from '../../util/util.schema';
 import errorHandler, { ServiceInput } from '../../util/util.service';
-
-import sequelize from '../../../db';
-import { queueOptions } from '../../../db/redis';
-
-import Entry from '../../entry/entry.model';
-import NFLPlayer from '../../nflplayer/nflplayer.model';
-import NFLGame from '../../nflgame/nflgame.model';
 import Offer from '../offer.model';
 
 const offerQueue = new Queue('offer-queue', queueOptions);

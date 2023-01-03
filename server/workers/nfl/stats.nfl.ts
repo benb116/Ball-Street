@@ -1,16 +1,14 @@
 import axios from 'axios';
 
-import logger from '../../utilities/logger';
-import { SumPoints, validStatLetters } from './dict.nfl';
-
-import state from './state.nfl';
-
-import statUpdate from '../live/channels/statUpdate.channel';
-
-import yahooData from '../tests/yahooData';
-import statprice from '../../db/redis/statprice.redis';
 import projprice from '../../db/redis/projprice.redis';
-import { teamIDs, TeamIDType } from '../../nflinfo';
+import statprice from '../../db/redis/statprice.redis';
+import { TeamIDType, teamIDs } from '../../nflinfo';
+import logger from '../../utilities/logger';
+import statUpdate from '../live/channels/statUpdate.channel';
+import yahooData from '../tests/yahooData';
+
+import { SumPoints, validStatLetters } from './dict.nfl';
+import state from './state.nfl';
 
 // Get all latest statlines and filter out ones we don't care about
 export async function GetNewStats() {
