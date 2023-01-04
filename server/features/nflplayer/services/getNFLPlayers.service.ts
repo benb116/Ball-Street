@@ -1,4 +1,5 @@
 import NFLPlayer from '../nflplayer.model';
+
 import type { PlayerItemType } from '../../../../types/api/player.api';
 
 /** Get al NFL players that are active */

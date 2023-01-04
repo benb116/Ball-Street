@@ -3,6 +3,7 @@
 import {
   Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
 } from 'sequelize';
+
 import sequelize from '../../db';
 
 class LedgerKind extends Model<InferAttributes<LedgerKind>, InferCreationAttributes<LedgerKind>> {

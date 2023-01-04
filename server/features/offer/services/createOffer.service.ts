@@ -2,21 +2,19 @@ import Queue from 'bull';
 import Joi from 'joi';
 import { Op } from 'sequelize';
 
+import { createOfferInput, CreateOfferInputType, OfferItemType } from '../../../../types/api/offer.api';
 import { DefaultProtected } from '../../../config';
+import sequelize from '../../../db';
+import { queueOptions } from '../../../db/redis';
+import Entry from '../../entry/entry.model';
+import NFLGame from '../../nflgame/nflgame.model';
+import NFLPlayer from '../../nflplayer/nflplayer.model';
 import {
   tobj, validate, uError, isPlayerOnRoster, isOpenRoster,
 } from '../../util/util';
 import validators from '../../util/util.schema';
 import errorHandler, { ServiceInput } from '../../util/util.service';
-
-import sequelize from '../../../db';
-import { queueOptions } from '../../../db/redis';
-
-import Entry from '../../entry/entry.model';
-import NFLPlayer from '../../nflplayer/nflplayer.model';
-import NFLGame from '../../nflgame/nflgame.model';
 import Offer from '../offer.model';
-import { createOfferInput, CreateOfferInputType, OfferItemType } from '../../../../types/api/offer.api';
 
 const offerQueue = new Queue('offer-queue', queueOptions);
 

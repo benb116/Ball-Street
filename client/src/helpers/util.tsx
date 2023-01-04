@@ -1,6 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
 import { isRejectedWithValue } from '@reduxjs/toolkit';
+import PropTypes from 'prop-types';
+import React from 'react';
 import toast from 'react-hot-toast';
 
 interface ErrType {

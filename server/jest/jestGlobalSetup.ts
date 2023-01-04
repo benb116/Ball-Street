@@ -1,7 +1,8 @@
 /* eslint-disable security/detect-non-literal-fs-filename */
 
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
+
 import sequelize from '../db';
 import PopulateDB from '../db/dbpopulate';
 import { client } from '../db/redis';

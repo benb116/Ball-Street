@@ -1,20 +1,18 @@
-import BaseAPI from '../../helpers/api';
-
-import {
-  LoginInput,
-  LoginOutput,
-  SignupInput,
-  GenPassResetInput,
-  EvalPassResetInput,
-  GenVerifyOutput,
-} from '../../../../types/api/user.api';
-
 import {
   AccountOutput,
   DepositWithdrawType,
   LedgerEntryJoinedKindType,
   LedgerEntryType,
 } from '../../../../types/api/account.api';
+import {
+  EvalPassResetInput,
+  GenPassResetInput,
+  GenVerifyOutput,
+  LoginInput,
+  LoginOutput,
+  SignupInput,
+} from '../../../../types/api/user.api';
+import BaseAPI from '../../helpers/api';
 
 const UserAPI = BaseAPI.injectEndpoints({
   endpoints: (build) => ({

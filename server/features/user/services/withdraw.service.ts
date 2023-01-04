@@ -1,15 +1,13 @@
 import Joi from 'joi';
 
+import { DepositWithdrawInput, DepositWithdrawType, LedgerEntryType } from '../../../../types/api/account.api';
+import { ledgerKinds } from '../../../../types/rosterinfo';
+import sequelize from '../../../db';
+import LedgerEntry from '../../ledger/ledgerEntry.model';
 import { validate, uError, tobj } from '../../util/util';
 import validators from '../../util/util.schema';
 import errorHandler, { ServiceInput } from '../../util/util.service';
-
-import sequelize from '../../../db';
-import LedgerEntry from '../../ledger/ledgerEntry.model';
 import User from '../user.model';
-
-import { ledgerKinds } from '../../../../types/rosterinfo';
-import { DepositWithdrawInput, DepositWithdrawType, LedgerEntryType } from '../../../../types/api/account.api';
 
 const bodySchema = Joi.object({
   amount: Joi.number().integer().greater(0).required()

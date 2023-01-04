@@ -1,14 +1,13 @@
 import express from 'express';
 
+import authenticate from '../../middleware/authenticate';
+import getUserLedger from '../ledger/services/getUserLedger.service';
 import routeHandler from '../util/util.route';
 
-import authenticate from '../../middleware/authenticate';
-
+import deposit from './services/deposit.service';
+import forceLogout from './services/forceLogout.service';
 import getAccount from './services/getAccount.service';
 import withdraw from './services/withdraw.service';
-import deposit from './services/deposit.service';
-import getUserLedger from '../ledger/services/getUserLedger.service';
-import forceLogout from './services/forceLogout.service';
 
 const router = express.Router();
 

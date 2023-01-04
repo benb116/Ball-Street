@@ -1,13 +1,13 @@
 import express, { Request, Response } from 'express';
 
-import { isUError, uError, UError } from '../util/util';
 import logger from '../../utilities/logger';
+import { isUError, uError, UError } from '../util/util';
 
-import signup from './services/signup.service';
-import login from './services/login.service';
+import evalPassReset from './services/evalPassReset.service';
 import evalVerify from './services/evalVerify.service';
 import genPassReset from './services/genPassReset.service';
-import evalPassReset from './services/evalPassReset.service';
+import login from './services/login.service';
+import signup from './services/signup.service';
 
 const router = express.Router();
 

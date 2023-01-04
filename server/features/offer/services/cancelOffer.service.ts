@@ -1,15 +1,13 @@
 import Queue from 'bull';
 import Joi from 'joi';
 
+import { cancelOfferInput, CancelOfferInputType, OfferItemType } from '../../../../types/api/offer.api';
+import sequelize from '../../../db';
+import { queueOptions } from '../../../db/redis';
 import { tobj, validate, uError } from '../../util/util';
 import validators from '../../util/util.schema';
 import { ServiceInput } from '../../util/util.service';
-
-import sequelize from '../../../db';
-import { queueOptions } from '../../../db/redis';
-
 import Offer from '../offer.model';
-import { cancelOfferInput, CancelOfferInputType, OfferItemType } from '../../../../types/api/offer.api';
 
 const offerQueue = new Queue('offer-queue', queueOptions);
 

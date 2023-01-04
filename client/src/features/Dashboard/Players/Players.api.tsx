@@ -1,4 +1,5 @@
 import BaseAPI from '../../../helpers/api';
+
 import type { GameItemType, PlayerItemType } from '../../../../../types/api/player.api';
 
 const PlayersAPI = BaseAPI.injectEndpoints({

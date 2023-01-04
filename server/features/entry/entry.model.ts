@@ -1,13 +1,12 @@
 import {
   Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes, NonAttribute,
 } from 'sequelize';
-import sequelize from '../../db';
 
 import { RosterPositions, RPosType } from '../../../types/rosterinfo';
-
-import User from '../user/user.model';
+import sequelize from '../../db';
 import Contest from '../contest/contest.model';
 import NFLPlayer from '../nflplayer/nflplayer.model';
+import User from '../user/user.model';
 
 interface RosterModelType {
   type: DataTypes.IntegerDataTypeConstructor,

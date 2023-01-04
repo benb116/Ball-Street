@@ -5,20 +5,16 @@
 import Queue from 'bull';
 
 import { ProtectionDelay } from '../config';
-
+import { queueOptions } from '../db/redis';
+import Offer from '../features/offer/offer.model';
 import logger from '../utilities/logger';
 
-import { queueOptions } from '../db/redis';
-
 import protectedMatch from './live/channels/protectedMatch.channel';
-
+import Book from './offer/book.offer';
+import { MatchPair } from './offer/evaluate.offer';
+import evalProtected from './offer/protected.offer';
 import fillOffers from './offer/trader.offer';
 import { getBook, updateBest } from './offer/util.offer';
-import evalProtected from './offer/protected.offer';
-import Book from './offer/book.offer';
-
-import Offer from '../features/offer/offer.model';
-import { MatchPair } from './offer/evaluate.offer';
 
 const offerQueue = new Queue('offer-queue', queueOptions);
 const protectedQueue = new Queue('protected-queue', queueOptions);

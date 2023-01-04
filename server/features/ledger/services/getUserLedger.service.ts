@@ -1,6 +1,6 @@
 import Joi from 'joi';
-import { LedgerEntryJoinedKindType } from '../../../../types/api/account.api';
 
+import { LedgerEntryJoinedKindType } from '../../../../types/api/account.api';
 import { validate } from '../../util/util';
 import validators from '../../util/util.schema';
 import errorHandler, { ServiceInput } from '../../util/util.service';

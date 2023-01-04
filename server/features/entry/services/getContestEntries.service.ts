@@ -1,12 +1,11 @@
 import Joi from 'joi';
+
 import { EntryType } from '../../../../types/api/entry.api';
 import { RosterPositions } from '../../../../types/rosterinfo';
 import projprice from '../../../db/redis/projprice.redis';
-
 import { validate } from '../../util/util';
 import validators from '../../util/util.schema';
 import errorHandler, { ServiceInput } from '../../util/util.service';
-
 import Entry from '../entry.model';
 
 const schema = Joi.object({

@@ -1,4 +1,5 @@
 import BaseAPI from '../../../helpers/api';
+
 import type { EntryType, PreTradeQueryType, ReorderQueryType } from '../../../../../types/api/entry.api';
 
 const EntryAPI = BaseAPI.injectEndpoints({

@@ -2,12 +2,11 @@ import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import Entry from './Entry/Entry';
-import Trades from './Trades/Trades';
-import Players from './Players/Players';
-import Offers from './Offers/Offers';
 import Leaderboard from './Leaderboard/Leaderboard';
 import OfferModal from './Modal/Modal';
-
+import Offers from './Offers/Offers';
+import Players from './Players/Players';
+import Trades from './Trades/Trades';
 import initWS from './ws';
 
 function Dashboard() {

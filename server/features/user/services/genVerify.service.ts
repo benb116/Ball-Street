@@ -1,13 +1,11 @@
 import cryptoRandomString from 'crypto-random-string';
 import Joi from 'joi';
 
+import { GenVerifyOutput } from '../../../../types/api/user.api';
 import { CallbackURL, verificationTimeout, verificationTokenLength } from '../../../config';
-
+import emailVer from '../../../db/redis/emailVer.redis';
 import { validate, uError } from '../../util/util';
 import validators from '../../util/util.schema';
-
-import emailVer from '../../../db/redis/emailVer.redis';
-import { GenVerifyOutput } from '../../../../types/api/user.api';
 
 const schema = Joi.object({
   id: validators.user,

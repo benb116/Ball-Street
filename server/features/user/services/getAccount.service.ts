@@ -1,10 +1,9 @@
 import Joi from 'joi';
 
+import { AccountOutput } from '../../../../types/api/account.api';
 import { validate, uError } from '../../util/util';
 import validators from '../../util/util.schema';
 import { ServiceInput } from '../../util/util.service';
-import { AccountOutput } from '../../../../types/api/account.api';
-
 import User from '../user.model';
 
 const schema = Joi.object({

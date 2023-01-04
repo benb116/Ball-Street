@@ -1,7 +1,8 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { Provider } from 'react-redux';
 import { Toaster } from 'react-hot-toast';
+import { Provider } from 'react-redux';
+
 import App from './App';
 import { store } from './app/store';
 import * as serviceWorker from './serviceWorker';

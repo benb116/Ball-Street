@@ -2,9 +2,9 @@ import express from 'express';
 
 import routeHandler from '../util/util.route';
 
+import createEntry from './services/createEntry.service';
 import getContestEntries from './services/getContestEntries.service';
 import getEntry from './services/getEntry.service';
-import createEntry from './services/createEntry.service';
 import reorderRoster from './services/reorderRoster.service';
 
 const router = express.Router({ mergeParams: true });

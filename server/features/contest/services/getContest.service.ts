@@ -1,12 +1,11 @@
 import Joi from 'joi';
 
+import getEntryRank from '../../entry/services/getEntryRank.service';
 import { validate, uError } from '../../util/util';
 import validators from '../../util/util.schema';
 import { ServiceInput } from '../../util/util.service';
-
-import getEntryRank from '../../entry/services/getEntryRank.service';
-
 import Contest from '../contest.model';
+
 import type { ContestWithEntryType } from '../../../../types/api/contest.api';
 
 const schema = Joi.object({

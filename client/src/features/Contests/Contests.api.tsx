@@ -1,4 +1,5 @@
 import BaseAPI from '../../helpers/api';
+
 import type { ContestItemType } from '../../../../types/api/contest.api';
 import type { EntryType } from '../../../../types/api/entry.api';
 

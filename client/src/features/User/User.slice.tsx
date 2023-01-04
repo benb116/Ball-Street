@@ -1,11 +1,13 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
+
 import { LedgerEntryJoinedKindType } from '../../../../types/api/account.api';
+import { ErrHandler } from '../../helpers/util';
+
+import UserAPI from './User.api';
 
 import type { RootState } from '../../app/store';
-import { ErrHandler } from '../../helpers/util';
-import UserAPI from './User.api';
 
 interface UserState {
   info: {

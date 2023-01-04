@@ -3,8 +3,8 @@ import Joi from 'joi';
 import { validate } from '../../util/util';
 import validators from '../../util/util.schema';
 import errorHandler, { ServiceInput } from '../../util/util.service';
-
 import Contest from '../contest.model';
+
 import type { ContestItemType } from '../../../../types/api/contest.api';
 
 const schema = Joi.object({

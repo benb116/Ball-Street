@@ -3,10 +3,11 @@
 import Sequelize, {
   Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes, NonAttribute, Association,
 } from 'sequelize';
-import sequelize from '../../db';
 
-import User from '../user/user.model';
+import sequelize from '../../db';
 import Contest from '../contest/contest.model';
+import User from '../user/user.model';
+
 import LedgerKind from './ledgerKind.model';
 
 class LedgerEntry extends Model<InferAttributes<LedgerEntry>, InferCreationAttributes<LedgerEntry>> {

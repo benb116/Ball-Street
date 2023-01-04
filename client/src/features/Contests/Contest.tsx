@@ -1,17 +1,17 @@
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 import { useAppSelector } from '../../app/hooks';
 import { RenderPrice } from '../../helpers/util';
 
-import { contestSelector, myEntrySelector } from './Contests.slice';
 import {
+  useCreateEntryMutation,
   useGetContestQuery,
   useGetEntriesQuery,
   useGetEntryQuery,
-  useCreateEntryMutation,
 } from './Contests.api';
+import { contestSelector, myEntrySelector } from './Contests.slice';
 
 import type { EntryItemType } from '../../../../types/api/entry.api';
 

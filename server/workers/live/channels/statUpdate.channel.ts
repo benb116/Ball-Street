@@ -1,8 +1,7 @@
-import type { PlayerValType } from '../../../../types/messages/statUpdate.message';
-
+import { client } from '../../../db/redis';
 import { sendToAll } from '../socket.live';
 
-import { client } from '../../../db/redis';
+import type { PlayerValType } from '../../../../types/messages/statUpdate.message';
 
 const statUpdate = {
   pub: function pub(obj: Record<number, PlayerValType>) {

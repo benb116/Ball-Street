@@ -1,28 +1,28 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable no-nested-ternary */
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { useAppSelector, useAppDispatch } from '../../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import {
+  FlexNFLPositionId, NFLPosIDType, NFLPosTypes, Roster, RosterPosIDType,
+} from '../../../helpers/config';
 import { ActionButton, RenderPrice } from '../../../helpers/util';
-
+import { setModal } from '../Modal/Modal.slice';
+import { useCancelOfferMutation } from '../Offers/Offers.api';
+import { offersSelector } from '../Offers/Offers.slice';
 import {
   allTeamsSelector,
   playerSelector,
   priceMapSelector,
 } from '../Players/Players.slice';
-import { rposSelector, selectRPos } from './Entry.slice';
-import { offersSelector } from '../Offers/Offers.slice';
-import { setModal } from '../Modal/Modal.slice';
-import { usePreDropMutation, useReorderRosterMutation } from './Entry.api';
 
-import {
-  FlexNFLPositionId, NFLPosIDType, NFLPosTypes, Roster, RosterPosIDType,
-} from '../../../helpers/config';
+import { usePreDropMutation, useReorderRosterMutation } from './Entry.api';
+import { rposSelector, selectRPos } from './Entry.slice';
+
 import type { OfferItemType } from '../../../../../types/api/offer.api';
-import { useCancelOfferMutation } from '../Offers/Offers.api';
 import type { RPosType } from '../../../../../types/rosterinfo';
 
 // Show a specific row in the roster table

@@ -1,14 +1,13 @@
-import { Op } from 'sequelize';
 import Joi from 'joi';
+import { Op } from 'sequelize';
 
+import { EntryType } from '../../../../types/api/entry.api';
 import { isUError, validate } from '../../util/util';
 import validators from '../../util/util.schema';
 import { ServiceInput } from '../../util/util.service';
+import Entry from '../entry.model';
 
 import getEntry from './getEntry.service';
-
-import Entry from '../entry.model';
-import { EntryType } from '../../../../types/api/entry.api';
 
 const schema = Joi.object({
   user: validators.user,

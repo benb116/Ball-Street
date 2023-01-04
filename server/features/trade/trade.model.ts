@@ -1,8 +1,8 @@
 import {
   Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes, NonAttribute, Association,
 } from 'sequelize';
-import sequelize from '../../db';
 
+import sequelize from '../../db';
 import Offer from '../offer/offer.model';
 
 export interface TradeType {

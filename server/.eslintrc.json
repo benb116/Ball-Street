@@ -37,16 +37,7 @@
         }],
         "max-len": ["error", { "code": 120, "tabWidth": 2, "ignoreComments": true }],
         "@typescript-eslint/lines-between-class-members": "off",
-        "sort-imports": [
-            "error",
-            {
-              "ignoreCase": false,
-              "ignoreDeclarationSort": true, // don"t want to sort import lines, use eslint-plugin-import instead
-              "ignoreMemberSort": false,
-              "memberSyntaxSortOrder": ["none", "all", "multiple", "single"],
-              "allowSeparatedGroups": true
-            }
-        ],
+        "@typescript-eslint/dot-notation": "off",
         // turn on errors for missing imports
         "import/no-unresolved": "error",
         // "import/no-named-as-default-member": "off",

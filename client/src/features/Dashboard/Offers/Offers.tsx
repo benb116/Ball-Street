@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { useAppSelector } from '../../../app/hooks';
-
 import { allTeamsSelector, playerSelector } from '../Players/Players.slice';
-import { offersSelector } from './Offers.slice';
+
 import { useCancelOfferMutation, useGetOffersQuery } from './Offers.api';
+import { offersSelector } from './Offers.slice';
 
 import type { OfferItemType } from '../../../../../types/api/offer.api';
 

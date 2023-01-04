@@ -1,9 +1,8 @@
+import Offer from '../../features/offer/offer.model';
+import ProtectedMatch from '../../features/protectedmatch/protectedmatch.model';
 import logger from '../../utilities/logger';
 
 import evaluateFn from './evaluate.offer';
-
-import Offer from '../../features/offer/offer.model';
-import ProtectedMatch from '../../features/protectedmatch/protectedmatch.model';
 
 export type LimitMap = Map<string, Offer>;
 type LimitTree = Record<string, LimitMap>;

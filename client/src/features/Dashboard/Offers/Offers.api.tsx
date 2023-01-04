@@ -1,5 +1,6 @@
 import BaseAPI from '../../../helpers/api';
-import type { OfferItemType, CreateOfferQueryType, CancelOfferQueryType } from '../../../../../types/api/offer.api';
+
+import type { CancelOfferQueryType, CreateOfferQueryType, OfferItemType } from '../../../../../types/api/offer.api';
 
 const OffersAPI = BaseAPI.injectEndpoints({
   endpoints: (build) => ({

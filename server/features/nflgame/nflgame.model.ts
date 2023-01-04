@@ -4,9 +4,9 @@
 import {
   Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes, NonAttribute, Association,
 } from 'sequelize';
-import sequelize from '../../db';
-import { gamePhases, GamePhaseType } from '../../../types/rosterinfo';
 
+import { gamePhases, GamePhaseType } from '../../../types/rosterinfo';
+import sequelize from '../../db';
 import NFLTeam from '../nflteam/nflteam.model';
 
 class NFLGame extends Model<InferAttributes<NFLGame>, InferCreationAttributes<NFLGame>> {

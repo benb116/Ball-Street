@@ -1,13 +1,11 @@
 import cryptoRandomString from 'crypto-random-string';
 import Joi from 'joi';
 
+import { GenPassResetInput, inputGenPassReset } from '../../../../types/api/user.api';
 import { CallbackURL, verificationTimeout, verificationTokenLength } from '../../../config';
-
+import passReset from '../../../db/redis/passReset.redis';
 import { validate, uError } from '../../util/util';
 import validators from '../../util/util.schema';
-
-import passReset from '../../../db/redis/passReset.redis';
-import { GenPassResetInput, inputGenPassReset } from '../../../../types/api/user.api';
 
 const schema = Joi.object({
   email: validators.email,

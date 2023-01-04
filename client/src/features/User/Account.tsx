@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { Link } from 'react-router-dom';
 
+import { DepositWithdrawType, LedgerEntryJoinedKindType } from '../../../../types/api/account.api';
 import { useAppSelector } from '../../app/hooks';
 
 import {
@@ -12,7 +13,6 @@ import {
   useWithdrawMutation,
 } from './User.api';
 import { userSelector } from './User.slice';
-import { DepositWithdrawType, LedgerEntryJoinedKindType } from '../../../../types/api/account.api';
 
 function Account() {
   const { register, handleSubmit } = useForm<DepositWithdrawType>();

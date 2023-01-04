@@ -1,15 +1,14 @@
 import { Transaction } from 'sequelize';
-import { profitFeePercentage } from '../../../config';
+
 import { ledgerKinds, RosterPositions } from '../../../../types/rosterinfo';
+import { profitFeePercentage } from '../../../config';
 import sequelize from '../../../db';
-import Contest from '../contest.model';
+import Entry from '../../entry/entry.model';
 import LedgerEntry from '../../ledger/ledgerEntry.model';
 import User from '../../user/user.model';
-
 import { tobj, uError, validate } from '../../util/util';
 import validators from '../../util/util.schema';
-
-import Entry from '../../entry/entry.model';
+import Contest from '../contest.model';
 
 /** Pay out prizes to all users with entries in a contest. Take fees as defined */
 async function payoutContest(rawcontestID: number) {

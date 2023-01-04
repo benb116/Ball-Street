@@ -1,12 +1,12 @@
 import { store } from '../../app/store';
+import API from '../../helpers/api';
 
-import type MessageType from '../../../../types/messages';
-
-import { setPhase, updatePrices, setInjury } from './Players/Players.slice';
-import { removeOffer, alertProtMatch } from './Offers/Offers.slice';
 import { offerFilled } from './Entry/Entry.slice';
 import { updateAverage } from './Leaderboard/Leaderboard.slice';
-import API from '../../helpers/api';
+import { alertProtMatch, removeOffer } from './Offers/Offers.slice';
+import { setInjury, setPhase, updatePrices } from './Players/Players.slice';
+
+import type MessageType from '../../../../types/messages';
 
 // Init WS connection and dispatch actions based on events
 const initWS = (contestID: string) => {

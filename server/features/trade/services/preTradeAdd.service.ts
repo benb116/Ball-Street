@@ -1,14 +1,12 @@
 import Joi from 'joi';
 
+import { preTradeInput, PreTradeInputType } from '../../../../types/api/entry.api';
 import sequelize from '../../../db';
-
 import { validate } from '../../util/util';
 import validators from '../../util/util.schema';
 import errorHandler, { ServiceInput } from '../../util/util.service';
 
 import tradeAdd from './tradeAdd.service';
-
-import { preTradeInput, PreTradeInputType } from '../../../../types/api/entry.api';
 
 const bodySchema = Joi.object().keys({
   nflplayerID: validators.nflplayerID,

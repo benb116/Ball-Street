@@ -4,7 +4,6 @@ import { Transaction } from 'sequelize';
 import {
   FlexNFLPositionId, NFLPosIDType, NFLPosTypes, Roster, RosterPositions, RPosType,
 } from '../../../types/rosterinfo';
-
 import Entry from '../entry/entry.model';
 
 // Return whether a player type (number) cannot be put into a specific roster position
@@ -61,7 +60,6 @@ export interface UError extends Error {
 /** Custom error function that returns a msg and http status */
 export const uError = function uError(msg: string, status = 500) {
   const uerr: UError = { name: msg, message: msg, status };
-  throw uerr;
   return uerr;
 };
 

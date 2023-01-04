@@ -1,4 +1,5 @@
 import Contest from '../contest.model';
+
 import type { ContestItemType } from '../../../../types/api/contest.api';
 
 /** Get all contests */

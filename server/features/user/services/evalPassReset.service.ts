@@ -1,14 +1,12 @@
 import bcrypt from 'bcryptjs';
 import Joi from 'joi';
 
+import { EvalPassResetInput, inputEvalPassReset } from '../../../../types/api/user.api';
 import { verificationTokenLength } from '../../../config';
-
+import passReset from '../../../db/redis/passReset.redis';
 import { validate, uError, OnCompare } from '../../util/util';
 import validators from '../../util/util.schema';
-
 import User from '../user.model';
-import passReset from '../../../db/redis/passReset.redis';
-import { EvalPassResetInput, inputEvalPassReset } from '../../../../types/api/user.api';
 
 const schema = Joi.object({
   token: Joi.string().length(verificationTokenLength).required().messages({
