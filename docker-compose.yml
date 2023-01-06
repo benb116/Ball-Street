@@ -38,7 +38,7 @@ services:
             - db
             - redis
         command: 
-            node dist/workers/api.worker.js # nodemon for restart in debugging
+            node dist/app/workers/api.worker.js # nodemon for restart in debugging
         volumes:
             - /home/node/app/node_modules
             - ./server/logs/api:/home/node/app/logs
@@ -58,7 +58,7 @@ services:
             - redis
         restart: always
         command: 
-            node dist/workers/leader.worker.js
+            node dist/app/workers/leader.worker.js
         volumes:
             - /home/node/app/node_modules
             - ./server/logs/leader:/home/node/app/logs
@@ -78,7 +78,7 @@ services:
             - redis
         restart: always
         command: 
-            node dist/workers/offer.worker.js
+            node dist/app/workers/offer.worker.js
         volumes:
             - /home/node/app/node_modules
             - ./server/logs/offer:/home/node/app/logs
@@ -97,7 +97,7 @@ services:
             - redis
         restart: always
         command: 
-            node dist/workers/live.worker.js
+            node dist/app/workers/live.worker.js
         volumes:
             - /home/node/app/node_modules
             - ./server/logs/live:/home/node/app/logs
@@ -117,7 +117,7 @@ services:
             - redis
         restart: always
         command: 
-            node dist/workers/nfl.worker.js
+            node dist/app/workers/nfl.worker.js
         volumes:
             - /home/node/app/node_modules
             - ./server/logs/nfl:/home/node/app/logs
