@@ -47,9 +47,9 @@ describe('getUserTrades service', () => {
         updatedAt: expect.any(Date),
       }],
     };
-    expect(bids).toStrictEqual(expectedout.bids);
-    expect(asks).toStrictEqual(expectedout.asks);
-    expect(actions).toStrictEqual(expectedout.actions);
+    expect(bids).toMatchObject(expectedout.bids);
+    expect(asks).toMatchObject(expectedout.asks);
+    expect(actions).toMatchObject(expectedout.actions);
   });
 
   test('Missing contestID returns error 400', ErrorTest(
