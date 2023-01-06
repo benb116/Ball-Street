@@ -106,8 +106,7 @@ async function tradeAdd(req: TradeAddInput, t: Transaction) {
   } else {
     tradeprice = value.body.price;
   }
-
-  if (tradeprice > pts) { uError("User doesn't have enough points", 402); }
+  if (tradeprice > pts) { throw uError("User doesn't have enough points", 402); }
 
   // Deduct cost from points
   theentry.set({

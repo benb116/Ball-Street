@@ -25,7 +25,7 @@ async function getNFLPlayer(req: GetNFLPlayerInput) {
   const value: GetNFLPlayerInput = validate(req, schema);
 
   const theplayer = await NFLPlayer.findByPk(value.params.nflplayerID);
-  if (!theplayer || !theplayer.active) { uError('No player found', 404); }
+  if (!theplayer || !theplayer.active) { throw uError('No player found', 404); }
   return theplayer;
 }
 
