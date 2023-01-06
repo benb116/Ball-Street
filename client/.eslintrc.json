@@ -4,6 +4,9 @@
         "es2021": true,
         "jest/globals": true
     },
+    "globals": {
+        "JSX": true
+    },
     "extends": [
         "plugin:security/recommended",
         "plugin:node/recommended",
@@ -11,7 +14,8 @@
         "airbnb-typescript",
         "eslint:recommended",
         "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended"
+        "plugin:@typescript-eslint/recommended",
+        "eslint:recommended"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -36,6 +40,41 @@
             "tryExtensions": [".js", ".json", ".node", ".ts", ".tsx"]
         }],
         "max-len": ["error", { "code": 150, "tabWidth": 2, "ignoreComments": true }],
-        "react/jsx-props-no-spreading": "off"
+        "react/jsx-props-no-spreading": "off",
+        "sort-imports": [
+            "error",
+            {
+              "ignoreCase": false,
+              "ignoreDeclarationSort": true, // don"t want to sort import lines, use eslint-plugin-import instead
+              "ignoreMemberSort": false,
+              "memberSyntaxSortOrder": ["none", "all", "multiple", "single"],
+              "allowSeparatedGroups": true
+            }
+        ],
+        // turn on errors for missing imports
+        "import/no-unresolved": "error",
+        // "import/no-named-as-default-member": "off",
+        "import/order": [
+            "warn",
+            {
+                "groups": [
+                    ["builtin", "external"], 
+                    "internal", 
+                    "parent", 
+                    "sibling",
+                    "index", 
+                    "unknown",
+                    "type"
+                ],
+                "newlines-between": "always",
+                "alphabetize": {
+                    /* sort in ascending order. Options: ["ignore", "asc", "desc"] */
+                    "order": "asc",
+                    /* ignore case. Options: [true, false] */
+                    "caseInsensitive": true
+                }
+            }
+        ]
     }
-}
+  }
+  

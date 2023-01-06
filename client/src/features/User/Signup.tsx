@@ -1,14 +1,15 @@
 import React from 'react';
-import { Link, Navigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { Link, Navigate } from 'react-router-dom';
 
-import { useSignupMutation } from './User.api';
-import { SignupInputType } from './User.types';
-import { userSelector } from './User.slice';
+import { SignupInput } from '../../../../types/api/user.api';
 import { useAppSelector } from '../../app/hooks';
 
+import { useSignupMutation } from './User.api';
+import { userSelector } from './User.slice';
+
 function Signup() {
-  const { register, handleSubmit } = useForm<SignupInputType>();
+  const { register, handleSubmit } = useForm<SignupInput>();
   const { id } = useAppSelector(userSelector);
 
   const [signup] = useSignupMutation();

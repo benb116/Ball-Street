@@ -1,27 +1,17 @@
-export const NFLPosTypes = {
-  1: { name: 'QB', canflex: false },
-  2: { name: 'RB', canflex: true },
-  3: { name: 'WR', canflex: true },
-  4: { name: 'TE', canflex: true },
-  5: { name: 'K', canflex: false },
-  6: { name: 'DEF', canflex: false },
-  99: { name: 'FLEX', canflex: true },
-} as const;
-export type NFLPosType = keyof typeof NFLPosTypes;
+import { TeamIDType } from "../nflinfo";
+import { NFLPosIDType, RosterPosKindType } from "../rosterinfo";
 
 export interface PlayerItemType {
   id: number,
   name: string,
-  posName?: string,
-  NFLTeamId: number,
-  NFLPositionId: NFLPosType,
+  posName?: RosterPosKindType,
+  NFLTeamId: TeamIDType,
+  NFLPositionId: NFLPosIDType,
   injuryStatus?: string | null,
-  preprice: number,
-  postprice: number,
-  projPrice: number,
-  statPrice: number,
-  NFLTeam: {
-    gamePhase: string,
+  preprice: number | null,
+  postprice: number | null, 
+  NFLTeam?: {
+    gamePhase: PhaseType,
   },
 }
 

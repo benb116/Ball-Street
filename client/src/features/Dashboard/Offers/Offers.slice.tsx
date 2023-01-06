@@ -2,11 +2,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
 
-import type { RootState } from '../../../app/store';
 import { ErrHandler } from '../../../helpers/util';
+
 import OffersAPI from './Offers.api';
 
-import { OfferItemType } from './Offers.types';
+import type { OfferItemType } from '../../../../../types/api/offer.api';
+import type { RootState } from '../../../app/store';
 
 interface OfferState {
   bids: OfferItemType[],
@@ -31,7 +32,7 @@ export const offersSlice = createSlice({
       state.asks = state.asks.filter((o) => o.id !== payload);
     },
     // When a protected match comes in, update the offer's expiration
-    alertProtMatch: (state, { payload }) => {
+    alertProtMatch: (state, { payload }: { payload: { offerID: string, expire: number } }) => {
       state.bids.forEach((o) => {
         if (o.id === payload.offerID) { o.expire = payload.expire; }
       });

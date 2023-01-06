@@ -1,8 +1,7 @@
-import service from '../services/genVerify.service';
-import { ErrorTest } from '../../util/util.tests';
-
-import { client } from '../../../db/redis';
 import { verificationTokenLength } from '../../../config';
+import { client } from '../../../db/redis';
+import { ErrorTest } from '../../util/util.tests';
+import service from '../services/genVerify.service';
 
 describe('genVerify service', () => {
   test('Valid request returns confirmation and redis key', async () => {

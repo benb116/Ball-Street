@@ -1,5 +1,5 @@
-import service from '../services/createOffer.service';
 import { ErrorTest, ObjectTest } from '../../util/util.tests';
+import service from '../services/createOffer.service';
 
 describe('createOffer service', () => {
   test('Valid request returns data', ObjectTest(
@@ -8,11 +8,9 @@ describe('createOffer service', () => {
       user: 1,
       params: { contestID: 2 },
       body: {
-        offerobj: {
-          nflplayerID: 31885,
-          isbid: false,
-          price: 2000,
-        },
+        nflplayerID: 31885,
+        isbid: false,
+        price: 2000,
       },
     },
     {
@@ -37,11 +35,9 @@ describe('createOffer service', () => {
       user: 2,
       params: { contestID: 2 },
       body: {
-        offerobj: {
-          nflplayerID: 31885,
-          isbid: false,
-          price: 2000,
-        },
+        nflplayerID: 31885,
+        isbid: false,
+        price: 2000,
       },
     },
     406,
@@ -54,11 +50,9 @@ describe('createOffer service', () => {
       user: 1,
       params: { contestID: 2 },
       body: {
-        offerobj: {
-          nflplayerID: 31221,
-          isbid: true,
-          price: 20000,
-        },
+        nflplayerID: 31221,
+        isbid: true,
+        price: 20000,
       },
     },
     402,
@@ -71,11 +65,9 @@ describe('createOffer service', () => {
       user: 1,
       params: { contestID: 2 },
       body: {
-        offerobj: {
-          nflplayerID: 99999,
-          isbid: true,
-          price: 1000,
-        },
+        nflplayerID: 99999,
+        isbid: true,
+        price: 1000,
       },
     },
     404,
@@ -88,11 +80,9 @@ describe('createOffer service', () => {
       user: 1,
       params: { contestID: 2 },
       body: {
-        offerobj: {
-          nflplayerID: 30266,
-          isbid: true,
-          price: 2000,
-        },
+        nflplayerID: 30266,
+        isbid: true,
+        price: 2000,
       },
     },
     409,
@@ -105,11 +95,9 @@ describe('createOffer service', () => {
       user: 1,
       params: { contestID: 2 },
       body: {
-        offerobj: {
-          nflplayerID: 31221,
-          isbid: false,
-          price: 2000,
-        },
+        nflplayerID: 31221,
+        isbid: false,
+        price: 2000,
       },
     },
     404,
@@ -122,11 +110,9 @@ describe('createOffer service', () => {
       user: 1,
       params: { contestID: 2 },
       body: {
-        offerobj: {
-          nflplayerID: 28378,
-          isbid: true,
-          price: 200,
-        },
+        nflplayerID: 28378,
+        isbid: true,
+        price: 200,
       },
     },
     409,
@@ -139,11 +125,9 @@ describe('createOffer service', () => {
       user: 4,
       params: { contestID: 2 },
       body: {
-        offerobj: {
-          nflplayerID: 31885,
-          isbid: false,
-          price: 2000,
-        },
+        nflplayerID: 31885,
+        isbid: false,
+        price: 2000,
       },
     },
     404,
@@ -156,11 +140,9 @@ describe('createOffer service', () => {
       user: 1,
       params: { },
       body: {
-        offerobj: {
-          nflplayerID: 31885,
-          isbid: false,
-          price: 2000,
-        },
+        nflplayerID: 31885,
+        isbid: false,
+        price: 2000,
       },
     },
     400,
@@ -172,11 +154,9 @@ describe('createOffer service', () => {
     {
       params: { contestID: 2 },
       body: {
-        offerobj: {
-          nflplayerID: 31885,
-          isbid: false,
-          price: 2000,
-        },
+        nflplayerID: 31885,
+        isbid: false,
+        price: 2000,
       },
     },
     400,
@@ -189,11 +169,9 @@ describe('createOffer service', () => {
       user: 2,
       params: { contestID: 2 },
       body: {
-        offerobj: {
-          nflplayerID: 32231,
-          isbid: true,
-          price: 200,
-        },
+        nflplayerID: 32231,
+        isbid: true,
+        price: 200,
       },
     },
     406,

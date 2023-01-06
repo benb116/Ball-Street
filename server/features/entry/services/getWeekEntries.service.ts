@@ -1,6 +1,6 @@
-import Entry from '../entry.model';
 import Contest from '../../contest/contest.model';
 import User from '../../user/user.model';
+import Entry from '../entry.model';
 
 /** Get all entries across all of this week's contests */
 async function getWeekEntries() {
@@ -10,7 +10,7 @@ async function getWeekEntries() {
       {
         model: Contest,
         where: {
-          nflweek: Number(process.env.WEEK),
+          nflweek: Number(process.env['WEEK']),
         },
       },
     ],

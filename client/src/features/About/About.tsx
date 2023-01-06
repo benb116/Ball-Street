@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { useAppSelector, useAppDispatch } from '../../app/hooks';
-import { userSelector, clearState } from '../User/User.slice';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { clearState, userSelector } from '../User/User.slice';
 
 function About() {
   const dispatch = useAppDispatch();

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { Link } from 'react-router-dom';
 
+import { DepositWithdrawType, LedgerEntryJoinedKindType } from '../../../../types/api/account.api';
 import { useAppSelector } from '../../app/hooks';
 
 import {
@@ -12,7 +13,6 @@ import {
   useWithdrawMutation,
 } from './User.api';
 import { userSelector } from './User.slice';
-import { DepositWithdrawType, LedgerEntryJoinedType } from './User.types';
 
 function Account() {
   const { register, handleSubmit } = useForm<DepositWithdrawType>();
@@ -53,12 +53,14 @@ function Account() {
       <div id="Transactions" style={{ display: 'inline-block', verticalAlign: 'top', margin: '3em' }}>
         <h4>Transactions</h4>
         <table>
-          <tr>
-            <th style={{ width: '15em' }}>Date</th>
-            <th style={{ width: '10em' }}>Description</th>
-            <th style={{ width: '5em' }}>Amount</th>
-          </tr>
-          {ledger.map((entry) => <LedgerEntry key={entry.id} entrydata={entry} />)}
+          <tbody>
+            <tr>
+              <th style={{ width: '15em' }}>Date</th>
+              <th style={{ width: '10em' }}>Description</th>
+              <th style={{ width: '5em' }}>Amount</th>
+            </tr>
+            {ledger.map((entry) => <LedgerEntry key={entry.id} entrydata={entry} />)}
+          </tbody>
         </table>
         Page
         {' '}
@@ -118,7 +120,7 @@ function Account() {
   );
 }
 
-function LedgerEntry({ entrydata }: { entrydata: LedgerEntryJoinedType }) {
+function LedgerEntry({ entrydata }: { entrydata: LedgerEntryJoinedKindType }) {
   return (
     <tr>
       <td>

@@ -1,4 +1,5 @@
 import logger from '../../utilities/logger';
+
 import { isUError, uError } from './util';
 
 interface ErrorRespType {
@@ -36,12 +37,12 @@ export default function errorHandler(responseMap: ResponseMapType) {
     if (isSeqError(err)) {
       const errmess = err.parent?.constraint;
       const out = responseMap[errmess];
-      if (out) return uError(out.message, out.status);
+      if (out) throw uError(out.message, out.status);
     }
 
     logger.error(`Unknown error: ${err}`);
     const outmess = (responseMap.default || 'Unexpected error');
-    return uError(outmess.message, (outmess.status || 500));
+    throw uError(outmess.message, (outmess.status || 500));
   };
 }
 

@@ -1,5 +1,5 @@
-import service from '../services/preTradeAdd.service';
 import { ErrorTest, ObjectTest } from '../../util/util.tests';
+import service from '../services/preTradeAdd.service';
 
 describe('preTradeAdd service', () => {
   test('Valid request returns data', ObjectTest(
@@ -9,7 +9,6 @@ describe('preTradeAdd service', () => {
       params: { contestID: 2 },
       body: {
         nflplayerID: 17,
-        rosterposition: 'DEF1',
       },
     },
     {
@@ -39,7 +38,6 @@ describe('preTradeAdd service', () => {
       params: { contestID: 2 },
       body: {
         nflplayerID: 31885,
-        rosterposition: 'RB1',
       },
     },
     406,
@@ -53,7 +51,6 @@ describe('preTradeAdd service', () => {
       params: { contestID: 2 },
       body: {
         nflplayerID: 27631,
-        rosterposition: 'RB1',
         price: 100,
       },
     },
@@ -68,25 +65,10 @@ describe('preTradeAdd service', () => {
       params: { contestID: 2 },
       body: {
         nflplayerID: 27648,
-        rosterposition: 'FLEX1',
       },
     },
     402,
     "User doesn't have enough points",
-  ));
-
-  test('Player in spot returns error 406', ErrorTest(
-    service,
-    {
-      user: 1,
-      params: { contestID: 2 },
-      body: {
-        nflplayerID: 31199,
-        rosterposition: 'K1',
-      },
-    },
-    406,
-    'There is a player in that spot',
   ));
 
   test('No open spots returns error 406', ErrorTest(
@@ -109,7 +91,6 @@ describe('preTradeAdd service', () => {
       params: { contestID: 2 },
       body: {
         nflplayerID: 27648,
-        rosterposition: 'TE1',
       },
     },
     404,
@@ -123,7 +104,6 @@ describe('preTradeAdd service', () => {
       params: { },
       body: {
         nflplayerID: 27648,
-        rosterposition: 'TE1',
       },
     },
     400,
@@ -136,7 +116,6 @@ describe('preTradeAdd service', () => {
       params: { contestID: 2 },
       body: {
         nflplayerID: 27648,
-        rosterposition: 'TE1',
       },
     },
     400,
@@ -150,7 +129,6 @@ describe('preTradeAdd service', () => {
       params: { contestID: 1 },
       body: {
         nflplayerID: 31019,
-        rosterposition: 'TE1',
       },
     },
     406,

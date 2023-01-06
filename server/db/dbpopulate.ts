@@ -1,15 +1,15 @@
 // Set up example DB records for use in testing
-import logger from '../utilities/logger';
 
+import { EntryActionKinds, GamePhaseType, ledgerKinds } from '../../types/rosterinfo';
 import Contest from '../features/contest/contest.model';
 import Entry from '../features/entry/entry.model';
+import LedgerEntry from '../features/ledger/ledgerEntry.model';
 import NFLGame from '../features/nflgame/nflgame.model';
 import Offer from '../features/offer/offer.model';
+import EntryAction from '../features/trade/entryaction.model';
 import Trade from '../features/trade/trade.model';
 import User from '../features/user/user.model';
-import LedgerEntry from '../features/ledger/ledgerEntry.model';
-import { EntryActionKinds, GamePhaseType, ledgerKinds } from '../config';
-import EntryAction from '../features/trade/entryaction.model';
+import logger from '../utilities/logger';
 
 async function PopulateDB() {
   logger.info('Populating DB with initial data');
@@ -42,7 +42,7 @@ async function PopulateDB() {
   }));
   await LedgerEntry.bulkCreate(ledgerEntries);
 
-  const curweek = Number(process.env.WEEK);
+  const curweek = Number(process.env['WEEK']);
   // Define existing contest
   const con = {
     name: 'Ball Street Big One',

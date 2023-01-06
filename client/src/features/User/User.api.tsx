@@ -1,46 +1,50 @@
-import BaseAPI from '../../helpers/api';
 import {
-  AccountType,
+  AccountOutput,
   DepositWithdrawType,
-  ForgotType,
-  LedgerEntryJoinedType,
-  LoginInputType,
-  NewLedgerEntryType,
-  ResetInputType,
-  SignupInputType,
-  SignupType,
-} from './User.types';
+  LedgerEntryJoinedKindType,
+  LedgerEntryType,
+} from '../../../../types/api/account.api';
+import {
+  EvalPassResetInput,
+  GenPassResetInput,
+  GenVerifyOutput,
+  LoginInput,
+  LoginOutput,
+  SignupInput,
+} from '../../../../types/api/user.api';
+import BaseAPI from '../../helpers/api';
 
 const UserAPI = BaseAPI.injectEndpoints({
   endpoints: (build) => ({
-    getAccount: build.query<AccountType, void>({
-      query: () => '/auth/account',
-      providesTags: ['Account'],
-    }),
-    signup: build.mutation<SignupType, SignupInputType>({
+    signup: build.mutation<LoginOutput | GenVerifyOutput, SignupInput>({
       query: (body) => ({ url: '/auth/signup', method: 'POST', body }),
     }),
-    login: build.mutation<SignupType, LoginInputType>({
+    login: build.mutation<LoginOutput | GenVerifyOutput, LoginInput>({
       query: (body) => ({ url: '/auth/login', method: 'POST', body }),
     }),
-    forgot: build.mutation<void, ForgotType>({
+    forgot: build.mutation<void, GenPassResetInput>({
       query: (body) => ({ url: '/auth/forgot', method: 'POST', body }),
     }),
-    reset: build.mutation<void, ResetInputType>({
+    reset: build.mutation<void, EvalPassResetInput>({
       query: (body) => ({ url: '/auth/resetPasswordToken', method: 'POST', body }),
     }),
-    logout: build.mutation<void, void>({ query: () => ({ url: '/auth/logout', method: 'DELETE' }) }),
-    forcelogout: build.mutation<void, void>({ query: () => ({ url: '/auth/forcelogout', method: 'DELETE' }) }),
-    deposit: build.mutation<NewLedgerEntryType, DepositWithdrawType>({
-      query: (body) => ({ url: '/auth/deposit', method: 'POST', body }),
+
+    getAccount: build.query<AccountOutput, void>({
+      query: () => '/api/user/account',
+      providesTags: ['Account'],
+    }),
+    logout: build.mutation<void, void>({ query: () => ({ url: '/api/user/logout', method: 'DELETE' }) }),
+    forcelogout: build.mutation<void, void>({ query: () => ({ url: '/api/user/forcelogout', method: 'DELETE' }) }),
+    deposit: build.mutation<LedgerEntryType, DepositWithdrawType>({
+      query: (body) => ({ url: '/api/user/deposit', method: 'POST', body }),
       invalidatesTags: ['Account', 'Ledger'],
     }),
-    withdraw: build.mutation<NewLedgerEntryType, DepositWithdrawType>({
-      query: (body) => ({ url: '/auth/withdraw', method: 'POST', body }),
+    withdraw: build.mutation<LedgerEntryType, DepositWithdrawType>({
+      query: (body) => ({ url: '/api/user/withdraw', method: 'POST', body }),
       invalidatesTags: ['Account', 'Ledger'],
     }),
-    getUserLedger: build.query<LedgerEntryJoinedType[], number>({
-      query: (pagenum) => `/auth/ledger/${pagenum}`,
+    getUserLedger: build.query<LedgerEntryJoinedKindType[], number>({
+      query: (pagenum) => `/api/user/ledger/${pagenum}`,
       providesTags: ['Ledger'],
     }),
   }),

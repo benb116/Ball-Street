@@ -1,5 +1,6 @@
 import Joi from 'joi';
 
+import { LedgerEntryJoinedKindType } from '../../../../types/api/account.api';
 import { validate } from '../../util/util';
 import validators from '../../util/util.schema';
 import errorHandler, { ServiceInput } from '../../util/util.service';
@@ -30,7 +31,7 @@ interface GetUserLedgerInput extends ServiceInput {
 const paginationLimit = 10;
 
 /** Show the recent ledger entries for a user */
-function getUserLedger(req: GetUserLedgerInput) {
+function getUserLedger(req: GetUserLedgerInput): Promise<LedgerEntryJoinedKindType[]> {
   const value: GetUserLedgerInput = validate(req, schema);
   return LedgerEntry.findAll({
     where: { UserId: value.user },
@@ -43,7 +44,7 @@ function getUserLedger(req: GetUserLedgerInput) {
   })
     .catch(errorHandler({
       default: { message: 'Cannot retrieve transactions', status: 500 },
-    }));
+    })) as Promise<LedgerEntryJoinedKindType[]>;
 }
 
 export default getUserLedger;

@@ -1,20 +1,16 @@
 import cryptoRandomString from 'crypto-random-string';
 import Joi from 'joi';
 
+import { GenPassResetInput, inputGenPassReset } from '../../../../types/api/user.api';
 import { CallbackURL, verificationTimeout, verificationTokenLength } from '../../../config';
-
+import passReset from '../../../db/redis/passReset.redis';
 import { validate, uError } from '../../util/util';
 import validators from '../../util/util.schema';
-
-import passReset from '../../../db/redis/passReset.redis';
 
 const schema = Joi.object({
   email: validators.email,
 });
-
-interface GenPassResetInput {
-  email: string,
-}
+validate(inputGenPassReset, schema);
 
 /** Create and send a password reset email */
 async function genPassReset(req: GenPassResetInput) {
@@ -25,7 +21,7 @@ async function genPassReset(req: GenPassResetInput) {
     await passReset.set(rand, email, verificationTimeout * 60);
     return await sendPassResetEmail(email, rand);
   } catch (err) {
-    return uError('genPassReset Error', 406);
+    throw uError('genPassReset Error', 406);
   }
 }
 

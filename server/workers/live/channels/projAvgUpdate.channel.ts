@@ -1,9 +1,7 @@
-import liveState from '../state.live'; // Data stored in memory
-
-import { MessageMapType, sendToContests } from '../socket.live';
-
 import { client } from '../../../db/redis';
 import projAvg from '../../../db/redis/projAvg.redis';
+import { MessageMapType, sendToContests } from '../socket.live';
+import liveState from '../state.live'; // Data stored in memory
 
 const projAvgUpdate = {
   pub: function pub() {
@@ -16,7 +14,7 @@ const projAvgUpdate = {
     const allAvgs = await projAvg.get(allContests);
     const avgMsgMap = allContests.reduce((acc, cur, i) => {
       const thisAverage = allAvgs[i];
-      if (thisAverage === null) return acc;
+      if (thisAverage === null || thisAverage === undefined) return acc;
       acc[cur] = { event: 'contestAvg', average: thisAverage };
       return acc;
     }, {} as MessageMapType);

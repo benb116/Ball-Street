@@ -3,14 +3,13 @@
 // Submit random buy and sell orders from various users
 // Some protected some not
 
-import User from '../../features/user/user.model';
 import Contest from '../../features/contest/contest.model';
 import Entry from '../../features/entry/entry.model';
-
-import createOffer from '../../features/offer/services/createOffer.service';
-import Offer from '../../features/offer/offer.model';
-import logger from '../../utilities/logger';
 import getNFLPlayerOfferSummary from '../../features/nflplayer/services/getNFLPlayerOfferSummary.service';
+import Offer from '../../features/offer/offer.model';
+import createOffer from '../../features/offer/services/createOffer.service';
+import User from '../../features/user/user.model';
+import logger from '../../utilities/logger';
 
 const numUsers = 4000;
 
@@ -55,12 +54,10 @@ async function run() {
         contestID: thecontest.id,
       },
       body: {
-        offerobj: {
-          nflplayerID: 33443, // Player 1
-          isbid: (i % 2 !== 0), // alternate bid/ask
-          price: 1000 + Math.round(Math.random() * 10) * 100,
-          protected: Math.random() < 0.5, // random is protected
-        },
+        nflplayerID: 33443, // Player 1
+        isbid: (i % 2 !== 0), // alternate bid/ask
+        price: 1000 + Math.round(Math.random() * 10) * 100,
+        protected: Math.random() < 0.5, // random is protected
       },
     }).catch(logger.error);
     createOffer({
@@ -69,12 +66,10 @@ async function run() {
         contestID: thecontest.id,
       },
       body: {
-        offerobj: {
-          nflplayerID: 30157,
-          isbid: (i % 2 === 0),
-          price: 1000 + Math.round(Math.random() * 10) * 100,
-          protected: Math.random() < 0.5,
-        },
+        nflplayerID: 30157,
+        isbid: (i % 2 === 0),
+        price: 1000 + Math.round(Math.random() * 10) * 100,
+        protected: Math.random() < 0.5,
       },
     }).catch(logger.error);
   }

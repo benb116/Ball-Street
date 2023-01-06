@@ -1,14 +1,14 @@
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { useAppSelector } from '../../../app/hooks';
-
 import { playerSelector } from '../Players/Players.slice';
-import { tradesSelector } from './Trades.slice';
-import { useGetTradesQuery } from './Trades.api';
 
-import { TradeItemType } from './Trades.types';
+import { useGetTradesQuery } from './Trades.api';
+import { tradesSelector } from './Trades.slice';
+
+import type { TradeItemType } from '../../../../../types/api/trade.api';
 
 function Trades() {
   const { contestID } = useParams<{ contestID: string }>();

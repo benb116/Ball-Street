@@ -3,8 +3,8 @@
 
 import { Sequelize, Transaction } from 'sequelize';
 
-import logger from '../utilities/logger';
 import sec from '../secret';
+import logger from '../utilities/logger';
 
 let {
   DB_USER,
@@ -15,7 +15,7 @@ let {
 } = process.env;
 
 const dbOptions = {
-  logging: (process.env.NODE_ENV !== 'test' ? logger.verbose : false),
+  logging: (process.env['NODE_ENV'] !== 'test' ? logger.verbose : false),
   isolationLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED,
   // We can used Read Committed here because of how the DB is set up
   // Prevent nonrepeatable reads by using select for update (row-level lock)
@@ -24,7 +24,7 @@ const dbOptions = {
 
 // Pull DB information from secrets file when testing
 // since test doesn't run within docker, doesn't have env vars
-if (process.env.NODE_ENV === 'test' || !process.env.NODE_ENV) {
+if (process.env['NODE_ENV'] === 'test' || !process.env['NODE_ENV']) {
   // eslint-disable-next-line global-require
   DB_USER = sec.db.user;
   DB_PASS = sec.db.pass;
@@ -44,7 +44,7 @@ let backoffDelay = 1;
 async function testDB() {
   try {
     await sequelize.authenticate();
-    if (process.env.NODE_ENV !== 'test') {
+    if (process.env['NODE_ENV'] !== 'test') {
       logger.info('Database connection has been established successfully.');
     }
     backoffDelay = 1;

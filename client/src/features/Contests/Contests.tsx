@@ -1,13 +1,13 @@
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { useAppSelector } from '../../app/hooks';
 
-import { contestsSelector } from './Contests.slice';
 import { useGetContestsQuery } from './Contests.api';
+import { contestsSelector } from './Contests.slice';
 
-import { ContestItemType } from './Contests.types';
+import type { ContestItemType } from '../../../../types/api/contest.api';
 
 // Show info about all contests available
 function Contests() {

@@ -1,5 +1,5 @@
-import service from '../services/getContest.service';
 import { ErrorTest, ObjectTest } from '../../util/util.tests';
+import service from '../services/getContest.service';
 
 describe('getContest service', () => {
   test('Valid request returns data', ObjectTest(
@@ -9,11 +9,12 @@ describe('getContest service', () => {
       id: 1,
       budget: 10000,
       name: 'Ball Street Big One',
-      nflweek: Number(process.env.WEEK),
+      nflweek: Number(process.env['WEEK']),
       buyin: 2000,
       createdAt: expect.any(Date),
       updatedAt: expect.any(Date),
       entry: {
+        UserId: 1,
         pointtotal: 10000,
         rank: 1,
       },

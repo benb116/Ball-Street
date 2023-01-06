@@ -1,19 +1,20 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 
-import type { RootState } from '../../../app/store';
+import { NFLPosTypes } from '../../../helpers/config';
 import { ErrHandler } from '../../../helpers/util';
+
 import PlayersAPI from './Players.api';
 
-import {
+import type {
   GameItemType,
-  NFLPosTypes,
   PhaseType,
   PlayerItemType,
   PriceMapItemType,
   SortByType,
   TeamMapType,
-} from './Players.types';
+} from '../../../../../types/api/player.api';
+import type { RootState } from '../../../app/store';
 
 interface FilterType {
   name: string,
@@ -76,7 +77,6 @@ export const playersSlice = createSlice({
         const pm = state.priceMap[p.nflplayerID] || {};
         state.priceMap[p.nflplayerID] = { ...(pm), ...p }; // Overwrite old values
       });
-      // state = ns;
     },
     setPhase: (state, { payload }: { payload: { nflTeamID: number, gamePhase: PhaseType, } }) => { // Set the phase of a team to a new phase
       state.gamelist = state.gamelist.map((g) => {

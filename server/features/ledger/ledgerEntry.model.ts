@@ -1,12 +1,13 @@
 // An entry into the global transaction ledger
 
 import Sequelize, {
-  Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
+  Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes, NonAttribute, Association,
 } from 'sequelize';
-import sequelize from '../../db';
 
-import User from '../user/user.model';
+import sequelize from '../../db';
 import Contest from '../contest/contest.model';
+import User from '../user/user.model';
+
 import LedgerKind from './ledgerKind.model';
 
 class LedgerEntry extends Model<InferAttributes<LedgerEntry>, InferCreationAttributes<LedgerEntry>> {
@@ -17,6 +18,15 @@ class LedgerEntry extends Model<InferAttributes<LedgerEntry>, InferCreationAttri
   declare LedgerKindId: number;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
+
+  declare LedgerKind?: NonAttribute<LedgerKind>;
+  declare User?: NonAttribute<User>;
+  declare Contest?: NonAttribute<Contest>;
+  declare static associations: {
+    LedgerKind: Association<LedgerEntry, LedgerKind>;
+    User: Association<LedgerEntry, User>;
+    Contest: Association<LedgerEntry, Contest>;
+  };
 }
 
 LedgerEntry.init({

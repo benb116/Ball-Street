@@ -1,24 +1,20 @@
 // Leader worker
 // Calculates live leaderboards
 
-import { RosterPositions, RPosType } from '../config';
-
-import { onlyUnique } from '../features/util/util';
-
-import getNFLPlayers from '../features/nflplayer/services/getNFLPlayers.service';
+import { RosterPositions, RPosType } from '../../types/rosterinfo';
+import projAvg from '../db/redis/projAvg.redis';
+import projprice from '../db/redis/projprice.redis';
+import Entry from '../features/entry/entry.model';
 import getWeekEntries from '../features/entry/services/getWeekEntries.service';
+import NFLGame from '../features/nflgame/nflgame.model';
+import getNFLPlayers from '../features/nflplayer/services/getNFLPlayers.service';
+import { onlyUnique } from '../features/util/util';
 
 import leaderUpdate from './live/channels/projAvgUpdate.channel';
 
-import NFLGame from '../features/nflgame/nflgame.model';
-import Entry from '../features/entry/entry.model';
-
-import projprice from '../db/redis/projprice.redis';
-import projAvg from '../db/redis/projAvg.redis';
-
 const average = (array: number[]) => array.reduce((a, b) => a + b) / array.length;
 
-if (!process.env.WEEK || Number.isNaN(Number(process.env.WEEK))) {
+if (!process.env['WEEK'] || Number.isNaN(Number(process.env['WEEK']))) {
   throw new Error('No/invalid week number specified in env');
 }
 
@@ -53,7 +49,7 @@ setInterval(calculateLeaderboard, 10000);
 
 async function calculateLeaderboard() {
   // Get current game phases (used to determine which point value to use)
-  const gamelist = await NFLGame.findAll({ where: { week: Number(process.env.WEEK) } });
+  const gamelist = await NFLGame.findAll({ where: { week: Number(process.env['WEEK']) } });
   // Are all games in pre or post phase
   interface GameItem {
     phase: string,

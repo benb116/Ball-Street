@@ -1,13 +1,13 @@
 // All channels for redis pub/sub
 
+import injuryUpdate from './channels/injuryUpdate.channel';
+import offerCancelled from './channels/offerCancelled.channel';
+import offerFilled from './channels/offerFilled.channel';
+import phaseChange from './channels/phaseChange.channel';
 import priceUpdate from './channels/priceUpdate.channel';
-import statUpdate from './channels/statUpdate.channel';
 import projAvgUpdate from './channels/projAvgUpdate.channel';
 import protectedMatch from './channels/protectedMatch.channel';
-import offerFilled from './channels/offerFilled.channel';
-import offerCancelled from './channels/offerCancelled.channel';
-import phaseChange from './channels/phaseChange.channel';
-import injuryUpdate from './channels/injuryUpdate.channel';
+import statUpdate from './channels/statUpdate.channel';
 
 const channelMap = {
   priceUpdate,

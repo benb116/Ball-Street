@@ -3,8 +3,7 @@ import { Transaction } from 'sequelize';
 
 import {
   FlexNFLPositionId, NFLPosIDType, NFLPosTypes, Roster, RosterPositions, RPosType,
-} from '../../config';
-
+} from '../../../types/rosterinfo';
 import Entry from '../entry/entry.model';
 
 // Return whether a player type (number) cannot be put into a specific roster position
@@ -61,7 +60,6 @@ export interface UError extends Error {
 /** Custom error function that returns a msg and http status */
 export const uError = function uError(msg: string, status = 500) {
   const uerr: UError = { name: msg, message: msg, status };
-  throw uerr;
   return uerr;
 };
 
@@ -70,7 +68,7 @@ export const isUError = (item: unknown): item is UError => !!(item as UError)?.s
 /** Validate an object based on a Joi schema */
 export const validate = function validate(input: unknown, schema: Schema) {
   const { value, error } = schema.validate(input);
-  if (error && error.details[0]) { uError(error.details[0].message, 400); }
+  if (error && error.details[0]) { throw uError(error.details[0].message, 400); }
   return value;
 };
 

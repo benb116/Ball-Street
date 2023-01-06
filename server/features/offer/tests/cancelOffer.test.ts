@@ -1,5 +1,5 @@
-import service from '../services/cancelOffer.service';
 import { ErrorTest, ObjectTest } from '../../util/util.tests';
+import service from '../services/cancelOffer.service';
 
 describe('cancelOffer service', () => {
   test('Valid request returns cancelled offer', ObjectTest(

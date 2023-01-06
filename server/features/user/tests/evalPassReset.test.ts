@@ -1,10 +1,11 @@
 import cryptoRandomString from 'crypto-random-string';
-import service from '../services/evalPassReset.service';
-import { uError, isUError } from '../../util/util';
+
 import { verificationTimeout, verificationTokenLength } from '../../../config';
-import { ErrorTest } from '../../util/util.tests';
-import passReset from '../../../db/redis/passReset.redis';
 import { client } from '../../../db/redis';
+import passReset from '../../../db/redis/passReset.redis';
+import { uError, isUError } from '../../util/util';
+import { ErrorTest } from '../../util/util.tests';
+import service from '../services/evalPassReset.service';
 
 describe('evalPassReset service', () => {
   test('Valid request returns confirmation and redis key', async () => {

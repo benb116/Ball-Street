@@ -1,28 +1,25 @@
 // Change the game phase (pre, mid, post)
 import Joi from 'joi';
 import Sequelize, { Op } from 'sequelize';
-import type { Literal } from 'sequelize/types/utils.d';
-import type { Logger } from 'winston';
 
-import { teamIDs, TeamIDType } from '../../nflinfo';
-
-import { validate, isPlayerOnRoster } from '../../features/util/util';
-import logger from '../../utilities/logger';
-import { SumPoints } from './dict.nfl';
-
-import state from './state.nfl';
-
+import { teamIDs, TeamIDType } from '../../../types/nflinfo';
+import { EntryActionKinds, gamePhases, GamePhaseType } from '../../../types/rosterinfo';
 import sequelize from '../../db';
 import { client } from '../../db/redis';
-
+import Entry from '../../features/entry/entry.model';
+import getWeekEntries from '../../features/entry/services/getWeekEntries.service';
+import NFLGame from '../../features/nflgame/nflgame.model';
+import NFLPlayer from '../../features/nflplayer/nflplayer.model';
+import EntryAction from '../../features/trade/entryaction.model';
+import { validate, isPlayerOnRoster } from '../../features/util/util';
+import logger from '../../utilities/logger';
 import phaseChange from '../live/channels/phaseChange.channel';
 
-import Entry from '../../features/entry/entry.model';
-import NFLPlayer from '../../features/nflplayer/nflplayer.model';
-import NFLGame from '../../features/nflgame/nflgame.model';
-import getWeekEntries from '../../features/entry/services/getWeekEntries.service';
-import EntryAction from '../../features/trade/entryaction.model';
-import { EntryActionKinds, gamePhases, GamePhaseType } from '../../config';
+import { SumPoints } from './dict.nfl';
+import state from './state.nfl';
+
+import type { Literal } from 'sequelize/types/utils.d';
+import type { Logger } from 'winston';
 
 const schema = Joi.object({
   teamID: Joi.valid(...teamIDs)
@@ -51,7 +48,7 @@ async function setPhase(teamID: TeamIDType, newphase: GamePhaseType) {
     await NFLGame.update({ phase: newphase }, {
       where: {
         [Op.or]: [{ HomeId: teamID }, { AwayId: teamID }],
-        week: Number(process.env.WEEK),
+        week: Number(process.env['WEEK']),
       },
     });
 
@@ -122,7 +119,7 @@ async function convertTeamPlayers(teamID: number) {
       addSum += (statmap[pID] || 0);
       playersConverted.push(pID);
     });
-    updatedProps.pointtotal = Sequelize.literal(`pointtotal + ${addSum.toString()}`);
+    updatedProps['pointtotal'] = Sequelize.literal(`pointtotal + ${addSum.toString()}`);
 
     // Write conversion records
     const entryActions = playersConverted.map((pID) => ({

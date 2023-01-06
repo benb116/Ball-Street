@@ -1,23 +1,22 @@
 /* eslint-disable no-nested-ternary */
 import React from 'react';
 
-import { useAppSelector, useAppDispatch } from '../../../app/hooks';
-
-import {
-  allPlayersSelector,
-  filterSelector,
-  sortSelector,
-  setSort,
-  allTeamsSelector,
-  allGamesSelector,
-  pricesMapSelector,
-} from './Players.slice';
-import { useGetPlayersQuery, useGetGamesQuery } from './Players.api';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 
 import PlayerFilter from './PlayerFilter';
 import PlayerItem from './PlayerItem';
+import { useGetGamesQuery, useGetPlayersQuery } from './Players.api';
+import {
+  allGamesSelector,
+  allPlayersSelector,
+  allTeamsSelector,
+  filterSelector,
+  pricesMapSelector,
+  setSort,
+  sortSelector,
+} from './Players.slice';
 
-import { GameItemType, SortByType } from './Players.types';
+import type { GameItemType, SortByType } from '../../../../../types/api/player.api';
 
 // Show list of all active players
 function Players() {
@@ -86,15 +85,15 @@ function Players() {
         return compare(i1 || 0, i2 || 0);
       }
       if (sortBy === 'projPrice') {
-        let [item1, item2] = [a[sortBy], b[sortBy]];
-        if (aPhase === 'pre') { item1 = a.preprice; }
-        if (bPhase === 'pre') { item2 = b.preprice; }
+        let [item1, item2] = [priceMap[a.id]?.[sortBy] || 0, priceMap[b.id]?.[sortBy] || 0]; // Get that property
+        if (aPhase === 'pre') { item1 = a.preprice || 0; }
+        if (bPhase === 'pre') { item2 = b.preprice || 0; }
         return compare(item1, item2);
       }
       if (sortBy === 'statPrice') {
-        let [item1, item2] = [a[sortBy], b[sortBy]];
-        if (aPhase === 'pre') { item1 = a.postprice; }
-        if (bPhase === 'pre') { item2 = b.postprice; }
+        let [item1, item2] = [priceMap[a.id]?.[sortBy] || 0, priceMap[b.id]?.[sortBy] || 0]; // Get that property
+        if (aPhase === 'pre') { item1 = a.postprice || 0; }
+        if (bPhase === 'pre') { item2 = b.postprice || 0; }
         return compare(item1, item2);
       }
       return compare(a[sortBy] || '', b[sortBy] || '');

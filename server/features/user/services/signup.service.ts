@@ -1,13 +1,15 @@
 import bcrypt from 'bcryptjs';
 import Joi from 'joi';
 
+import {
+  GenVerifyOutput, inputSignup, LoginOutput, SignupInput,
+} from '../../../../types/api/user.api';
 import { validate, uError } from '../../util/util';
 import validators from '../../util/util.schema';
 import errorHandler from '../../util/util.service';
+import User from '../user.model';
 
 import genVerify from './genVerify.service';
-
-import User from '../user.model';
 
 const schema = Joi.object({
   name: Joi.string().required().messages({
@@ -18,18 +20,12 @@ const schema = Joi.object({
   password: validators.password,
   skipVerification: Joi.boolean().default(false),
 });
-
-interface SignupInput {
-  name: string,
-  email: string,
-  password: string,
-  skipVerification: boolean,
-}
+validate(inputSignup, schema);
 
 const saltRounds = 10;
 
 /** Sign up a user and possibly continue verification */
-async function signup(req: SignupInput) {
+async function signup(req: SignupInput): Promise<LoginOutput | GenVerifyOutput> {
   const value: SignupInput = validate(req, schema);
   const {
     name, email, password, skipVerification,
@@ -40,7 +36,7 @@ async function signup(req: SignupInput) {
     const theuser = await User.create({
       name, email, pwHash: hash, verified: skipVerification, cash: 0,
     });
-    if (!theuser) { return uError('User could not be created', 500); }
+    if (!theuser) { throw uError('User could not be created', 500); }
     if (!skipVerification) return await genVerify({ id: theuser.id, email: theuser.email });
     return {
       needsVerification: false, id: theuser.id, email: theuser.email, name: theuser.name, cash: theuser.cash,

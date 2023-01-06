@@ -1,11 +1,7 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { RefreshTime } from '../../../config';
-
-import liveState from '../state.live'; // Data stored in memory
-
-import { MessageMapType, sendToContests } from '../socket.live';
-
 import { client } from '../../../db/redis';
+import { MessageMapType, sendToContests } from '../socket.live';
+import liveState from '../state.live'; // Data stored in memory
 
 const priceUpdate = {
   pub: function pub(type: 'best' | 'last', contestID: number, nflplayerID: number, bestbid: number, bestask?: number) {
@@ -48,7 +44,7 @@ setInterval(() => {
   const priceUpdatecIDs = Object.keys(liveState.priceUpdateMap);
 
   const priceMsgMap = priceUpdatecIDs.reduce((acc, cur: string) => {
-    acc[cur] = { event: 'priceUpdate', pricedata: liveState.priceUpdateMap[cur] };
+    acc[cur] = { event: 'priceUpdate', pricedata: liveState.priceUpdateMap[cur] || {} };
     return acc;
   }, {} as MessageMapType);
   liveState.priceUpdateMap = {};

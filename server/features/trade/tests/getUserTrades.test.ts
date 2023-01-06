@@ -1,5 +1,5 @@
-import service from '../services/getUserTrades.service';
 import { ErrorTest } from '../../util/util.tests';
+import service from '../services/getUserTrades.service';
 
 describe('getUserTrades service', () => {
   test('Valid request returns data', async () => {
@@ -47,9 +47,9 @@ describe('getUserTrades service', () => {
         updatedAt: expect.any(Date),
       }],
     };
-    expect(bids.map((b) => b.toJSON())).toStrictEqual(expectedout.bids);
-    expect(asks.map((b) => b.toJSON())).toStrictEqual(expectedout.asks);
-    expect(actions.map((b) => b.toJSON())).toStrictEqual(expectedout.actions);
+    expect(bids).toMatchObject(expectedout.bids);
+    expect(asks).toMatchObject(expectedout.asks);
+    expect(actions).toMatchObject(expectedout.actions);
   });
 
   test('Missing contestID returns error 400', ErrorTest(

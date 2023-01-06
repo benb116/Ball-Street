@@ -2,9 +2,9 @@ import express from 'express';
 
 import routeHandler from '../util/util.route';
 
-import getUserOffers from './services/getUserOffers.service';
-import createOffer from './services/createOffer.service';
 import cancelOffer from './services/cancelOffer.service';
+import createOffer from './services/createOffer.service';
+import getUserOffers from './services/getUserOffers.service';
 
 const router = express.Router({ mergeParams: true });
 

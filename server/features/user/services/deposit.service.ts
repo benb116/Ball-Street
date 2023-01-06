@@ -1,44 +1,44 @@
 import Joi from 'joi';
 
+import { DepositWithdrawInput, DepositWithdrawType, LedgerEntryType } from '../../../../types/api/account.api';
+import { ledgerKinds } from '../../../../types/rosterinfo';
+import sequelize from '../../../db';
+import LedgerEntry from '../../ledger/ledgerEntry.model';
 import { validate, uError, tobj } from '../../util/util';
 import validators from '../../util/util.schema';
 import errorHandler, { ServiceInput } from '../../util/util.service';
-
-import sequelize from '../../../db';
-import LedgerEntry from '../../ledger/ledgerEntry.model';
-import { ledgerKinds } from '../../../config';
 import User from '../user.model';
 
+const bodySchema = Joi.object({
+  amount: Joi.number().integer().greater(0).required()
+    .messages({
+      'number.base': 'Deposit amount is invalid',
+      'number.integer': 'Deposit amount is invalid',
+      'number.greater': 'Deposit amount must be positive',
+      'any.required': 'Deposit amount is invalid',
+    }),
+});
+validate(DepositWithdrawInput, bodySchema);
 const schema = Joi.object({
   user: validators.user,
   params: validators.noObj,
-  body: {
-    amount: Joi.number().integer().greater(0).required()
-      .messages({
-        'number.base': 'Deposit amount is invalid',
-        'number.integer': 'Deposit amount is invalid',
-        'number.greater': 'Deposit amount must be positive',
-        'any.required': 'Deposit amount is invalid',
-      }),
-  },
+  body: bodySchema,
 });
 
 interface DepositInput extends ServiceInput {
   params: Record<string, never>,
-  body: {
-    amount: number,
-  }
+  body: DepositWithdrawType
 }
 
 /** Create an entry in a contest */
-async function deposit(req: DepositInput) {
+async function deposit(req: DepositInput): Promise<LedgerEntryType> {
   const value: DepositInput = validate(req, schema);
 
   return sequelize.transaction(async (t) => {
     // Confirm contest is valid and for the current week
 
     const theuser = await User.findOne({ where: { id: value.user }, ...tobj(t) });
-    if (!theuser) return uError('No user found', 404);
+    if (!theuser) throw uError('No user found', 404);
 
     theuser.cash += value.body.amount;
     theuser.save({ transaction: t });

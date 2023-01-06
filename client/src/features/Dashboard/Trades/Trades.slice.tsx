@@ -1,10 +1,12 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 
-import type { RootState } from '../../../app/store';
 import { ErrHandler } from '../../../helpers/util';
+
 import TradesAPI from './Trades.api';
-import { TradeItemType } from './Trades.types';
+
+import type { TradeItemType } from '../../../../../types/api/trade.api';
+import type { RootState } from '../../../app/store';
 
 interface TradesState {
   trades: TradeItemType[],
@@ -41,7 +43,7 @@ export const tradesSlice = createSlice({
         price: a.price,
         createdAt: a.createdAt,
       })));
-      state.trades = out.sort((a: TradeItemType, b: TradeItemType) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
+      state.trades = out.sort((a: TradeItemType, b: TradeItemType) => +b.createdAt - +a.createdAt);
     });
     builder.addMatcher(TradesAPI.endpoints.getTrades.matchRejected, ErrHandler);
   },

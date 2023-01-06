@@ -1,12 +1,12 @@
-import Modal from 'react-modal';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-
 import toast from 'react-hot-toast';
-import { useAppSelector, useAppDispatch } from '../../../app/hooks';
+import Modal from 'react-modal';
 
-import { modalSelector, modalStatusSelector, closeModal } from './Modal.slice';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { useCreateOfferMutation } from '../Offers/Offers.api';
+
+import { closeModal, modalSelector, modalStatusSelector } from './Modal.slice';
 
 const customStyles = {
   content: {
@@ -57,7 +57,7 @@ function OfferModal({ contestID }: { contestID: string }) {
       price: thisprice,
       protected: data.protected,
     };
-    createOffer({ contestID, offerobj });
+    createOffer({ contestID, ...offerobj });
     close();
   }
 

@@ -1,14 +1,14 @@
 import { Transaction } from 'sequelize';
-import { ledgerKinds, profitFeePercentage, RosterPositions } from '../../../config';
+
+import { ledgerKinds, RosterPositions } from '../../../../types/rosterinfo';
+import { profitFeePercentage } from '../../../config';
 import sequelize from '../../../db';
-import Contest from '../contest.model';
+import Entry from '../../entry/entry.model';
 import LedgerEntry from '../../ledger/ledgerEntry.model';
 import User from '../../user/user.model';
-
 import { tobj, uError, validate } from '../../util/util';
 import validators from '../../util/util.schema';
-
-import Entry from '../../entry/entry.model';
+import Contest from '../contest.model';
 
 /** Pay out prizes to all users with entries in a contest. Take fees as defined */
 async function payoutContest(rawcontestID: number) {
@@ -16,7 +16,7 @@ async function payoutContest(rawcontestID: number) {
 
   return sequelize.transaction(async (t) => {
     const thecontest = await Contest.findByPk(contestID);
-    if (!thecontest) return uError('No contest found', 404);
+    if (!thecontest) throw uError('No contest found', 404);
     const contestBuyIn = thecontest.buyin;
     if (!contestBuyIn) return true;
 
@@ -49,7 +49,7 @@ async function payoutTransaction(entry: Entry, t: Transaction, averagePoints: nu
   const grossPayout = Math.round(entryFraction * contestBuyIn);
   const profit = grossPayout - contestBuyIn;
   const theuser = await User.findOne({ where: { id: entry.UserId }, ...tobj(t) });
-  if (!theuser) return uError('No user found', 404);
+  if (!theuser) throw uError('No user found', 404);
 
   theuser.cash += profit;
 

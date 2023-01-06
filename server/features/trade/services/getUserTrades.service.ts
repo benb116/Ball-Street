@@ -1,13 +1,14 @@
 import Joi from 'joi';
-import Offer from '../../offer/offer.model';
 
+import Offer from '../../offer/offer.model';
 import { validate } from '../../util/util';
 import validators from '../../util/util.schema';
 import { ServiceInput } from '../../util/util.service';
 import EntryAction from '../entryaction.model';
 import EntryActionKind from '../entryactionkind.model';
-
 import Trade from '../trade.model';
+
+import type { TradeTree } from '../../../../types/api/trade.api';
 
 const schema = Joi.object({
   user: validators.user,
@@ -18,9 +19,7 @@ const schema = Joi.object({
 });
 
 interface GetUserTradesInput extends ServiceInput {
-  params: {
-    contestID: number,
-  },
+  params: { contestID: number },
   body: Record<string, never>
 }
 
@@ -55,7 +54,7 @@ async function getUserTrades(req: GetUserTradesInput) {
       UserId: value.user,
     },
   });
-  return { bids, asks, actions };
+  return { bids, asks, actions } as TradeTree;
 }
 
 export default getUserTrades;

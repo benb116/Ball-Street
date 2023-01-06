@@ -1,12 +1,13 @@
 import BaseAPI from '../../helpers/api';
-import { ContestItemType } from './Contests.types';
-import { EntryItemType, EntryType } from '../Dashboard/Entry/Entry.types';
+
+import type { ContestItemType } from '../../../../types/api/contest.api';
+import type { EntryType } from '../../../../types/api/entry.api';
 
 const ContestsAPI = BaseAPI.injectEndpoints({
   endpoints: (build) => ({
     getContests: build.query<ContestItemType[], void>({ query: () => '/api/contests' }),
     getContest: build.query<ContestItemType, string>({ query: (contestID) => `/api/contests/${contestID}` }),
-    getEntries: build.query<EntryItemType[], string>({ query: (contestID) => `/api/contests/${contestID}/entries` }),
+    getEntries: build.query<EntryType[], string>({ query: (contestID) => `/api/contests/${contestID}/entries` }),
     getEntry: build.query<EntryType, string>({
       query: (contestID) => `/api/contests/${contestID}/entry`,
       providesTags: ['Roster'], // Roster updates on trades and offer fills

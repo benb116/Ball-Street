@@ -1,30 +1,32 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable no-nested-ternary */
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { useAppSelector, useAppDispatch } from '../../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import {
+  FlexNFLPositionId, NFLPosIDType, NFLPosTypes, Roster, RosterPosIDType,
+} from '../../../helpers/config';
 import { ActionButton, RenderPrice } from '../../../helpers/util';
-
+import { setModal } from '../Modal/Modal.slice';
+import { useCancelOfferMutation } from '../Offers/Offers.api';
+import { offersSelector } from '../Offers/Offers.slice';
 import {
   allTeamsSelector,
   playerSelector,
   priceMapSelector,
 } from '../Players/Players.slice';
-import { rposSelector, selectRPos } from './Entry.slice';
-import { offersSelector } from '../Offers/Offers.slice';
-import { setModal } from '../Modal/Modal.slice';
-import { usePreDropMutation, useReorderRosterMutation } from './Entry.api';
 
-import { flexPosID, rosterkey, RosterPosType } from './Entry.types';
-import { NFLPosType, NFLPosTypes } from '../Players/Players.types';
-import { OfferItemType } from '../Offers/Offers.types';
-import { useCancelOfferMutation } from '../Offers/Offers.api';
+import { usePreDropMutation, useReorderRosterMutation } from './Entry.api';
+import { rposSelector, selectRPos } from './Entry.slice';
+
+import type { OfferItemType } from '../../../../../types/api/offer.api';
+import type { RPosType } from '../../../../../types/rosterinfo';
 
 // Show a specific row in the roster table
-function RosterItem({ playerid, position }: { playerid: number | null, position: RosterPosType }) {
+function RosterItem({ playerid, position }: { playerid: number | null, position: RPosType }) {
   const dispatch = useAppDispatch();
   const { contestID } = useParams<{ contestID: string }>();
 
@@ -54,7 +56,7 @@ function RosterItem({ playerid, position }: { playerid: number | null, position:
     } else if (thisplayer?.NFLPositionId) {
       dispatch(selectRPos([thisplayer.NFLPositionId, position]));
     } else {
-      dispatch(selectRPos([rosterkey[position], position]));
+      dispatch(selectRPos([Roster[position], position]));
     }
   };
 
@@ -97,7 +99,7 @@ function RosterItem({ playerid, position }: { playerid: number | null, position:
       nflplayerID: thisplayer.id,
       nflplayerName: thisplayer.name,
       isbid: false,
-      price: (priceMap ? Number(dispAsk || 0) : dispProj),
+      price: (priceMap ? Number(dispAsk || 0) : dispProj || 0),
       protected: true,
     }));
   };
@@ -158,20 +160,20 @@ function RosterItem({ playerid, position }: { playerid: number | null, position:
 }
 
 // Should a pos label be highlighted (If a clicked player could be moved there)
-function shouldHighlight(selectedType: NFLPosType | 0, position: RosterPosType) {
+function shouldHighlight(selectedType: RosterPosIDType | 0, position: RPosType) {
   if (selectedType === 0) return false; // If flag is not set, then don't
-  const thisType = rosterkey[position];
+  const thisType = Roster[position];
   if (selectedType === thisType) return true; // If same pos type, can def do it
-  if (selectedType === flexPosID || thisType === flexPosID) { // If either is a flex position
-    if (selectedType === flexPosID && !NFLPosTypes[thisType].canflex) return false; // Can't if non-flex type can't flex
-    if (thisType === flexPosID && !NFLPosTypes[selectedType].canflex) return false;
+  if (selectedType === FlexNFLPositionId || thisType === FlexNFLPositionId) { // If either is a flex position
+    if (selectedType === FlexNFLPositionId && thisType !== FlexNFLPositionId && !NFLPosTypes[thisType].canflex) return false; // Can't if non-flex type can't flex
+    if (thisType === FlexNFLPositionId && selectedType !== FlexNFLPositionId && !NFLPosTypes[selectedType].canflex) return false;
     return true;
   }
   return false;
 }
 
 // Get the name of a position type from it's number
-function posName(posNum: NFLPosType) {
+function posName(posNum: NFLPosIDType) {
   return `(${NFLPosTypes[posNum].name})`;
 }
 

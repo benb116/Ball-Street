@@ -15,6 +15,7 @@ COPY --chown=node:node ./server/package.json ./
 COPY --chown=node:node ./server/package-lock.json ./
 RUN npm install
 
+COPY --chown=node:node ./types ../types/
 COPY --chown=node:node ./server ./
 
 RUN tsc

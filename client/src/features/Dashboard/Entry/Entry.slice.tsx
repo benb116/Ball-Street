@@ -2,18 +2,19 @@
 import { createSlice } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
 
-import type { RootState } from '../../../app/store';
+import { RPosType, Roster, RosterPosIDType } from '../../../helpers/config';
 import { ErrHandler } from '../../../helpers/util';
-
-import { EntryType, Roster, RosterPosType } from './Entry.types';
-import { NFLPosType } from '../Players/Players.types';
-import EntryAPI from './Entry.api';
 import ContestsAPI from '../../Contests/Contests.api';
+
+import EntryAPI from './Entry.api';
+
+import type { EntryType } from '../../../../../types/api/entry.api';
+import type { RootState } from '../../../app/store';
 
 interface EntryState {
   balance: number,
-  roster: Record<RosterPosType, number | null>,
-  rposSelected: [NFLPosType | 0, RosterPosType | ''],
+  roster: Record<RPosType, number | null>,
+  rposSelected: [RosterPosIDType | 0, RPosType | ''],
 }
 
 const defaultState: EntryState = {
@@ -33,7 +34,7 @@ export const entrySlice = createSlice({
     offerFilled: () => {
       toast.success('Offer filled');
     },
-    selectRPos: (state, { payload }: { payload: [NFLPosType | 0, RosterPosType | ''] }) => {
+    selectRPos: (state, { payload }: { payload: [RosterPosIDType | 0, RPosType | ''] }) => {
       // If current state is 0, nothing is currently selected.
       // This is the first click, so set the state
       if (state.rposSelected[0] === 0) {

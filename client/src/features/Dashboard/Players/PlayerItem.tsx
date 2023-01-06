@@ -1,19 +1,19 @@
 /* eslint-disable no-nested-ternary */
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { useAppSelector, useAppDispatch } from '../../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { ActionButton, RenderPrice } from '../../../helpers/util';
-
+import { usePreAddMutation, usePreDropMutation } from '../Entry/Entry.api';
 import { isOnRosterSelector } from '../Entry/Entry.slice';
 import { setModal } from '../Modal/Modal.slice';
+import { useCancelOfferMutation } from '../Offers/Offers.api';
 import { offersSelector } from '../Offers/Offers.slice';
+
 import { allTeamsSelector, priceMapSelector } from './Players.slice';
 
-import { PlayerItemType } from './Players.types';
-import { usePreAddMutation, usePreDropMutation } from '../Entry/Entry.api';
-import { useCancelOfferMutation } from '../Offers/Offers.api';
+import type { PlayerItemType } from '../../../../../types/api/player.api';
 
 // Show a player's row in the list
 function PlayerItem({ playerdata }: { playerdata: PlayerItemType }) {
@@ -59,7 +59,7 @@ function PlayerItem({ playerdata }: { playerdata: PlayerItemType }) {
       nflplayerID: playerdata.id,
       nflplayerName: playerdata.name,
       isbid: false,
-      price: (priceMap ? Number(dispBid || dispProj) : dispProj),
+      price: (priceMap ? Number(dispBid || dispProj) : dispProj || 0),
       protected: true,
     }));
   };
@@ -69,7 +69,7 @@ function PlayerItem({ playerdata }: { playerdata: PlayerItemType }) {
       nflplayerID: playerdata.id,
       nflplayerName: playerdata.name,
       isbid: true,
-      price: (priceMap ? Number(dispAsk || dispProj) : dispProj),
+      price: (priceMap ? Number(dispAsk || dispProj) : dispProj || 0),
       protected: true,
     }));
   };
@@ -127,8 +127,6 @@ PlayerItem.propTypes = {
     injuryStatus: PropTypes.string,
     preprice: PropTypes.number,
     postprice: PropTypes.number,
-    projPrice: PropTypes.number,
-    statPrice: PropTypes.number,
     NFLTeam: PropTypes.shape({
       gamePhase: PropTypes.string.isRequired,
     }),

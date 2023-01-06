@@ -1,5 +1,5 @@
-import service from '../services/getUserLedger.service';
 import { ErrorTest, ArrayTest } from '../../util/util.tests';
+import service from '../services/getUserLedger.service';
 
 describe('getUserLedger service', () => {
   test('Valid request returns data', ArrayTest(

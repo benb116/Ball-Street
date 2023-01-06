@@ -1,11 +1,12 @@
 import { store } from '../../app/store';
+import API from '../../helpers/api';
 
-import { setPhase, updatePrices, setInjury } from './Players/Players.slice';
-import { removeOffer, alertProtMatch } from './Offers/Offers.slice';
 import { offerFilled } from './Entry/Entry.slice';
 import { updateAverage } from './Leaderboard/Leaderboard.slice';
-import { PhaseType, PriceMapItemType } from './Players/Players.types';
-import API from '../../helpers/api';
+import { alertProtMatch, removeOffer } from './Offers/Offers.slice';
+import { setInjury, setPhase, updatePrices } from './Players/Players.slice';
+
+import type MessageType from '../../../../types/messages';
 
 // Init WS connection and dispatch actions based on events
 const initWS = (contestID: string) => {
@@ -19,44 +20,24 @@ const initWS = (contestID: string) => {
   // Listen for messages
   socket.addEventListener('message', (event) => {
     // console.log('Message from server ', event.data);
-    const msg = JSON.parse(event.data);
-    if (Array.isArray(msg)) {
-      msg.filter((u) => u).forEach(markPrice);
-    } else {
-      switch (msg.event) {
-        case 'offerFilled':
-          delOffer(msg.offerID);
-          fillOffer();
-          upRost();
-          break;
-        case 'offerCancelled':
-          delOffer(msg.offerID);
-          break;
-        case 'protectedMatch':
-          protMatch(msg);
-          break;
-        case 'contestAvg':
-          upAverage(msg.average);
-          break;
-        case 'phaseChange':
-          newPhase(msg.phase);
-          if (msg.phase.gamePhase === 'post') {
-            upRost();
-          }
-          break;
-        case 'priceUpdate':
-          markPrice(Object.values(msg.pricedata));
-          break;
-        case 'statUpdate':
-          markPrice(Object.values(msg.pricedata));
-          break;
-        case 'injuryUpdate':
-          markInjury(msg.update);
-          break;
-        default:
-          break;
+    const msg = JSON.parse(event.data) as MessageType;
+    if (msg.event === 'offerFilled') {
+      store.dispatch(removeOffer(msg.offerID));
+      store.dispatch(offerFilled());
+      store.dispatch(API.util.invalidateTags(['Roster', 'Trades']));
+    }
+    if (msg.event === 'offerCancelled') store.dispatch(removeOffer(msg.offerID));
+    if (msg.event === 'protectedMatch') store.dispatch(alertProtMatch(msg));
+    if (msg.event === 'contestAvg') store.dispatch(updateAverage(msg.average));
+    if (msg.event === 'phaseChange') {
+      store.dispatch(setPhase(msg.phase));
+      if (msg.phase.gamePhase === 'post') {
+        store.dispatch(API.util.invalidateTags(['Roster', 'Trades']));
       }
     }
+    if (msg.event === 'priceUpdate') store.dispatch(updatePrices(Object.values(msg.pricedata)));
+    if (msg.event === 'statUpdate') store.dispatch(updatePrices(Object.values(msg.pricedata)));
+    if (msg.event === 'injuryUpdate') store.dispatch(setInjury(msg.update));
   });
 
   socket.addEventListener('close', () => {
@@ -71,37 +52,5 @@ const initWS = (contestID: string) => {
     socket.close();
   });
 };
-
-function markPrice(arr: PriceMapItemType[]) {
-  store.dispatch(updatePrices(arr));
-}
-
-function markInjury(info: Record<number, string | null>) {
-  store.dispatch(setInjury(info));
-}
-
-function delOffer(oid: string) {
-  store.dispatch(removeOffer(oid));
-}
-
-function fillOffer() {
-  store.dispatch(offerFilled());
-}
-
-function upRost() {
-  store.dispatch(API.util.invalidateTags(['Roster', 'Trades']));
-}
-
-function protMatch({ offerID, expire }: { offerID: string, expire: number }) {
-  store.dispatch(alertProtMatch({ offerID, expire }));
-}
-
-function upAverage(average: number) {
-  store.dispatch(updateAverage(average));
-}
-
-function newPhase(nphase: { nflTeamID: number, gamePhase: PhaseType, }) {
-  store.dispatch(setPhase(nphase));
-}
 
 export default initWS;

@@ -1,11 +1,11 @@
 import React, { ChangeEvent } from 'react';
 
-import { useAppSelector, useAppDispatch } from '../../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 
 import {
+  FilterNameType,
   allGamesSelector,
   allTeamsSelector,
-  FilterNameType,
   filterSelector,
   setFilter,
 } from './Players.slice';

@@ -3,14 +3,14 @@
 
 import express from 'express';
 
-import authenticate from '../../middleware/authenticate';
-
-import nfldataRouter from '../../features/nflplayer/nfldata.route';
+import contestRouter from '../../features/contest/contest.route';
 import entryRouter from '../../features/entry/entry.route';
+import nfldataRouter from '../../features/nflplayer/nfldata.route';
+import nflplayerRouter from '../../features/nflplayer/nflplayer.route';
 import offerRouter from '../../features/offer/offer.route';
 import tradeRouter from '../../features/trade/trade.route';
-import nflplayerRouter from '../../features/nflplayer/nflplayer.route';
-import contestRouter from '../../features/contest/contest.route';
+import userRouter from '../../features/user/user.route';
+import authenticate from '../../middleware/authenticate';
 
 const router = express.Router();
 const contestsRouter = express.Router({ mergeParams: true });
@@ -33,5 +33,5 @@ contestsRouter.use('/contests/', thecontestRouter);
 contestsRouter.use('/contests/', contestRouter);
 
 router.use(contestsRouter);
-
+router.use('/user', userRouter);
 export default router;

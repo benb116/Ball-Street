@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import state from '../nfl/state.nfl';
+import Entry from '../../features/entry/entry.model';
+import NFLGame from '../../features/nflgame/nflgame.model';
+import NFLPlayer from '../../features/nflplayer/nflplayer.model';
 import { SumPoints } from '../nfl/dict.nfl';
 import { CalculateTimefrac, ParseGameFileInit, ParseGameFileUpdate } from '../nfl/games.nfl';
+import { FormatInjuryObjects, FindInjuryChanges } from '../nfl/injury.nfl';
+import setPhase from '../nfl/phase.nfl';
+import state from '../nfl/state.nfl';
+import { EstimateProjection } from '../nfl/stats.nfl';
 
 import yahoo from './yahooData';
-import setPhase from '../nfl/phase.nfl';
-import { FormatInjuryObjects, FindInjuryChanges } from '../nfl/injury.nfl';
-import { EstimateProjection } from '../nfl/stats.nfl';
-import NFLGame from '../../features/nflgame/nflgame.model';
-import Entry from '../../features/entry/entry.model';
-import NFLPlayer from '../../features/nflplayer/nflplayer.model';
 
 type TestNameType = keyof typeof yahoo.games;
 const testfiles = Object.keys(yahoo.games) as TestNameType[];
@@ -90,7 +90,7 @@ describe('NFL worker tests', () => {
       test(testname, () => {
         yahoo.games[testname].gameobjs = yahoo.games[testname].gameobjs.map((g) => {
           const ng = { ...g };
-          ng.week = Number(process.env.WEEK);
+          ng.week = Number(process.env['WEEK']);
           return ng;
         });
         const { phasemap, gameobjs } = ParseGameFileInit(yahoo.games[testname].data);

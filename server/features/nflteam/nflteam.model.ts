@@ -2,6 +2,7 @@
 import {
   Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes,
 } from 'sequelize';
+
 import sequelize from '../../db';
 
 class NFLTeam extends Model<InferAttributes<NFLTeam>, InferCreationAttributes<NFLTeam>> {

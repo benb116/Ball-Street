@@ -3,14 +3,12 @@
 
 import axios from 'axios';
 
+import NFLPlayer from '../../features/nflplayer/nflplayer.model';
 import logger from '../../utilities/logger';
+import injuryUpdate, { InjuryUpdateType } from '../live/channels/injuryUpdate.channel';
+import yahooData from '../tests/yahooData';
 
 import state from './state.nfl';
-
-import injuryUpdate, { InjuryUpdateType } from '../live/channels/injuryUpdate.channel';
-
-import NFLPlayer from '../../features/nflplayer/nflplayer.model';
-import yahooData from '../tests/yahooData';
 
 let injuryInited = false;
 
@@ -28,7 +26,7 @@ export default async function PullLatestInjuries() {
 
 /** Pull injury data from yahoo or mock data */
 function pullInjuryData() {
-  if (Number(process.env.YAHOO_MOCK)) {
+  if (Number(process.env['YAHOO_MOCK'])) {
     return yahooData.injury;
   }
   return axios.get('https://football.fantasysports.yahoo.com/f1/injuries');

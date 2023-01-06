@@ -1,5 +1,5 @@
-import service from '../services/withdraw.service';
 import { ErrorTest, ObjectTest } from '../../util/util.tests';
+import service from '../services/withdraw.service';
 
 describe('withdraw service', () => {
   test('Valid request returns data and creates ledger entry', ObjectTest(

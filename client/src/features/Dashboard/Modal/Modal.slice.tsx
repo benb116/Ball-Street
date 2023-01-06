@@ -3,17 +3,18 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import type { RootState } from '../../../app/store';
 
-interface ModelState {
-  modalIsOpen: boolean,
-  info: {
-    nflplayerID: number,
-    nflplayerName: string,
-    isbid: boolean,
-    price: number,
-    protected: boolean,
-  },
+interface ModalInfo {
+  nflplayerID: number,
+  nflplayerName: string,
+  isbid: boolean,
+  price: number,
+  protected: boolean,
 }
-const defaultState: ModelState = {
+interface ModalState {
+  modalIsOpen: boolean,
+  info: ModalInfo
+}
+const defaultState: ModalState = {
   modalIsOpen: false,
   info: {
     nflplayerID: 0,
@@ -28,7 +29,7 @@ export const modalSlice = createSlice({
   name: 'modal',
   initialState: defaultState,
   reducers: {
-    setModal: (state, { payload }) => {
+    setModal: (state, { payload }: { payload: ModalInfo }) => {
       state.info = payload;
       state.modalIsOpen = true;
     },

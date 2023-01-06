@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Model } from 'sequelize';
+
 import sequelize from '../../db';
+
 import { isUError } from './util';
 import { ServiceType } from './util.service';
 
@@ -44,7 +46,7 @@ export const ErrorTest = function ErrorTest(service: ServiceType, req: unknown, 
       throw new Error('Unexpected pass');
     } catch (err) {
       // eslint-disable-next-line no-console
-      if (!isUError(err)) { console.log(err); return; }
+      if (!isUError(err)) { console.log(err); throw new Error('Unexpected pass'); }
       // eslint-disable-next-line no-console
       if (!err.status) { console.log(err); }
       expect(err.message).toEqual(message);

@@ -1,15 +1,13 @@
 import axios from 'axios';
 
+import { teamIDs, TeamIDType } from '../../../types/nflinfo';
+import { GamePhaseType } from '../../../types/rosterinfo';
+import NFLGame from '../../features/nflgame/nflgame.model';
 import logger from '../../utilities/logger';
-import { teamIDs, TeamIDType } from '../../nflinfo';
-
-import state from './state.nfl';
+import yahooData from '../tests/yahooData';
 
 import setPhase from './phase.nfl';
-
-import NFLGame from '../../features/nflgame/nflgame.model';
-import yahooData from '../tests/yahooData';
-import { GamePhaseType } from '../../config';
+import state from './state.nfl';
 
 type PhaseMapType = Partial<Record<TeamIDType, GamePhaseType | number>>;
 
@@ -28,7 +26,7 @@ export async function InitGameState() {
 
 /** Get game data (from yahoo or mock data) */
 function pullGameData() {
-  if (Number(process.env.YAHOO_MOCK)) {
+  if (Number(process.env['YAHOO_MOCK'])) {
     return yahooData.games.gamesMonNightMidgame;
   }
   return axios.get('https://relay-stream.sports.yahoo.com/nfl/games.txt');
@@ -38,7 +36,7 @@ function pullGameData() {
 export function ParseGameFileInit(data: string) {
   const rawlines = data.split('\n');
   const gamelines = rawlines.filter((l: string) => l[0] === 'g');
-  const currentweek = (Number(process.env.WEEK) || 0);
+  const currentweek = (Number(process.env['WEEK']) || 0);
 
   // Create a map of team IDs and their gamephases
   const phasemaps = gamelines.map(CreatePhaseMap);
