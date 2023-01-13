@@ -10,12 +10,15 @@ export function getBook(
   ContestId: number,
   NFLPlayerId: number,
 ) {
-  let contestbooks = books[ContestId];
-  if (!contestbooks) { contestbooks = {}; }
-  let playerBook = contestbooks[NFLPlayerId];
-  if (!playerBook) {
-    playerBook = new Book(ContestId, NFLPlayerId);
+  // eslint-disable-next-line no-param-reassign
+  if (!books[ContestId]) { books[ContestId] = {}; }
+  const contestbooks = books[ContestId];
+  if (!contestbooks) return null;
+  if (!contestbooks[NFLPlayerId]) {
+    contestbooks[NFLPlayerId] = new Book(ContestId, NFLPlayerId);
   }
+  const playerBook = contestbooks[NFLPlayerId];
+  if (!playerBook) return null;
   // There may be existing offers and matches in the DB, so add them to the book
   // If the book hasn't been inited, try to init
   if (!playerBook.init) { playerBook.begin(); }
