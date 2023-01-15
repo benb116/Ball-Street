@@ -1,8 +1,5 @@
 import bestask from '../../db/redis/bestask.redis';
 import bestbid from '../../db/redis/bestbid.redis';
-import Offer from '../../features/offer/offer.model';
-import ProtectedMatch from '../../features/protectedmatch/protectedmatch.model';
-import logger from '../../utilities/logger';
 import priceUpdate from '../live/channels/priceUpdate.channel';
 
 import Book from './book.offer';
@@ -14,74 +11,14 @@ export function getBook(
   NFLPlayerId: number,
 ) {
   // eslint-disable-next-line no-param-reassign
-  if (!books[ContestId]) { books[ContestId] = {}; }
-  const contestbooks = books[ContestId];
-  if (!contestbooks) return null;
-  if (!contestbooks[NFLPlayerId]) {
-    // eslint-disable-next-line no-param-reassign
-    contestbooks[NFLPlayerId] = new Book(ContestId, NFLPlayerId);
-  }
-  const playerBook = contestbooks[NFLPlayerId];
-  if (!playerBook) return null;
+  books[ContestId] = books[ContestId] || {};
+  const contestbooks = books[ContestId] || {};
+  const playerBook = contestbooks[NFLPlayerId] || new Book(ContestId, NFLPlayerId);
+  contestbooks[NFLPlayerId] = playerBook;
   // There may be existing offers and matches in the DB, so add them to the book
   // If the book hasn't been inited, try to init
-  if (!playerBook.init) {
-    playerBook.enqueue(async () => { await beginBook(playerBook); });
-  }
+  if (!playerBook.init) { playerBook.begin(); }
   return playerBook;
-}
-
-/** It's possible that the book will been called again before the first init is complete.
- * In that case, we don't want to mark the book as init=true until it's ready,
- * but we also don't want to have the second call reinit the book.
- * So add the init process as an item on the book queue.
- * The first will complete, and when the second is attempted, init will be true so exit.
- */
-async function beginBook(playerBook: Book) {
-  if (playerBook.init) return Promise.resolve();
-  return initializeBook(playerBook)
-    // eslint-disable-next-line no-param-reassign
-    .then(() => { playerBook.init = true; })
-    .catch((err) => {
-      // eslint-disable-next-line no-param-reassign
-      playerBook.init = false;
-      throw Error(err);
-    });
-}
-
-/** Generate the starting book based on existing offers in DB */
-async function initializeBook(playerBook: Book) {
-  const { contestID, nflplayerID } = playerBook;
-  // Should be sorted oldest first since Maps maintain order
-  const sortedOffers = await Offer.findAll({
-    where: {
-      ContestId: contestID,
-      NFLPlayerId: nflplayerID,
-      filled: false,
-      cancelled: false,
-    },
-    order: [
-      ['createdAt', 'ASC'],
-    ],
-  });
-  sortedOffers.forEach((o) => playerBook.add(o.toJSON()));
-  // Also add protected matches that have been previously created
-  const protMatches = await ProtectedMatch.findAll({
-    include: {
-      model: Offer,
-      as: 'existing',
-      where: {
-        ContestId: contestID,
-        NFLPlayerId: nflplayerID,
-      },
-    },
-  });
-  protMatches.forEach((m) => {
-    // eslint-disable-next-line no-param-reassign
-    playerBook.protMatchMap[m.existingId] = m.newId;
-  });
-  logger.info(`Book initialized: Contest ${contestID} Player ${nflplayerID}`);
-  return true;
 }
 
 /** Send out latest price info based on book */

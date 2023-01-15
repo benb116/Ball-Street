@@ -50,7 +50,6 @@ function processor(job: OfferJob) {
   logger.info(JSON.stringify(job.data));
   // Get the appropriate book (or make one)
   const playerBook = getBook(books, ContestId, NFLPlayerId);
-  if (!playerBook) return;
   // Add the action to the queue
   if (job.data.cancelled) {
     playerBook.enqueue(async () => { await playerBook.cancel(job.data); });

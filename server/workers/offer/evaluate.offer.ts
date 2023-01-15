@@ -67,9 +67,9 @@ function evaluateFn(book: Book) {
 
   function findMatchForBestBid() {
   // Best offer of each type that is ready to match
-    let bestbidOffer;
-    let bestaskOffer;
-    let bestpaskOffer;
+    let bestbidOffer: [string, Offer] | undefined;
+    let bestaskOffer: [string, Offer] | undefined;
+    let bestpaskOffer: [string, Offer] | undefined;
 
     let evalbid = bidPrices[0];
     if (!evalbid) return false;
@@ -99,10 +99,12 @@ function evaluateFn(book: Book) {
         if (askPrices[0] && evalbid[0] >= askPrices[0][0]) {
           logger.verbose('found bid + ask');
           bestaskOffer = askPrices[0][1].entries().next().value;
-          return {
-            bid: { ...bestbidOffer[1], protected: false },
-            ask: { ...bestaskOffer[1], protected: false },
-          } as MatchPair;
+          if (bestaskOffer) {
+            return {
+              bid: { ...bestbidOffer[1], protected: false },
+              ask: { ...bestaskOffer[1], protected: false },
+            } as MatchPair;
+          }
         }
         // If that falls through, find an unmatched protected ask
         // but only if this bid has not matched a protask
@@ -133,9 +135,9 @@ function evaluateFn(book: Book) {
 
   function findMatchForBestPBid() {
   // Best offer of each type that is ready to match
-    let bestaskOffer;
-    let bestpbidOffer;
-    let bestpaskOffer;
+    let bestaskOffer: [string, Offer] | undefined;
+    let bestpbidOffer: [string, Offer] | undefined;
+    let bestpaskOffer: [string, Offer] | undefined;
 
     // Try to match the best pbid next
     let evalpbid = pbidPrices[0];
@@ -151,13 +153,11 @@ function evaluateFn(book: Book) {
       if (!bestpbidOffer) {
         pbidPrices.shift();
         [evalpbid] = pbidPrices;
-        // If there are no more left, then exit this loop and go to pbids
+        // If there are no more left, then exit this loop
         if (!evalpbid) {
           done = true;
           break;
         }
-        pbidIterator = evalpbid[1].entries();
-
         pbidIterator = evalpbid[1].entries();
       } else if (!(bestpbidOffer[0] in book.protMatchMap)) {
         // ^^^^^^^^^^^^^^^^^^^^^^^^^

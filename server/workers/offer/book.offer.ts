@@ -85,6 +85,64 @@ class Book {
     });
   }
 
+  begin() {
+    this.enqueue(async () => { await this.beginBook(); });
+  }
+
+  /** It's possible that the book will been called again before the first init is complete.
+   * In that case, we don't want to mark the book as init=true until it's ready,
+   * but we also don't want to have the second call reinit the book.
+   * So add the init process as an item on the book queue.
+   * The first will complete, and when the second is attempted, init will be true so exit.
+   */
+  private async beginBook() {
+    if (this.init) return Promise.resolve();
+    return this.initializeBook()
+      // eslint-disable-next-line no-param-reassign
+      .then(() => { this.init = true; })
+      .catch((err) => {
+        // eslint-disable-next-line no-param-reassign
+        this.init = false;
+        throw Error(err);
+      });
+  }
+
+  /** Generate the starting book based on existing offers in DB */
+  private async initializeBook() {
+    const { contestID, nflplayerID } = this;
+    // Should be sorted oldest first since Maps maintain order
+    const sortedOffers = await Offer.findAll({
+      where: {
+        ContestId: contestID,
+        NFLPlayerId: nflplayerID,
+        filled: false,
+        cancelled: false,
+      },
+      order: [
+        ['createdAt', 'ASC'],
+      ],
+    });
+    sortedOffers.forEach((o) => this.add(o.toJSON()));
+    // Also add protected matches that have been previously created
+    const protMatches = await ProtectedMatch.findAll({
+      include: {
+        model: Offer,
+        as: 'existing',
+        where: {
+          ContestId: contestID,
+          NFLPlayerId: nflplayerID,
+        },
+      },
+      where: { active: true },
+    });
+    protMatches.forEach((m) => {
+      // eslint-disable-next-line no-param-reassign
+      this.protMatchMap[m.existingId] = m.newId;
+    });
+    logger.info(`Book initialized: Contest ${contestID} Player ${nflplayerID}`);
+    return true;
+  }
+
   /** Add an offer to the book */
   async add(offer: Offer) {
     const { isbid, price } = offer;
@@ -109,13 +167,14 @@ class Book {
     if (!priceLimit.size) {
       delete thetree[price];
     }
+
     // if offer was part of a protected match, delete it
-    delete this.protMatchMap[offer.id];
+    this.unmatch(offer).catch(() => {});
   }
 
   /**
    * Mark that a protected offer has been matched
-   * So it doesn't rematch over and over
+   * so it doesn't rematch over and over
    */
   async match(matchee: MatcherType, matcher: MatcherType) {
     await ProtectedMatch.create({
@@ -128,13 +187,13 @@ class Book {
 
   /**
    * Mark that a protected offer is no longer matched
-   * So it can be matched again
+   * so it can be matched again
    */
   async unmatch(matchee: MatcherType) {
-    await ProtectedMatch.destroy({
+    delete this.protMatchMap[matchee.id];
+    await ProtectedMatch.update({ active: false }, {
       where: { existingId: matchee.id },
     });
-    delete this.protMatchMap[matchee.id];
   }
 
   evaluate() {
