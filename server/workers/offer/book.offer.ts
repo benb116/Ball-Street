@@ -168,9 +168,8 @@ class Book {
       delete thetree[price];
     }
 
-    // TODO Unmatch when cancelled
     // if offer was part of a protected match, delete it
-    delete this.protMatchMap[offer.id];
+    this.unmatch(offer).catch(() => {});
   }
 
   /**
@@ -191,10 +190,10 @@ class Book {
    * so it can be matched again
    */
   async unmatch(matchee: MatcherType) {
+    delete this.protMatchMap[matchee.id];
     await ProtectedMatch.update({ active: false }, {
       where: { existingId: matchee.id },
     });
-    delete this.protMatchMap[matchee.id];
   }
 
   evaluate() {
