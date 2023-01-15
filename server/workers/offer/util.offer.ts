@@ -11,14 +11,10 @@ export function getBook(
   NFLPlayerId: number,
 ) {
   // eslint-disable-next-line no-param-reassign
-  if (!books[ContestId]) { books[ContestId] = {}; }
-  const contestbooks = books[ContestId];
-  if (!contestbooks) return null;
-  if (!contestbooks[NFLPlayerId]) {
-    contestbooks[NFLPlayerId] = new Book(ContestId, NFLPlayerId);
-  }
-  const playerBook = contestbooks[NFLPlayerId];
-  if (!playerBook) return null;
+  books[ContestId] = books[ContestId] || {};
+  const contestbooks = books[ContestId] || {};
+  const playerBook = contestbooks[NFLPlayerId] || new Book(ContestId, NFLPlayerId);
+  contestbooks[NFLPlayerId] = playerBook;
   // There may be existing offers and matches in the DB, so add them to the book
   // If the book hasn't been inited, try to init
   if (!playerBook.init) { playerBook.begin(); }

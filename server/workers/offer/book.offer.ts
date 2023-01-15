@@ -133,6 +133,7 @@ class Book {
           NFLPlayerId: nflplayerID,
         },
       },
+      where: { active: true },
     });
     protMatches.forEach((m) => {
       // eslint-disable-next-line no-param-reassign
@@ -190,8 +191,7 @@ class Book {
    * so it can be matched again
    */
   async unmatch(matchee: MatcherType) {
-    // TODO Switch to soft delete
-    await ProtectedMatch.destroy({
+    await ProtectedMatch.update({ active: false }, {
       where: { existingId: matchee.id },
     });
     delete this.protMatchMap[matchee.id];

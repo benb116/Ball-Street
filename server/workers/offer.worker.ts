@@ -52,9 +52,9 @@ function processor(job: OfferJob) {
   const playerBook = getBook(books, ContestId, NFLPlayerId);
   // Add the action to the queue
   if (job.data.cancelled) {
-    playerBook.enqueue(() => { playerBook.cancel(job.data); });
+    playerBook.enqueue(async () => { await playerBook.cancel(job.data); });
   } else {
-    playerBook.enqueue(() => { playerBook.add(job.data); });
+    playerBook.enqueue(async () => { await playerBook.add(job.data); });
   }
   // Add an evaluation to the queue
   playerBook.enqueue(async () => { await evaluateBook(playerBook); });
