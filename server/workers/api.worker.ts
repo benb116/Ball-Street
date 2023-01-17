@@ -17,6 +17,7 @@ if (!process.env['WEEK'] || Number.isNaN(Number(process.env['WEEK']))) {
 
 const app = express();
 
+
 app.use(cors());
 app.use(express.json());
 app.use(session);
