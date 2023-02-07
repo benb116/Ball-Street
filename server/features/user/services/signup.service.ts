@@ -1,15 +1,15 @@
 import bcrypt from 'bcryptjs';
 import Joi from 'joi';
 
-import {
-  GenVerifyOutput, inputSignup, LoginOutput, SignupInput,
-} from '../../../../types/api/user.api';
+import { inputSignup } from '../../../../types/api/user.api';
 import { validate, uError } from '../../util/util';
 import validators from '../../util/util.schema';
 import errorHandler from '../../util/util.service';
 import User from '../user.model';
 
 import genVerify from './genVerify.service';
+
+import type { GenVerifyOutputType, LoginOutputType, SignupInputType } from '../../../../types/api/user.api';
 
 const schema = Joi.object({
   name: Joi.string().required().messages({
@@ -25,8 +25,8 @@ validate(inputSignup, schema);
 const saltRounds = 10;
 
 /** Sign up a user and possibly continue verification */
-async function signup(req: SignupInput): Promise<LoginOutput | GenVerifyOutput> {
-  const value: SignupInput = validate(req, schema);
+async function signup(req: SignupInputType): Promise<LoginOutputType | GenVerifyOutputType> {
+  const value: SignupInputType = validate(req, schema);
   const {
     name, email, password, skipVerification,
   } = value;

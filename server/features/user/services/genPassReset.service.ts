@@ -1,11 +1,13 @@
 import cryptoRandomString from 'crypto-random-string';
 import Joi from 'joi';
 
-import { GenPassResetInput, inputGenPassReset } from '../../../../types/api/user.api';
+import { inputGenPassReset } from '../../../../types/api/user.api';
 import { CallbackURL, verificationTimeout, verificationTokenLength } from '../../../config';
 import passReset from '../../../db/redis/passReset.redis';
 import { validate, uError } from '../../util/util';
 import validators from '../../util/util.schema';
+
+import type { GenPassResetInputType } from '../../../../types/api/user.api';
 
 const schema = Joi.object({
   email: validators.email,
@@ -13,8 +15,8 @@ const schema = Joi.object({
 validate(inputGenPassReset, schema);
 
 /** Create and send a password reset email */
-async function genPassReset(req: GenPassResetInput) {
-  const value: GenPassResetInput = validate(req, schema);
+async function genPassReset(req: GenPassResetInputType) {
+  const value: GenPassResetInputType = validate(req, schema);
   const { email } = value;
   try {
     const rand = cryptoRandomString({ length: verificationTokenLength, type: 'url-safe' });

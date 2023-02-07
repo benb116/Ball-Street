@@ -1,14 +1,14 @@
 import bcrypt from 'bcryptjs';
 import Joi from 'joi';
 
-import {
-  LoginInput, inputLogin, LoginOutput, GenVerifyOutput,
-} from '../../../../types/api/user.api';
+import { inputLogin } from '../../../../types/api/user.api';
 import { validate, uError } from '../../util/util';
 import validators from '../../util/util.schema';
 import User from '../user.model';
 
 import genVerify from './genVerify.service';
+
+import type { LoginInputType, LoginOutputType, GenVerifyOutputType } from '../../../../types/api/user.api';
 
 const schema = Joi.object({
   email: validators.email,
@@ -17,8 +17,8 @@ const schema = Joi.object({
 validate(inputLogin, schema);
 
 /** Log a user in and possibly continue verification */
-async function login(req: LoginInput): Promise<LoginOutput | GenVerifyOutput> {
-  const value: LoginInput = validate(req, schema);
+async function login(req: LoginInputType): Promise<LoginOutputType | GenVerifyOutputType> {
+  const value: LoginInputType = validate(req, schema);
   const { email, password } = value;
 
   const theuser = await User.scope('withPassword').findOne({ where: { email } });
