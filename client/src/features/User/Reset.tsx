@@ -2,13 +2,13 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useParams } from 'react-router-dom';
 
-import { EvalPassResetInput } from '../../../../types/api/user.api';
-
 import { useResetMutation } from './User.api';
+
+import type { EvalPassResetInputType } from '../../../../types/api/user.api';
 
 function Reset() {
   const { token } = useParams<{ token: string }>();
-  const { register, handleSubmit } = useForm<EvalPassResetInput>();
+  const { register, handleSubmit } = useForm<EvalPassResetInputType>();
 
   const [reset] = useResetMutation();
 

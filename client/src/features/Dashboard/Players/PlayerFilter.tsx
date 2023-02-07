@@ -3,12 +3,13 @@ import React, { ChangeEvent } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 
 import {
-  FilterNameType,
   allGamesSelector,
   allTeamsSelector,
   filterSelector,
   setFilter,
 } from './Players.slice';
+
+import type { FilterNameType } from './Players.slice';
 
 type EventType = ChangeEvent<HTMLInputElement | HTMLSelectElement>;
 

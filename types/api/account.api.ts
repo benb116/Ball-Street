@@ -1,4 +1,4 @@
-export interface AccountOutput {
+export interface AccountOutputType {
   email: string,
   id: number,
   name: string,

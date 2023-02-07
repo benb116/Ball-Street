@@ -2,9 +2,9 @@ export const inputLogin = {
   email: 'email@email.com',
   password: 'password'
 }
-export type LoginInput = typeof inputLogin;
+export type LoginInputType = typeof inputLogin;
 
-export interface LoginOutput {
+export interface LoginOutputType {
   needsVerification: false, 
   id: number, 
   email: string, 
@@ -12,7 +12,7 @@ export interface LoginOutput {
   cash: number,
 }
 
-export interface GenVerifyOutput {
+export interface GenVerifyOutputType {
   needsVerification: true,
   id: number
 }
@@ -23,16 +23,16 @@ export const inputSignup = {
   password: 'password',
   skipVerification: false as const,
 }
-export type SignupInput = typeof inputSignup;
+export type SignupInputType = typeof inputSignup;
 
 export const inputGenPassReset = {
   email: 'email@email.com'
 }
-export type GenPassResetInput = typeof inputGenPassReset;
+export type GenPassResetInputType = typeof inputGenPassReset;
 
 export const inputEvalPassReset = {
   token: 'tlbgbwreqlppzxdyrhrvahyitvditdtmkichbjznchpjmmbanhpozrdvoyxldjzxohtbyvgisfnrtpairqcwqwtljxeuaxgouwcyetiqwctwupidmmmfzkssfganqswi',
   password: 'password',
   confirmPassword: 'password',
 }
-export type EvalPassResetInput = typeof inputEvalPassReset;
+export type EvalPassResetInputType = typeof inputEvalPassReset;

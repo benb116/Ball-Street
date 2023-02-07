@@ -1,35 +1,36 @@
-import {
-  AccountOutput,
+import BaseAPI from '../../helpers/api';
+
+import type {
+  AccountOutputType,
   DepositWithdrawType,
   LedgerEntryJoinedKindType,
   LedgerEntryType,
 } from '../../../../types/api/account.api';
-import {
-  EvalPassResetInput,
-  GenPassResetInput,
-  GenVerifyOutput,
-  LoginInput,
-  LoginOutput,
-  SignupInput,
+import type {
+  EvalPassResetInputType,
+  GenPassResetInputType,
+  GenVerifyOutputType,
+  LoginInputType,
+  LoginOutputType,
+  SignupInputType,
 } from '../../../../types/api/user.api';
-import BaseAPI from '../../helpers/api';
 
 const UserAPI = BaseAPI.injectEndpoints({
   endpoints: (build) => ({
-    signup: build.mutation<LoginOutput | GenVerifyOutput, SignupInput>({
+    signup: build.mutation<LoginOutputType | GenVerifyOutputType, SignupInputType>({
       query: (body) => ({ url: '/auth/signup', method: 'POST', body }),
     }),
-    login: build.mutation<LoginOutput | GenVerifyOutput, LoginInput>({
+    login: build.mutation<LoginOutputType | GenVerifyOutputType, LoginInputType>({
       query: (body) => ({ url: '/auth/login', method: 'POST', body }),
     }),
-    forgot: build.mutation<void, GenPassResetInput>({
+    forgot: build.mutation<void, GenPassResetInputType>({
       query: (body) => ({ url: '/auth/forgot', method: 'POST', body }),
     }),
-    reset: build.mutation<void, EvalPassResetInput>({
+    reset: build.mutation<void, EvalPassResetInputType>({
       query: (body) => ({ url: '/auth/resetPasswordToken', method: 'POST', body }),
     }),
 
-    getAccount: build.query<AccountOutput, void>({
+    getAccount: build.query<AccountOutputType, void>({
       query: () => '/api/user/account',
       providesTags: ['Account'],
     }),

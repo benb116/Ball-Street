@@ -1,30 +1,31 @@
 import cryptoRandomString from 'crypto-random-string';
 import Joi from 'joi';
 
-import { GenVerifyOutput } from '../../../../types/api/user.api';
 import { CallbackURL, verificationTimeout, verificationTokenLength } from '../../../config';
 import emailVer from '../../../db/redis/emailVer.redis';
 import { validate, uError } from '../../util/util';
 import validators from '../../util/util.schema';
+
+import type { GenVerifyOutputType } from '../../../../types/api/user.api';
 
 const schema = Joi.object({
   id: validators.user,
   email: validators.email,
 });
 
-interface GenVerifyInput {
+interface GenVerifyInputType {
   id: number,
   email: string,
 }
 
 /** Create and send an email verification link */
-async function genVerify(req: GenVerifyInput) {
-  const value: GenVerifyInput = validate(req, schema);
+async function genVerify(req: GenVerifyInputType) {
+  const value: GenVerifyInputType = validate(req, schema);
   const { email, id } = value;
   try {
     const rand = cryptoRandomString({ length: verificationTokenLength, type: 'url-safe' });
     await emailVer.set(rand, email, verificationTimeout * 60);
-    return await sendVerificationEmail(id, email, rand) as GenVerifyOutput;
+    return await sendVerificationEmail(id, email, rand) as GenVerifyOutputType;
   } catch (err) {
     throw uError('genVerify Error', 406);
   }
