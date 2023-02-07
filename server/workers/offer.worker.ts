@@ -20,7 +20,7 @@ const offerQueue = new Queue('offer-queue', queueOptions);
 const protectedQueue = new Queue('protected-queue', queueOptions);
 
 // books[contestID][playerID] = Book
-const books = { };
+const books: Map<number, Map<number, Book>> = new Map();
 
 const parallelProcessors = 10;
 
