@@ -67,8 +67,12 @@ wss.on('connection', async (ws, request: Request) => {
   // Add to contest map (ws <-> contest)
   const requestTerms = request.url.split('/');
   const contestID = Number(requestTerms[requestTerms.length - 1]);
-  liveState.contestmap.delete(ws);
-  liveState.contestmap.set(ws, contestID);
+  if (Number.isNaN(contestID)) {
+    return;
+  }
+  const contestSet = liveState.contestmap.get(contestID) || new Set();
+  contestSet.add(ws);
+  liveState.contestmap.set(contestID, contestSet);
 
   // Send starting data
   ws.send(JSON.stringify({ event: 'priceUpdate', pricedata: await sendLatest(contestID) }));
@@ -79,7 +83,8 @@ wss.on('connection', async (ws, request: Request) => {
 
   ws.on('close', () => {
     liveState.connmap.delete(userId);
-    liveState.contestmap.delete(ws);
+    contestSet.delete(ws);
+    liveState.contestmap.set(contestID, contestSet);
   });
 });
 

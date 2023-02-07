@@ -4,9 +4,7 @@ import liveState from './state.live'; // WS server
 
 import type MessageType from '../../../types/messages';
 
-export interface MessageMapType {
-  [key: string]: MessageType,
-}
+export type MessageMapType = Map<number, MessageType>;
 
 /** Send a message to a specific user */
 export function sendToUser(userID: number, msg: MessageType) {
@@ -17,18 +15,22 @@ export function sendToUser(userID: number, msg: MessageType) {
 
 /** Send messages to users in specific contests Input as a map of contestID: messageObj */
 export function sendToContests(msgMap: MessageMapType) {
-  liveState.contestmap.forEach((cID: number, thews) => {
-    if (!msgMap[cID]) { return; }
-    if (!thews) { liveState.contestmap.delete(thews); return; }
-    if (thews.readyState === 1) {
-      thews.send(JSON.stringify(msgMap[cID]));
-    }
+  msgMap.forEach((msg, cID) => {
+    const wsSet = liveState.contestmap.get(cID);
+    if (!wsSet) return;
+    wsSet.forEach((ws) => {
+      if (ws.readyState !== 1) {
+        wsSet.delete(ws);
+      } else {
+        ws.send(JSON.stringify(msg));
+      }
+    });
   });
 }
 
 /** Send message to all users */
 export function sendToAll(msg: MessageType) {
-  liveState.contestmap.forEach(async (_thecontestID: number, thews) => {
+  liveState.connmap.forEach((thews) => {
     if (!thews) { liveState.contestmap.delete(thews); return; }
     if (thews.readyState === 1) thews.send(JSON.stringify(msg));
   });
