@@ -6,15 +6,20 @@ import Book from './book.offer';
 
 /** Access the correct book or make one if necessary */
 export function getBook(
-  books: Record<string, Record<string, Book>>,
+  books: Map<number, Map<number, Book>>,
   ContestId: number,
   NFLPlayerId: number,
 ) {
-  // eslint-disable-next-line no-param-reassign
-  books[ContestId] = books[ContestId] || {};
-  const contestbooks = books[ContestId] || {};
-  const playerBook = contestbooks[NFLPlayerId] || new Book(ContestId, NFLPlayerId);
-  contestbooks[NFLPlayerId] = playerBook;
+  let contestbooks = books.get(ContestId);
+  if (!contestbooks) {
+    contestbooks = new Map();
+    books.set(ContestId, contestbooks);
+  }
+  let playerBook = contestbooks.get(NFLPlayerId);
+  if (!playerBook) {
+    playerBook = new Book(ContestId, NFLPlayerId);
+    contestbooks.set(NFLPlayerId, playerBook);
+  }
   // There may be existing offers and matches in the DB, so add them to the book
   // If the book hasn't been inited, try to init
   if (!playerBook.init) { playerBook.begin(); }

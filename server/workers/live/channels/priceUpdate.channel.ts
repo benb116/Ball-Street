@@ -33,6 +33,7 @@ const priceUpdate = {
     contestPriceMap[nflplayerID] = contestPriceMap[nflplayerID] || { nflplayerID };
     const contestPlayerPriceMap = contestPriceMap[nflplayerID];
     if (!contestPlayerPriceMap) return;
+
     if (bestbid !== undefined) contestPlayerPriceMap.bestbid = bestbid;
     if (bestask !== undefined) contestPlayerPriceMap.bestask = bestask;
     if (lastprice !== undefined) contestPlayerPriceMap.lastprice = lastprice;
@@ -41,12 +42,14 @@ const priceUpdate = {
 
 // Send out new price data when it's available
 setInterval(() => {
-  const priceUpdatecIDs = Object.keys(liveState.priceUpdateMap);
+  const priceUpdatecIDs = Array.from(liveState.contestmap.keys());
 
-  const priceMsgMap = priceUpdatecIDs.reduce((acc, cur: string) => {
-    acc[cur] = { event: 'priceUpdate', pricedata: liveState.priceUpdateMap[cur] || {} };
+  const priceMsgMap = priceUpdatecIDs.reduce((acc, cur) => {
+    const contestPriceData = liveState.priceUpdateMap[cur];
+    if (!contestPriceData) return acc;
+    acc.set(cur, { event: 'priceUpdate', pricedata: contestPriceData });
     return acc;
-  }, {} as MessageMapType);
+  }, new Map() as MessageMapType);
   liveState.priceUpdateMap = {};
 
   sendToContests(priceMsgMap);
