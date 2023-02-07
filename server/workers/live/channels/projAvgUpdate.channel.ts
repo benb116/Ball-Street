@@ -3,6 +3,8 @@ import projAvg from '../../../db/redis/projAvg.redis';
 import { MessageMapType, sendToContests } from '../socket.live';
 import liveState from '../state.live'; // Data stored in memory
 
+const lastAverage = new Map<number, number>();
+
 const projAvgUpdate = {
   pub: function pub() {
     client.publish('projAvgUpdate', '');
@@ -15,7 +17,10 @@ const projAvgUpdate = {
     const avgMsgMap = allContests.reduce((acc, cur, i) => {
       const thisAverage = allAvgs[i];
       if (thisAverage === null || thisAverage === undefined) return acc;
-      acc.set(cur, { event: 'contestAvg', average: thisAverage });
+      if (lastAverage.get(cur) !== thisAverage) {
+        acc.set(cur, { event: 'contestAvg', average: thisAverage });
+        lastAverage.set(cur, thisAverage);
+      }
       return acc;
     }, new Map() as MessageMapType);
     sendToContests(avgMsgMap);

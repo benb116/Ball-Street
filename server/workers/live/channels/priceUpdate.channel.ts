@@ -46,6 +46,7 @@ setInterval(() => {
 
   const priceMsgMap = priceUpdatecIDs.reduce((acc, cur) => {
     const contestPriceData = liveState.priceUpdateMap[cur];
+    if (!contestPriceData) return acc;
     acc.set(cur, { event: 'priceUpdate', pricedata: contestPriceData });
     return acc;
   }, new Map() as MessageMapType);
