@@ -18,7 +18,7 @@ import Offer from '../offer.model';
 
 const offerQueue = new Queue('offer-queue', queueOptions);
 
-const bodySchema = Joi.object().keys({
+const bodySchema = Joi.object<CreateOfferInputType>().keys({
   nflplayerID: validators.nflplayerID,
   isbid: Joi.boolean().required().messages({
     'boolean.base': 'Offer type is invalid',
@@ -37,7 +37,7 @@ const bodySchema = Joi.object().keys({
 }).required();
 validate(createOfferInput, bodySchema);
 
-const schema = Joi.object({
+const schema = Joi.object<CreateOfferInput>({
   user: validators.user,
   params: Joi.object().keys({ contestID: validators.contestID }).required(),
   body: bodySchema,
@@ -50,7 +50,7 @@ interface CreateOfferInput extends ServiceInput {
 
 /** Create an offer in a contest */
 async function createOffer(req: CreateOfferInput): Promise<OfferItemType> {
-  const value: CreateOfferInput = validate(req, schema);
+  const value = validate(req, schema);
 
   return sequelize.transaction(async (t) => {
     // Find user's entry

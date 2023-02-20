@@ -10,7 +10,7 @@ import Trade from '../trade.model';
 
 import type { TradeTree } from '../../../../types/api/trade.api';
 
-const schema = Joi.object({
+const schema = Joi.object<GetUserTradesInput>({
   user: validators.user,
   params: Joi.object().keys({
     contestID: validators.contestID,
@@ -25,7 +25,7 @@ interface GetUserTradesInput extends ServiceInput {
 
 /** Get all of the trades a user has made, including bids, asks, and entry actions */
 async function getUserTrades(req: GetUserTradesInput) {
-  const value: GetUserTradesInput = validate(req, schema);
+  const value = validate(req, schema);
 
   const bids = await Trade.findAll({
     include: [{

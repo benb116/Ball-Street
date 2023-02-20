@@ -8,7 +8,7 @@ import { uError, validate } from '../../util/util';
 import validators from '../../util/util.schema';
 import { ServiceInput } from '../../util/util.service';
 
-const schema = Joi.object({
+const schema = Joi.object<ForceLogoutInput>({
   user: validators.user,
   params: validators.noObj,
   body: validators.noObj,
@@ -21,7 +21,7 @@ interface ForceLogoutInput extends ServiceInput {
 
 /** Force a user to logout by deleting all session info */
 async function forceLogout(req: ForceLogoutInput) {
-  const value: ForceLogoutInput = validate(req, schema);
+  const value = validate(req, schema);
 
   const iterator = client.scanIterator({
     MATCH: 'sess:*',

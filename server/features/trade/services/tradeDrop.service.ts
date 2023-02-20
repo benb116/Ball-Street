@@ -10,7 +10,7 @@ import validators from '../../util/util.schema';
 import { ServiceInput } from '../../util/util.service';
 import EntryAction from '../entryaction.model';
 
-const schema = Joi.object({
+const schema = Joi.object<TradeDropInput>({
   user: validators.user,
   params: Joi.object().keys({ contestID: validators.contestID }).required(),
   body: Joi.object().keys({
@@ -34,7 +34,7 @@ interface TradeDropInput extends ServiceInput {
 
 /** Drop a player within a transaction, but don't commit */
 async function tradeDrop(req: TradeDropInput, t: Transaction) {
-  const value: TradeDropInput = validate(req, schema);
+  const value = validate(req, schema);
 
   // Remove from roster
   const theentry = await Entry.findOne({

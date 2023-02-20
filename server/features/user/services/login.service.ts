@@ -10,7 +10,7 @@ import genVerify from './genVerify.service';
 
 import type { LoginInputType, LoginOutputType, GenVerifyOutputType } from '../../../../types/api/user.api';
 
-const schema = Joi.object({
+const schema = Joi.object<LoginInputType>({
   email: validators.email,
   password: validators.password,
 });
@@ -18,7 +18,7 @@ validate(inputLogin, schema);
 
 /** Log a user in and possibly continue verification */
 async function login(req: LoginInputType): Promise<LoginOutputType | GenVerifyOutputType> {
-  const value: LoginInputType = validate(req, schema);
+  const value = validate(req, schema);
   const { email, password } = value;
 
   const theuser = await User.scope('withPassword').findOne({ where: { email } });

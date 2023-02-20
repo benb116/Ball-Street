@@ -9,14 +9,14 @@ import validators from '../../util/util.schema';
 
 import type { GenPassResetInputType } from '../../../../types/api/user.api';
 
-const schema = Joi.object({
+const schema = Joi.object<GenPassResetInputType>({
   email: validators.email,
 });
 validate(inputGenPassReset, schema);
 
 /** Create and send a password reset email */
 async function genPassReset(req: GenPassResetInputType) {
-  const value: GenPassResetInputType = validate(req, schema);
+  const value = validate(req, schema);
   const { email } = value;
   try {
     const rand = cryptoRandomString({ length: verificationTokenLength, type: 'url-safe' });

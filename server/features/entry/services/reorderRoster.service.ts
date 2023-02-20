@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-import { reorderInput, EntryType } from '../../../../types/api/entry.api';
+import { reorderInput, EntryType, ReorderInputType } from '../../../../types/api/entry.api';
 import {
   FlexNFLPositionId, NFLPosTypes, Roster, RosterPositions, RPosType,
 } from '../../../../types/rosterinfo';
@@ -11,7 +11,7 @@ import validators from '../../util/util.schema';
 import errorHandler, { ServiceInput } from '../../util/util.service';
 import Entry from '../entry.model';
 
-const bodySchema = Joi.object().keys({
+const bodySchema = Joi.object<ReorderInputType>().keys({
   pos1: Joi.string().trim().valid(...RosterPositions).required()
     .messages({
       'string.base': 'First position is invalid',
@@ -25,7 +25,7 @@ const bodySchema = Joi.object().keys({
 }).required();
 validate(reorderInput, bodySchema);
 
-const schema = Joi.object({
+const schema = Joi.object<ReorderRosterInput>({
   user: validators.user,
   params: Joi.object().keys({ contestID: validators.contestID }).required(),
   body: bodySchema,
@@ -41,7 +41,7 @@ interface ReorderRosterInput extends ServiceInput {
 
 /** Swap players in positions of an entry */
 async function reorderRoster(req: ReorderRosterInput): Promise<EntryType> {
-  const value: ReorderRosterInput = validate(req, schema);
+  const value = validate(req, schema);
 
   return sequelize.transaction(async (t) => {
     // Get position types

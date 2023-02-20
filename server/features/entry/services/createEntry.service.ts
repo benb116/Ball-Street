@@ -11,7 +11,7 @@ import validators from '../../util/util.schema';
 import errorHandler, { ServiceInput } from '../../util/util.service';
 import Entry from '../entry.model';
 
-const schema = Joi.object({
+const schema = Joi.object<CreateEntryInput>({
   user: validators.user,
   params: Joi.object().keys({ contestID: validators.contestID }).required(),
   body: validators.noObj,
@@ -24,7 +24,7 @@ interface CreateEntryInput extends ServiceInput {
 
 /** Create an entry in a contest */
 async function createEntry(req: CreateEntryInput): Promise<EntryType> {
-  const value: CreateEntryInput = validate(req, schema);
+  const value = validate(req, schema);
 
   return sequelize.transaction(async (t) => {
     // Confirm contest is valid and for the current week

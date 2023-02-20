@@ -10,7 +10,7 @@ import User from '../user.model';
 
 import type { EvalPassResetInputType } from '../../../../types/api/user.api';
 
-const schema = Joi.object({
+const schema = Joi.object<EvalPassResetInputType>({
   token: Joi.string().length(verificationTokenLength).required().messages({
     'string.base': 'Token is invalid',
     'string.length': `Token must be ${verificationTokenLength} characters long`,
@@ -23,7 +23,7 @@ validate(inputEvalPassReset, schema);
 
 /** Change a user's password */
 async function evalPassReset(req: EvalPassResetInputType) {
-  const value: EvalPassResetInputType = validate(req, schema);
+  const value = validate(req, schema);
   const { token, password, confirmPassword } = value;
   if (OnCompare(password, confirmPassword)) throw uError('Passwords do not match', 403);
   const email = await passReset.get(token);

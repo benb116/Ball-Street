@@ -8,7 +8,7 @@ import validators from '../../util/util.schema';
 
 import type { GenVerifyOutputType } from '../../../../types/api/user.api';
 
-const schema = Joi.object({
+const schema = Joi.object<GenVerifyInputType>({
   id: validators.user,
   email: validators.email,
 });
@@ -20,7 +20,7 @@ interface GenVerifyInputType {
 
 /** Create and send an email verification link */
 async function genVerify(req: GenVerifyInputType) {
-  const value: GenVerifyInputType = validate(req, schema);
+  const value = validate(req, schema);
   const { email, id } = value;
   try {
     const rand = cryptoRandomString({ length: verificationTokenLength, type: 'url-safe' });

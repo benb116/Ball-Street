@@ -7,7 +7,7 @@ import errorHandler, { ServiceInput } from '../../util/util.service';
 import LedgerEntry from '../ledgerEntry.model';
 import LedgerKind from '../ledgerKind.model';
 
-const schema = Joi.object({
+const schema = Joi.object<GetUserLedgerInput>({
   user: validators.user,
   params: Joi.object().keys({
     page: Joi.number().integer().greater(0).optional()
@@ -32,7 +32,7 @@ const paginationLimit = 10;
 
 /** Show the recent ledger entries for a user */
 function getUserLedger(req: GetUserLedgerInput): Promise<LedgerEntryJoinedKindType[]> {
-  const value: GetUserLedgerInput = validate(req, schema);
+  const value = validate(req, schema);
   return LedgerEntry.findAll({
     where: { UserId: value.user },
     order: [['createdAt', 'DESC']],

@@ -5,7 +5,7 @@ import { validate } from '../../util/util';
 import validators from '../../util/util.schema';
 import { ServiceInput } from '../../util/util.service';
 
-const schema = Joi.object({
+const schema = Joi.object<GetNFLPlayerOffersInput>({
   user: validators.user,
   params: Joi.object().keys({
     contestID: validators.contestID,
@@ -25,7 +25,7 @@ interface GetNFLPlayerOffersInput extends ServiceInput {
 /** Get current book summary for a player */
 // How many offers at each price point?
 function getNFLPlayerOfferSummary(req: GetNFLPlayerOffersInput) {
-  const value: GetNFLPlayerOffersInput = validate(req, schema);
+  const value = validate(req, schema);
 
   const bids = Offer.count({
     group: 'price',

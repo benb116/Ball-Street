@@ -8,7 +8,7 @@ import Contest from '../contest.model';
 
 import type { ContestWithEntryType } from '../../../../types/api/contest.api';
 
-const schema = Joi.object({
+const schema = Joi.object<GetContestInput>({
   user: validators.user,
   params: Joi.object().keys({ contestID: validators.contestID }).required(),
   body: validators.noObj,
@@ -21,7 +21,7 @@ interface GetContestInput extends ServiceInput {
 
 /** Get info for a specific contest */
 async function getContest(req: GetContestInput): Promise<ContestWithEntryType> {
-  const value: GetContestInput = validate(req, schema);
+  const value = validate(req, schema);
   const thecontest = await Contest.findByPk(value.params.contestID);
   if (!thecontest) { throw uError('No contest found', 404); }
 

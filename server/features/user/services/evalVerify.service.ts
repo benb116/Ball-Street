@@ -5,7 +5,7 @@ import emailVer from '../../../db/redis/emailVer.redis';
 import { validate, uError } from '../../util/util';
 import User from '../user.model';
 
-const schema = Joi.object({
+const schema = Joi.object<EvalVerifyInput>({
   token: Joi.string().length(verificationTokenLength).required().messages({
     'string.base': 'Token is invalid',
     'string.length': `Token must be ${verificationTokenLength} characters long`,
@@ -19,7 +19,7 @@ interface EvalVerifyInput {
 
 /** Check that a verification link is valid */
 async function evalVerify(req: EvalVerifyInput) {
-  const value: EvalVerifyInput = validate(req, schema);
+  const value = validate(req, schema);
   const { token } = value;
   const email = await emailVer.get(token);
   if (!email) throw uError('Email could not be verified', 404);

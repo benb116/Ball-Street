@@ -8,7 +8,7 @@ import validators from '../../util/util.schema';
 import errorHandler, { ServiceInput } from '../../util/util.service';
 import Entry from '../entry.model';
 
-const schema = Joi.object({
+const schema = Joi.object<GetContestEntriesInput>({
   user: validators.user,
   params: Joi.object().keys({ contestID: validators.contestID }).required(),
   body: validators.noObj,
@@ -21,7 +21,7 @@ interface GetContestEntriesInput extends ServiceInput {
 
 /** Get all entries in a contest */
 function getContestEntries(req: GetContestEntriesInput): Promise<EntryType[]> {
-  const value: GetContestEntriesInput = validate(req, schema);
+  const value = validate(req, schema);
 
   return Entry.findAll({ where: { ContestId: value.params.contestID } })
     // We want to show the projected totals for each entry, not just current balance.
