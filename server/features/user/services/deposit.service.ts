@@ -11,7 +11,7 @@ import User from '../user.model';
 
 import type { DepositWithdrawType, LedgerEntryType } from '../../../../types/api/account.api';
 
-const bodySchema = Joi.object({
+const bodySchema = Joi.object<DepositWithdrawType>({
   amount: Joi.number().integer().greater(0).required()
     .messages({
       'number.base': 'Deposit amount is invalid',
@@ -21,7 +21,7 @@ const bodySchema = Joi.object({
     }),
 });
 validate(DepositWithdrawInput, bodySchema);
-const schema = Joi.object({
+const schema = Joi.object<DepositInput>({
   user: validators.user,
   params: validators.noObj,
   body: bodySchema,
@@ -34,7 +34,7 @@ interface DepositInput extends ServiceInput {
 
 /** Create an entry in a contest */
 async function deposit(req: DepositInput): Promise<LedgerEntryType> {
-  const value: DepositInput = validate(req, schema);
+  const value = validate(req, schema);
 
   return sequelize.transaction(async (t) => {
     // Confirm contest is valid and for the current week

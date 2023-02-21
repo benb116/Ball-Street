@@ -7,7 +7,7 @@ import Contest from '../contest.model';
 
 import type { ContestItemType } from '../../../../types/api/contest.api';
 
-const schema = Joi.object({
+const schema = Joi.object<CreateContestInput>({
   user: validators.user,
   params: validators.noObj,
   body: Joi.object().keys({
@@ -44,7 +44,7 @@ interface CreateContestInput extends ServiceInput {
 
 /** Create a new contest (to be used by admin) */
 async function createContest(req: CreateContestInput): Promise<ContestItemType> {
-  const value: CreateContestInput = validate(req, schema);
+  const value = validate(req, schema);
   const contestObj = {
     name: value.body.name,
     nflweek: Number(process.env['WEEK']),

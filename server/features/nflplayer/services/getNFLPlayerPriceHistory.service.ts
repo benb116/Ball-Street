@@ -6,7 +6,7 @@ import { validate } from '../../util/util';
 import validators from '../../util/util.schema';
 import { ServiceInput } from '../../util/util.service';
 
-const schema = Joi.object({
+const schema = Joi.object<GetNFLPlayerPriceHistoryInput>({
   user: validators.user,
   params: Joi.object().keys({
     contestID: validators.contestID,
@@ -25,7 +25,7 @@ interface GetNFLPlayerPriceHistoryInput extends ServiceInput {
 
 /** Get price history of a player's trades */
 function getNFLPlayerPriceHistory(req: GetNFLPlayerPriceHistoryInput) {
-  const value: GetNFLPlayerPriceHistoryInput = validate(req, schema);
+  const value = validate(req, schema);
 
   return sequelize.query(`
       SELECT time_bucket('1 minute', "createdAt") as "bucket",

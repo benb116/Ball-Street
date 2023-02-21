@@ -8,13 +8,13 @@ import errorHandler, { ServiceInput } from '../../util/util.service';
 
 import tradeAdd from './tradeAdd.service';
 
-const bodySchema = Joi.object().keys({
+const bodySchema = Joi.object<PreTradeInputType>().keys({
   nflplayerID: validators.nflplayerID,
   price: Joi.any().forbidden().messages({ 'any.unknown': 'Price not allowed in pretrade' }),
 }).required();
 validate(preTradeInput, bodySchema);
 
-const schema = Joi.object({
+const schema = Joi.object<PreTradeAddInput>({
   user: validators.user,
   params: Joi.object().keys({ contestID: validators.contestID }).required(),
   body: bodySchema,
@@ -27,7 +27,7 @@ interface PreTradeAddInput extends ServiceInput {
 
 /** Try to add within a transaction, errors will rollback */
 async function preTradeAdd(req: PreTradeAddInput) {
-  const value: PreTradeAddInput = validate(req, schema);
+  const value = validate(req, schema);
 
   return sequelize.transaction(async (t) => tradeAdd(value, t))
     .catch(errorHandler({

@@ -7,7 +7,7 @@ import Offer from '../offer.model';
 
 import type { OfferItemType } from '../../../../types/api/offer.api';
 
-const schema = Joi.object({
+const schema = Joi.object<GetUserOffersInput>({
   user: validators.user,
   params: Joi.object().keys({ contestID: validators.contestID }).required(),
   body: validators.noObj,
@@ -20,7 +20,7 @@ interface GetUserOffersInput extends ServiceInput {
 
 /** Get a user's active offers */
 function getUserOffers(req: GetUserOffersInput): Promise<OfferItemType[]> {
-  const value: GetUserOffersInput = validate(req, schema);
+  const value = validate(req, schema);
   return Offer.findAll({
     where: {
       UserId: value.user,

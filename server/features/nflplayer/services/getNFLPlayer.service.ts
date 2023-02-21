@@ -5,7 +5,7 @@ import validators from '../../util/util.schema';
 import { ServiceInput } from '../../util/util.service';
 import NFLPlayer from '../nflplayer.model';
 
-const schema = Joi.object({
+const schema = Joi.object<GetNFLPlayerInput>({
   user: validators.user,
   params: Joi.object().keys({
     nflplayerID: validators.nflplayerID,
@@ -22,7 +22,7 @@ interface GetNFLPlayerInput extends ServiceInput {
 
 /** Get info about an NFLPlayer */
 async function getNFLPlayer(req: GetNFLPlayerInput) {
-  const value: GetNFLPlayerInput = validate(req, schema);
+  const value = validate(req, schema);
 
   const theplayer = await NFLPlayer.findByPk(value.params.nflplayerID);
   if (!theplayer || !theplayer.active) { throw uError('No player found', 404); }

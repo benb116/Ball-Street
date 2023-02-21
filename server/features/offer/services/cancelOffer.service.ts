@@ -11,14 +11,15 @@ import Offer from '../offer.model';
 
 const offerQueue = new Queue('offer-queue', queueOptions);
 
-const bodySchema = Joi.object().keys({
+const bodySchema = Joi.object<CancelOfferInputType>().keys({
   offerID: Joi.string().trim().required().messages({
     'string.base': 'Offer ID is invalid',
     'any.required': 'Please specify a offer',
   }),
 }).required();
 validate(cancelOfferInput, bodySchema);
-const schema = Joi.object({
+
+const schema = Joi.object<CancelOfferInput>({
   user: validators.user,
   params: Joi.object().keys({
     contestID: Joi.number().optional(),
@@ -33,7 +34,7 @@ interface CancelOfferInput extends ServiceInput {
 
 /** Cancel an existing offer */
 async function cancelOffer(req: CancelOfferInput): Promise<OfferItemType> {
-  const value: CancelOfferInput = validate(req, schema);
+  const value = validate(req, schema);
 
   // Cancel offer, but if it's filled, let user know
   return sequelize.transaction(async (t) => {

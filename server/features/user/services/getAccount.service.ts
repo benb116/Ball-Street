@@ -7,7 +7,7 @@ import User from '../user.model';
 
 import type { AccountOutputType } from '../../../../types/api/account.api';
 
-const schema = Joi.object({
+const schema = Joi.object<GetAccountInput>({
   user: validators.user,
   params: validators.noObj,
   body: validators.noObj,
@@ -20,7 +20,7 @@ interface GetAccountInput extends ServiceInput {
 
 /** Load a user's account */
 async function getAccount(req: GetAccountInput): Promise<AccountOutputType> {
-  const value: GetAccountInput = validate(req, schema);
+  const value = validate(req, schema);
   const theuser = await User.findByPk(value.user);
   if (!theuser) { throw uError('User not found', 404); }
   return theuser;

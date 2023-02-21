@@ -12,7 +12,7 @@ import validators from '../../util/util.schema';
 import { ServiceInput } from '../../util/util.service';
 import EntryAction from '../entryaction.model';
 
-const schema = Joi.object({
+const schema = Joi.object<TradeAddInput>({
   user: validators.user,
   params: Joi.object().keys({ contestID: validators.contestID }).required(),
   body: Joi.object().keys({
@@ -40,7 +40,7 @@ interface TradeAddInput extends ServiceInput {
 
 /** Add a player within a transaction, but don't commit */
 async function tradeAdd(req: TradeAddInput, t: Transaction) {
-  const value: TradeAddInput = validate(req, schema);
+  const value = validate(req, schema);
 
   // Get user entry
   const theentry = await Entry.findOne({

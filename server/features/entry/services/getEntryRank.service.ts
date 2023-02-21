@@ -9,7 +9,7 @@ import Entry from '../entry.model';
 
 import getEntry from './getEntry.service';
 
-const schema = Joi.object({
+const schema = Joi.object<GetEntryRankInput>({
   user: validators.user,
   params: Joi.object().keys({ contestID: validators.contestID }).required(),
   body: validators.noObj,
@@ -22,7 +22,7 @@ interface GetEntryRankInput extends ServiceInput {
 
 /** Get an entry's rank within a contest */
 async function getEntryRank(req: GetEntryRankInput): Promise<EntryType> {
-  const value: GetEntryRankInput = validate(req, schema);
+  const value = validate(req, schema);
 
   const theentry = await getEntry(value);
   if (isUError(theentry)) throw theentry;

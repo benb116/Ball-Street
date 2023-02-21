@@ -1,10 +1,10 @@
-import { Schema } from 'joi';
-import { Transaction } from 'sequelize';
-
 import {
   FlexNFLPositionId, NFLPosIDType, NFLPosTypes, Roster, RosterPositions, RPosType,
 } from '../../../types/rosterinfo';
 import Entry from '../entry/entry.model';
+
+import type { NumberSchema, ObjectSchema } from 'joi';
+import type { Transaction } from 'sequelize';
 
 // Return whether a player type (number) cannot be put into a specific roster position
 export const isInvalidSpot = function isInvalidSpot(playerType: NFLPosIDType, rosterPosName: RPosType) {
@@ -66,9 +66,10 @@ export const uError = function uError(msg: string, status = 500) {
 export const isUError = (item: unknown): item is UError => !!(item as UError)?.status;
 
 /** Validate an object based on a Joi schema */
-export const validate = function validate(input: unknown, schema: Schema) {
-  const { value, error } = schema.validate(input);
-  if (error && error.details[0]) { throw uError(error.details[0].message, 400); }
+export const validate = function validate<T>(input: unknown, schema2: ObjectSchema<T> | NumberSchema<T>) {
+  const { value, error } = schema2.validate(input);
+  if (error?.details[0]) { throw uError(error.details[0].message, 400); }
+  if (!value) { throw uError('unexpected validation error', 400); }
   return value;
 };
 

@@ -11,7 +11,7 @@ import genVerify from './genVerify.service';
 
 import type { GenVerifyOutputType, LoginOutputType, SignupInputType } from '../../../../types/api/user.api';
 
-const schema = Joi.object({
+const schema = Joi.object<SignupInputType>({
   name: Joi.string().required().messages({
     'string.base': 'Name is invalid',
     'any.required': 'Name is required',
@@ -26,7 +26,7 @@ const saltRounds = 10;
 
 /** Sign up a user and possibly continue verification */
 async function signup(req: SignupInputType): Promise<LoginOutputType | GenVerifyOutputType> {
-  const value: SignupInputType = validate(req, schema);
+  const value = validate(req, schema);
   const {
     name, email, password, skipVerification,
   } = value;
