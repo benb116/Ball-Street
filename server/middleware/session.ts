@@ -1,18 +1,16 @@
-import connect from 'connect-redis';
+import RedisStore from 'connect-redis';
 import session from 'express-session';
 import { createClient } from 'redis';
 
 import { REDIS_PORT, REDIS_HOST } from '../db/redis';
+import logger from '../utilities/logger';
 
 const connObj = {
   url: `redis://${REDIS_HOST}:${REDIS_PORT}`,
   socket: { connectTimeout: 10000 },
-  legacyMode: true,
 };
 const client = createClient(connObj);
-client.connect();
-
-const RedisStore = connect(session);
+client.connect().catch(logger.error);
 
 declare module 'express-session' {
   export interface SessionData {
@@ -25,7 +23,7 @@ export default session({
   secret: process.env['COOKIE_SECRET'] || 'defaultSecret',
   name: '_ballstreet',
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: {
     httpOnly: true,
     sameSite: true,
