@@ -15,6 +15,7 @@ interface UserState {
     email: string,
     name: string,
     cash: number,
+    balance_dollars: string,
     ledger: LedgerEntryJoinedKindType[]
   },
   redirect: string,
@@ -25,6 +26,7 @@ const defaultState: UserState = {
     email: '',
     name: '',
     cash: 0,
+    balance_dollars: '0.00',
     ledger: [],
   },
   redirect: '',
@@ -107,6 +109,11 @@ export const userSlice = createSlice({
       } else {
         state.info.ledger = payload;
       }
+    });
+
+    builder.addMatcher(UserAPI.endpoints.getPortfolioBalance.matchFulfilled, (state, { payload }) => {
+      state.info.cash = payload.balance;
+      state.info.balance_dollars = payload.balance_dollars;
     });
 
     builder.addMatcher(UserAPI.endpoints.deposit.matchFulfilled, () => { toast.success('Deposit confirmed'); });

@@ -5,6 +5,7 @@ import type {
   DepositWithdrawType,
   LedgerEntryJoinedKindType,
   LedgerEntryType,
+  PortfolioBalanceOutputType,
 } from '../../../../types/api/account.api';
 import type {
   EvalPassResetInputType,
@@ -34,6 +35,10 @@ const UserAPI = BaseAPI.injectEndpoints({
       query: () => '/api/user/account',
       providesTags: ['Account'],
     }),
+    getPortfolioBalance: build.query<PortfolioBalanceOutputType, void>({
+      query: () => '/api/portfolio/balance',
+      providesTags: ['Account'],
+    }),
     logout: build.mutation<void, void>({ query: () => ({ url: '/api/user/logout', method: 'DELETE' }) }),
     forcelogout: build.mutation<void, void>({ query: () => ({ url: '/api/user/forcelogout', method: 'DELETE' }) }),
     deposit: build.mutation<LedgerEntryType, DepositWithdrawType>({
@@ -53,6 +58,7 @@ const UserAPI = BaseAPI.injectEndpoints({
 
 export const {
   useGetAccountQuery,
+  useGetPortfolioBalanceQuery,
   useLoginMutation,
   useLogoutMutation,
   useForcelogoutMutation,

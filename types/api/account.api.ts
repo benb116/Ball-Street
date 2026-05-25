@@ -4,6 +4,11 @@ export interface AccountOutputType {
   name: string,
   cash: number,
 }
+
+export interface PortfolioBalanceOutputType {
+  balance: number,
+  balance_dollars: string,
+}
 export interface LedgerEntryType {
   id: string,
   UserId: number,

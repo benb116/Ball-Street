@@ -8,6 +8,7 @@ import {
   useDepositMutation,
   useForcelogoutMutation,
   useGetAccountQuery,
+  useGetPortfolioBalanceQuery,
   useGetUserLedgerQuery,
   useWithdrawMutation,
 } from './User.api';
@@ -19,7 +20,7 @@ function Account() {
   const { register, handleSubmit } = useForm<DepositWithdrawType>();
   const { register: r2, handleSubmit: h2 } = useForm<DepositWithdrawType>();
 
-  const { cash, ledger } = useAppSelector(userSelector);
+  const { balance_dollars, ledger } = useAppSelector(userSelector);
 
   const [deposit] = useDepositMutation();
   const [withdraw] = useWithdrawMutation();
@@ -40,6 +41,7 @@ function Account() {
   };
 
   useGetAccountQuery();
+  useGetPortfolioBalanceQuery();
 
   return (
     <>
@@ -47,7 +49,7 @@ function Account() {
         <h2>Account details</h2>
         <p>
           Account balance: $
-          {cash / 100}
+          {balance_dollars}
         </p>
       </div>
 

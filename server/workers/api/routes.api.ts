@@ -8,6 +8,7 @@ import entryRouter from '../../features/entry/entry.route';
 import nfldataRouter from '../../features/nflplayer/nfldata.route';
 import nflplayerRouter from '../../features/nflplayer/nflplayer.route';
 import offerRouter from '../../features/offer/offer.route';
+import portfolioRouter from '../../features/user/portfolio.route';
 import tradeRouter from '../../features/trade/trade.route';
 import userRouter from '../../features/user/user.route';
 import authenticate from '../../middleware/authenticate';
@@ -34,4 +35,5 @@ contestsRouter.use('/contests/', contestRouter);
 
 router.use(contestsRouter);
 router.use('/user', userRouter);
+router.use('/portfolio', portfolioRouter);
 export default router;
